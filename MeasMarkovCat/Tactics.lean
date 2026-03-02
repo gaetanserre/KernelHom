@@ -1,6 +1,7 @@
 import Lean
+import Mathlib.CategoryTheory.Monoidal.Category
 
-open Lean Meta Elab Tactic
+open Lean Meta Elab Tactic CategoryTheory
 
 /-- Tactic to find an instance of `IsSFiniteKernel`.
 First tries `infer_instance`. If that fails, it adds hypotheses `IsSFiniteKernel κ.1`
@@ -31,3 +32,17 @@ elab "kernel_sfiniteness" : tactic => withMainContext do
             continue
       -- Retry infer_instance
       evalTactic (← `(tactic| infer_instance))
+
+/-- Tactic to reduce goals about categorical equalities of kernels to a simpler form. -/
+elab "cat_kernel" : tactic => do
+  try
+    evalTactic (← `(tactic| refine Subtype.ext ?_))
+    evalTactic (← `(tactic| simp only))
+  catch _ =>
+    throwError "cat_kernel tactic failed: could not apply Subtype.ext"
+  try
+    evalTactic (← `(tactic| dsimp only [CategoryStruct.id, CategoryStruct.comp,
+      MonoidalCategory.whiskerLeft, MonoidalCategory.whiskerRight,
+      MonoidalCategory.tensorHom]))
+  catch _ =>
+    throwError "cat_kernel tactic failed: dsimp made no progress"

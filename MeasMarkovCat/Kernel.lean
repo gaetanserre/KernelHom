@@ -1,7 +1,8 @@
 import Mathlib
 import MeasMarkovCat.Tactics
+import MeasMarkovCat.Mathlib.Kernel
 
-open CategoryTheory ProbabilityTheory
+open CategoryTheory ProbabilityTheory MeasureTheory
 
 universe u
 
@@ -35,14 +36,12 @@ instance : MonoidalCategory MeasCatKer where
     have hf₂ : Measurable f₂ := by fun_prop
     refine ⟨⟨Kernel.id.map f₁, by kernel_sfiniteness⟩,
       ⟨Kernel.id.map f₂, by kernel_sfiniteness⟩, ?_, ?_⟩
-    · refine Subtype.ext ?_
-      change Kernel.id.map f₂ ∘ₖ Kernel.id.map f₁ = Kernel.id
+    · cat_kernel
       rw [Kernel.id_map hf₁, Kernel.id_map hf₂, Kernel.deterministic_comp_eq_map hf₂,
         Kernel.deterministic_map hf₁ hf₂]
       ext x s hs
       simp [Kernel.deterministic_apply, Kernel.id_apply, f₁, f₂]
-    · refine Subtype.ext ?_
-      change Kernel.id.map f₁ ∘ₖ Kernel.id.map f₂ = Kernel.id
+    · cat_kernel
       rw [Kernel.id_map hf₂, Kernel.id_map hf₁, Kernel.deterministic_comp_eq_map hf₁,
         Kernel.deterministic_map hf₂ hf₁]
       ext x s hs
@@ -53,14 +52,12 @@ instance : MonoidalCategory MeasCatKer where
     have hf₂ : Measurable (Prod.snd : Unit × X → X) := by fun_prop
     refine ⟨⟨Kernel.id.map Prod.snd, by kernel_sfiniteness⟩,
       ⟨Kernel.id.map f₁, by kernel_sfiniteness⟩, ?_, ?_⟩
-    · refine Subtype.ext ?_
-      change Kernel.id.map f₁ ∘ₖ Kernel.id.map Prod.snd = Kernel.id
+    · cat_kernel
       rw [Kernel.id_map hf₁, Kernel.deterministic_comp_eq_map hf₁, Kernel.id_map hf₂,
         Kernel.deterministic_map hf₂ hf₁]
       ext x s hs
       simp [Kernel.deterministic_apply, Kernel.id_apply, f₁]
-    · refine Subtype.ext ?_
-      change Kernel.id.map Prod.snd ∘ₖ Kernel.id.map f₁ = Kernel.id
+    · cat_kernel
       rw [Kernel.id_map hf₂, Kernel.deterministic_comp_eq_map hf₂, Kernel.id_map hf₁,
         Kernel.deterministic_map hf₁ hf₂]
       ext x s hs
@@ -71,29 +68,84 @@ instance : MonoidalCategory MeasCatKer where
     have hf₂ : Measurable (Prod.fst : X × Unit → X) := by fun_prop
     refine ⟨⟨Kernel.id.map Prod.fst, by kernel_sfiniteness⟩,
       ⟨Kernel.id.map f₁, by kernel_sfiniteness⟩, ?_, ?_⟩
-    · refine Subtype.ext ?_
-      change (Kernel.id.map f₁ ∘ₖ Kernel.id.map Prod.fst) = Kernel.id
+    · cat_kernel
       rw [Kernel.id_map hf₁, Kernel.deterministic_comp_eq_map hf₁, Kernel.id_map hf₂,
         Kernel.deterministic_map hf₂ hf₁]
       ext x s hs
       simp [Kernel.deterministic_apply, Kernel.id_apply, f₁]
-    · refine Subtype.ext ?_
-      change Kernel.id.map Prod.fst ∘ₖ Kernel.id.map f₁ = Kernel.id
+    · cat_kernel
       rw [Kernel.id_map hf₂, Kernel.deterministic_comp_eq_map hf₂, Kernel.id_map hf₁,
         Kernel.deterministic_map hf₁ hf₂]
       ext x s hs
       simp [Kernel.deterministic_apply, Kernel.id_apply, f₁]
-
-  -- Might need to change the type of morphisms to `SFiniteKernel`.
-  whiskerLeft_id X Y := by sorry
-  id_whiskerRight := by sorry
-  id_tensorHom_id := by sorry
-  tensorHom_comp_tensorHom := by sorry
-  associator_naturality := by sorry
-  pentagon := by sorry
-  leftUnitor_naturality := by sorry
-  rightUnitor_naturality := by sorry
-  triangle := by sorry
+  whiskerLeft_id X Y := by
+    cat_kernel
+    simp
+  id_whiskerRight X Y := by
+    cat_kernel
+    simp
+  id_tensorHom_id X₁ X₂ := by
+    cat_kernel
+    simp
+  leftUnitor_naturality κ := by
+    cat_kernel
+    rw [Kernel.id_map (by fun_prop), Kernel.id_map (by fun_prop)]
+    simp only [Kernel.deterministic_comp_eq_map, Kernel.comp_deterministic_eq_comap]
+    ext x s hs
+    have : IsSFiniteKernel κ.1 := κ.2
+    rw [Kernel.map_apply' _ (by fun_prop) _ hs, Kernel.comap_apply' _ (by fun_prop),
+      Kernel.parallelComp_apply' <| measurable_snd hs]
+    simp only [Kernel.id_apply, lintegral_dirac]
+    congr
+  rightUnitor_naturality κ := by
+    cat_kernel
+    rw [Kernel.id_map (by fun_prop), Kernel.id_map (by fun_prop)]
+    simp only [Kernel.deterministic_comp_eq_map, Kernel.comp_deterministic_eq_comap]
+    ext x s hs
+    have : IsSFiniteKernel κ.1 := κ.2
+    rw [Kernel.map_apply' _ (by fun_prop) _ hs, Kernel.comap_apply' _ (by fun_prop),
+      Kernel.parallelComp_apply' <| measurable_fst hs]
+    simp only [Kernel.id_apply, MeasurableSpace.measurableSet_top, Measure.dirac_apply']
+    rw [← lintegral_indicator_one hs]
+    congr
+  tensorHom_comp_tensorHom κ₁ κ₂ η₁ η₂ := by
+    cat_kernel
+    have := η₂.2
+    have := η₁.2
+    have := κ₁.2
+    have := κ₂.2
+    simp only [Kernel.comp_id_parallelComp]
+    exact Kernel.parallelComp_comp_parallelComp
+  associator_naturality κ₁ κ₂ η := by
+    cat_kernel
+    have := κ₁.2
+    have := κ₂.2
+    have := η.2
+    simp only [Kernel.comp_id_parallelComp]
+    rw [Kernel.id_map (by fun_prop), Kernel.id_map (by fun_prop),
+      Kernel.deterministic_comp_eq_map, Kernel.comp_deterministic_eq_comap]
+    ext x s hs
+    rw [Kernel.map_apply' _ (by fun_prop) _ hs, Kernel.comap_apply' _ (by fun_prop)]
+    repeat rw [Kernel.parallelComp_apply]
+    rw [Measure.prod_apply hs, Measure.prod_apply (by measurability), lintegral_prod]
+    · congr with a
+      rw [Measure.prod_apply (by measurability)]
+      congr
+    · refine Measurable.aemeasurable ?_
+      exact measurable_measure_prodMk_left (by measurability)
+  pentagon W X Y Z := by
+    cat_kernel
+    rw [Kernel.parallelComp_id_id_map (by fun_prop), Kernel.parallelComp_id_map_id (by fun_prop),
+      Kernel.id_map (by fun_prop), Kernel.id_map (by fun_prop), Kernel.id_map (by fun_prop),
+      Kernel.id_map (by fun_prop), Kernel.id_map (by fun_prop)]
+    simp [Kernel.deterministic_comp_deterministic]
+    congr 1
+  triangle X Y := by
+    cat_kernel
+    rw [Kernel.parallelComp_id_id_map (by fun_prop), Kernel.parallelComp_id_map_id (by fun_prop),
+      Kernel.id_map (by fun_prop), Kernel.id_map (by fun_prop), Kernel.id_map (by fun_prop),
+      Kernel.deterministic_comp_deterministic]
+    congr
 
 -- Use `ProbabilityTheory.Kernel.copy` in the `ComonObj` instance.
 
