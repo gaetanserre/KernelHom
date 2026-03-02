@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Probability.Kernel.Composition.KernelLemmas
 
 open ProbabilityTheory MeasureTheory
 
@@ -50,5 +50,10 @@ lemma comp_parallelComp_id {ι γ : Type*} [MeasurableSpace ι] [MeasurableSpace
   rw [parallelComp_id_right_comp_parallelComp]
   congr
   exact comp_id κ₁
+
+lemma id_eq_deterministic_id :
+    (Kernel.id : Kernel α α) = Kernel.deterministic id measurable_id := by
+  ext x s hs
+  simp [Kernel.deterministic_apply, Kernel.id_apply]
 
 end ProbabilityTheory.Kernel
