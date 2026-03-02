@@ -4,8 +4,8 @@ import Mathlib.Probability.Kernel.Composition.MapComap
 
 open Lean Meta Elab Tactic CategoryTheory MeasureTheory ProbabilityTheory
 
-/-- Tactic to find an instance of `IsSFiniteKernel`. -/
-elab "kernel_sfiniteness" : tactic => withMainContext do
+/-- Tactic to find an instance of `IsMarkovKernel`. -/
+elab "kernel_markov" : tactic => withMainContext do
     -- First, try to synthesize the instance directly
     evalTactic (← `(tactic| try dsimp only [MonoidalCategory.tensorUnit,
       MonoidalCategory.tensorObj]))
@@ -42,7 +42,7 @@ elab "kernel_sfiniteness" : tactic => withMainContext do
             let _ ← getMainGoal
           catch _ =>
             return ()
-      throwError "kernel_sfiniteness tactic failed."
+      throwError "kernel_markov tactic failed."
 
 /-- Tactic to reduce goals about categorical equalities of kernels to a simpler form. -/
 elab "cat_kernel" : tactic => do

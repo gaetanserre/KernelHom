@@ -20,8 +20,8 @@ noncomputable section
 
 instance : LargeCategory MeasCatKer where
   Hom X Y := { k : Kernel X Y // IsMarkovKernel k }
-  id X := ⟨Kernel.id, by kernel_sfiniteness⟩
-  comp κ₁ κ₂ := ⟨κ₂.1 ∘ₖ κ₁.1, by kernel_sfiniteness⟩
+  id X := ⟨Kernel.id, by kernel_markov⟩
+  comp κ₁ κ₂ := ⟨κ₂.1 ∘ₖ κ₁.1, by kernel_markov⟩
   assoc κ₁ κ₂ κ₃ := by simp [Kernel.comp_assoc]
 
 abbrev dirac_unit : Set (Measure Unit) := {Measure.dirac ()}
@@ -33,16 +33,16 @@ lemma dirac_unit_unique (x : dirac_unit) : x.1 = Measure.dirac () := by
 
 instance : MonoidalCategory MeasCatKer where
   tensorObj X Y := MeasCatKer.of (X × Y)
-  whiskerLeft X Y₁ Y₂ κ := ⟨Kernel.id ∥ₖ κ.1, by kernel_sfiniteness⟩
-  whiskerRight κ Y := ⟨κ.1 ∥ₖ Kernel.id, by kernel_sfiniteness⟩
+  whiskerLeft X Y₁ Y₂ κ := ⟨Kernel.id ∥ₖ κ.1, by kernel_markov⟩
+  whiskerRight κ Y := ⟨κ.1 ∥ₖ Kernel.id, by kernel_markov⟩
   tensorUnit := MeasCatKer.of dirac_unit
   associator X Y Z := by
     let f₁ := fun (x : (X × Y) × Z) ↦ (x.1.1, x.1.2, x.2)
     let f₂ := fun (x : X × Y × Z) ↦ ((x.1, x.2.1), x.2.2)
     have hf₁ : Measurable f₁ := by fun_prop
     have hf₂ : Measurable f₂ := by fun_prop
-    refine ⟨⟨Kernel.id.map f₁, by kernel_sfiniteness⟩,
-      ⟨Kernel.id.map f₂, by kernel_sfiniteness⟩, ?_, ?_⟩
+    refine ⟨⟨Kernel.id.map f₁, by kernel_markov⟩,
+      ⟨Kernel.id.map f₂, by kernel_markov⟩, ?_, ?_⟩
     · cat_kernel
       rw [Kernel.id_map hf₁, Kernel.id_map hf₂, Kernel.deterministic_comp_eq_map hf₂,
         Kernel.deterministic_map hf₁ hf₂]
@@ -57,8 +57,8 @@ instance : MonoidalCategory MeasCatKer where
     let f₁ := fun (x : X) ↦ ((⟨Measure.dirac (), by trivial⟩ : dirac_unit), x)
     have hf₁ : Measurable f₁ := by fun_prop
     have hf₂ : Measurable (Prod.snd : dirac_unit × X → X) := by fun_prop
-    refine ⟨⟨Kernel.id.map Prod.snd, by kernel_sfiniteness⟩,
-      ⟨Kernel.id.map f₁, by kernel_sfiniteness⟩, ?_, ?_⟩
+    refine ⟨⟨Kernel.id.map Prod.snd, by kernel_markov⟩,
+      ⟨Kernel.id.map f₁, by kernel_markov⟩, ?_, ?_⟩
     · cat_kernel
       rw [Kernel.id_map hf₁, Kernel.deterministic_comp_eq_map hf₁, Kernel.id_map hf₂,
         Kernel.deterministic_map hf₂ hf₁]
@@ -76,8 +76,8 @@ instance : MonoidalCategory MeasCatKer where
     let f₁ := fun (x : X) ↦ (x, (⟨Measure.dirac (), by trivial⟩ : dirac_unit))
     have hf₁ : Measurable f₁ := by fun_prop
     have hf₂ : Measurable (Prod.fst : X × dirac_unit → X) := by fun_prop
-    refine ⟨⟨Kernel.id.map Prod.fst, by kernel_sfiniteness⟩,
-      ⟨Kernel.id.map f₁, by kernel_sfiniteness⟩, ?_, ?_⟩
+    refine ⟨⟨Kernel.id.map Prod.fst, by kernel_markov⟩,
+      ⟨Kernel.id.map f₁, by kernel_markov⟩, ?_, ?_⟩
     · cat_kernel
       rw [Kernel.id_map hf₁, Kernel.deterministic_comp_eq_map hf₁, Kernel.id_map hf₂,
         Kernel.deterministic_map hf₂ hf₁]

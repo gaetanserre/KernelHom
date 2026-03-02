@@ -21,22 +21,22 @@ noncomputable section
 
 instance : LargeCategory MeasCatKer where
   Hom X Y := { k : Kernel X Y // IsMarkovKernel k }
-  id X := ⟨Kernel.id, by kernel_sfiniteness⟩
-  comp κ₁ κ₂ := ⟨κ₂.1 ∘ₖ κ₁.1, by kernel_sfiniteness⟩
+  id X := ⟨Kernel.id, by kernel_markov⟩
+  comp κ₁ κ₂ := ⟨κ₂.1 ∘ₖ κ₁.1, by kernel_markov⟩
   assoc κ₁ κ₂ κ₃ := by simp [Kernel.comp_assoc]
 
 instance : MonoidalCategory MeasCatKer where
   tensorObj X Y := MeasCatKer.of (X × Y)
-  whiskerLeft X Y₁ Y₂ κ := ⟨Kernel.id ∥ₖ κ.1, by kernel_sfiniteness⟩
-  whiskerRight κ Y := ⟨κ.1 ∥ₖ Kernel.id, by kernel_sfiniteness⟩
+  whiskerLeft X Y₁ Y₂ κ := ⟨Kernel.id ∥ₖ κ.1, by kernel_markov⟩
+  whiskerRight κ Y := ⟨κ.1 ∥ₖ Kernel.id, by kernel_markov⟩
   tensorUnit := MeasCatKer.of Unit
   associator X Y Z := by
     let f₁ := fun (x : (X × Y) × Z) ↦ (x.1.1, x.1.2, x.2)
     let f₂ := fun (x : X × Y × Z) ↦ ((x.1, x.2.1), x.2.2)
     have hf₁ : Measurable f₁ := by fun_prop
     have hf₂ : Measurable f₂ := by fun_prop
-    refine ⟨⟨Kernel.id.map f₁, by kernel_sfiniteness⟩,
-      ⟨Kernel.id.map f₂, by kernel_sfiniteness⟩, ?_, ?_⟩
+    refine ⟨⟨Kernel.id.map f₁, by kernel_markov⟩,
+      ⟨Kernel.id.map f₂, by kernel_markov⟩, ?_, ?_⟩
     · cat_kernel
       rw [Kernel.id_map hf₁, Kernel.id_map hf₂, Kernel.deterministic_comp_eq_map hf₂,
         Kernel.deterministic_map hf₁ hf₂]
@@ -51,8 +51,8 @@ instance : MonoidalCategory MeasCatKer where
     let f₁ := fun (x : X) ↦ ((), x)
     have hf₁ : Measurable f₁ := by fun_prop
     have hf₂ : Measurable (Prod.snd : Unit × X → X) := by fun_prop
-    refine ⟨⟨Kernel.id.map Prod.snd, by kernel_sfiniteness⟩,
-      ⟨Kernel.id.map f₁, by kernel_sfiniteness⟩, ?_, ?_⟩
+    refine ⟨⟨Kernel.id.map Prod.snd, by kernel_markov⟩,
+      ⟨Kernel.id.map f₁, by kernel_markov⟩, ?_, ?_⟩
     · cat_kernel
       rw [Kernel.id_map hf₁, Kernel.deterministic_comp_eq_map hf₁, Kernel.id_map hf₂,
         Kernel.deterministic_map hf₂ hf₁]
@@ -67,8 +67,8 @@ instance : MonoidalCategory MeasCatKer where
     let f₁ := fun (x : X) ↦ (x, ())
     have hf₁ : Measurable f₁ := by fun_prop
     have hf₂ : Measurable (Prod.fst : X × Unit → X) := by fun_prop
-    refine ⟨⟨Kernel.id.map Prod.fst, by kernel_sfiniteness⟩,
-      ⟨Kernel.id.map f₁, by kernel_sfiniteness⟩, ?_, ?_⟩
+    refine ⟨⟨Kernel.id.map Prod.fst, by kernel_markov⟩,
+      ⟨Kernel.id.map f₁, by kernel_markov⟩, ?_, ?_⟩
     · cat_kernel
       rw [Kernel.id_map hf₁, Kernel.deterministic_comp_eq_map hf₁, Kernel.id_map hf₂,
         Kernel.deterministic_map hf₂ hf₁]
@@ -153,8 +153,8 @@ instance {α : Type} [MeasurableSpace α] : IsFiniteKernel (Kernel.copy α) := b
   infer_instance
 
 instance (X : MeasCatKer) : ComonObj X where
-  counit := ⟨Kernel.discard X, by kernel_sfiniteness⟩
-  comul := ⟨Kernel.copy X, by kernel_sfiniteness⟩
+  counit := ⟨Kernel.discard X, by kernel_markov⟩
+  comul := ⟨Kernel.copy X, by kernel_markov⟩
   counit_comul := by
     cat_kernel
     simp only [Kernel.discard, Kernel.copy]
@@ -176,7 +176,7 @@ instance (X : MeasCatKer) : ComonObj X where
 
 instance : BraidedCategory MeasCatKer where
   braiding X Y := by
-    refine ⟨⟨Kernel.swap _ _, by kernel_sfiniteness⟩, ⟨Kernel.swap _ _, by kernel_sfiniteness⟩,
+    refine ⟨⟨Kernel.swap _ _, by kernel_markov⟩, ⟨Kernel.swap _ _, by kernel_markov⟩,
       ?_, ?_⟩
     · cat_kernel
       exact Kernel.swap_swap
