@@ -8,7 +8,7 @@ namespace ProbabilityTheory.Kernel
 
 @[simp]
 lemma parallelComp_id_id :
-    (Kernel.id ∥ₖ Kernel.id) = (Kernel.id : Kernel (α × β) (α × β)) := by
+    Kernel.id ∥ₖ Kernel.id = (Kernel.id : Kernel (α × β) (α × β)) := by
   ext x s hs
   simp [parallelComp_apply, id_apply, Measure.dirac_prod_dirac]
 
