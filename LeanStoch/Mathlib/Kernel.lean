@@ -1,4 +1,22 @@
+/-
+Copyright (c) 2026 Gaëtan Serré. All rights reserved.
+Released under GNU GPL 3.0 license as described in the file LICENSE.
+Authors: Gaëtan Serré
+-/
+
 import Mathlib.Probability.Kernel.Composition.KernelLemmas
+
+/-!
+# Auxiliary lemmas for probability kernels
+
+This file provides supporting lemmas about parallel composition, mapping, and composition
+of probability kernels that are used in the definition of **Stoch** as a Markov category.
+
+## Main results
+
+* `parallelComp_id_id`: Parallel composition of two identity kernels is the identity
+* `comp_id_parallelComp`, `comp_parallelComp_id`: Simplification lemmas for kernel compositions
+-/
 
 open ProbabilityTheory MeasureTheory
 

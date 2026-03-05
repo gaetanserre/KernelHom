@@ -8,6 +8,19 @@ import Lean
 import Mathlib.CategoryTheory.Monoidal.Category
 import Mathlib.Probability.Kernel.Composition.MapComap
 
+/-!
+# Tactics for kernel automation
+
+This file defines custom tactics for working with probability kernels in **Stoch**.
+
+## Main definitions
+
+* `kernel_markov`: automatically solves goals of the form `IsMarkovKernel k` by searching for
+  instances in the context
+* `cat_kernel`: reduces categorical equality goals between kernels to simpler kernel equalities
+  by unfolding categorical structure
+-/
+
 open Lean Meta Elab Tactic CategoryTheory MeasureTheory ProbabilityTheory
 
 /-- Tactic to find an instance of `IsMarkovKernel`. -/

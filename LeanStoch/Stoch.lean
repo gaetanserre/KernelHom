@@ -9,10 +9,33 @@ import Mathlib.MeasureTheory.Category.MeasCat
 import LeanStoch.Tactics
 import LeanStoch.Mathlib.Kernel
 
+/-!
+# The Markov category Stoch
+
+This file defines the category **Stoch** and proves it is a Markov category.
+
+## Main definitions
+
+* `Stoch`: the category whose objects are measurable spaces and morphisms are Markov kernels
+* `instance : MarkovCategory Stoch`: **Stoch** satisfies the axioms of a Markov category
+
+## Implementation notes
+
+Morphisms in **Stoch** are represented as subtypes `{ k : Kernel X Y // IsMarkovKernel k }`.
+The monoidal structure is given by the categorical product of measurable spaces, and each object
+carries a canonical comonoid structure with copying `Kernel.copy X` and discarding
+`Kernel.discard X`.
+
+## References
+
+* [Tobias Fritz, A synthetic approach to Markov kernels, conditional independence and theorems on sufficient statistics](https://arxiv.org/abs/1908.07021)
+-/
+
 open CategoryTheory ProbabilityTheory MeasureTheory
 
 universe u
 
+/-- The category **Stoch** of measurable spaces and Markov kernels. -/
 structure Stoch : Type (u + 1) where
   of ::
   carrier : Type u
@@ -25,12 +48,16 @@ instance : CoeSort Stoch Type* :=
 
 noncomputable section
 
+/-- **Stoch** is a large category with Markov kernels as morphisms.
+Composition is given by kernel composition `∘ₖ`. -/
 instance : LargeCategory Stoch where
   Hom X Y := { k : Kernel X Y // IsMarkovKernel k }
   id X := ⟨Kernel.id, by kernel_markov⟩
   comp κ₁ κ₂ := ⟨κ₂.1 ∘ₖ κ₁.1, by kernel_markov⟩
   assoc κ₁ κ₂ κ₃ := by simp [Kernel.comp_assoc]
 
+/-- **Stoch** is a monoidal category with tensor product given by the categorical product.
+The unit is the terminal object `Unit`. -/
 instance : MonoidalCategory Stoch where
   tensorObj X Y := Stoch.of (X × Y)
   whiskerLeft X Y₁ Y₂ κ := ⟨Kernel.id ∥ₖ κ.1, by kernel_markov⟩
@@ -158,6 +185,9 @@ instance {α : Type} [MeasurableSpace α] : IsFiniteKernel (Kernel.copy α) := b
   dsimp [Kernel.copy]
   infer_instance
 
+/-- Every object in **Stoch** carries a canonical comonoid structure.
+The comultiplication is copying `Kernel.copy X : X → X ⊗ X`
+and the counit is discarding `Kernel.discard X : X → 𝟙_`. -/
 instance (X : Stoch) : ComonObj X where
   counit := ⟨Kernel.discard X, by kernel_markov⟩
   comul := ⟨Kernel.copy X, by kernel_markov⟩
@@ -180,6 +210,7 @@ instance (X : Stoch) : ComonObj X where
       Kernel.deterministic_parallelComp_deterministic]
     congr 1
 
+/-- **Stoch** is a braided category with braiding given by the swap map. -/
 instance : BraidedCategory Stoch where
   braiding X Y := by
     refine ⟨⟨Kernel.swap _ _, by kernel_markov⟩, ⟨Kernel.swap _ _, by kernel_markov⟩,
@@ -211,16 +242,23 @@ instance : BraidedCategory Stoch where
       congr 1
     all_goals fun_prop
 
+/-- **Stoch** is a symmetric monoidal category. -/
 instance : SymmetricCategory Stoch where
   symmetry X Y := by
     cat_kernel
     exact Kernel.swap_swap
 
+/-- The comonoid on each object is commutative. -/
 instance (X : Stoch) : IsCommComonObj X where
   comul_comm := by
     cat_kernel
     exact Kernel.swap_copy
 
+/-- **Main theorem**: **Stoch** is a Markov category.
+
+This establishes that the category of measurable spaces and Markov kernels satisfies
+all axioms of a Markov category [Fritz, 2020], providing a categorical framework for
+probability theory and stochastic processes. -/
 instance : MarkovCategory Stoch where
   discard_natural κ := by
     cat_kernel
