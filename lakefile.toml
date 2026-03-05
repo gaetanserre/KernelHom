@@ -1,10 +1,10 @@
-name = "MeasMarkovCat"
+name = "LeanStoch"
 version = "0.1.0"
 keywords = ["math"]
-defaultTargets = ["MeasMarkovCat"]
+defaultTargets = ["LeanStoch"]
 
 [leanOptions]
-pp.unicode.fun = true # pretty-prints `fun a ↦ b`
+pp.unicode.fun = true                 # pretty-prints `fun a ↦ b`
 relaxedAutoImplicit = false
 weak.linter.mathlibStandardSet = true
 maxSynthPendingDepth = 3
@@ -15,4 +15,4 @@ scope = "leanprover-community"
 rev = "v4.28.0"
 
 [[lean_lib]]
-name = "MeasMarkovCat"
+name = "LeanStoch"

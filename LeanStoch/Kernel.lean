@@ -4,9 +4,10 @@ Released under GNU GPL 3.0 license as described in the file LICENSE.
 Authors: Gaëtan Serré
 -/
 
-import Mathlib.CategoryTheory.Monoidal.Category
-import MeasMarkovCat.Mathlib.Kernel
-import MeasMarkovCat.Tactics
+import Mathlib.CategoryTheory.MarkovCategory.Basic
+import Mathlib.MeasureTheory.Category.MeasCat
+import LeanStoch.Tactics
+import LeanStoch.Mathlib.Kernel
 
 open CategoryTheory ProbabilityTheory MeasureTheory
 
@@ -30,18 +31,11 @@ instance : LargeCategory MeasCatKer where
   comp κ₁ κ₂ := ⟨κ₂.1 ∘ₖ κ₁.1, by kernel_markov⟩
   assoc κ₁ κ₂ κ₃ := by simp [Kernel.comp_assoc]
 
-abbrev dirac_unit : Set (Measure Unit) := {Measure.dirac ()}
-
-@[simp]
-lemma dirac_unit_unique (x : dirac_unit) : x.1 = Measure.dirac () := by
-  have := x.2
-  simp_all only [Set.mem_singleton_iff]
-
 instance : MonoidalCategory MeasCatKer where
   tensorObj X Y := MeasCatKer.of (X × Y)
   whiskerLeft X Y₁ Y₂ κ := ⟨Kernel.id ∥ₖ κ.1, by kernel_markov⟩
   whiskerRight κ Y := ⟨κ.1 ∥ₖ Kernel.id, by kernel_markov⟩
-  tensorUnit := MeasCatKer.of dirac_unit
+  tensorUnit := MeasCatKer.of Unit
   associator X Y Z := by
     let f₁ := fun (x : (X × Y) × Z) ↦ (x.1.1, x.1.2, x.2)
     let f₂ := fun (x : X × Y × Z) ↦ ((x.1, x.2.1), x.2.2)
@@ -60,38 +54,32 @@ instance : MonoidalCategory MeasCatKer where
       ext x s hs
       simp [Kernel.deterministic_apply, Kernel.id_apply, f₁, f₂]
   leftUnitor X := by
-    let f₁ := fun (x : X) ↦ ((⟨Measure.dirac (), by trivial⟩ : dirac_unit), x)
+    let f₁ := fun (x : X) ↦ ((), x)
     have hf₁ : Measurable f₁ := by fun_prop
-    have hf₂ : Measurable (Prod.snd : dirac_unit × X → X) := by fun_prop
+    have hf₂ : Measurable (Prod.snd : Unit × X → X) := by fun_prop
     refine ⟨⟨Kernel.id.map Prod.snd, by kernel_markov⟩,
       ⟨Kernel.id.map f₁, by kernel_markov⟩, ?_, ?_⟩
     · cat_kernel
       rw [Kernel.id_map hf₁, Kernel.deterministic_comp_eq_map hf₁, Kernel.id_map hf₂,
         Kernel.deterministic_map hf₂ hf₁]
       ext x s hs
-      simp only [Kernel.deterministic_apply, Function.comp_apply, Kernel.id_apply, f₁]
-      repeat rw [Measure.dirac_apply' _ hs]
-      congr
-      simp
+      simp [Kernel.deterministic_apply, Kernel.id_apply, f₁]
     · cat_kernel
       rw [Kernel.id_map hf₂, Kernel.deterministic_comp_eq_map hf₂, Kernel.id_map hf₁,
         Kernel.deterministic_map hf₁ hf₂]
       ext x s hs
       simp [Kernel.deterministic_apply, Kernel.id_apply, f₁]
   rightUnitor X := by
-    let f₁ := fun (x : X) ↦ (x, (⟨Measure.dirac (), by trivial⟩ : dirac_unit))
+    let f₁ := fun (x : X) ↦ (x, ())
     have hf₁ : Measurable f₁ := by fun_prop
-    have hf₂ : Measurable (Prod.fst : X × dirac_unit → X) := by fun_prop
+    have hf₂ : Measurable (Prod.fst : X × Unit → X) := by fun_prop
     refine ⟨⟨Kernel.id.map Prod.fst, by kernel_markov⟩,
       ⟨Kernel.id.map f₁, by kernel_markov⟩, ?_, ?_⟩
     · cat_kernel
       rw [Kernel.id_map hf₁, Kernel.deterministic_comp_eq_map hf₁, Kernel.id_map hf₂,
         Kernel.deterministic_map hf₂ hf₁]
       ext x s hs
-      simp only [Kernel.deterministic_apply, Function.comp_apply, Kernel.id_apply, f₁]
-      repeat rw [Measure.dirac_apply' _ hs]
-      congr
-      simp
+      simp [Kernel.deterministic_apply, Kernel.id_apply, f₁]
     · cat_kernel
       rw [Kernel.id_map hf₂, Kernel.deterministic_comp_eq_map hf₂, Kernel.id_map hf₁,
         Kernel.deterministic_map hf₁ hf₂]
@@ -124,7 +112,7 @@ instance : MonoidalCategory MeasCatKer where
     have := κ.2
     rw [Kernel.map_apply' _ (by fun_prop) _ hs, Kernel.comap_apply' _ (by fun_prop),
       Kernel.parallelComp_apply' <| measurable_fst hs]
-    simp only [Kernel.id_apply, Measure.dirac_apply]
+    simp only [Kernel.id_apply, MeasurableSpace.measurableSet_top, Measure.dirac_apply']
     rw [← lintegral_indicator_one hs]
     congr
   tensorHom_comp_tensorHom κ₁ κ₂ η₁ η₂ := by
@@ -166,6 +154,98 @@ instance : MonoidalCategory MeasCatKer where
       Kernel.deterministic_comp_deterministic]
     congr
 
--- Use `ProbabilityTheory.Kernel.copy` in the `ComonObj` instance.
+instance {α : Type} [MeasurableSpace α] : IsFiniteKernel (Kernel.copy α) := by
+  dsimp [Kernel.copy]
+  infer_instance
+
+instance (X : MeasCatKer) : ComonObj X where
+  counit := ⟨Kernel.discard X, by kernel_markov⟩
+  comul := ⟨Kernel.copy X, by kernel_markov⟩
+  counit_comul := by
+    cat_kernel
+    simp only [Kernel.discard, Kernel.copy]
+    rw [Kernel.id_eq_deterministic_id, Kernel.deterministic_parallelComp_deterministic,
+      Kernel.deterministic_comp_deterministic, Kernel.deterministic_map measurable_id (by fun_prop)]
+    congr 1
+  comul_counit := by
+    cat_kernel
+    simp only [Kernel.discard, Kernel.copy]
+    rw [Kernel.id_eq_deterministic_id, Kernel.deterministic_parallelComp_deterministic,
+      Kernel.deterministic_comp_deterministic, Kernel.deterministic_map measurable_id (by fun_prop)]
+    congr 1
+  comul_assoc := by
+    cat_kernel
+    rw [Kernel.id_map (by fun_prop)]
+    simp [Kernel.copy, Kernel.id_eq_deterministic_id, Kernel.deterministic_comp_deterministic,
+      Kernel.deterministic_parallelComp_deterministic]
+    congr 1
+
+instance : BraidedCategory MeasCatKer where
+  braiding X Y := by
+    refine ⟨⟨Kernel.swap _ _, by kernel_markov⟩, ⟨Kernel.swap _ _, by kernel_markov⟩,
+      ?_, ?_⟩
+    · cat_kernel
+      exact Kernel.swap_swap
+    · cat_kernel
+      exact Kernel.swap_swap
+  braiding_naturality_right X Y Z κ := by
+    cat_kernel
+    exact Kernel.swap_parallelComp
+  braiding_naturality_left κ X := by
+    cat_kernel
+    exact Kernel.swap_parallelComp
+  hexagon_forward X Y Z := by
+    cat_kernel
+    repeat rw [Kernel.id_map]
+    · simp only [Kernel.id_eq_deterministic_id, Kernel.swap]
+      repeat rw [Kernel.deterministic_parallelComp_deterministic]
+      repeat rw [Kernel.deterministic_comp_deterministic]
+      congr 1
+    all_goals fun_prop
+  hexagon_reverse X Y Z := by
+    cat_kernel
+    repeat rw [Kernel.id_map]
+    · simp only [Kernel.id_eq_deterministic_id, Kernel.swap]
+      repeat rw [Kernel.deterministic_parallelComp_deterministic]
+      repeat rw [Kernel.deterministic_comp_deterministic]
+      congr 1
+    all_goals fun_prop
+
+instance : SymmetricCategory MeasCatKer where
+  symmetry X Y := by
+    cat_kernel
+    exact Kernel.swap_swap
+
+instance (X : MeasCatKer) : IsCommComonObj X where
+  comul_comm := by
+    cat_kernel
+    exact Kernel.swap_copy
+
+instance : MarkovCategory MeasCatKer where
+  discard_natural κ := by
+    cat_kernel
+    have := κ.2
+    exact Kernel.comp_discard κ.1
+  copy_tensor X Y := by
+    dsimp [MonoidalCategory.tensorμ, ComonObj.comul, BraidedCategory.braiding]
+    cat_kernel
+    repeat rw [Kernel.id_map (by fun_prop)]
+    simp only [Kernel.copy, Kernel.id_eq_deterministic_id, Kernel.swap]
+    repeat rw [Kernel.deterministic_parallelComp_deterministic]
+    repeat rw [Kernel.deterministic_comp_deterministic]
+    congr 1
+  discard_tensor X Y := by
+    cat_kernel
+    simp only [ComonObj.counit, Kernel.comp_id_parallelComp]
+    rw [Kernel.id_map (by fun_prop), Kernel.deterministic_comp_eq_map]
+    ext x s hs
+    rw [Kernel.map_apply _ (by fun_prop), Kernel.parallelComp_apply]
+    simp [Kernel.discard_apply]
+  copy_unit := by
+    cat_kernel
+    dsimp [ComonObj.comul]
+    ext x s hs
+    rw [Kernel.id_map (by fun_prop)]
+    simp [Kernel.copy_apply, Kernel.deterministic_apply]
 
 end
