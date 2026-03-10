@@ -10,21 +10,21 @@ import LeanStoch.Tactics
 import LeanStoch.Mathlib.Kernel
 
 /-!
-# The Markov category Stoch
+# The symmetric monoidal category Stoch
 
-This file defines the category **Stoch** and proves it is a Markov category.
+This file defines the category **Stoch** of measurable spaces and s-finite kernels,
+and proves it is a symmetric monoidal category.
 
 ## Main definitions
 
-* `Stoch`: the category whose objects are measurable spaces and morphisms are Markov kernels
-* `instance : MarkovCategory Stoch`: **Stoch** satisfies the axioms of a Markov category
+* `Stoch`: the category whose objects are measurable spaces and morphisms are s-finite kernels
+* `instance : MonoidalCategory Stoch`: **Stoch** has a monoidal structure
+* `instance : SymmetricCategory Stoch`: **Stoch** is a symmetric monoidal category
 
 ## Implementation notes
 
-Morphisms in **Stoch** are represented as subtypes `{ k : Kernel X Y // IsMarkovKernel k }`.
-The monoidal structure is given by the categorical product of measurable spaces, and each object
-carries a canonical comonoid structure with copying `Kernel.copy X` and discarding
-`Kernel.discard X`.
+Morphisms in **Stoch** are represented as subtypes `{ k : Kernel X Y // IsSFiniteKernel k }`.
+The monoidal structure is given by the categorical product of measurable spaces.
 
 ## References
 
@@ -51,25 +51,25 @@ noncomputable section
 /-- **Stoch** is a large category with Markov kernels as morphisms.
 Composition is given by kernel composition `∘ₖ`. -/
 instance : LargeCategory Stoch where
-  Hom X Y := { k : Kernel X Y // IsMarkovKernel k }
-  id X := ⟨Kernel.id, by kernel_markov⟩
-  comp κ₁ κ₂ := ⟨κ₂.1 ∘ₖ κ₁.1, by kernel_markov⟩
+  Hom X Y := { k : Kernel X Y // IsSFiniteKernel k }
+  id X := ⟨Kernel.id, by kernel_sfinite⟩
+  comp κ₁ κ₂ := ⟨κ₂.1 ∘ₖ κ₁.1, by kernel_sfinite⟩
   assoc κ₁ κ₂ κ₃ := by simp [Kernel.comp_assoc]
 
 /-- **Stoch** is a monoidal category with tensor product given by the categorical product.
 The unit is the terminal object `Unit`. -/
 instance : MonoidalCategory Stoch where
   tensorObj X Y := Stoch.of (X × Y)
-  whiskerLeft X Y₁ Y₂ κ := ⟨Kernel.id ∥ₖ κ.1, by kernel_markov⟩
-  whiskerRight κ Y := ⟨κ.1 ∥ₖ Kernel.id, by kernel_markov⟩
+  whiskerLeft X Y₁ Y₂ κ := ⟨Kernel.id ∥ₖ κ.1, by kernel_sfinite⟩
+  whiskerRight κ Y := ⟨κ.1 ∥ₖ Kernel.id, by kernel_sfinite⟩
   tensorUnit := Stoch.of Unit
   associator X Y Z := by
     let f₁ := fun (x : (X × Y) × Z) ↦ (x.1.1, x.1.2, x.2)
     let f₂ := fun (x : X × Y × Z) ↦ ((x.1, x.2.1), x.2.2)
     have hf₁ : Measurable f₁ := by fun_prop
     have hf₂ : Measurable f₂ := by fun_prop
-    refine ⟨⟨Kernel.id.map f₁, by kernel_markov⟩,
-      ⟨Kernel.id.map f₂, by kernel_markov⟩, ?_, ?_⟩
+    refine ⟨⟨Kernel.id.map f₁, by kernel_sfinite⟩,
+      ⟨Kernel.id.map f₂, by kernel_sfinite⟩, ?_, ?_⟩
     · cat_kernel
       rw [Kernel.id_map hf₁, Kernel.id_map hf₂, Kernel.deterministic_comp_eq_map hf₂,
         Kernel.deterministic_map hf₁ hf₂]
@@ -84,8 +84,8 @@ instance : MonoidalCategory Stoch where
     let f₁ := fun (x : X) ↦ ((), x)
     have hf₁ : Measurable f₁ := by fun_prop
     have hf₂ : Measurable (Prod.snd : Unit × X → X) := by fun_prop
-    refine ⟨⟨Kernel.id.map Prod.snd, by kernel_markov⟩,
-      ⟨Kernel.id.map f₁, by kernel_markov⟩, ?_, ?_⟩
+    refine ⟨⟨Kernel.id.map Prod.snd, by kernel_sfinite⟩,
+      ⟨Kernel.id.map f₁, by kernel_sfinite⟩, ?_, ?_⟩
     · cat_kernel
       rw [Kernel.id_map hf₁, Kernel.deterministic_comp_eq_map hf₁, Kernel.id_map hf₂,
         Kernel.deterministic_map hf₂ hf₁]
@@ -100,8 +100,8 @@ instance : MonoidalCategory Stoch where
     let f₁ := fun (x : X) ↦ (x, ())
     have hf₁ : Measurable f₁ := by fun_prop
     have hf₂ : Measurable (Prod.fst : X × Unit → X) := by fun_prop
-    refine ⟨⟨Kernel.id.map Prod.fst, by kernel_markov⟩,
-      ⟨Kernel.id.map f₁, by kernel_markov⟩, ?_, ?_⟩
+    refine ⟨⟨Kernel.id.map Prod.fst, by kernel_sfinite⟩,
+      ⟨Kernel.id.map f₁, by kernel_sfinite⟩, ?_, ?_⟩
     · cat_kernel
       rw [Kernel.id_map hf₁, Kernel.deterministic_comp_eq_map hf₁, Kernel.id_map hf₂,
         Kernel.deterministic_map hf₂ hf₁]
@@ -189,8 +189,8 @@ instance {α : Type} [MeasurableSpace α] : IsFiniteKernel (Kernel.copy α) := b
 The comultiplication is copying `Kernel.copy X : X → X ⊗ X`
 and the counit is discarding `Kernel.discard X : X → 𝟙_`. -/
 instance (X : Stoch) : ComonObj X where
-  counit := ⟨Kernel.discard X, by kernel_markov⟩
-  comul := ⟨Kernel.copy X, by kernel_markov⟩
+  counit := ⟨Kernel.discard X, by kernel_sfinite⟩
+  comul := ⟨Kernel.copy X, by kernel_sfinite⟩
   counit_comul := by
     cat_kernel
     simp only [Kernel.discard, Kernel.copy]
@@ -213,7 +213,7 @@ instance (X : Stoch) : ComonObj X where
 /-- **Stoch** is a braided category with braiding given by the swap map. -/
 instance : BraidedCategory Stoch where
   braiding X Y := by
-    refine ⟨⟨Kernel.swap _ _, by kernel_markov⟩, ⟨Kernel.swap _ _, by kernel_markov⟩,
+    refine ⟨⟨Kernel.swap _ _, by kernel_sfinite⟩, ⟨Kernel.swap _ _, by kernel_sfinite⟩,
       ?_, ?_⟩
     · cat_kernel
       exact Kernel.swap_swap
@@ -253,37 +253,5 @@ instance (X : Stoch) : IsCommComonObj X where
   comul_comm := by
     cat_kernel
     exact Kernel.swap_copy
-
-/-- **Main theorem**: **Stoch** is a Markov category.
-
-This establishes that the category of measurable spaces and Markov kernels satisfies
-all axioms of a Markov category [Fritz, 2020], providing a categorical framework for
-probability theory and stochastic processes. -/
-instance : MarkovCategory Stoch where
-  discard_natural κ := by
-    cat_kernel
-    have := κ.2
-    exact Kernel.comp_discard κ.1
-  copy_tensor X Y := by
-    dsimp [MonoidalCategory.tensorμ, ComonObj.comul, BraidedCategory.braiding]
-    cat_kernel
-    repeat rw [Kernel.id_map (by fun_prop)]
-    simp only [Kernel.copy, Kernel.id_eq_deterministic_id, Kernel.swap]
-    repeat rw [Kernel.deterministic_parallelComp_deterministic]
-    repeat rw [Kernel.deterministic_comp_deterministic]
-    congr 1
-  discard_tensor X Y := by
-    cat_kernel
-    simp only [ComonObj.counit, Kernel.comp_id_parallelComp]
-    rw [Kernel.id_map (by fun_prop), Kernel.deterministic_comp_eq_map]
-    ext x s hs
-    rw [Kernel.map_apply _ (by fun_prop), Kernel.parallelComp_apply]
-    simp [Kernel.discard_apply]
-  copy_unit := by
-    cat_kernel
-    dsimp [ComonObj.comul]
-    ext x s hs
-    rw [Kernel.id_map (by fun_prop)]
-    simp [Kernel.copy_apply, Kernel.deterministic_apply]
 
 end

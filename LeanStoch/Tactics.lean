@@ -11,11 +11,11 @@ import Mathlib.Probability.Kernel.Composition.MapComap
 /-!
 # Tactics for kernel automation
 
-This file defines custom tactics for working with probability kernels in **Stoch**.
+This file defines custom tactics for working with s-finite kernels in the category **Stoch**.
 
 ## Main definitions
 
-* `kernel_markov`: automatically solves goals of the form `IsMarkovKernel k` by searching for
+* `kernel_sfinite`: automatically solves goals of the form `IsSFiniteKernel k` by searching for
   instances in the context
 * `cat_kernel`: reduces categorical equality goals between kernels to simpler kernel equalities
   by unfolding categorical structure
@@ -23,8 +23,8 @@ This file defines custom tactics for working with probability kernels in **Stoch
 
 open Lean Meta Elab Tactic CategoryTheory MeasureTheory ProbabilityTheory
 
-/-- Tactic to find an instance of `IsMarkovKernel`. -/
-elab "kernel_markov" : tactic => withMainContext do
+/-- Tactic to find an instance of `IsSFiniteKernel`. -/
+elab "kernel_sfinite" : tactic => withMainContext do
     -- First, try to synthesize the instance directly
     evalTactic (← `(tactic| try dsimp only [MonoidalCategory.tensorUnit,
       MonoidalCategory.tensorObj]))
@@ -49,19 +49,7 @@ elab "kernel_markov" : tactic => withMainContext do
         let _ ← getMainGoal
       catch _ =>
         return ()
-      let lctx ← getLCtx
-      for decl in lctx do
-        if decl.isImplementationDetail then continue
-        let declType ← instantiateMVars decl.type
-        -- Check if the type is of the form `Measurable _`
-        if declType.isAppOf ``Measurable then
-          let declName := decl.userName
-          evalTactic (← `(tactic| try exact Kernel.IsMarkovKernel.map _ $(mkIdent declName)))
-          try
-            let _ ← getMainGoal
-          catch _ =>
-            return ()
-      throwError "kernel_markov tactic failed."
+      throwError "kernel_sfinite tactic failed."
 
 /-- Tactic to reduce goals about categorical equalities of kernels to a simpler form. -/
 elab "cat_kernel" : tactic => do
