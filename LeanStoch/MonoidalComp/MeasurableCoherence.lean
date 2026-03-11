@@ -7,6 +7,7 @@ Authors: Gaëtan Serré
 import Mathlib
 import LeanStoch.Stoch
 import LeanStoch.Tactics
+import LeanStoch.MonoidalComp.Kernel
 
 open CategoryTheory MonoidalCategory MeasureTheory ProbabilityTheory
 
@@ -15,14 +16,14 @@ class MeasurableCoherence (X Y : Type*) [MeasurableSpace X] [MeasurableSpace Y] 
 
 namespace MeasurableCoherence
 
-universe x y
+universe w x y
 
 variable {X : Type x} {Y : Type y} [MeasurableSpace X] [MeasurableSpace Y]
   [mXY : MeasurableCoherence X Y]
 
 noncomputable
-instance : MonoidalCoherence (C := (Stoch : Type (max x y + 1)))
-    (Stoch.of <| ULift X) (Stoch.of <| ULift Y) where
+instance monoidalCoherence : MonoidalCoherence (Stoch.of (ULift.{max w y} X))
+    (Stoch.of (ULift.{max w x} Y)) where
   iso := by
     -- ULift X ≃ᵐ X ≃ᵐ Y ≃ᵐ ULift Y
     let e : ULift X ≃ᵐ ULift Y :=
@@ -49,37 +50,12 @@ universe w x y z
 
 variable {W : Type w} {X : Type x} {Y : Type y} {Z : Type z}
   [MeasurableSpace W] [MeasurableSpace X] [MeasurableSpace Y] [MeasurableSpace Z]
-  [MeasurableCoherence X Y]
-  (κ : Kernel W X) [IsSFiniteKernel κ] (η : Kernel Y Z) [IsSFiniteKernel η]
+  [MeasurableCoherence X Y] (κ : Kernel W X) [IsSFiniteKernel κ] (η : Kernel Y Z)
+  [IsSFiniteKernel η]
 
 noncomputable
 def monoComp : Kernel W Z := by
-  let SUW := Stoch.of (ULift.{max w x y z} W)
-  let SUX := Stoch.of (ULift.{max w x y z} X)
-  let SUY := Stoch.of (ULift.{max w x y z} Y)
-  let SUZ := Stoch.of (ULift.{max w x y z} Z)
-  let κ' : SUW ⟶ SUX := by
-    refine ⟨(κ.comap MeasurableEquiv.ulift (by fun_prop)).map MeasurableEquiv.ulift.symm, ?_⟩
-    kernel_sfinite
-  let η' : SUY ⟶ SUZ := by
-    refine ⟨(η.comap MeasurableEquiv.ulift (by fun_prop)).map MeasurableEquiv.ulift.symm, ?_⟩
-    kernel_sfinite
-  have : MonoidalCoherence SUX SUY := by sorry
-  let test := κ' ⊗≫ η'
-  let t : Kernel W SUZ := test.1.comap MeasurableEquiv.ulift.symm (by fun_prop)
-  exact t.map MeasurableEquiv.ulift
-
+  have := monoidalCoherence.{max w x y z} (X := X) (Y := Y)
+  exact fromQuiver.{max w x y z} <| toQuiver.{max w x y z} κ ⊗≫ toQuiver.{max w x y z} η
 
 end ProbabilityTheory.Kernel
-
-universe u v
-
-variable {X : Type u} {Y : Type v} [MeasurableSpace X] [MeasurableSpace Y] [MeasurableCoherence X Y]
-
-noncomputable
-example : MonoidalCoherence (C := (Stoch : Type (max u v + 1)))
-    (Stoch.of <| ULift X) (Stoch.of <| ULift Y) := inferInstance
-
-variable {W X Y Z : Stoch} [MonoidalCoherence X Y] (κ : W ⟶ X) (η : Y ⟶ Z)
-
-#check κ ⊗≫ η
