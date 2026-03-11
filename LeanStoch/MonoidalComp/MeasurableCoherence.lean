@@ -5,9 +5,8 @@ Authors: Gaëtan Serré
 -/
 
 import Mathlib
-import LeanStoch.Stoch
-import LeanStoch.Tactics
 import LeanStoch.MonoidalComp.Kernel
+import LeanStoch.Tactics.Tactics
 
 open CategoryTheory MonoidalCategory MeasureTheory ProbabilityTheory
 
@@ -58,4 +57,15 @@ def monoComp : Kernel W Z := by
   have := monoidalCoherence.{max w x y z} (X := X) (Y := Y)
   exact fromQuiver.{max w x y z} <| toQuiver.{max w x y z} κ ⊗≫ toQuiver.{max w x y z} η
 
+@[inherit_doc Kernel.monoComp]
+scoped[ProbabilityTheory] infixr:80 " ⊗≫ₖ " =>
+  Kernel.monoComp
+
 end ProbabilityTheory.Kernel
+
+variable {W X Y Z : Type*}
+  [MeasurableSpace X] [MeasurableSpace Y] [MeasurableSpace Z] [MeasurableSpace W]
+  [MeasurableCoherence X Y] (κ : Kernel W X) [IsSFiniteKernel κ] (η : Kernel Y Z)
+  [IsSFiniteKernel η]
+
+#check κ ⊗≫ₖ η

@@ -4,7 +4,6 @@ Released under GNU GPL 3.0 license as described in the file LICENSE.
 Authors: Gaëtan Serré
 -/
 
-import Lean
 import Mathlib.CategoryTheory.Monoidal.Category
 import Mathlib.Probability.Kernel.Composition.MapComap
 
@@ -24,7 +23,7 @@ This file defines custom tactics for working with s-finite kernels in the catego
 open Lean Meta Elab Tactic CategoryTheory MeasureTheory ProbabilityTheory
 
 /-- Tactic to find an instance of `IsSFiniteKernel`. -/
-elab "kernel_sfinite" : tactic => withMainContext do
+elab "kernel_sfinite" : tactic => do
     -- First, try to synthesize the instance directly
     evalTactic (← `(tactic| try dsimp only [MonoidalCategory.tensorUnit,
       MonoidalCategory.tensorObj]))

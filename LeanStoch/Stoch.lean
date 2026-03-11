@@ -6,7 +6,7 @@ Authors: Gaëtan Serré
 
 import Mathlib.CategoryTheory.MarkovCategory.Basic
 import Mathlib.MeasureTheory.Category.MeasCat
-import LeanStoch.Tactics
+import LeanStoch.Tactics.SFinite
 import LeanStoch.Mathlib.Kernel
 
 /-!
@@ -50,7 +50,7 @@ noncomputable section
 
 /-- **Stoch** is a large category with Markov kernels as morphisms.
 Composition is given by kernel composition `∘ₖ`. -/
-instance : LargeCategory Stoch where
+instance : LargeCategory Stoch.{u} where
   Hom X Y := { k : Kernel X Y // IsSFiniteKernel k }
   id X := ⟨Kernel.id, by kernel_sfinite⟩
   comp κ₁ κ₂ := ⟨κ₂.1 ∘ₖ κ₁.1, by kernel_sfinite⟩
@@ -58,11 +58,11 @@ instance : LargeCategory Stoch where
 
 /-- **Stoch** is a monoidal category with tensor product given by the categorical product.
 The unit is the terminal object `Unit`. -/
-instance : MonoidalCategory Stoch where
+instance : MonoidalCategory Stoch.{u} where
   tensorObj X Y := Stoch.of (X × Y)
   whiskerLeft X Y₁ Y₂ κ := ⟨Kernel.id ∥ₖ κ.1, by kernel_sfinite⟩
   whiskerRight κ Y := ⟨κ.1 ∥ₖ Kernel.id, by kernel_sfinite⟩
-  tensorUnit := Stoch.of Unit
+  tensorUnit := Stoch.of PUnit
   associator X Y Z := by
     let f₁ := fun (x : (X × Y) × Z) ↦ (x.1.1, x.1.2, x.2)
     let f₂ := fun (x : X × Y × Z) ↦ ((x.1, x.2.1), x.2.2)
@@ -81,9 +81,9 @@ instance : MonoidalCategory Stoch where
       ext x s hs
       simp [Kernel.deterministic_apply, Kernel.id_apply, f₁, f₂]
   leftUnitor X := by
-    let f₁ := fun (x : X) ↦ ((), x)
+    let f₁ := fun (x : X) ↦ (PUnit.unit, x)
     have hf₁ : Measurable f₁ := by fun_prop
-    have hf₂ : Measurable (Prod.snd : Unit × X → X) := by fun_prop
+    have hf₂ : Measurable (Prod.snd : PUnit × X → X) := by fun_prop
     refine ⟨⟨Kernel.id.map Prod.snd, by kernel_sfinite⟩,
       ⟨Kernel.id.map f₁, by kernel_sfinite⟩, ?_, ?_⟩
     · cat_kernel
@@ -97,9 +97,9 @@ instance : MonoidalCategory Stoch where
       ext x s hs
       simp [Kernel.deterministic_apply, Kernel.id_apply, f₁]
   rightUnitor X := by
-    let f₁ := fun (x : X) ↦ (x, ())
+    let f₁ := fun (x : X) ↦ (x, PUnit.unit)
     have hf₁ : Measurable f₁ := by fun_prop
-    have hf₂ : Measurable (Prod.fst : X × Unit → X) := by fun_prop
+    have hf₂ : Measurable (Prod.fst : X × PUnit → X) := by fun_prop
     refine ⟨⟨Kernel.id.map Prod.fst, by kernel_sfinite⟩,
       ⟨Kernel.id.map f₁, by kernel_sfinite⟩, ?_, ?_⟩
     · cat_kernel
@@ -188,18 +188,18 @@ instance {α : Type} [MeasurableSpace α] : IsFiniteKernel (Kernel.copy α) := b
 /-- Every object in **Stoch** carries a canonical comonoid structure.
 The comultiplication is copying `Kernel.copy X : X → X ⊗ X`
 and the counit is discarding `Kernel.discard X : X → 𝟙_`. -/
-instance (X : Stoch) : ComonObj X where
-  counit := ⟨Kernel.discard X, by kernel_sfinite⟩
+instance {X : Stoch.{u}} : ComonObj X where
+  counit := ⟨Kernel.Udiscard X, by kernel_sfinite⟩
   comul := ⟨Kernel.copy X, by kernel_sfinite⟩
   counit_comul := by
     cat_kernel
-    simp only [Kernel.discard, Kernel.copy]
+    simp only [Kernel.Udiscard, Kernel.copy]
     rw [Kernel.id_eq_deterministic_id, Kernel.deterministic_parallelComp_deterministic,
       Kernel.deterministic_comp_deterministic, Kernel.deterministic_map measurable_id (by fun_prop)]
     congr 1
   comul_counit := by
     cat_kernel
-    simp only [Kernel.discard, Kernel.copy]
+    simp only [Kernel.Udiscard, Kernel.copy]
     rw [Kernel.id_eq_deterministic_id, Kernel.deterministic_parallelComp_deterministic,
       Kernel.deterministic_comp_deterministic, Kernel.deterministic_map measurable_id (by fun_prop)]
     congr 1
@@ -211,7 +211,7 @@ instance (X : Stoch) : ComonObj X where
     congr 1
 
 /-- **Stoch** is a braided category with braiding given by the swap map. -/
-instance : BraidedCategory Stoch where
+instance : BraidedCategory Stoch.{u} where
   braiding X Y := by
     refine ⟨⟨Kernel.swap _ _, by kernel_sfinite⟩, ⟨Kernel.swap _ _, by kernel_sfinite⟩,
       ?_, ?_⟩
@@ -243,13 +243,13 @@ instance : BraidedCategory Stoch where
     all_goals fun_prop
 
 /-- **Stoch** is a symmetric monoidal category. -/
-instance : SymmetricCategory Stoch where
+instance : SymmetricCategory Stoch.{u} where
   symmetry X Y := by
     cat_kernel
     exact Kernel.swap_swap
 
 /-- The comonoid on each object is commutative. -/
-instance (X : Stoch) : IsCommComonObj X where
+instance (X : Stoch.{u}) : IsCommComonObj X where
   comul_comm := by
     cat_kernel
     exact Kernel.swap_copy

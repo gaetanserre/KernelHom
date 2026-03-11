@@ -4,15 +4,12 @@ Released under GNU GPL 3.0 license as described in the file LICENSE.
 Authors: Gaëtan Serré
 -/
 
-import Mathlib
 import LeanStoch.Stoch
-import LeanStoch.Tactics
+import Mathlib.Combinatorics.Quiver.ReflQuiver
 
 open MeasureTheory ProbabilityTheory
 
 namespace ProbabilityTheory.Kernel
-
-section
 
 universe w x y
 
@@ -39,16 +36,24 @@ def toQuiver (κ : Kernel X Y) [IsSFiniteKernel κ] :
 @[simp]
 lemma toQuiver_congr {κ₁ κ₂ : Kernel X Y} [IsSFiniteKernel κ₁] [IsSFiniteKernel κ₂] :
     κ₁ = κ₂ ↔ toQuiver.{w} κ₁ = toQuiver κ₂ := by
-  sorry
+  constructor
+  · rintro rfl
+    rfl
+  · intro h
+    rw [Subtype.ext_iff] at h
+    ext x s hs
+    replace h := DFunLike.congr (x := MeasurableEquiv.ulift.symm x) h rfl
+    simp only [toQuiver, coe_comap, Function.comp_apply, MeasurableEquiv.apply_symm_apply] at h
+    rw [Kernel.map_apply, Kernel.map_apply] at h
+    · replace h := DFunLike.congr (x := MeasurableEquiv.ulift.symm '' s) h rfl
+      rw [Measure.map_apply, Measure.map_apply] at h
+      · simpa using h
+      all_goals try fun_prop
+      all_goals measurability
+    all_goals fun_prop
 
-@[simp]
-lemma toQuiver_eq_iff {κ₁ κ₂ : Kernel X Y} [IsSFiniteKernel κ₁] [IsSFiniteKernel κ₂] :
-    κ₁.toQuiver = κ₂.toQuiver ↔ κ₁ = κ₂ := by
-  sorry
 
-end
-
-universe w x y z
+universe z
 
 variable {X : Type x} {Y : Type y} {Z : Type z}
   [MeasurableSpace X] [MeasurableSpace Y] [MeasurableSpace Z]
@@ -56,14 +61,14 @@ variable {X : Type x} {Y : Type y} {Z : Type z}
 open CategoryTheory in
 lemma toQuiver_comp {κ₁ : Kernel X Y} {κ₂ : Kernel Z X} [IsSFiniteKernel κ₁] [IsSFiniteKernel κ₂] :
     toQuiver.{max w x y z} (κ₁ ∘ₖ κ₂) = toQuiver.{max w x y z} κ₂ ≫ toQuiver.{max w x y z} κ₁ := by
-  sorry
-
-
-/- open CategoryTheory in
-@[simp]
-lemma toQuiver_comp_iff {Z : Type w} [MeasurableSpace Z] {κ₁ : Kernel X Y} {κ₂ : Kernel Z X}
-    {κ₃ : Kernel Z Y} [IsSFiniteKernel κ₁] [IsSFiniteKernel κ₂] [IsSFiniteKernel κ₃] :
-    κ₁ ∘ₖ κ₂ = κ₃ ↔ toQuiver.{max w x y} κ₂ ≫ κ₁.toQuiver = κ₃.toQuiver := by
-  sorry -/
+  cat_kernel
+  simp only [toQuiver]
+  ext x s hs
+  rw [Kernel.map_comp, ← Kernel.comp_map, Kernel.comap_apply, Kernel.comp_apply',
+    Kernel.comp_apply', Kernel.map_apply, Kernel.comap_apply, Kernel.map_apply,
+  ]
+  · simp
+  all_goals try fun_prop
+  all_goals measurability
 
 end ProbabilityTheory.Kernel
