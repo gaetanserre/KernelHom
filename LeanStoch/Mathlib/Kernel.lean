@@ -22,14 +22,23 @@ open ProbabilityTheory MeasureTheory
 
 namespace ProbabilityTheory.Kernel
 
-/-- The Markov kernel to the `PUnit` type. -/
+/-- The Markov kernel to the universe-polymorphic type `PUnit`. -/
 noncomputable
-def Udiscard (α : Type*) [MeasurableSpace α] : Kernel α PUnit :=
+def Pdiscard (α : Type*) [MeasurableSpace α] : Kernel α PUnit :=
   Kernel.deterministic (fun _ ↦ PUnit.unit) measurable_const
 
 variable {α β : Type*} [MeasurableSpace α] [MeasurableSpace β]
 
-instance : IsMarkovKernel (Udiscard α) := by rw [Udiscard]; infer_instance
+instance : IsMarkovKernel (Pdiscard α) := by rw [Pdiscard]; infer_instance
+
+@[simp]
+lemma comp_Pdiscard (κ : Kernel α β) [IsMarkovKernel κ] : (Pdiscard β) ∘ₖ κ = Pdiscard α := by
+  ext _ _ hs
+  simp [comp_apply' _ _ _ hs, Pdiscard, deterministic_apply]
+
+@[simp]
+lemma Pdiscard_apply (a : α) : Pdiscard α a = Measure.dirac PUnit.unit := by
+  simp [Pdiscard, deterministic_apply]
 
 @[simp]
 lemma parallelComp_id_id :

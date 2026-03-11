@@ -189,17 +189,17 @@ instance {α : Type} [MeasurableSpace α] : IsFiniteKernel (Kernel.copy α) := b
 The comultiplication is copying `Kernel.copy X : X → X ⊗ X`
 and the counit is discarding `Kernel.discard X : X → 𝟙_`. -/
 instance {X : Stoch.{u}} : ComonObj X where
-  counit := ⟨Kernel.Udiscard X, by kernel_sfinite⟩
+  counit := ⟨Kernel.Pdiscard X, by kernel_sfinite⟩
   comul := ⟨Kernel.copy X, by kernel_sfinite⟩
   counit_comul := by
     cat_kernel
-    simp only [Kernel.Udiscard, Kernel.copy]
+    simp only [Kernel.Pdiscard, Kernel.copy]
     rw [Kernel.id_eq_deterministic_id, Kernel.deterministic_parallelComp_deterministic,
       Kernel.deterministic_comp_deterministic, Kernel.deterministic_map measurable_id (by fun_prop)]
     congr 1
   comul_counit := by
     cat_kernel
-    simp only [Kernel.Udiscard, Kernel.copy]
+    simp only [Kernel.Pdiscard, Kernel.copy]
     rw [Kernel.id_eq_deterministic_id, Kernel.deterministic_parallelComp_deterministic,
       Kernel.deterministic_comp_deterministic, Kernel.deterministic_map measurable_id (by fun_prop)]
     congr 1
