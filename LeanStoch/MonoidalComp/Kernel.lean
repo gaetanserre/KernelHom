@@ -12,10 +12,11 @@ open MeasureTheory ProbabilityTheory
 
 namespace ProbabilityTheory.Kernel
 
+section
+
 universe w x y
 
 variable {X : Type x} {Y : Type y} [MeasurableSpace X] [MeasurableSpace Y]
-
 
 noncomputable
 def fromQuiver (κ : Stoch.of (ULift.{max w y} X) ⟶ Stoch.of (ULift.{max w x} Y)) : Kernel X Y :=
@@ -40,10 +41,21 @@ lemma toQuiver_congr {κ₁ κ₂ : Kernel X Y} [IsSFiniteKernel κ₁] [IsSFini
     κ₁ = κ₂ ↔ toQuiver.{w} κ₁ = toQuiver κ₂ := by
   sorry
 
+@[simp]
+lemma toQuiver_eq_iff {κ₁ κ₂ : Kernel X Y} [IsSFiniteKernel κ₁] [IsSFiniteKernel κ₂] :
+    κ₁.toQuiver = κ₂.toQuiver ↔ κ₁ = κ₂ := by
+  sorry
+
+end
+
+universe w x y z
+
+variable {X : Type x} {Y : Type y} {Z : Type z}
+  [MeasurableSpace X] [MeasurableSpace Y] [MeasurableSpace Z]
+
 open CategoryTheory in
-lemma toQuiver_comp.{v} {Z : Type w} [MeasurableSpace Z] {κ₁ : Kernel X Y} {κ₂ : Kernel Z X}
-    [IsSFiniteKernel κ₁] [IsSFiniteKernel κ₂] :
-    toQuiver.{max v w x y} (κ₁ ∘ₖ κ₂) = toQuiver.{max v w x y} κ₂ ≫ toQuiver.{max v w x y} κ₁ := by
+lemma toQuiver_comp {κ₁ : Kernel X Y} {κ₂ : Kernel Z X} [IsSFiniteKernel κ₁] [IsSFiniteKernel κ₂] :
+    toQuiver.{max w x y z} (κ₁ ∘ₖ κ₂) = toQuiver.{max w x y z} κ₂ ≫ toQuiver.{max w x y z} κ₁ := by
   sorry
 
 
@@ -53,10 +65,5 @@ lemma toQuiver_comp_iff {Z : Type w} [MeasurableSpace Z] {κ₁ : Kernel X Y} {�
     {κ₃ : Kernel Z Y} [IsSFiniteKernel κ₁] [IsSFiniteKernel κ₂] [IsSFiniteKernel κ₃] :
     κ₁ ∘ₖ κ₂ = κ₃ ↔ toQuiver.{max w x y} κ₂ ≫ κ₁.toQuiver = κ₃.toQuiver := by
   sorry -/
-
-@[simp]
-lemma toQuiver_eq_iff {κ₁ κ₂ : Kernel X Y} [IsSFiniteKernel κ₁] [IsSFiniteKernel κ₂] :
-    κ₁.toQuiver = κ₂.toQuiver ↔ κ₁ = κ₂ := by
-  sorry
 
 end ProbabilityTheory.Kernel
