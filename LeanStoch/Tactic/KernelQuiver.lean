@@ -6,6 +6,7 @@ Authors: Gaëtan Serré
 
 import Lean.Elab.Tactic.Location
 import LeanStoch.MonoidalComp.Kernel
+import LeanStoch.MonoidalComp.MeasurableCoherence
 import LeanStoch.Tactic.LocTactic
 
 open Lean Elab Tactic Meta CategoryTheory Parser.Tactic ProbabilityTheory Kernel
@@ -65,14 +66,24 @@ def applyKernelQuiver (goal : MVarId) (fvarId : Option FVarId) : TacticM MVarId 
     | some fid => do
       let hName := (← fid.getDecl).userName
       withMainContext do
-        evalTactic (← `(tactic| rw [toQuiver_congr.{$maxLevelStx}] at $(mkIdent hName):ident))
-        evalTactic (← `(tactic|
-          repeat rw [toQuiver_comp.{$maxLevelStx}] at $(mkIdent hName):ident))
+        evalTactic (← `(tactic| first
+          | simp only [toQuiver_congr.{$maxLevelStx},
+            toQuiver_comp.{$maxLevelStx},
+            toQuiver_monoComp.{$maxLevelStx}]
+            at $(mkIdent hName):ident
+          | simp only [toQuiver_congr.{$maxLevelStx},
+            toQuiver_comp.{$maxLevelStx}] at $(mkIdent hName):ident
+        ))
         getMainGoal
     | none => do
       withMainContext do
-        evalTactic (← `(tactic| rw [toQuiver_congr.{$maxLevelStx}]))
-        evalTactic (← `(tactic| repeat rw [toQuiver_comp.{$maxLevelStx}]))
+        evalTactic (← `(tactic| first
+          | simp only [toQuiver_congr.{$maxLevelStx},
+            toQuiver_comp.{$maxLevelStx},
+            toQuiver_monoComp.{$maxLevelStx}]
+          | simp only [toQuiver_congr.{$maxLevelStx},
+            toQuiver_comp.{$maxLevelStx}]
+        ))
         getMainGoal
 
 def applyQuiverKernel (goal : MVarId) (fvarId : Option FVarId) : TacticM MVarId := do
@@ -94,14 +105,24 @@ def applyQuiverKernel (goal : MVarId) (fvarId : Option FVarId) : TacticM MVarId 
     | some fid => do
       let hName := (← fid.getDecl).userName
       withMainContext do
-        evalTactic (← `(tactic|
-          repeat rw [← toQuiver_comp.{$maxLevelStx}] at $(mkIdent hName):ident))
-        evalTactic (← `(tactic| rw [← toQuiver_congr.{$maxLevelStx}] at $(mkIdent hName):ident))
+        evalTactic (← `(tactic| first
+          | simp only [← toQuiver_congr.{$maxLevelStx},
+            ← toQuiver_comp.{$maxLevelStx},
+            ← toQuiver_monoComp.{$maxLevelStx}]
+            at $(mkIdent hName):ident
+          | simp only [← toQuiver_congr.{$maxLevelStx},
+            ← toQuiver_comp.{$maxLevelStx}] at $(mkIdent hName):ident
+        ))
         getMainGoal
     | none => do
       withMainContext do
-        evalTactic (← `(tactic| repeat rw [← toQuiver_comp.{$maxLevelStx}]))
-        evalTactic (← `(tactic| rw [← toQuiver_congr.{$maxLevelStx}]))
+        evalTactic (← `(tactic| first
+          | simp only [← toQuiver_congr.{$maxLevelStx},
+            ← toQuiver_comp.{$maxLevelStx},
+            ← toQuiver_monoComp.{$maxLevelStx}]
+          | simp only [← toQuiver_congr.{$maxLevelStx},
+            ← toQuiver_comp.{$maxLevelStx}]
+        ))
         getMainGoal
 
 /-- The `kernel_quiver` tactic transforms a kernel equality to its quiver representation.

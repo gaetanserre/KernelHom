@@ -4,9 +4,8 @@ Released under GNU GPL 3.0 license as described in the file LICENSE.
 Authors: Gaëtan Serré
 -/
 
-import Mathlib
+import LeanStoch.Mathlib.LIntegral
 import LeanStoch.MonoidalComp.Kernel
-import LeanStoch.Tactic.Tactic
 
 open CategoryTheory MonoidalCategory MeasureTheory ProbabilityTheory
 
@@ -25,7 +24,7 @@ instance monoidalCoherence : MonoidalCoherence (Stoch.of (ULift.{max w y x} X))
     (Stoch.of (ULift.{max w x y} Y)) where
   iso := by
     -- ULift X ≃ᵐ X ≃ᵐ Y ≃ᵐ ULift Y
-    let e : ULift X ≃ᵐ ULift Y :=
+    let e : ULift.{max w x y} X ≃ᵐ ULift.{max w x y} Y :=
       MeasurableEquiv.ulift.trans <| mXY.miso.trans MeasurableEquiv.ulift.symm
     refine ⟨⟨Kernel.id.map e, by kernel_sfinite⟩,
       ⟨Kernel.id.map e.symm, by kernel_sfinite⟩, ?_, ?_⟩
@@ -52,41 +51,56 @@ variable {W : Type w} {X : Type x} {Y : Type y} {Z : Type z}
   [MeasurableCoherence X Y] (κ : Kernel W X) [IsSFiniteKernel κ] (η : Kernel Y Z)
   [IsSFiniteKernel η]
 
+/-- The kernelized version of the monoidal composition of kernels using
+the `Stoch` monoidal category. -/
 noncomputable
-def monoComp : Kernel W Z := by
+def monoComp : Kernel W Z :=
   have := monoidalCoherence.{max w x y z} (X := X) (Y := Y)
-  exact fromQuiver.{max w x y z} <| toQuiver.{max w x y z} κ ⊗≫ toQuiver.{max w x y z} η
+  fromQuiver.{max w x y z} <| toQuiver.{max w x y z} κ ⊗≫ toQuiver.{max w x y z} η
 
 @[inherit_doc Kernel.monoComp]
-scoped[ProbabilityTheory] infixr:80 " ⊗≫ₖ " =>
-  Kernel.monoComp
+scoped[ProbabilityTheory] infixr:80 " ⊗≫ₖ " => Kernel.monoComp
 
 instance monoComp_sfinite : IsSFiniteKernel (κ ⊗≫ₖ η) := by
   simp only [monoComp]
   infer_instance
 
-/- lemma toQuiver_monoComp : toQuiver.{max v w x y z} (monoComp κ η) =
+lemma toQuiver_monoComp : toQuiver.{max v w x y z} (monoComp κ η) =
     @monoidalComp _ _ _ _ _ _ (monoidalCoherence.{max v w x y z} (X := X) (Y := Y))
     (toQuiver.{max v w x y z} κ) (toQuiver.{max v w x y z} η) := by
-  sorry -/
+  simp only [monoComp, fromQuiver, toQuiver, monoidalComp]
+  cat_kernel
+  dsimp [monoidalCoherence]
+  ext _ s hs
+  simp_all only [coe_comap, Function.comp_apply, comp_apply']
+  rw [Kernel.map_apply', Kernel.map_apply']
+  · simp_all only [coe_comap, Function.comp_apply, MeasurableEquiv.measurableSet_preimage,
+    comp_apply', MeasurableEquiv.apply_symm_apply]
+    rw [Kernel.map_apply, Kernel.map_apply, Kernel.id_map (by fun_prop),
+      Kernel.id_map (by fun_prop)]
+    · simp_rw [Kernel.deterministic_apply]
+      rw [lintegral_lintegral_dirac, lintegral_lintegral_dirac]
+      · rw [MeasureTheory.lintegral_map, MeasureTheory.lintegral_map]
+        · simp_all only [MeasurableEquiv.trans_apply, MeasurableEquiv.apply_symm_apply]
+          congr with _
+          rw [Kernel.map_apply', Kernel.map_apply']
+          · simp
+          all_goals try fun_prop
+          all_goals try measurability
+        · refine ((η.map MeasurableEquiv.ulift.symm).measurable_coe hs).comp ?_
+          fun_prop
+        · fun_prop
+        · refine ((η.map MeasurableEquiv.ulift.symm).measurable_coe ?_).comp ?_
+          · measurability
+          · fun_prop
+        · fun_prop
+      · refine ((η.map ⇑MeasurableEquiv.ulift.symm).measurable_coe hs).comp ?_
+        fun_prop
+      · refine ((η.map ⇑MeasurableEquiv.ulift.symm).measurable_coe ?_).comp ?_
+        · measurability
+        · fun_prop
+    all_goals try fun_prop
+  all_goals try fun_prop
+  all_goals try measurability
 
 end ProbabilityTheory.Kernel
-
-variable {W X Y Z : Type*}
-  [MeasurableSpace X] [MeasurableSpace Y] [MeasurableSpace Z] [MeasurableSpace W]
-  [MeasurableCoherence X Y] (κ : Kernel W X) [IsSFiniteKernel κ] (η : Kernel Y Z)
-  [IsSFiniteKernel η]
-
-#check κ ⊗≫ₖ η
-
-example {X Y Z : Stoch} (f : 𝟙_ Stoch ⟶ X) (g : Y ⟶ Z) [MonoidalCoherence X Y] :
-    (λ_ (𝟙_ Stoch)).hom ≫ f ⊗≫ g = (ρ_ (𝟙_ Stoch)).hom ≫ f ⊗≫ g := by
-  coherence
-
-def f.{u, v} {α : Type u} {β : Type v} (self : α × β) : α := Prod.fst self
-def g.{u, v} {α : Type u} {β : Type v} (self : α × β) : β := Prod.snd self
-
-example (κ : Kernel Unit X) [IsSFiniteKernel κ] (η : Kernel Y Z)
-    [IsSFiniteKernel η] [MeasurableCoherence X Y] :
-    κ ∘ₖ (Kernel.id.map f : Kernel (Unit × Unit) Unit) ⊗≫ₖ η = κ ∘ₖ (Kernel.id.map g) ⊗≫ₖ η := by
-  kernel_coherence
