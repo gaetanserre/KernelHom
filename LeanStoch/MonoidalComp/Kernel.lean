@@ -19,8 +19,7 @@ noncomputable
 def fromQuiver (κ : Stoch.of (ULift.{max w y} X) ⟶ Stoch.of (ULift.{max w x} Y)) : Kernel X Y :=
   (κ.1.comap MeasurableEquiv.ulift.symm (by fun_prop)).map MeasurableEquiv.ulift
 
-@[simp]
-lemma fromQuiver_sfinite (κ : Stoch.of (ULift.{max w y} X) ⟶ Stoch.of (ULift.{max w x} Y)) :
+instance {κ : Stoch.of (ULift.{max w y} X) ⟶ Stoch.of (ULift.{max w x} Y)} :
     IsSFiniteKernel (fromQuiver κ) := by
   simp only [fromQuiver]
   kernel_sfinite
@@ -52,13 +51,15 @@ lemma toQuiver_congr {κ₁ κ₂ : Kernel X Y} [IsSFiniteKernel κ₁] [IsSFini
       all_goals measurability
     all_goals fun_prop
 
+section
 
 universe z
 
-variable {X : Type x} {Y : Type y} {Z : Type z}
-  [MeasurableSpace X] [MeasurableSpace Y] [MeasurableSpace Z]
+variable {Z : Type z} [MeasurableSpace Z]
 
-open CategoryTheory in
+open CategoryTheory
+
+@[simp]
 lemma toQuiver_comp {κ₁ : Kernel X Y} {κ₂ : Kernel Z X} [IsSFiniteKernel κ₁] [IsSFiniteKernel κ₂] :
     toQuiver.{max w x y z} (κ₁ ∘ₖ κ₂) = toQuiver.{max w x y z} κ₂ ≫ toQuiver.{max w x y z} κ₁ := by
   cat_kernel
@@ -70,5 +71,7 @@ lemma toQuiver_comp {κ₁ : Kernel X Y} {κ₂ : Kernel Z X} [IsSFiniteKernel �
   · simp
   all_goals try fun_prop
   all_goals measurability
+
+end
 
 end ProbabilityTheory.Kernel

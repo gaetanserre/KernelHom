@@ -1,0 +1,36 @@
+/-
+Copyright (c) 2026 Gaëtan Serré. All rights reserved.
+Released under GNU GPL 3.0 license as described in the file LICENSE.
+Authors: Gaëtan Serré
+-/
+
+import Lean.Elab.Tactic.Location
+
+open Lean Elab Tactic Meta
+
+def applyLocTactic (loc : Location) (tactic : MVarId → Option FVarId → TacticM MVarId) :
+    TacticM Unit := do
+  match loc with
+  | Location.targets hyps target => do
+    for hyp in hyps do
+      let hFVarId ← getFVarId hyp
+      let newGoal ← tactic (← getMainGoal) (some hFVarId)
+      replaceMainGoal [newGoal]
+    if target then
+      let newGoal ← tactic (← getMainGoal) none
+      replaceMainGoal [newGoal]
+  | Location.wildcard => do
+    let goal ← getMainGoal
+    goal.withContext do
+      let lctx ← getLCtx
+      let mut currentGoal := goal
+      for decl in lctx do
+        if decl.isImplementationDetail then continue
+        try
+          currentGoal ← tactic currentGoal (some decl.fvarId)
+          replaceMainGoal [currentGoal]
+        catch _ => continue
+      try
+        currentGoal ← tactic currentGoal none
+        replaceMainGoal [currentGoal]
+      catch _ => pure ()

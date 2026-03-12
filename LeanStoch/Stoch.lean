@@ -6,7 +6,7 @@ Authors: Gaëtan Serré
 
 import Mathlib.CategoryTheory.MarkovCategory.Basic
 import Mathlib.MeasureTheory.Category.MeasCat
-import LeanStoch.Tactics.SFinite
+import LeanStoch.Tactic.SFinite
 import LeanStoch.Mathlib.Kernel
 
 /-!

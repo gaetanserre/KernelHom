@@ -5,5 +5,11 @@ Authors: Gaëtan Serré
 -/
 
 import LeanStoch.Stoch
-import LeanStoch.Tactics
+import LeanStoch.Tactic.KernelCoherence
+import LeanStoch.Tactic.KernelQuiver
+import LeanStoch.Tactic.LocTactic
+import LeanStoch.Tactic.SFinite
+import LeanStoch.Tactic.Tactic
 import LeanStoch.Mathlib.Kernel
+import LeanStoch.MonoidalComp.Kernel
+import LeanStoch.MonoidalComp.MeasurableCoherence
