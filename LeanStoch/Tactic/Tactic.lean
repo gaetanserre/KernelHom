@@ -8,3 +8,4 @@ import LeanStoch.Tactic.SFinite
 import LeanStoch.Tactic.KernelQuiver
 import LeanStoch.Tactic.LocTactic
 import LeanStoch.Tactic.KernelCoherence
+import LeanStoch.Tactic.Universe

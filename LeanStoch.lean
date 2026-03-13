@@ -9,7 +9,10 @@ import LeanStoch.Tactic.KernelCoherence
 import LeanStoch.Tactic.KernelQuiver
 import LeanStoch.Tactic.LocTactic
 import LeanStoch.Tactic.SFinite
+import LeanStoch.Tactic.Universe
 import LeanStoch.Tactic.Tactic
 import LeanStoch.Mathlib.Kernel
+import LeanStoch.Mathlib.MeasurableEquiv
 import LeanStoch.MonoidalComp.Kernel
 import LeanStoch.MonoidalComp.MeasurableCoherence
+import LeanStoch.MonoidalComp.Test

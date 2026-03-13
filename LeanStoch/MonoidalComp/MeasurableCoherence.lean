@@ -7,7 +7,7 @@ Authors: Gaëtan Serré
 import LeanStoch.Mathlib.LIntegral
 import LeanStoch.MonoidalComp.Kernel
 
-open CategoryTheory MonoidalCategory MeasureTheory ProbabilityTheory
+open CategoryTheory MonoidalCategory MeasureTheory ProbabilityTheory MeasurableEquiv
 
 class MeasurableCoherence (X Y : Type*) [MeasurableSpace X] [MeasurableSpace Y] where
   miso : X ≃ᵐ Y
@@ -19,13 +19,14 @@ universe w x y
 variable {X : Type x} {Y : Type y} [MeasurableSpace X] [MeasurableSpace Y]
   [mXY : MeasurableCoherence X Y]
 
+instance : MeasurableCoherence X X where
+  miso := MeasurableEquiv.refl X
+
 noncomputable
-instance monoidalCoherence : MonoidalCoherence (Stoch.of (ULift.{max w y x} X))
-    (Stoch.of (ULift.{max w x y} Y)) where
+def monoidalCoherence {X' Y' : Type w} [MeasurableSpace X'] [MeasurableSpace Y']
+    (ex : X' ≃ᵐ X) (ey : Y' ≃ᵐ Y) : MonoidalCoherence (Stoch.of X') (Stoch.of Y') where
   iso := by
-    -- ULift X ≃ᵐ X ≃ᵐ Y ≃ᵐ ULift Y
-    let e : ULift.{max w x y} X ≃ᵐ ULift.{max w x y} Y :=
-      MeasurableEquiv.ulift.trans <| mXY.miso.trans MeasurableEquiv.ulift.symm
+    let e := ex.trans <| mXY.miso.trans ey.symm
     refine ⟨⟨Kernel.id.map e, by kernel_sfinite⟩,
       ⟨Kernel.id.map e.symm, by kernel_sfinite⟩, ?_, ?_⟩
     all_goals cat_kernel
@@ -51,12 +52,26 @@ variable {W : Type w} {X : Type x} {Y : Type y} {Z : Type z}
   [MeasurableCoherence X Y] (κ : Kernel W X) [IsSFiniteKernel κ] (η : Kernel Y Z)
   [IsSFiniteKernel η]
 
+variable {W' : Type max w x y z} {X' : Type max w x y z} {Y' : Type max w x y z}
+  {Z' : Type max w x y z} [MeasurableSpace W'] [MeasurableSpace X'] [MeasurableSpace Y']
+  [MeasurableSpace Z'] (ew : W' ≃ᵐ W) (ex : X' ≃ᵐ X) (ey : Y' ≃ᵐ Y) (ez : Z' ≃ᵐ Z)
+
+noncomputable
+def monoComp' : Kernel W Z :=
+  have := monoidalCoherence ex ey
+  fromQuiver (ex := ew) (ey := ez) <| quiver (ex := ew) (ey := ex) κ ⊗≫
+    quiver (ex := ey) (ey := ez) η
+
+instance monoComp'_sfinite : IsSFiniteKernel (monoComp' κ η ew ex ey ez ) := by
+  simp only [monoComp']
+  infer_instance
+
 /-- The kernelized version of the monoidal composition of kernels using
 the `Stoch` monoidal category. -/
 noncomputable
 def monoComp : Kernel W Z :=
-  have := monoidalCoherence.{max w x y z} (X := X) (Y := Y)
-  fromQuiver.{max w x y z} <| toQuiver.{max w x y z} κ ⊗≫ toQuiver.{max w x y z} η
+  monoComp' κ η (ulift.{_, max w x y z}) (ulift.{_, max w x y z})
+    (ulift.{_, max w x y z}) (ulift.{_, max w x y z})
 
 @[inherit_doc Kernel.monoComp]
 scoped[ProbabilityTheory] infixr:80 " ⊗≫ₖ " => Kernel.monoComp
@@ -65,10 +80,14 @@ instance monoComp_sfinite : IsSFiniteKernel (κ ⊗≫ₖ η) := by
   simp only [monoComp]
   infer_instance
 
-lemma toQuiver_monoComp : toQuiver.{max v w x y z} (monoComp κ η) =
-    @monoidalComp _ _ _ _ _ _ (monoidalCoherence.{max v w x y z} (X := X) (Y := Y))
-    (toQuiver.{max v w x y z} κ) (toQuiver.{max v w x y z} η) := by
-  simp only [monoComp, fromQuiver, toQuiver, monoidalComp]
+variable {W'' : Type max v w x y z} {X'' : Type max v w x y z} {Y'' : Type max v w x y z}
+  {Z'' : Type max v w x y z} [MeasurableSpace W''] [MeasurableSpace X''] [MeasurableSpace Y'']
+  [MeasurableSpace Z''] (ew' : W'' ≃ᵐ W) (ex' : X'' ≃ᵐ X) (ey' : Y'' ≃ᵐ Y) (ez' : Z'' ≃ᵐ Z)
+
+lemma quiver_monoComp : quiver (ex := ew') (ey := ez') (monoComp κ η) =
+    @monoidalComp _ _ _ _ _ _ (monoidalCoherence ex' ey')
+    (quiver (ex := ew') (ey := ex') κ) (quiver (ex := ey') (ey := ez') η) := by
+  simp only [monoComp, monoComp', fromQuiver, quiver, monoidalComp]
   cat_kernel
   dsimp [monoidalCoherence]
   ext _ s hs
@@ -87,16 +106,16 @@ lemma toQuiver_monoComp : toQuiver.{max v w x y z} (monoComp κ η) =
           · simp
           all_goals try fun_prop
           all_goals try measurability
-        · refine ((η.map MeasurableEquiv.ulift.symm).measurable_coe hs).comp ?_
+        · refine (Kernel.measurable_coe _ hs).comp ?_
           fun_prop
         · fun_prop
-        · refine ((η.map MeasurableEquiv.ulift.symm).measurable_coe ?_).comp ?_
+        · refine (Kernel.measurable_coe _ ?_).comp ?_
           · measurability
           · fun_prop
         · fun_prop
-      · refine ((η.map ⇑MeasurableEquiv.ulift.symm).measurable_coe hs).comp ?_
+      · refine (Kernel.measurable_coe _ hs).comp ?_
         fun_prop
-      · refine ((η.map ⇑MeasurableEquiv.ulift.symm).measurable_coe ?_).comp ?_
+      · refine (Kernel.measurable_coe _ ?_).comp ?_
         · measurability
         · fun_prop
     all_goals try fun_prop
