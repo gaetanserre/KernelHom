@@ -12,3 +12,7 @@ open Lean Elab Tactic
 elab "kernel_coherence" : tactic => do
   evalTactic (← `(tactic| kernel_quiver))
   evalTactic (← `(tactic| coherence))
+
+elab "kernel_monoidal" : tactic => do
+  evalTactic (← `(tactic| kernel_quiver))
+  evalTactic (← `(tactic| monoidal))
