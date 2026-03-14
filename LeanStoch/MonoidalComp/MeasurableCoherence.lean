@@ -5,7 +5,7 @@ Authors: Gaëtan Serré
 -/
 
 import LeanStoch.Mathlib.LIntegral
-import LeanStoch.MonoidalComp.Kernel
+import LeanStoch.MonoidalComp.Quiver
 
 open CategoryTheory MonoidalCategory MeasureTheory ProbabilityTheory MeasurableEquiv
 
@@ -84,9 +84,9 @@ variable {W'' : Type max v w x y z} {X'' : Type max v w x y z} {Y'' : Type max v
   {Z'' : Type max v w x y z} [MeasurableSpace W''] [MeasurableSpace X''] [MeasurableSpace Y'']
   [MeasurableSpace Z''] (ew' : W'' ≃ᵐ W) (ex' : X'' ≃ᵐ X) (ey' : Y'' ≃ᵐ Y) (ez' : Z'' ≃ᵐ Z)
 
-lemma quiver_monoComp : quiver (ex := ew') (ey := ez') (monoComp κ η) =
-    @monoidalComp _ _ _ _ _ _ (monoidalCoherence ex' ey')
-    (quiver (ex := ew') (ey := ex') κ) (quiver (ex := ey') (ey := ez') η) := by
+lemma quiver_monoComp : @monoidalComp _ _ _ _ _ _ (monoidalCoherence ex' ey')
+    (quiver (ex := ew') (ey := ex') κ) (quiver (ex := ey') (ey := ez') η)
+    = quiver (ex := ew') (ey := ez') (monoComp κ η):= by
   simp only [monoComp, monoComp', fromQuiver, quiver, monoidalComp]
   cat_kernel
   dsimp [monoidalCoherence]
@@ -106,18 +106,18 @@ lemma quiver_monoComp : quiver (ex := ew') (ey := ez') (monoComp κ η) =
           · simp
           all_goals try fun_prop
           all_goals try measurability
-        · refine (Kernel.measurable_coe _ hs).comp ?_
-          fun_prop
-        · fun_prop
         · refine (Kernel.measurable_coe _ ?_).comp ?_
           · measurability
           · fun_prop
         · fun_prop
-      · refine (Kernel.measurable_coe _ hs).comp ?_
-        fun_prop
+        · refine (Kernel.measurable_coe _ hs).comp ?_
+          fun_prop
+        · fun_prop
       · refine (Kernel.measurable_coe _ ?_).comp ?_
         · measurability
         · fun_prop
+      · refine (Kernel.measurable_coe _ hs).comp ?_
+        fun_prop
     all_goals try fun_prop
   all_goals try fun_prop
   all_goals try measurability

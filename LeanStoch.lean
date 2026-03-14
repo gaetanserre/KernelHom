@@ -13,6 +13,6 @@ import LeanStoch.Tactic.Universe
 import LeanStoch.Tactic.Tactic
 import LeanStoch.Mathlib.Kernel
 import LeanStoch.Mathlib.MeasurableEquiv
-import LeanStoch.MonoidalComp.Kernel
+import LeanStoch.MonoidalComp.Quiver
 import LeanStoch.MonoidalComp.MeasurableCoherence
 import LeanStoch.MonoidalComp.Test

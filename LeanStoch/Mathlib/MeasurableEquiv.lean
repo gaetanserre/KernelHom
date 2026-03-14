@@ -11,19 +11,22 @@ namespace MeasurableEquiv
 universe w x y
 
 variable {X : Type x} {Y : Type y} [MeasurableSpace X] [MeasurableSpace Y]
+  {X' Y' : Type w} [MeasurableSpace X'] [MeasurableSpace Y'] (ex : X' ≃ᵐ X) (ey : Y' ≃ᵐ Y)
 
-def ulift_prod : ULift.{max w y} X × ULift.{max w x} Y ≃ᵐ X × Y where
-  toFun := fun (⟨x⟩, ⟨y⟩) ↦ (x, y)
-  invFun := fun (x, y) ↦ (ULift.up x, ULift.up y)
-  left_inv := by rintro ⟨⟨x⟩, ⟨y⟩⟩; rfl
-  right_inv := by rintro ⟨x, y⟩; rfl
-  measurable_toFun := by
-    have := measurable_down.{_, max w y} (α := X)
-    have := measurable_down.{_, max w x} (α := Y)
-    fun_prop
-  measurable_invFun := by
-    have := measurable_up.{_, max w y} (α := X)
-    have := measurable_up.{_, max w x} (α := Y)
-    fun_prop
+def prod : X' × Y' ≃ᵐ X × Y where
+  toFun := fun (x', y') ↦ (ex x', ey y')
+  invFun := fun (x, y) ↦ (ex.symm x, ey.symm y)
+  left_inv := by simp [Function.LeftInverse]
+  right_inv := by simp [Function.RightInverse, Function.LeftInverse]
+  measurable_toFun := by fun_prop
+  measurable_invFun := by fun_prop
+
+def punit : PUnit.{w + 1} ≃ᵐ PUnit.{x + 1} where
+  toFun := fun _ ↦ PUnit.unit
+  invFun := fun _ ↦ PUnit.unit
+  left_inv := by grind
+  right_inv := by grind
+  measurable_toFun := measurable_id
+  measurable_invFun := measurable_id
 
 end MeasurableEquiv

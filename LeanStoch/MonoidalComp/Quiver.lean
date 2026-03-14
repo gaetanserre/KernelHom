@@ -5,6 +5,7 @@ Authors: Gaëtan Serré
 -/
 
 import LeanStoch.Stoch
+import LeanStoch.Mathlib.MeasurableEquiv
 import Mathlib.Combinatorics.Quiver.ReflQuiver
 
 open MeasureTheory ProbabilityTheory MeasurableEquiv
@@ -16,6 +17,7 @@ universe w x y
 variable {X : Type x} {Y : Type y} [MeasurableSpace X] [MeasurableSpace Y]
     {X' Y' : Type w} [MeasurableSpace X'] [MeasurableSpace Y'] {ex : X' ≃ᵐ X} {ey : Y' ≃ᵐ Y}
 
+section Quiver
 
 noncomputable
 def fromQuiver (κ : Stoch.of X' ⟶ Stoch.of Y') : Kernel X Y :=
@@ -36,14 +38,9 @@ def quiver' (κ : Kernel X Y) [IsSFiniteKernel κ] :
     Stoch.of (ULift.{max w y} X) ⟶ Stoch.of (ULift.{max w x} Y) :=
   quiver (ex := ulift) (ey := ulift) κ
 
--- Lemmas for compatibility between kernel operations and quiver morphisms
-
-@[simp]
 lemma quiver_congr {κ₁ κ₂ : Kernel X Y} [IsSFiniteKernel κ₁] [IsSFiniteKernel κ₂] :
-    κ₁ = κ₂ ↔ quiver (ex := ex) (ey := ey) κ₁ = quiver (ex := ex) (ey := ey) κ₂ := by
+    quiver (ex := ex) (ey := ey) κ₁ = quiver (ex := ex) (ey := ey) κ₂ ↔ κ₁ = κ₂ := by
   constructor
-  · rintro rfl
-    rfl
   · intro h
     rw [Subtype.ext_iff] at h
     ext x s hs
@@ -56,8 +53,10 @@ lemma quiver_congr {κ₁ κ₂ : Kernel X Y} [IsSFiniteKernel κ₁] [IsSFinite
       all_goals try fun_prop
       all_goals measurability
     all_goals fun_prop
+  · rintro rfl
+    rfl
 
-section
+section Comp
 
 universe z
 
@@ -65,10 +64,9 @@ variable {Z : Type z} [MeasurableSpace Z] {Z' : Type w} [MeasurableSpace Z'] {ez
 
 open CategoryTheory
 
-@[simp]
 lemma quiver_comp {κ₁ : Kernel X Y} {κ₂ : Kernel Z X} [IsSFiniteKernel κ₁] [IsSFiniteKernel κ₂] :
-    quiver (ex := ez) (ey := ey) (κ₁ ∘ₖ κ₂) =
-      quiver (ex := ez) (ey := ex) κ₂ ≫ quiver (ex := ex) (ey := ey) κ₁ := by
+    quiver (ex := ez) (ey := ex) κ₂ ≫ quiver (ex := ex) (ey := ey) κ₁
+      = quiver (ex := ez) (ey := ey) (κ₁ ∘ₖ κ₂) := by
   cat_kernel
   simp only [quiver]
   ext x s hs
@@ -79,6 +77,34 @@ lemma quiver_comp {κ₁ : Kernel X Y} {κ₂ : Kernel Z X} [IsSFiniteKernel κ�
   all_goals try fun_prop
   all_goals measurability
 
-end
+end Comp
+
+end Quiver
+
+open CategoryTheory MonoidalCategory
+
+section unitors
+
+lemma leftUnitor : (λ_ (Stoch.of X')).hom = quiver (ex := punit.prod ex) (ey := ex)
+    (Kernel.id.map (Prod.snd : PUnit × X → X)) := by
+  cat_kernel
+  simp only [quiver]
+  ext x s hs
+  rw [Kernel.map_apply', Kernel.comap_apply', Kernel.map_apply', Kernel.map_apply',
+    Kernel.id_apply, Kernel.id_apply]
+  · simp only [Set.preimage, Set.mem_setOf_eq]
+    rw [Measure.dirac_apply', Measure.dirac_apply']
+    · refine Set.indicator_eq_indicator (Iff.intro (fun h ↦ ?_) (fun h ↦ ?_)) rfl
+      · simpa [punit, MeasurableEquiv.prod]
+      · simpa [punit, MeasurableEquiv.prod] using h
+    · rw [measurableSet_setOf]
+      exact Measurable.comp hs.mem <| .comp ex.symm.measurable measurable_snd
+    · rw [measurableSet_setOf]
+      exact Measurable.comp hs.mem measurable_snd
+  all_goals try fun_prop
+  all_goals measurability
+
+end unitors
+
 
 end ProbabilityTheory.Kernel
