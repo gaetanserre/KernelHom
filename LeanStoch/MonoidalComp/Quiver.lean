@@ -46,7 +46,7 @@ lemma quiver_congr {κ₁ κ₂ : Kernel X Y} [IsSFiniteKernel κ₁] [IsSFinite
     ext x s hs
     replace h := DFunLike.congr (x := ex.symm x) h rfl
     simp only [quiver, coe_comap, Function.comp_apply, apply_symm_apply] at h
-    rw [Kernel.map_apply, Kernel.map_apply] at h
+    rw [map_apply, map_apply] at h
     · replace h := DFunLike.congr (x := ey.symm '' s) h rfl
       rw [Measure.map_apply, Measure.map_apply] at h
       · simpa using h
@@ -70,9 +70,8 @@ lemma quiver_comp {κ₁ : Kernel X Y} {κ₂ : Kernel Z X} [IsSFiniteKernel κ�
   cat_kernel
   simp only [quiver]
   ext x s hs
-  rw [Kernel.map_comp, ← Kernel.comp_map, Kernel.comap_apply, Kernel.comp_apply',
-    Kernel.comp_apply', Kernel.map_apply, Kernel.comap_apply, Kernel.map_apply,
-  ]
+  rw [map_comp, ← comp_map, comap_apply, comp_apply', comp_apply', map_apply, comap_apply,
+    map_apply]
   · simp
   all_goals try fun_prop
   all_goals measurability
@@ -90,8 +89,7 @@ lemma leftUnitor : (λ_ (Stoch.of X')).hom = quiver (ex := punit.prod ex) (ey :=
   cat_kernel
   simp only [quiver]
   ext x s hs
-  rw [Kernel.map_apply', Kernel.comap_apply', Kernel.map_apply', Kernel.map_apply',
-    Kernel.id_apply, Kernel.id_apply]
+  rw [map_apply', comap_apply', map_apply', map_apply', id_apply, id_apply]
   · simp only [Set.preimage, Set.mem_setOf_eq]
     rw [Measure.dirac_apply', Measure.dirac_apply']
     · refine Set.indicator_eq_indicator (Iff.intro (fun h ↦ ?_) (fun h ↦ ?_)) rfl
@@ -109,8 +107,7 @@ lemma rightUnitor : (ρ_ (Stoch.of X')).hom = quiver (ex := ex.prod punit) (ey :
   cat_kernel
   simp only [quiver]
   ext x s hs
-  rw [Kernel.map_apply', Kernel.comap_apply', Kernel.map_apply', Kernel.map_apply',
-    Kernel.id_apply, Kernel.id_apply]
+  rw [map_apply', comap_apply', map_apply', map_apply', id_apply, id_apply]
   · simp only [Set.preimage, Set.mem_setOf_eq]
     rw [Measure.dirac_apply', Measure.dirac_apply']
     · refine Set.indicator_eq_indicator (Iff.intro (fun h ↦ ?_) (fun h ↦ ?_)) rfl
@@ -125,5 +122,44 @@ lemma rightUnitor : (ρ_ (Stoch.of X')).hom = quiver (ex := ex.prod punit) (ey :
 
 end unitors
 
+section whiskers
+
+variable {Z : Type z} [MeasurableSpace Z] {Z' : Type w} [MeasurableSpace Z'] {ez : Z' ≃ᵐ Z}
+
+lemma leftWhisker {κ : Kernel X Y} [IsSFiniteKernel κ] :
+    Stoch.of Z' ◁ κ.quiver (ex := ex) (ey := ey) =
+      quiver (ex := ez.prod ex) (ey := ez.prod ey) ((Kernel.id (α := Z)) ∥ₖ κ) := by
+  cat_kernel
+  simp only [quiver]
+  ext _ _ hs
+  rw [parallelComp_apply, comap_apply, map_apply, id_apply,
+    comap_apply, map_apply, parallelComp_apply, id_apply]
+  · simp only [Measure.dirac_prod, MeasurableEquiv.prod]
+    rw [Measure.map_map, Measure.map_map, Measure.map_apply, Measure.map_apply]
+    · congr with y
+      · simp
+      · simp
+    all_goals try fun_prop
+    all_goals exact hs
+  all_goals fun_prop
+
+lemma rightWhisker {κ : Kernel X Y} [IsSFiniteKernel κ] :
+    κ.quiver (ex := ex) (ey := ey) ▷ Stoch.of Z' =
+      quiver (ex := ex.prod ez) (ey := ey.prod ez) (κ ∥ₖ Kernel.id (α := Z)) := by
+  cat_kernel
+  simp only [quiver]
+  ext _ _ hs
+  rw [parallelComp_apply, comap_apply, map_apply, id_apply,
+    comap_apply, map_apply, parallelComp_apply, id_apply]
+  · simp only [Measure.prod_dirac, MeasurableEquiv.prod]
+    rw [Measure.map_map, Measure.map_map, Measure.map_apply, Measure.map_apply]
+    · congr with y
+      · simp
+      · simp
+    all_goals try fun_prop
+    all_goals exact hs
+  all_goals fun_prop
+
+end whiskers
 
 end ProbabilityTheory.Kernel

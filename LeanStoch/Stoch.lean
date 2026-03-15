@@ -73,12 +73,12 @@ instance : MonoidalCategory Stoch.{u} where
     · cat_kernel
       rw [Kernel.id_map hf₁, Kernel.id_map hf₂, Kernel.deterministic_comp_eq_map hf₂,
         Kernel.deterministic_map hf₁ hf₂]
-      ext x s hs
+      ext : 1
       simp [Kernel.deterministic_apply, Kernel.id_apply, f₁, f₂]
     · cat_kernel
       rw [Kernel.id_map hf₂, Kernel.id_map hf₁, Kernel.deterministic_comp_eq_map hf₁,
         Kernel.deterministic_map hf₂ hf₁]
-      ext x s hs
+      ext : 1
       simp [Kernel.deterministic_apply, Kernel.id_apply, f₁, f₂]
   leftUnitor X := by
     let f₁ := fun (x : X) ↦ (PUnit.unit, x)
@@ -89,12 +89,12 @@ instance : MonoidalCategory Stoch.{u} where
     · cat_kernel
       rw [Kernel.id_map hf₁, Kernel.deterministic_comp_eq_map hf₁, Kernel.id_map hf₂,
         Kernel.deterministic_map hf₂ hf₁]
-      ext x s hs
+      ext : 1
       simp [Kernel.deterministic_apply, Kernel.id_apply, f₁]
     · cat_kernel
       rw [Kernel.id_map hf₂, Kernel.deterministic_comp_eq_map hf₂, Kernel.id_map hf₁,
         Kernel.deterministic_map hf₁ hf₂]
-      ext x s hs
+      ext : 1
       simp [Kernel.deterministic_apply, Kernel.id_apply, f₁]
   rightUnitor X := by
     let f₁ := fun (x : X) ↦ (x, PUnit.unit)
@@ -105,12 +105,12 @@ instance : MonoidalCategory Stoch.{u} where
     · cat_kernel
       rw [Kernel.id_map hf₁, Kernel.deterministic_comp_eq_map hf₁, Kernel.id_map hf₂,
         Kernel.deterministic_map hf₂ hf₁]
-      ext x s hs
+      ext : 1
       simp [Kernel.deterministic_apply, Kernel.id_apply, f₁]
     · cat_kernel
       rw [Kernel.id_map hf₂, Kernel.deterministic_comp_eq_map hf₂, Kernel.id_map hf₁,
         Kernel.deterministic_map hf₁ hf₂]
-      ext x s hs
+      ext : 1
       simp [Kernel.deterministic_apply, Kernel.id_apply, f₁]
   whiskerLeft_id X Y := by
     cat_kernel
@@ -125,7 +125,7 @@ instance : MonoidalCategory Stoch.{u} where
     cat_kernel
     rw [Kernel.id_map (by fun_prop), Kernel.id_map (by fun_prop)]
     simp only [Kernel.deterministic_comp_eq_map, Kernel.comp_deterministic_eq_comap]
-    ext x s hs
+    ext _ _ hs
     have := κ.2
     rw [Kernel.map_apply' _ (by fun_prop) _ hs, Kernel.comap_apply' _ (by fun_prop),
       Kernel.parallelComp_apply' <| measurable_snd hs]
@@ -135,7 +135,7 @@ instance : MonoidalCategory Stoch.{u} where
     cat_kernel
     rw [Kernel.id_map (by fun_prop), Kernel.id_map (by fun_prop)]
     simp only [Kernel.deterministic_comp_eq_map, Kernel.comp_deterministic_eq_comap]
-    ext x s hs
+    ext _ _ hs
     have := κ.2
     rw [Kernel.map_apply' _ (by fun_prop) _ hs, Kernel.comap_apply' _ (by fun_prop),
       Kernel.parallelComp_apply' <| measurable_fst hs]
@@ -158,7 +158,7 @@ instance : MonoidalCategory Stoch.{u} where
     simp only [Kernel.comp_id_parallelComp]
     rw [Kernel.id_map (by fun_prop), Kernel.id_map (by fun_prop),
       Kernel.deterministic_comp_eq_map, Kernel.comp_deterministic_eq_comap]
-    ext x s hs
+    ext _ _ hs
     rw [Kernel.map_apply' _ (by fun_prop) _ hs, Kernel.comap_apply' _ (by fun_prop)]
     repeat rw [Kernel.parallelComp_apply]
     rw [Measure.prod_apply hs, Measure.prod_apply (by measurability), lintegral_prod]

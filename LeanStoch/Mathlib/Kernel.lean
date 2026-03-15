@@ -43,7 +43,7 @@ lemma Pdiscard_apply (a : α) : Pdiscard α a = Measure.dirac PUnit.unit := by
 @[simp]
 lemma parallelComp_id_id :
     Kernel.id ∥ₖ Kernel.id = (Kernel.id : Kernel (α × β) (α × β)) := by
-  ext x s hs
+  ext : 1
   simp [parallelComp_apply, id_apply, Measure.dirac_prod_dirac]
 
 @[simp]
@@ -57,17 +57,15 @@ lemma parallelComp_id_id_map {ι : Type*} [MeasurableSpace ι] {f : α → β} (
    Kernel.id ∥ₖ Kernel.id.map f =
     (Kernel.id.map (fun x => (x.1, f x.2)) : Kernel (ι × α) (ι × β)) := by
   rw [id_map hf, id_map (by fun_prop)]
-  ext x s hs
-  simp [parallelComp_apply, id_apply,
-    deterministic_apply, Measure.dirac_prod_dirac]
+  ext : 1
+  simp [parallelComp_apply, id_apply, deterministic_apply, Measure.dirac_prod_dirac]
 
 lemma parallelComp_id_map_id {ι : Type*} [MeasurableSpace ι] {f : α → β} (hf : Measurable f) :
    Kernel.id.map f ∥ₖ Kernel.id =
     (Kernel.id.map (fun x => (f x.1, x.2)) : Kernel (α × ι) (β × ι)) := by
   rw [id_map hf, id_map (by fun_prop)]
-  ext x s hs
-  simp [parallelComp_apply, id_apply,
-    deterministic_apply, Measure.dirac_prod_dirac]
+  ext : 1
+  simp [parallelComp_apply, id_apply, deterministic_apply, Measure.dirac_prod_dirac]
 
 @[simp]
 lemma comp_id_parallelComp {ι γ : Type*} [MeasurableSpace ι] [MeasurableSpace γ] (κ₁ : Kernel α β)
@@ -87,7 +85,7 @@ lemma comp_parallelComp_id {ι γ : Type*} [MeasurableSpace ι] [MeasurableSpace
 
 lemma id_eq_deterministic_id :
     (Kernel.id : Kernel α α) = Kernel.deterministic id measurable_id := by
-  ext x s hs
+  ext : 1
   simp [Kernel.deterministic_apply, Kernel.id_apply]
 
 end ProbabilityTheory.Kernel
