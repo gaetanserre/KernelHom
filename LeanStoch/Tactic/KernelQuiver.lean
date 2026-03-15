@@ -44,14 +44,14 @@ partial def construct_measurable_equiv (X : Expr) (xLevel maxLvl : Level) : Meta
       #[none, none, none, none, none, none, none, none, ex, ey]
   | _ => mkAppOptM' (Expr.const `MeasurableEquiv.ulift [xLevel, maxLvl]) #[X, none]
 
-def check_leftUnitor (κ : Expr) : MetaM Bool := do
+def check_unitors (κ : Expr) (n_arg : Nat) (prod : Name) : MetaM Bool := do
   let κ := κ.consumeMData
   if !κ.getAppFn.isConstOf ``ProbabilityTheory.Kernel.map then
     return false
   let args := κ.getAppArgs
   let fn := args[args.size - 1]!
   let idKernel := args[args.size - 2]!
-  if !fn.getAppFn.isConstOf ``Prod.snd then
+  if !fn.getAppFn.isConstOf prod then
     return false
   if !idKernel.getAppFn.isConstOf ``ProbabilityTheory.Kernel.id then
     return false
@@ -62,19 +62,39 @@ def check_leftUnitor (κ : Expr) : MetaM Bool := do
     let args := srcWhnf.getAppArgs
     if args.size < 2 then
       return false
-    let left := args[0]!
-    match left.getAppFn with
+    let punit? := args[n_arg]!
+    match punit?.getAppFn with
     | Expr.const ``PUnit _ => return true
     | _ => return false
   | _ => return false
 
-abbrev LvlExpr := Level × Expr
+def check_leftUnitor (κ : Expr) : MetaM Bool := check_unitors κ 0 ``Prod.snd
+
+def check_rightUnitor (κ : Expr) : MetaM Bool := check_unitors κ 1 ``Prod.fst
+
+def compute_StochOf (X : Expr) (xLevel maxLvl : Level) : MetaM Expr := do
+  match ← whnf X with
+  | Expr.const ``PUnit _ =>
+    let stoch := Expr.const `Stoch [maxLvl]
+    let tensorunit :=
+      Expr.const `CategoryTheory.MonoidalCategoryStruct.tensorUnit [maxLvl, maxLvl.succ]
+    mkAppOptM' tensorunit #[stoch, none, none]
+  | _ =>
+    let target ← mkAppM' (Expr.const `ULift [maxLvl, xLevel]) #[X]
+    let stochOfconst := Expr.const `Stoch.of [maxLvl]
+    mkAppOptM' stochOfconst #[target, none]
+
+inductive MonoidalOP
+  | leftUnitor
+  | rightUnitor
+
+abbrev LvlExpr := MonoidalOP × Level × Expr
 
 /-- Transform a kernel expression to its quiver representation with explicit universe level for w.
 - Replace `κ₁ ∘ₖ κ₂` (`Kernel.comp`) with `quiver κ₂ ≫ quiver κ₁`
 - Replace `κ ⊗≫ₖ η` (`Kernel.monoComp`) with `quiver κ ⊗≫ quiver η`
 - Replace single kernels with `quiver κ` -/
-partial def transformKernelToQuiver (maxLvl : Level) (e : Expr) (left_equivs : List LvlExpr) :
+partial def transformKernelToQuiver (maxLvl : Level) (e : Expr) (op_data : List LvlExpr) :
     MetaM (Expr × List LvlExpr) := do
   match e.getAppFn with
   | Expr.const `ProbabilityTheory.Kernel.comp _ =>
@@ -83,7 +103,7 @@ partial def transformKernelToQuiver (maxLvl : Level) (e : Expr) (left_equivs : L
       let κ := args[args.size - 2]!
       let η := args[args.size - 1]!
       -- Recursively transform both kernels
-      let (κ', lκ) ← transformKernelToQuiver maxLvl κ left_equivs
+      let (κ', lκ) ← transformKernelToQuiver maxLvl κ op_data
       let (η', lη) ← transformKernelToQuiver maxLvl η lκ
       -- Create categorical composition: η' ≫ κ' (reversed order)
       return (← mkAppM `CategoryTheory.CategoryStruct.comp #[η', κ'], lη)
@@ -96,7 +116,7 @@ partial def transformKernelToQuiver (maxLvl : Level) (e : Expr) (left_equivs : L
       let η := args[args.size - 2]!
       let ((_, X), (_, xLevel)) ← get_types_from_kernel κ
       let ((Y, _), (yLevel, _)) ← get_types_from_kernel η
-      let (κ', lκ) ← transformKernelToQuiver maxLvl κ left_equivs
+      let (κ', lκ) ← transformKernelToQuiver maxLvl κ op_data
       let (η', lη) ← transformKernelToQuiver maxLvl η lκ
       -- Create monoidal composition: quiver κ ⊗≫ quiver η
       let ex ← construct_measurable_equiv X xLevel maxLvl
@@ -117,27 +137,28 @@ partial def transformKernelToQuiver (maxLvl : Level) (e : Expr) (left_equivs : L
         | Expr.const ``Prod univs =>
           pure univs[0]!
         | _ => throwError "Expected left unitor with source PUnit × X, got: {X}"
-      let stochOf ←
-        match ← whnf Y with
-        | Expr.const ``PUnit _ =>
-          let stoch := Expr.const `Stoch [maxLvl]
-          let tensorunit :=
-            Expr.const `CategoryTheory.MonoidalCategoryStruct.tensorUnit [maxLvl, maxLvl.succ]
-          mkAppOptM' tensorunit #[stoch, none, none]
-        | _ =>
-          let target ← mkAppM' (Expr.const `ULift [maxLvl, yLevel]) #[Y]
-          let stochOfconst := Expr.const `Stoch.of [maxLvl]
-          mkAppOptM' stochOfconst #[target, none]
+      let stochOf ← compute_StochOf Y yLevel maxLvl
       let leftunitor ← mkAppM `CategoryTheory.MonoidalCategoryStruct.leftUnitor #[stochOf]
       let ey ← construct_measurable_equiv Y yLevel maxLvl
-      return (← mkAppM `CategoryTheory.Iso.hom #[leftunitor], left_equivs ++ [(punit_level, ey)])
+      let leftOP := [(MonoidalOP.leftUnitor, punit_level, ey)]
+      return (← mkAppM `CategoryTheory.Iso.hom #[leftunitor], op_data ++ leftOP)
+    if ← check_rightUnitor e then
+      let punit_level ← match (← whnf X).getAppFn with
+        | Expr.const ``Prod univs =>
+          pure univs[1]!
+        | _ => throwError "Expected right unitor with source X × PUnit, got: {X}"
+      let stochOf ← compute_StochOf Y yLevel maxLvl
+      let rightunitor ← mkAppM `CategoryTheory.MonoidalCategoryStruct.rightUnitor #[stochOf]
+      let ey ← construct_measurable_equiv Y yLevel maxLvl
+      let rightOP := [(MonoidalOP.rightUnitor, punit_level, ey)]
+      return (← mkAppM `CategoryTheory.Iso.hom #[rightunitor], op_data ++ rightOP)
     else
       -- Single kernel, transform to quiver.{maxLvl} ex ey κ
       let quiverConst := Expr.const `ProbabilityTheory.Kernel.quiver [maxLvl, xLevel, yLevel]
       let ex ← construct_measurable_equiv X xLevel maxLvl
       let ey ← construct_measurable_equiv Y yLevel maxLvl
       return( ← mkAppOptM' quiverConst
-        #[none, none, none, none, none, none, none, none, ex, ey, e, none], left_equivs)
+        #[none, none, none, none, none, none, none, none, ex, ey, e, none], op_data)
 
 /-- Transform both sides of an equality by converting kernels to quivers. -/
 def transformEquality (maxLvl : Level) (e : Expr) : MetaM (Expr × List LvlExpr) := do
@@ -148,7 +169,7 @@ def transformEquality (maxLvl : Level) (e : Expr) : MetaM (Expr × List LvlExpr)
   else
     throwError "Expected an equality, got: {e}"
 
-def mkKernelQuiverEqProof (eqProofType : Expr) (maxLvl : Level) (left_equivs : List LvlExpr) :
+def mkKernelQuiverEqProof (eqProofType : Expr) (maxLvl : Level) (op_data : List LvlExpr) :
     TacticM Expr := do
   let maxLevelStx ← liftMacroM <| levelToSyntax maxLvl
   let savedGoals ← getGoals
@@ -161,59 +182,63 @@ def mkKernelQuiverEqProof (eqProofType : Expr) (maxLvl : Level) (left_equivs : L
   let goalsAfterConstructor ← getGoals
   match goalsAfterConstructor with
   | [forwardGoal, backwardGoal] =>
-    -- Modus ponens direct. Try to use congruence on kernel compositions.
+
+    -- Modus ponens direction.
     setGoals [forwardGoal]
     evalTactic (← `(tactic| intro h))
-    evalTactic (← `(tactic|
-      try simp only [
+    -- Unfold `tensorUnit` if it appears, then try to rewrite unitors.
+    evalTactic (← `(tactic| try dsimp only [MonoidalCategoryStruct.tensorUnit]))
+    for e in op_data do
+      match e.1 with
+      | .leftUnitor =>
+        let eStx ← Term.exprToSyntax e.2.2
+        let punitLevelStx ← liftMacroM <| levelToSyntax e.2.1
+        evalTactic (← `(tactic| try rw [Kernel.leftUnitor.{$maxLevelStx, _, $punitLevelStx}
+          (ex := $eStx)]))
+      | .rightUnitor =>
+        let eStx ← Term.exprToSyntax e.2.2
+        let punitLevelStx ← liftMacroM <| levelToSyntax e.2.1
+        evalTactic (← `(tactic| try rw [Kernel.rightUnitor.{$maxLevelStx, _, $punitLevelStx}
+          (ex := $eStx)]))
+    -- Try to use congruence on kernel compositions and conclude with assumptions.
+    evalTactic (← `(tactic| first
+      | simpa [
         quiver_monoComp.{$maxLevelStx},
         quiver_comp.{$maxLevelStx},
         quiver_congr.{$maxLevelStx},
       ]
-    ))
-    evalTactic (← `(tactic|
-      try simp only [
+      | simpa [
         quiver_comp.{$maxLevelStx},
         quiver_congr.{$maxLevelStx}
       ]
     ))
-
-    -- Unfold `tensorUnit` if it appears, then try to rewrite unitors.
-    evalTactic (← `(tactic| try dsimp only [MonoidalCategoryStruct.tensorUnit]))
-    for e in left_equivs do
-      let eStx ← Term.exprToSyntax e.2
-      let punitLevelStx ← liftMacroM <| levelToSyntax e.1
-      evalTactic (← `(tactic| try rw [Kernel.leftUnitor.{$maxLevelStx, _, $punitLevelStx}
-        (ex := $eStx)]))
-
-    -- Try to use congruence lemmas to close the goal, then try to solve with assumptions.
-    evalTactic (← `(tactic| try simp only [quiver_congr.{$maxLevelStx}]))
-    evalTactic (← `(tactic| assumption))
-
     -- Modus ponens reverse
     setGoals [backwardGoal]
     evalTactic (← `(tactic| intro h))
-    evalTactic (← `(tactic|
-      try simp only [
+    evalTactic (← `(tactic| try dsimp only [MonoidalCategoryStruct.tensorUnit] at h))
+    for e in op_data do
+      match e.1 with
+      | .leftUnitor =>
+        let eStx ← Term.exprToSyntax e.2.2
+        let punitLevelStx ← liftMacroM <| levelToSyntax e.2.1
+        evalTactic (← `(tactic| try rw [Kernel.leftUnitor.{$maxLevelStx, _, $punitLevelStx}
+          (ex := $eStx)] at h))
+      | .rightUnitor =>
+        let eStx ← Term.exprToSyntax e.2.2
+        let punitLevelStx ← liftMacroM <| levelToSyntax e.2.1
+        evalTactic (← `(tactic| try rw [Kernel.rightUnitor.{$maxLevelStx, _, $punitLevelStx}
+          (ex := $eStx)] at h))
+    evalTactic (← `(tactic| first
+      | simpa only [
         quiver_monoComp.{$maxLevelStx},
         quiver_comp.{$maxLevelStx},
         quiver_congr.{$maxLevelStx},
-      ] at h
-    ))
-    evalTactic (← `(tactic|
-      try simp only [
+      ] using h
+      | simpa only [
         quiver_comp.{$maxLevelStx},
         quiver_congr.{$maxLevelStx}
-      ] at h
+      ] using h
     ))
-    evalTactic (← `(tactic| try dsimp only [MonoidalCategoryStruct.tensorUnit] at h))
-    for e in left_equivs do
-      let eStx ← Term.exprToSyntax e.2
-      let punitLevelStx ← liftMacroM <| levelToSyntax e.1
-      evalTactic (← `(tactic| try rw [Kernel.leftUnitor.{$maxLevelStx, _, $punitLevelStx}
-        (ex := $eStx)] at h))
-    evalTactic (← `(tactic| try simp only [quiver_congr.{$maxLevelStx}] at h))
-    evalTactic (← `(tactic| assumption))
   | _ =>
     setGoals savedGoals
     throwError "Expected exactly two goals after `constructor`"
@@ -238,9 +263,9 @@ def applyKernelQuiver (goal : MVarId) (fvarId : Option FVarId) : TacticM MVarId 
     let maxLvl ← match uniqueLevels with
       | [] => throwError "No universe levels found in the expression"
       | head :: tail => pure (tail.foldl Level.max head)
-    let (quiverExpr, left_equivs) ← transformEquality maxLvl expr
+    let (quiverExpr, op_data) ← transformEquality maxLvl expr
     let eqProofType ← mkEq expr quiverExpr
-    let eqProof ← mkKernelQuiverEqProof eqProofType maxLvl left_equivs
+    let eqProof ← mkKernelQuiverEqProof eqProofType maxLvl op_data
     match fvarId with
     | some fid => do
       let mvarId ← getMainGoal
@@ -293,3 +318,24 @@ example {W X Y Z : Type*} [MeasurableSpace X] [MeasurableSpace Y] [MeasurableSpa
     t ∘ₖ ξ ∘ₖ (κ ⊗≫ₖ η) = t ∘ₖ (ξ ∘ₖ (κ ⊗≫ₖ η)) := by
   kernel_quiver
   simp only [Category.assoc]
+
+example {X : Type*} [MeasurableSpace X] :
+    Kernel.id.map (Prod.snd : PUnit × X → X) = (0 : Kernel (PUnit × X) X) := by
+  kernel_quiver
+  sorry
+
+example {X : Type*} [MeasurableSpace X] :
+    Kernel.id.map (Prod.snd : PUnit × PUnit → PUnit) = (0 : Kernel (PUnit × PUnit) PUnit) := by
+  kernel_quiver
+  sorry
+
+example {X : Type*} [MeasurableSpace X] :
+    Kernel.id.map (Prod.fst : PUnit × PUnit → PUnit) = (0 : Kernel (PUnit × PUnit) PUnit) := by
+  kernel_quiver
+  sorry
+
+example {X Y : Type*} [MeasurableSpace X] [MeasurableSpace Y] (κ : Kernel X Y)
+    [IsSFiniteKernel κ] :
+    κ ∘ₖ Kernel.id.map (Prod.fst : X × PUnit → X) = (0 : Kernel (X × PUnit) Y) := by
+  kernel_quiver
+  sorry

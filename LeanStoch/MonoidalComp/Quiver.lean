@@ -104,6 +104,25 @@ lemma leftUnitor : (λ_ (Stoch.of X')).hom = quiver (ex := punit.prod ex) (ey :=
   all_goals try fun_prop
   all_goals measurability
 
+lemma rightUnitor : (ρ_ (Stoch.of X')).hom = quiver (ex := ex.prod punit) (ey := ex)
+    (Kernel.id.map (Prod.fst : X × PUnit → X)) := by
+  cat_kernel
+  simp only [quiver]
+  ext x s hs
+  rw [Kernel.map_apply', Kernel.comap_apply', Kernel.map_apply', Kernel.map_apply',
+    Kernel.id_apply, Kernel.id_apply]
+  · simp only [Set.preimage, Set.mem_setOf_eq]
+    rw [Measure.dirac_apply', Measure.dirac_apply']
+    · refine Set.indicator_eq_indicator (Iff.intro (fun h ↦ ?_) (fun h ↦ ?_)) rfl
+      · simpa [punit, MeasurableEquiv.prod]
+      · simpa [punit, MeasurableEquiv.prod] using h
+    · rw [measurableSet_setOf]
+      exact Measurable.comp hs.mem <| .comp ex.symm.measurable measurable_fst
+    · rw [measurableSet_setOf]
+      exact Measurable.comp hs.mem measurable_fst
+  all_goals try fun_prop
+  all_goals measurability
+
 end unitors
 
 
