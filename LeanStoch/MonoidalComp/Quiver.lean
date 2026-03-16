@@ -126,7 +126,7 @@ section whiskers
 
 variable {Z : Type z} [MeasurableSpace Z] {Z' : Type w} [MeasurableSpace Z'] {ez : Z' ≃ᵐ Z}
 
-lemma leftWhisker {κ : Kernel X Y} [IsSFiniteKernel κ] :
+lemma WhiskerLeft {κ : Kernel X Y} [IsSFiniteKernel κ] :
     Stoch.of Z' ◁ κ.quiver (ex := ex) (ey := ey) =
       quiver (ex := ez.prod ex) (ey := ez.prod ey) ((Kernel.id (α := Z)) ∥ₖ κ) := by
   cat_kernel
@@ -143,7 +143,7 @@ lemma leftWhisker {κ : Kernel X Y} [IsSFiniteKernel κ] :
     all_goals exact hs
   all_goals fun_prop
 
-lemma rightWhisker {κ : Kernel X Y} [IsSFiniteKernel κ] :
+lemma WhiskerRight {κ : Kernel X Y} [IsSFiniteKernel κ] :
     κ.quiver (ex := ex) (ey := ey) ▷ Stoch.of Z' =
       quiver (ex := ex.prod ez) (ey := ey.prod ez) (κ ∥ₖ Kernel.id (α := Z)) := by
   cat_kernel

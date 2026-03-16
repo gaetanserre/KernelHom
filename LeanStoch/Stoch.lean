@@ -35,7 +35,7 @@ open CategoryTheory ProbabilityTheory MeasureTheory
 
 universe u
 
-/-- The category **Stoch** of measurable spaces and Markov kernels. -/
+/-- The category **Stoch** of measurable spaces and s-finite kernels. -/
 structure Stoch : Type (u + 1) where
   of ::
   carrier : Type u
@@ -48,7 +48,7 @@ instance : CoeSort Stoch Type* :=
 
 noncomputable section
 
-/-- **Stoch** is a large category with Markov kernels as morphisms.
+/-- **Stoch** is a large category with s-finite kernels as morphisms.
 Composition is given by kernel composition `∘ₖ`. -/
 instance : LargeCategory Stoch.{u} where
   Hom X Y := { k : Kernel X Y // IsSFiniteKernel k }
