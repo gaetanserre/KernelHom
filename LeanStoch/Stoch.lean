@@ -5,7 +5,6 @@ Authors: Gaëtan Serré
 -/
 
 import Mathlib.CategoryTheory.MarkovCategory.Basic
-import Mathlib.MeasureTheory.Category.MeasCat
 import LeanStoch.Tactic.SFinite
 import LeanStoch.Mathlib.Kernel
 
@@ -70,12 +69,12 @@ instance : MonoidalCategory Stoch.{u} where
     have hf₂ : Measurable f₂ := by fun_prop
     refine ⟨⟨Kernel.id.map f₁, by kernel_sfinite⟩,
       ⟨Kernel.id.map f₂, by kernel_sfinite⟩, ?_, ?_⟩
-    · cat_kernel
+    · kernel_cat
       rw [Kernel.id_map hf₁, Kernel.id_map hf₂, Kernel.deterministic_comp_eq_map hf₂,
         Kernel.deterministic_map hf₁ hf₂]
       ext : 1
       simp [Kernel.deterministic_apply, Kernel.id_apply, f₁, f₂]
-    · cat_kernel
+    · kernel_cat
       rw [Kernel.id_map hf₂, Kernel.id_map hf₁, Kernel.deterministic_comp_eq_map hf₁,
         Kernel.deterministic_map hf₂ hf₁]
       ext : 1
@@ -86,12 +85,12 @@ instance : MonoidalCategory Stoch.{u} where
     have hf₂ : Measurable (Prod.snd : PUnit × X → X) := by fun_prop
     refine ⟨⟨Kernel.id.map Prod.snd, by kernel_sfinite⟩,
       ⟨Kernel.id.map f₁, by kernel_sfinite⟩, ?_, ?_⟩
-    · cat_kernel
+    · kernel_cat
       rw [Kernel.id_map hf₁, Kernel.deterministic_comp_eq_map hf₁, Kernel.id_map hf₂,
         Kernel.deterministic_map hf₂ hf₁]
       ext : 1
       simp [Kernel.deterministic_apply, Kernel.id_apply, f₁]
-    · cat_kernel
+    · kernel_cat
       rw [Kernel.id_map hf₂, Kernel.deterministic_comp_eq_map hf₂, Kernel.id_map hf₁,
         Kernel.deterministic_map hf₁ hf₂]
       ext : 1
@@ -102,27 +101,27 @@ instance : MonoidalCategory Stoch.{u} where
     have hf₂ : Measurable (Prod.fst : X × PUnit → X) := by fun_prop
     refine ⟨⟨Kernel.id.map Prod.fst, by kernel_sfinite⟩,
       ⟨Kernel.id.map f₁, by kernel_sfinite⟩, ?_, ?_⟩
-    · cat_kernel
+    · kernel_cat
       rw [Kernel.id_map hf₁, Kernel.deterministic_comp_eq_map hf₁, Kernel.id_map hf₂,
         Kernel.deterministic_map hf₂ hf₁]
       ext : 1
       simp [Kernel.deterministic_apply, Kernel.id_apply, f₁]
-    · cat_kernel
+    · kernel_cat
       rw [Kernel.id_map hf₂, Kernel.deterministic_comp_eq_map hf₂, Kernel.id_map hf₁,
         Kernel.deterministic_map hf₁ hf₂]
       ext : 1
       simp [Kernel.deterministic_apply, Kernel.id_apply, f₁]
   whiskerLeft_id X Y := by
-    cat_kernel
+    kernel_cat
     simp
   id_whiskerRight X Y := by
-    cat_kernel
+    kernel_cat
     simp
   id_tensorHom_id X₁ X₂ := by
-    cat_kernel
+    kernel_cat
     simp
   leftUnitor_naturality κ := by
-    cat_kernel
+    kernel_cat
     rw [Kernel.id_map (by fun_prop), Kernel.id_map (by fun_prop)]
     simp only [Kernel.deterministic_comp_eq_map, Kernel.comp_deterministic_eq_comap]
     ext _ _ hs
@@ -132,7 +131,7 @@ instance : MonoidalCategory Stoch.{u} where
     simp only [Kernel.id_apply, lintegral_dirac]
     congr
   rightUnitor_naturality κ := by
-    cat_kernel
+    kernel_cat
     rw [Kernel.id_map (by fun_prop), Kernel.id_map (by fun_prop)]
     simp only [Kernel.deterministic_comp_eq_map, Kernel.comp_deterministic_eq_comap]
     ext _ _ hs
@@ -143,7 +142,7 @@ instance : MonoidalCategory Stoch.{u} where
     rw [← lintegral_indicator_one hs]
     congr
   tensorHom_comp_tensorHom κ₁ κ₂ η₁ η₂ := by
-    cat_kernel
+    kernel_cat
     have := η₂.2
     have := η₁.2
     have := κ₁.2
@@ -151,7 +150,7 @@ instance : MonoidalCategory Stoch.{u} where
     simp only [Kernel.comp_id_parallelComp]
     exact Kernel.parallelComp_comp_parallelComp
   associator_naturality κ₁ κ₂ η := by
-    cat_kernel
+    kernel_cat
     have := κ₁.2
     have := κ₂.2
     have := η.2
@@ -168,14 +167,14 @@ instance : MonoidalCategory Stoch.{u} where
     · refine Measurable.aemeasurable ?_
       exact measurable_measure_prodMk_left (by measurability)
   pentagon W X Y Z := by
-    cat_kernel
+    kernel_cat
     rw [Kernel.parallelComp_id_id_map (by fun_prop), Kernel.parallelComp_id_map_id (by fun_prop),
       Kernel.id_map (by fun_prop), Kernel.id_map (by fun_prop), Kernel.id_map (by fun_prop),
       Kernel.id_map (by fun_prop), Kernel.id_map (by fun_prop)]
     simp [Kernel.deterministic_comp_deterministic]
     congr 1
   triangle X Y := by
-    cat_kernel
+    kernel_cat
     rw [Kernel.parallelComp_id_id_map (by fun_prop), Kernel.parallelComp_id_map_id (by fun_prop),
       Kernel.id_map (by fun_prop), Kernel.id_map (by fun_prop), Kernel.id_map (by fun_prop),
       Kernel.deterministic_comp_deterministic]
@@ -192,21 +191,21 @@ instance {X : Stoch.{u}} : ComonObj X where
   counit := ⟨Kernel.Pdiscard X, by kernel_sfinite⟩
   comul := ⟨Kernel.copy X, by kernel_sfinite⟩
   counit_comul := by
-    cat_kernel
-    simp only [Kernel.Pdiscard, Kernel.copy]
-    rw [Kernel.id_eq_deterministic_id, Kernel.deterministic_parallelComp_deterministic,
+    kernel_cat
+    simp only [Kernel.Pdiscard, Kernel.copy, Kernel.id]
+    rw [Kernel.deterministic_parallelComp_deterministic,
       Kernel.deterministic_comp_deterministic, Kernel.deterministic_map measurable_id (by fun_prop)]
     congr 1
   comul_counit := by
-    cat_kernel
-    simp only [Kernel.Pdiscard, Kernel.copy]
-    rw [Kernel.id_eq_deterministic_id, Kernel.deterministic_parallelComp_deterministic,
+    kernel_cat
+    simp only [Kernel.Pdiscard, Kernel.copy, Kernel.id]
+    rw [Kernel.deterministic_parallelComp_deterministic,
       Kernel.deterministic_comp_deterministic, Kernel.deterministic_map measurable_id (by fun_prop)]
     congr 1
   comul_assoc := by
-    cat_kernel
+    kernel_cat
     rw [Kernel.id_map (by fun_prop)]
-    simp [Kernel.copy, Kernel.id_eq_deterministic_id, Kernel.deterministic_comp_deterministic,
+    simp [Kernel.copy, Kernel.id, Kernel.deterministic_comp_deterministic,
       Kernel.deterministic_parallelComp_deterministic]
     congr 1
 
@@ -215,28 +214,28 @@ instance : BraidedCategory Stoch.{u} where
   braiding X Y := by
     refine ⟨⟨Kernel.swap _ _, by kernel_sfinite⟩, ⟨Kernel.swap _ _, by kernel_sfinite⟩,
       ?_, ?_⟩
-    · cat_kernel
+    · kernel_cat
       exact Kernel.swap_swap
-    · cat_kernel
+    · kernel_cat
       exact Kernel.swap_swap
   braiding_naturality_right X Y Z κ := by
-    cat_kernel
+    kernel_cat
     exact Kernel.swap_parallelComp
   braiding_naturality_left κ X := by
-    cat_kernel
+    kernel_cat
     exact Kernel.swap_parallelComp
   hexagon_forward X Y Z := by
-    cat_kernel
+    kernel_cat
     repeat rw [Kernel.id_map]
-    · simp only [Kernel.id_eq_deterministic_id, Kernel.swap]
+    · simp only [Kernel.id, Kernel.swap]
       repeat rw [Kernel.deterministic_parallelComp_deterministic]
       repeat rw [Kernel.deterministic_comp_deterministic]
       congr 1
     all_goals fun_prop
   hexagon_reverse X Y Z := by
-    cat_kernel
+    kernel_cat
     repeat rw [Kernel.id_map]
-    · simp only [Kernel.id_eq_deterministic_id, Kernel.swap]
+    · simp only [Kernel.id, Kernel.swap]
       repeat rw [Kernel.deterministic_parallelComp_deterministic]
       repeat rw [Kernel.deterministic_comp_deterministic]
       congr 1
@@ -245,13 +244,13 @@ instance : BraidedCategory Stoch.{u} where
 /-- **Stoch** is a symmetric monoidal category. -/
 instance : SymmetricCategory Stoch.{u} where
   symmetry X Y := by
-    cat_kernel
+    kernel_cat
     exact Kernel.swap_swap
 
 /-- The comonoid on each object is commutative. -/
 instance (X : Stoch.{u}) : IsCommComonObj X where
   comul_comm := by
-    cat_kernel
+    kernel_cat
     exact Kernel.swap_copy
 
 end

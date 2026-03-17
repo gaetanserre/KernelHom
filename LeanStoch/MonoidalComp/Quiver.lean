@@ -67,7 +67,7 @@ open CategoryTheory
 lemma quiver_comp {κ₁ : Kernel X Y} {κ₂ : Kernel Z X} [IsSFiniteKernel κ₁] [IsSFiniteKernel κ₂] :
     quiver (ex := ez) (ey := ex) κ₂ ≫ quiver (ex := ex) (ey := ey) κ₁
       = quiver (ex := ez) (ey := ey) (κ₁ ∘ₖ κ₂) := by
-  cat_kernel
+  kernel_cat
   simp only [quiver]
   ext x s hs
   rw [map_comp, ← comp_map, comap_apply, comp_apply', comp_apply', map_apply, comap_apply,
@@ -86,7 +86,7 @@ section unitors
 
 lemma leftUnitor : (λ_ (Stoch.of X')).hom = quiver (ex := punit.prod ex) (ey := ex)
     (Kernel.id.map (Prod.snd : PUnit × X → X)) := by
-  cat_kernel
+  kernel_cat
   simp only [quiver]
   ext x s hs
   rw [map_apply', comap_apply', map_apply', map_apply', id_apply, id_apply]
@@ -104,7 +104,7 @@ lemma leftUnitor : (λ_ (Stoch.of X')).hom = quiver (ex := punit.prod ex) (ey :=
 
 lemma rightUnitor : (ρ_ (Stoch.of X')).hom = quiver (ex := ex.prod punit) (ey := ex)
     (Kernel.id.map (Prod.fst : X × PUnit → X)) := by
-  cat_kernel
+  kernel_cat
   simp only [quiver]
   ext x s hs
   rw [map_apply', comap_apply', map_apply', map_apply', id_apply, id_apply]
@@ -129,7 +129,7 @@ variable {Z : Type z} [MeasurableSpace Z] {Z' : Type w} [MeasurableSpace Z'] {ez
 lemma WhiskerLeft {κ : Kernel X Y} [IsSFiniteKernel κ] :
     Stoch.of Z' ◁ κ.quiver (ex := ex) (ey := ey) =
       quiver (ex := ez.prod ex) (ey := ez.prod ey) ((Kernel.id (α := Z)) ∥ₖ κ) := by
-  cat_kernel
+  kernel_cat
   simp only [quiver]
   ext _ _ hs
   rw [parallelComp_apply, comap_apply, map_apply, id_apply,
@@ -146,7 +146,7 @@ lemma WhiskerLeft {κ : Kernel X Y} [IsSFiniteKernel κ] :
 lemma WhiskerRight {κ : Kernel X Y} [IsSFiniteKernel κ] :
     κ.quiver (ex := ex) (ey := ey) ▷ Stoch.of Z' =
       quiver (ex := ex.prod ez) (ey := ey.prod ez) (κ ∥ₖ Kernel.id (α := Z)) := by
-  cat_kernel
+  kernel_cat
   simp only [quiver]
   ext _ _ hs
   rw [parallelComp_apply, comap_apply, map_apply, id_apply,

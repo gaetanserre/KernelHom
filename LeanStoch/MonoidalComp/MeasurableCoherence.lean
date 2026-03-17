@@ -29,7 +29,7 @@ def monoidalCoherence {X' Y' : Type w} [MeasurableSpace X'] [MeasurableSpace Y']
     let e := ex.trans <| mXY.miso.trans ey.symm
     refine ⟨⟨Kernel.id.map e, by kernel_sfinite⟩,
       ⟨Kernel.id.map e.symm, by kernel_sfinite⟩, ?_, ?_⟩
-    all_goals cat_kernel
+    all_goals kernel_cat
     · rw [Kernel.id_map (by fun_prop), Kernel.id_map (by fun_prop),
         Kernel.deterministic_comp_deterministic, Kernel.id_eq_deterministic_id]
       congr
@@ -88,7 +88,7 @@ lemma quiver_monoComp : @monoidalComp _ _ _ _ _ _ (monoidalCoherence ex' ey')
     (quiver (ex := ew') (ey := ex') κ) (quiver (ex := ey') (ey := ez') η)
     = quiver (ex := ew') (ey := ez') (monoComp κ η):= by
   simp only [monoComp, monoComp', fromQuiver, quiver, monoidalComp]
-  cat_kernel
+  kernel_cat
   dsimp [monoidalCoherence]
   ext _ s hs
   simp_all only [coe_comap, Function.comp_apply, comp_apply']
