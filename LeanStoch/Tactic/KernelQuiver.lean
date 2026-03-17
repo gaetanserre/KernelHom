@@ -30,7 +30,7 @@ def get_types_from_kernel (κ : Expr) : MetaM (Expr × Expr × Level × Level) :
 partial def construct_measurable_equiv (e : Expr) (eLevel maxLvl : Level) : MetaM Expr := do
   let ewhnf ← whnf e
   match ewhnf.getAppFn with
-  | Expr.const ``PUnit _ =>
+  | Expr.const ``PUnit _ | Expr.const ``Unit _ =>
     mkAppOptM' (Expr.const `MeasurableEquiv.punit [maxLvl, eLevel]) #[]
   | Expr.const ``Prod univs =>
     let args := ewhnf.getAppArgs
@@ -65,7 +65,7 @@ def check_unitors (κ : Expr) (offset : Nat) (prod : Name) : MetaM Bool := do
       return false
     let punit? := args[offset]!
     match punit?.getAppFn with
-    | Expr.const ``PUnit _ => return true
+    | Expr.const ``PUnit _ | Expr.const ``Unit _ => return true
     | _ => return false
   | _ => return false
 
@@ -89,7 +89,7 @@ def check_WhiskerRight (κ : Expr) : MetaM Bool := check_Whiskers κ 1
 
 def compute_StochOf (X : Expr) (xLevel maxLvl : Level) : MetaM Expr := do
   match ← whnf X with
-  | Expr.const ``PUnit _ =>
+  | Expr.const ``PUnit _ | Expr.const ``Unit _ =>
     let stoch := Expr.const `Stoch [maxLvl]
     let tensorunit :=
       Expr.const `CategoryTheory.MonoidalCategoryStruct.tensorUnit [maxLvl, maxLvl.succ]
@@ -123,7 +123,6 @@ def construct_unitors (X Y : Expr) (yLvl maxLvl : Level) (offset : Nat) :
   let ey ← construct_measurable_equiv Y yLvl maxLvl
   let unitorOP := if left then .leftUnitor (punit_level, ey)
     else .rightUnitor (punit_level, ey)
-  logInfo m!"Constructed unitor: {unitor} for {X} → {Y} with PUnit level: {punit_level}"
   return (← mkAppM `CategoryTheory.Iso.hom #[unitor], unitorOP)
 
 def construct_whiskers_args (e X : Expr) (maxLvl : Level) (offset : Nat) :
@@ -238,8 +237,7 @@ def mkKernelQuiverEqProof (eqProofType rhs lhs : Expr) (maxLvl : Level) (op_data
   let mvarId := mvar.mvarId!
   setGoals [mvarId]
 
-  evalTactic (← `(tactic| sorry))
-  /- evalTactic (← `(tactic| apply propext))
+  evalTactic (← `(tactic| apply propext))
   evalTactic (← `(tactic| constructor))
   let goalsAfterConstructor ← getGoals
   match goalsAfterConstructor with
@@ -367,7 +365,7 @@ def mkKernelQuiverEqProof (eqProofType rhs lhs : Expr) (maxLvl : Level) (op_data
     evalTactic (← `(tactic| rwa [quiver_congr.{$maxLevelStx} (κ₁ := $rhsStx) (κ₂ := $lhsStx)] at h))
   | _ =>
     setGoals savedGoals
-    throwError "Expected exactly two goals after `constructor`" -/
+    throwError "Expected exactly two goals after `constructor`"
 
   if !(← getGoals).isEmpty then
     setGoals savedGoals
@@ -446,23 +444,23 @@ example {W X Y Z : Type*} [MeasurableSpace X] [MeasurableSpace Y] [MeasurableSpa
   simp only [Category.assoc]
 
 example {X : Type*} [MeasurableSpace X] :
-    Kernel.id.map (Prod.snd : PUnit × X → X) = (0 : Kernel (PUnit × X) X) := by
+    Kernel.id.map (Prod.snd : Unit × X → X) = (0 : Kernel (Unit × X) X) := by
   kernel_quiver
   sorry
 
 example {X : Type*} [MeasurableSpace X] :
-    Kernel.id.map (Prod.snd : PUnit × PUnit → PUnit) = (0 : Kernel (PUnit × PUnit) PUnit) := by
+    Kernel.id.map (Prod.snd : Unit × Unit → Unit) = (0 : Kernel (Unit × Unit) Unit) := by
   kernel_quiver
   sorry
 
 example {X : Type*} [MeasurableSpace X] :
-    Kernel.id.map (Prod.fst : PUnit × PUnit → PUnit) = (0 : Kernel (PUnit × PUnit) PUnit) := by
+    Kernel.id.map (Prod.fst : Unit × Unit → Unit) = (0 : Kernel (Unit × Unit) Unit) := by
   kernel_quiver
   sorry
 
 example {X Y : Type*} [MeasurableSpace X] [MeasurableSpace Y] (κ : Kernel X Y)
     [IsSFiniteKernel κ] :
-    κ ∘ₖ Kernel.id.map (Prod.fst : X × PUnit → X) = (0 : Kernel (X × PUnit) Y) := by
+    κ ∘ₖ Kernel.id.map (Prod.fst : X × Unit → X) = (0 : Kernel (X × Unit) Y) := by
   kernel_quiver
   sorry
 
@@ -470,7 +468,7 @@ open MeasurableEquiv
 example {X Y W Z : Type*} [MeasurableSpace X] [MeasurableSpace Y] [MeasurableSpace W]
     [MeasurableSpace Z] (κ : Kernel X Y) (η : Kernel Y Z) [IsFiniteKernel η]
     [IsSFiniteKernel κ] :
-   (Kernel.id (α := PUnit)) ∥ₖ (η ∘ₖ κ) = (0 : Kernel (PUnit × X) (PUnit × Z)) := by
+   (Kernel.id (α := Unit)) ∥ₖ (η ∘ₖ κ) = (0 : Kernel (Unit × X) (Unit × Z)) := by
   kernel_quiver
   sorry
 

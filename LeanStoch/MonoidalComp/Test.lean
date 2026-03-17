@@ -32,8 +32,8 @@ example :
 open MeasurableEquiv
 
 example (f : Kernel X Y) (g : Kernel Y Z) [IsSFiniteKernel f] [IsSFiniteKernel g] :
-    (g ∘ₖ Kernel.id.map (Prod.fst : Y × PUnit.{u_1 + 1} → Y)) ∘ₖ (Kernel.id.map (Prod.fst : Y × PUnit.{u_2 + 1} → Y) ∥ₖ Kernel.id (α := PUnit)) = (0 : Kernel ((Y × PUnit) × PUnit) Z) := by
+    (g ∘ₖ Kernel.id.map (Prod.fst : Y × Unit → Y)) ∘ₖ (Kernel.id.map (Prod.fst : Y × Unit → Y) ∥ₖ Kernel.id (α := Unit)) = (0 : Kernel ((Y × Unit) × Unit) Z) := by
   kernel_quiver
   --dsimp [MonoidalCategoryStruct.tensorUnit]
-  rw [Kernel.rightUnitor.{max y z u_1 u_2, _, u_1} (ex := ulift)]
+  rw [Kernel.rightUnitor.{max y z 0, _, 0} (ex := ulift)]
   sorry
