@@ -31,11 +31,11 @@ def monoidalCoherence {X' Y' : Type w} [MeasurableSpace X'] [MeasurableSpace Y']
       ⟨Kernel.id.map e.symm, by kernel_sfinite⟩, ?_, ?_⟩
     all_goals kernel_cat
     · rw [Kernel.id_map (by fun_prop), Kernel.id_map (by fun_prop),
-        Kernel.deterministic_comp_deterministic, Kernel.id_eq_deterministic_id]
+        Kernel.deterministic_comp_deterministic, Kernel.id]
       congr
       simp [e]
     · rw [Kernel.id_map (by fun_prop), Kernel.id_map (by fun_prop),
-        Kernel.deterministic_comp_deterministic, Kernel.id_eq_deterministic_id]
+        Kernel.deterministic_comp_deterministic, Kernel.id]
       congr
       simp [e]
 

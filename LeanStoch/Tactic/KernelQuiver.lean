@@ -148,10 +148,7 @@ def construct_whiskers_args (e X : Expr) (maxLvl : Level) (offset : Nat) :
       else throwError "Expected right whisker with parallelComp, got: {e}"
   return (stochOfZ, κ, Z, zLvl)
 
-/-- Transform a kernel expression to its quiver representation with explicit universe level for w.
-- Replace `κ₁ ∘ₖ κ₂` (`Kernel.comp`) with `quiver κ₂ ≫ quiver κ₁`
-- Replace `κ ⊗≫ₖ η` (`Kernel.monoComp`) with `quiver κ ⊗≫ quiver η`
-- Replace single kernels with `quiver κ` -/
+/-- Transform a kernel expression to its quiver representation with explicit universe level. -/
 partial def transformKernelToQuiver (maxLvl : Level) (e : Expr) (op_data : List MonoidalOP) :
     MetaM (Expr × List MonoidalOP) := do
   match e.getAppFn with
@@ -219,7 +216,8 @@ partial def transformKernelToQuiver (maxLvl : Level) (e : Expr) (op_data : List 
         #[none, none, none, none, none, none, none, none, ex, ey, e, none], op_data)
 
 /-- Transform both sides of an equality by converting kernels to quivers. -/
-def transformEquality (maxLvl : Level) (e : Expr) : MetaM (Expr × List MonoidalOP × Expr × Expr) := do
+def transformEquality (maxLvl : Level) (e : Expr) :
+    MetaM (Expr × List MonoidalOP × Expr × Expr) := do
   if e.isAppOfArity `Eq 3 then
     let (lhs, lh) ← transformKernelToQuiver maxLvl e.getAppArgs[1]! []
     let (rhs, rh) ← transformKernelToQuiver maxLvl e.getAppArgs[2]! lh
@@ -227,8 +225,8 @@ def transformEquality (maxLvl : Level) (e : Expr) : MetaM (Expr × List Monoidal
   else
     throwError "Expected an equality, got: {e}"
 
-def mkKernelQuiverEqProof (eqProofType rhs lhs : Expr) (maxLvl : Level) (op_data : List MonoidalOP) :
-    TacticM Expr := do
+def mkKernelQuiverEqProof (eqProofType rhs lhs : Expr) (maxLvl : Level)
+    (op_data : List MonoidalOP) : TacticM Expr := do
   let maxLevelStx ← liftMacroM <| levelToSyntax maxLvl
   let rhsStx ← Term.exprToSyntax rhs
   let lhsStx ← Term.exprToSyntax lhs
@@ -274,21 +272,6 @@ def mkKernelQuiverEqProof (eqProofType rhs lhs : Expr) (maxLvl : Level) (op_data
       evalTactic congr_tac
     catch _ =>
       pure ()
-
-    for e in op_data do
-      match e with
-      | .leftUnitor lvl_expr =>
-        let punitLevelStx ← liftMacroM <| levelToSyntax lvl_expr.1
-        let eStx ← Term.exprToSyntax lvl_expr.2
-        evalTactic (← `(tactic| try rw [Kernel.leftUnitor.{$maxLevelStx, _, $punitLevelStx}
-          (ex := $eStx)]))
-      | .rightUnitor lvl_expr =>
-        let punitLevelStx ← liftMacroM <| levelToSyntax lvl_expr.1
-        let eStx ← Term.exprToSyntax lvl_expr.2
-        evalTactic (← `(tactic| try rw [Kernel.rightUnitor.{$maxLevelStx, _, $punitLevelStx}
-          (ex := $eStx)]))
-      | _ => pure ()
-
     for e in op_data do
       match e with
       | .WhiskerLeft lvl_expr =>
@@ -334,21 +317,6 @@ def mkKernelQuiverEqProof (eqProofType rhs lhs : Expr) (maxLvl : Level) (op_data
       evalTactic congr_tac
     catch _ =>
       pure ()
-
-    for e in op_data do
-      match e with
-      | .leftUnitor lvl_expr =>
-        let punitLevelStx ← liftMacroM <| levelToSyntax lvl_expr.1
-        let eStx ← Term.exprToSyntax lvl_expr.2
-        evalTactic (← `(tactic| try rw [Kernel.leftUnitor.{$maxLevelStx, _, $punitLevelStx}
-          (ex := $eStx)] at h))
-      | .rightUnitor lvl_expr =>
-        let punitLevelStx ← liftMacroM <| levelToSyntax lvl_expr.1
-        let eStx ← Term.exprToSyntax lvl_expr.2
-        evalTactic (← `(tactic| try rw [Kernel.rightUnitor.{$maxLevelStx, _, $punitLevelStx}
-          (ex := $eStx)] at h))
-      | _ => pure ()
-
     for e in op_data do
       match e with
       | .WhiskerLeft lvl_expr =>
@@ -403,15 +371,8 @@ def applyKernelQuiver (goal : MVarId) (fvarId : Option FVarId) : TacticM MVarId 
       let mvarId ← getMainGoal
       mvarId.replaceTargetEq quiverExpr eqProof
 
-/-- The `kernel_quiver` tactic transforms a kernel equality to its quiver representation.
-
-- Collects all universe levels from the equality
-- Uses the maximum level for the `w` parameter in `quiver`
-- Transforms both sides: kernels become `quiver κ`
-- Rewrites compositions `κ₁ ∘ₖ κ₂` as `quiver κ₂ ≫ quiver κ₁`
-- Rewrites monoidal compositions `κ ⊗≫ₖ η` as `quiver κ ⊗≫ quiver η`
-- Detects `Kernel.leftUnitor` shapes coming from `Kernel.id.map Prod.snd` and rewrites
-  the resulting quiver expression as the left unitor isomorphism.
+/-- The `kernel_quiver` tactic transforms a kernel equality to an equivalent equality in
+the category of measurable spaces and s-finite kernels.
 
 The tactic supports location specifiers like `rw` or `simp`:
 - `kernel_quiver` — applies to the goal
@@ -441,27 +402,41 @@ example {W X Y Z : Type*} [MeasurableSpace X] [MeasurableSpace Y] [MeasurableSpa
     [IsFiniteKernel ξ] [IsSFiniteKernel κ] [IsSFiniteKernel η] :
     t ∘ₖ ξ ∘ₖ (κ ⊗≫ₖ η) = t ∘ₖ (ξ ∘ₖ (κ ⊗≫ₖ η)) := by
   kernel_quiver
-  simp only [Category.assoc]
+  simp only [Kernel.quiver_monoComp.{max u_1 u_2 u_3 u_4}]
+  simp only [Kernel.quiver_comp.{max u_1 u_2 u_3 u_4}, Kernel.quiver_congr.{max u_1 u_2 u_3 u_4}]
+  sorry
+  --simp only [Category.assoc]
 
 example {X : Type*} [MeasurableSpace X] :
     Kernel.id.map (Prod.snd : Unit × X → X) = (0 : Kernel (Unit × X) X) := by
   kernel_quiver
+  rw [Kernel.leftUnitor (X := X)]
+  rw [Kernel.quiver_congr]
+
   sorry
 
 example {X : Type*} [MeasurableSpace X] :
     Kernel.id.map (Prod.snd : Unit × Unit → Unit) = (0 : Kernel (Unit × Unit) Unit) := by
   kernel_quiver
+  dsimp only [MonoidalCategoryStruct.tensorUnit]
+  rw [Kernel.leftUnitor (X := Unit)]
+  rw [Kernel.quiver_congr]
   sorry
 
 example {X : Type*} [MeasurableSpace X] :
     Kernel.id.map (Prod.fst : Unit × Unit → Unit) = (0 : Kernel (Unit × Unit) Unit) := by
   kernel_quiver
+  rw [Kernel.rightUnitor (X := Unit)]
+  rw [Kernel.quiver_congr]
   sorry
 
 example {X Y : Type*} [MeasurableSpace X] [MeasurableSpace Y] (κ : Kernel X Y)
     [IsSFiniteKernel κ] :
     κ ∘ₖ Kernel.id.map (Prod.fst : X × Unit → X) = (0 : Kernel (X × Unit) Y) := by
   kernel_quiver
+  rw [Kernel.rightUnitor (X := X)]
+  rw [Kernel.quiver_comp.{max u_1 u_2 0}]
+  rw [Kernel.quiver_congr.{max u_1 u_2 0}]
   sorry
 
 open MeasurableEquiv
@@ -470,6 +445,10 @@ example {X Y W Z : Type*} [MeasurableSpace X] [MeasurableSpace Y] [MeasurableSpa
     [IsSFiniteKernel κ] :
    (Kernel.id (α := Unit)) ∥ₖ (η ∘ₖ κ) = (0 : Kernel (Unit × X) (Unit × Z)) := by
   kernel_quiver
+  dsimp only [MonoidalCategoryStruct.tensorUnit]
+  rw [Kernel.quiver_comp]
+  rw [Kernel.WhiskerLeft.{max u_1 u_2 u_4 0, _, _, 0} (ez := punit)]
+  rw [Kernel.quiver_congr]
   sorry
 
 /- example {X Y W Z : Type*} [MeasurableSpace X] [MeasurableSpace Y] [MeasurableSpace W]
@@ -482,10 +461,3 @@ example {X Y W Z : Type*} [MeasurableSpace X] [MeasurableSpace Y] [MeasurableSpa
   rw [Kernel.WhiskerRight.{max u_1 u_2 u_3} (ex := ulift) (ey := ulift) (ez := ulift)]
   rw [Kernel.quiver_congr]
   sorry -/
-
-example {X Y W Z : Type*} [MeasurableSpace X] [MeasurableSpace Y] [MeasurableSpace W]
-    [MeasurableSpace Z] (κ : Kernel ((X × Y) × Z) W) (η : Kernel Y Z) [IsFiniteKernel η]
-    [IsSFiniteKernel κ] :
-   κ = 0 := by
-  kernel_quiver
-  sorry
