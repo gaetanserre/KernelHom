@@ -24,7 +24,7 @@ instance : MeasurableCoherence X X where
 
 noncomputable
 def monoidalCoherence {X' Y' : Type w} [MeasurableSpace X'] [MeasurableSpace Y']
-    (ex : X' ≃ᵐ X) (ey : Y' ≃ᵐ Y) : MonoidalCoherence (Stoch.of X') (Stoch.of Y') where
+    (ex : X' ≃ᵐ X) (ey : Y' ≃ᵐ Y) : MonoidalCoherence (SFinKer.of X') (SFinKer.of Y') where
   iso := by
     let e := ex.trans <| mXY.miso.trans ey.symm
     refine ⟨⟨Kernel.id.map e, by kernel_sfinite⟩,
@@ -67,7 +67,7 @@ instance monoComp'_sfinite : IsSFiniteKernel (monoComp' κ η ew ex ey ez ) := b
   infer_instance
 
 /-- The kernelized version of the monoidal composition of kernels using
-the `Stoch` monoidal category. -/
+the `SFinKer` monoidal category. -/
 noncomputable
 def monoComp : Kernel W Z :=
   monoComp' κ η (ulift.{_, max w x y z}) (ulift.{_, max w x y z})

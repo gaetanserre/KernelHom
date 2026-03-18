@@ -4,7 +4,7 @@ Released under GNU GPL 3.0 license as described in the file LICENSE.
 Authors: Gaëtan Serré
 -/
 
-import LeanStoch.Stoch
+import LeanStoch.SFinKer
 import LeanStoch.Mathlib.MeasurableEquiv
 import Mathlib.Combinatorics.Quiver.ReflQuiver
 
@@ -20,22 +20,22 @@ variable {X : Type x} {Y : Type y} [MeasurableSpace X] [MeasurableSpace Y]
 section Quiver
 
 noncomputable
-def fromQuiver (κ : Stoch.of X' ⟶ Stoch.of Y') : Kernel X Y :=
+def fromQuiver (κ : SFinKer.of X' ⟶ SFinKer.of Y') : Kernel X Y :=
   (κ.1.comap ex.symm (by fun_prop)).map ey
 
-instance {κ : Stoch.of X' ⟶ Stoch.of Y'} :
+instance {κ : SFinKer.of X' ⟶ SFinKer.of Y'} :
     IsSFiniteKernel (fromQuiver (ex := ex) (ey := ey) κ) := by
   simp only [fromQuiver]
   kernel_sfinite
 
 noncomputable
-def quiver (κ : Kernel X Y) [IsSFiniteKernel κ] : Stoch.of X' ⟶ Stoch.of Y' := by
+def quiver (κ : Kernel X Y) [IsSFiniteKernel κ] : SFinKer.of X' ⟶ SFinKer.of Y' := by
   refine ⟨(κ.map ey.symm).comap ex (by fun_prop), ?_⟩
   kernel_sfinite
 
 noncomputable
 def quiver' (κ : Kernel X Y) [IsSFiniteKernel κ] :
-    Stoch.of (ULift.{max w y} X) ⟶ Stoch.of (ULift.{max w x} Y) :=
+    SFinKer.of (ULift.{max w y} X) ⟶ SFinKer.of (ULift.{max w x} Y) :=
   quiver (ex := ulift) (ey := ulift) κ
 
 lemma quiver_congr {κ₁ κ₂ : Kernel X Y} [IsSFiniteKernel κ₁] [IsSFiniteKernel κ₂] :
@@ -84,7 +84,7 @@ open CategoryTheory MonoidalCategory
 
 section unitors
 
-lemma leftUnitor : (λ_ (Stoch.of X')).hom = quiver (ex := punit.prod ex) (ey := ex)
+lemma leftUnitor : (λ_ (SFinKer.of X')).hom = quiver (ex := punit.prod ex) (ey := ex)
     (Kernel.id.map (Prod.snd : PUnit × X → X)) := by
   kernel_cat
   simp only [quiver]
@@ -102,7 +102,7 @@ lemma leftUnitor : (λ_ (Stoch.of X')).hom = quiver (ex := punit.prod ex) (ey :=
   all_goals try fun_prop
   all_goals measurability
 
-lemma rightUnitor : (ρ_ (Stoch.of X')).hom = quiver (ex := ex.prod punit) (ey := ex)
+lemma rightUnitor : (ρ_ (SFinKer.of X')).hom = quiver (ex := ex.prod punit) (ey := ex)
     (Kernel.id.map (Prod.fst : X × PUnit → X)) := by
   kernel_cat
   simp only [quiver]
@@ -127,7 +127,7 @@ section whiskers
 variable {Z : Type z} [MeasurableSpace Z] {Z' : Type w} [MeasurableSpace Z'] {ez : Z' ≃ᵐ Z}
 
 lemma WhiskerLeft {κ : Kernel X Y} [IsSFiniteKernel κ] :
-    Stoch.of Z' ◁ κ.quiver (ex := ex) (ey := ey) =
+    SFinKer.of Z' ◁ κ.quiver (ex := ex) (ey := ey) =
       quiver (ex := ez.prod ex) (ey := ez.prod ey) ((Kernel.id (α := Z)) ∥ₖ κ) := by
   kernel_cat
   simp only [quiver]
@@ -144,7 +144,7 @@ lemma WhiskerLeft {κ : Kernel X Y} [IsSFiniteKernel κ] :
   all_goals fun_prop
 
 lemma WhiskerRight {κ : Kernel X Y} [IsSFiniteKernel κ] :
-    κ.quiver (ex := ex) (ey := ey) ▷ Stoch.of Z' =
+    κ.quiver (ex := ex) (ey := ey) ▷ SFinKer.of Z' =
       quiver (ex := ex.prod ez) (ey := ey.prod ez) (κ ∥ₖ Kernel.id (α := Z)) := by
   kernel_cat
   simp only [quiver]

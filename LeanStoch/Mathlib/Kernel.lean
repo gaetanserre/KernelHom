@@ -10,7 +10,7 @@ import Mathlib.Probability.Kernel.Composition.KernelLemmas
 # Auxiliary lemmas for probability kernels
 
 This file provides supporting lemmas about parallel composition, mapping, and composition
-of probability kernels that are used in the definition of **Stoch** as a Markov category.
+of probability kernels that are used in the definition of **SFinKer** as a Markov category.
 
 ## Main results
 
@@ -22,23 +22,7 @@ open ProbabilityTheory MeasureTheory
 
 namespace ProbabilityTheory.Kernel
 
-/-- The Markov kernel to the universe-polymorphic type `PUnit`. -/
-noncomputable
-def Pdiscard (X : Type*) [MeasurableSpace X] : Kernel X PUnit :=
-  Kernel.deterministic (fun _ ↦ PUnit.unit) measurable_const
-
 variable {X Y : Type*} [MeasurableSpace X] [MeasurableSpace Y]
-
-instance : IsMarkovKernel (Pdiscard X) := by rw [Pdiscard]; infer_instance
-
-@[simp]
-lemma comp_Pdiscard (κ : Kernel X Y) [IsMarkovKernel κ] : (Pdiscard Y) ∘ₖ κ = Pdiscard X := by
-  ext _ _ hs
-  simp [comp_apply' _ _ _ hs, Pdiscard, deterministic_apply]
-
-@[simp]
-lemma Pdiscard_apply (a : X) : Pdiscard X a = Measure.dirac PUnit.unit := by
-  simp [Pdiscard, deterministic_apply]
 
 @[simp]
 lemma parallelComp_id_id :

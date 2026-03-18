@@ -12,7 +12,7 @@ import Mathlib.Probability.Kernel.Composition.MapComap
 /-!
 # Tactic for kernel automation
 
-This file defines custom Tactic for working with s-finite kernels in the category **Stoch**.
+This file defines custom Tactic for working with s-finite kernels in the category **SFinKer**.
 
 ## Main definitions
 

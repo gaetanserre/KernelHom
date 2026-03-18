@@ -27,25 +27,39 @@ partial def levelToSyntax (lvl : Level) : MacroM (TSyntax `level) := do
     `(level| imax $l1Stx $l2Stx)
 
 /-- Recursively traverse an expression and collect universe levels found.
-Returns a list of all universe levels encountered. -/
-partial def collectKernelUniverses (e : Expr) : MetaM (List Level) :=
-  let aux (e: Expr) : MetaM (List Level) := do
-    let eType ← inferType e
-    let mut levels : List Level := []
-    match eType.getAppFn with
-    | Expr.const _ univs =>
-      -- univs contains the universe levels for this kernel
-      levels := univs
-    | _ => pure ()
+Returns a list of all unique universe levels encountered. -/
+partial def collectExprUniverses (e : Expr) : MetaM (List Level) := do
+  let rec aux (e : Expr) : List Level :=
     match e with
-    | Expr.app f a =>
-      let levelsF ← collectKernelUniverses f
-      let levelsA ← collectKernelUniverses a
-      return levels ++ levelsF ++ levelsA
-    | _ => return levels
-  return (← aux e).eraseDups
+    | Expr.const _ univs => univs
+    | Expr.sort u => [u]
+    | Expr.app f a => aux f ++ aux a
+    | Expr.lam _ t b _ => aux t ++ aux b
+    | Expr.forallE _ t b _ => aux t ++ aux b
+    | Expr.letE _ t v b _ => aux t ++ aux v ++ aux b
+    | Expr.mdata _ b => aux b
+    | Expr.proj _ _ b => aux b
+    | Expr.bvar _ | Expr.fvar _ | Expr.mvar _ | Expr.lit _ => []
+  let e ← instantiateMVars e
+  let e ← zetaReduce e
+  return (aux e).eraseDups
 
 def compute_max_universe (levels : List Level) : MetaM Level :=
   match levels with
-    | [] => throwError "No universe levels found in the expression"
+    | [] => throwError "Expected at least one universe level, got an empty list"
     | head :: tail => pure (tail.foldl Level.max head)
+
+/-- Get the category universe level from the left side of an equality expression. -/
+def get_universe_from_cat_eq (eq : Expr) : MetaM Level := do
+  let eq ← instantiateMVars eq
+  let eq ← zetaReduce eq
+  let eq ← whnf eq
+  let eq := eq.consumeMData
+  match eq with
+  | Expr.app (Expr.app (Expr.app (Expr.const ``Eq _) _) lhsExpr) _ =>
+    let l ← getLevel (← inferType lhsExpr)
+    match l with
+    | Level.succ l' => return l'
+    | _ => throwError "Expected a universe level ≥ 1, got: {l}"
+  | _ =>
+    throwError "Expected an equality, got: {eq}"

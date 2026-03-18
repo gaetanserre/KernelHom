@@ -9,20 +9,20 @@ import LeanStoch.Tactic.SFinite
 import LeanStoch.Mathlib.Kernel
 
 /-!
-# The symmetric monoidal category Stoch
+# The symmetric monoidal category SFinKer
 
-This file defines the category **Stoch** of measurable spaces and s-finite kernels,
+This file defines the category **SFinKer** of measurable spaces and s-finite kernels,
 and proves it is a symmetric monoidal category.
 
 ## Main definitions
 
-* `Stoch`: the category whose objects are measurable spaces and morphisms are s-finite kernels
-* `instance : MonoidalCategory Stoch`: **Stoch** has a monoidal structure
-* `instance : SymmetricCategory Stoch`: **Stoch** is a symmetric monoidal category
+* `SFinKer`: the category whose objects are measurable spaces and morphisms are s-finite kernels
+* `instance : MonoidalCategory SFinKer`: **SFinKer** has a monoidal structure
+* `instance : SymmetricCategory SFinKer`: **SFinKer** is a symmetric monoidal category
 
 ## Implementation notes
 
-Morphisms in **Stoch** are represented as subtypes `{ k : Kernel X Y // IsSFiniteKernel k }`.
+Morphisms in **SFinKer** are represented as subtypes `{ k : Kernel X Y // IsSFiniteKernel k }`.
 The monoidal structure is given by the categorical product of measurable spaces.
 
 ## References
@@ -34,34 +34,34 @@ open CategoryTheory ProbabilityTheory MeasureTheory
 
 universe u
 
-/-- The category **Stoch** of measurable spaces and s-finite kernels. -/
-structure Stoch : Type (u + 1) where
+/-- The category **SFinKer** of measurable spaces and s-finite kernels. -/
+structure SFinKer : Type (u + 1) where
   of ::
   carrier : Type u
   [str : MeasurableSpace carrier]
 
-attribute [instance] Stoch.str
+attribute [instance] SFinKer.str
 
-instance : CoeSort Stoch Type* :=
-  ⟨Stoch.carrier⟩
+instance : CoeSort SFinKer Type* :=
+  ⟨SFinKer.carrier⟩
 
 noncomputable section
 
-/-- **Stoch** is a large category with s-finite kernels as morphisms.
+/-- **SFinKer** is a large category with s-finite kernels as morphisms.
 Composition is given by kernel composition `∘ₖ`. -/
-instance : LargeCategory Stoch.{u} where
+instance : LargeCategory SFinKer.{u} where
   Hom X Y := { k : Kernel X Y // IsSFiniteKernel k }
   id X := ⟨Kernel.id, by kernel_sfinite⟩
   comp κ₁ κ₂ := ⟨κ₂.1 ∘ₖ κ₁.1, by kernel_sfinite⟩
   assoc κ₁ κ₂ κ₃ := by simp [Kernel.comp_assoc]
 
-/-- **Stoch** is a monoidal category with tensor product given by the categorical product.
+/-- **SFinKer** is a monoidal category with tensor product given by the categorical product.
 The unit is the terminal object `Unit`. -/
-instance : MonoidalCategory Stoch.{u} where
-  tensorObj X Y := Stoch.of (X × Y)
+instance : MonoidalCategory SFinKer.{u} where
+  tensorObj X Y := SFinKer.of (X × Y)
   whiskerLeft X Y₁ Y₂ κ := ⟨Kernel.id ∥ₖ κ.1, by kernel_sfinite⟩
   whiskerRight κ Y := ⟨κ.1 ∥ₖ Kernel.id, by kernel_sfinite⟩
-  tensorUnit := Stoch.of PUnit
+  tensorUnit := SFinKer.of PUnit
   associator X Y Z := by
     let f₁ := fun (x : (X × Y) × Z) ↦ (x.1.1, x.1.2, x.2)
     let f₂ := fun (x : X × Y × Z) ↦ ((x.1, x.2.1), x.2.2)
@@ -184,21 +184,21 @@ instance {α : Type} [MeasurableSpace α] : IsFiniteKernel (Kernel.copy α) := b
   dsimp [Kernel.copy]
   infer_instance
 
-/-- Every object in **Stoch** carries a canonical comonoid structure.
+/-- Every object in **SFinKer** carries a canonical comonoid structure.
 The comultiplication is copying `Kernel.copy X : X → X ⊗ X`
 and the counit is discarding `Kernel.discard X : X → 𝟙_`. -/
-instance {X : Stoch.{u}} : ComonObj X where
-  counit := ⟨Kernel.Pdiscard X, by kernel_sfinite⟩
+instance {X : SFinKer.{u}} : ComonObj X where
+  counit := ⟨Kernel.discard X, by kernel_sfinite⟩
   comul := ⟨Kernel.copy X, by kernel_sfinite⟩
   counit_comul := by
     kernel_cat
-    simp only [Kernel.Pdiscard, Kernel.copy, Kernel.id]
+    simp only [Kernel.discard, Kernel.copy, Kernel.id]
     rw [Kernel.deterministic_parallelComp_deterministic,
       Kernel.deterministic_comp_deterministic, Kernel.deterministic_map measurable_id (by fun_prop)]
     congr 1
   comul_counit := by
     kernel_cat
-    simp only [Kernel.Pdiscard, Kernel.copy, Kernel.id]
+    simp only [Kernel.discard, Kernel.copy, Kernel.id]
     rw [Kernel.deterministic_parallelComp_deterministic,
       Kernel.deterministic_comp_deterministic, Kernel.deterministic_map measurable_id (by fun_prop)]
     congr 1
@@ -209,8 +209,8 @@ instance {X : Stoch.{u}} : ComonObj X where
       Kernel.deterministic_parallelComp_deterministic]
     congr 1
 
-/-- **Stoch** is a braided category with braiding given by the swap map. -/
-instance : BraidedCategory Stoch.{u} where
+/-- **SFinKer** is a braided category with braiding given by the swap map. -/
+instance : BraidedCategory SFinKer.{u} where
   braiding X Y := by
     refine ⟨⟨Kernel.swap _ _, by kernel_sfinite⟩, ⟨Kernel.swap _ _, by kernel_sfinite⟩,
       ?_, ?_⟩
@@ -241,14 +241,14 @@ instance : BraidedCategory Stoch.{u} where
       congr 1
     all_goals fun_prop
 
-/-- **Stoch** is a symmetric monoidal category. -/
-instance : SymmetricCategory Stoch.{u} where
+/-- **SFinKer** is a symmetric monoidal category. -/
+instance : SymmetricCategory SFinKer.{u} where
   symmetry X Y := by
     kernel_cat
     exact Kernel.swap_swap
 
 /-- The comonoid on each object is commutative. -/
-instance (X : Stoch.{u}) : IsCommComonObj X where
+instance (X : SFinKer.{u}) : IsCommComonObj X where
   comul_comm := by
     kernel_cat
     exact Kernel.swap_copy

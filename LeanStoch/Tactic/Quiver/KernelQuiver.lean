@@ -12,6 +12,22 @@ import LeanStoch.Tactic.LocTactic
 import LeanStoch.Tactic.Quiver.Universe
 import LeanStoch.Tactic.Quiver.Utils
 
+/-!
+# `kernel_quiver` tactic
+
+This file implements the `kernel_quiver` tactic, which transforms equalities of
+kernels into equivalent equalities in the monoidal quiver category.
+
+## Main declarations
+
+- `transformKernelToQuiver`: recursive translation from kernel expressions to
+  quiver expressions.
+- `mkKernelQuiverEqProof`: construction of the equivalence proof used by the
+  tactic.
+- `applyKernelQuiver`: core implementation on goals and hypotheses.
+- `kernel_quiver`: user-facing tactic (with location support).
+-/
+
 open Lean Elab Tactic Meta CategoryTheory Parser.Tactic ProbabilityTheory MonoidalCategory
 
 def check_unitors (κ : Expr) (offset : Nat) (prod : Name) : MetaM Bool := do
@@ -45,14 +61,14 @@ def check_rightUnitor (κ : Expr) : MetaM Bool := check_unitors κ 1 ``Prod.fst
 def compute_StochOf (X : Expr) (xLevel maxLvl : Level) : MetaM Expr := do
   match ← whnf X with
   | Expr.const ``PUnit _ | Expr.const ``Unit _ =>
-    let stoch := Expr.const `Stoch [maxLvl]
+    let sfinker := Expr.const `SFinKer [maxLvl]
     let tensorunit :=
       Expr.const ``MonoidalCategoryStruct.tensorUnit [maxLvl, maxLvl.succ]
-    mkAppOptM' tensorunit #[stoch, none, none]
+    mkAppOptM' tensorunit #[sfinker, none, none]
   | _ =>
     let ex ← inferType (← construct_measurable_equiv X xLevel maxLvl)
     let lifted_X := ex.getAppArgs[0]!
-    let stochOfconst := Expr.const `Stoch.of [maxLvl]
+    let stochOfconst := Expr.const `SFinKer.of [maxLvl]
     mkAppOptM' stochOfconst #[lifted_X, none]
 
 def construct_unitors (X Y : Expr) (yLvl maxLvl : Level) (offset : Nat) :
@@ -118,10 +134,8 @@ partial def transformKernelToQuiver (maxLvl : Level) (e : Expr) (op_data : List 
     let args := e.getAppArgs
     let κ := args[args.size - 2]!
     let η := args[args.size - 1]!
-    -- Recursively transform both kernels
     let (κ', lκ) ← transformKernelToQuiver maxLvl κ op_data
     let (η', lη) ← transformKernelToQuiver maxLvl η lκ
-    -- Create categorical composition: η' ≫ κ' (reversed order)
     return (← mkAppM ``CategoryStruct.comp #[η', κ'], lη)
   | Expr.const ``Kernel.monoComp _ =>
     let args := e.getAppArgs
@@ -131,7 +145,6 @@ partial def transformKernelToQuiver (maxLvl : Level) (e : Expr) (op_data : List 
     let (Y, _, yLevel, _) ← get_types_from_kernel η
     let (κ', lκ) ← transformKernelToQuiver maxLvl κ op_data
     let (η', lη) ← transformKernelToQuiver maxLvl η lκ
-    -- Create monoidal composition: quiver κ ⊗≫ quiver η
     let ex ← construct_measurable_equiv X xLevel maxLvl
     let ey ← construct_measurable_equiv Y yLevel maxLvl
     let monoComp := Expr.const ``monoidalComp [maxLvl, maxLvl.succ]
@@ -164,7 +177,6 @@ partial def transformKernelToQuiver (maxLvl : Level) (e : Expr) (op_data : List 
       let rightWhiskerOP := .WhiskerRight (zLvl, ez)
       return (whiskerleft, rightWhiskerOP :: lκ)
     else
-      -- Single kernel, transform to quiver.{maxLvl} ex ey κ
       let quiverConst := Expr.const ``Kernel.quiver [maxLvl, xLevel, yLevel]
       let ex ← construct_measurable_equiv X xLevel maxLvl
       let ey ← construct_measurable_equiv Y yLevel maxLvl
@@ -180,16 +192,13 @@ def mkKernelQuiverEqProof (eqProofType rhs lhs : Expr) (maxLvl : Level)
   let mvar ← mkFreshExprSyntheticOpaqueMVar eqProofType
   let mvarId := mvar.mvarId!
   setGoals [mvarId]
-
   evalTactic (← `(tactic| apply propext))
   evalTactic (← `(tactic| constructor))
   let goalsAfterConstructor ← getGoals
   match goalsAfterConstructor with
   | [forwardGoal, backwardGoal] =>
-    -- Modus ponens direction.
     setGoals [forwardGoal]
     evalTactic (← `(tactic| intro h))
-    -- Unfold `tensorUnit` if it appears, then try to rewrite unitors.
     evalTactic (← `(tactic| try dsimp only [MonoidalCategoryStruct.tensorUnit]))
     for e in op_data do
       match e with
@@ -204,7 +213,6 @@ def mkKernelQuiverEqProof (eqProofType rhs lhs : Expr) (maxLvl : Level)
         evalTactic (← `(tactic| try rw [Kernel.rightUnitor.{$maxLevelStx, _, $punitLevelStx}
           (ex := $eStx)]))
       | _ => pure ()
-    -- Try to use congruence on kernel compositions and conclude with assumptions.
     let congr_tac ← `(tactic| first
       | simp only [
         Kernel.quiver_monoComp.{$maxLevelStx},
@@ -234,7 +242,6 @@ def mkKernelQuiverEqProof (eqProofType rhs lhs : Expr) (maxLvl : Level)
     evalTactic (← `(tactic| rwa [Kernel.quiver_congr.{$maxLevelStx}
       (κ₁ := $rhsStx) (κ₂ := $lhsStx)]))
 
-    -- Modus ponens reverse
     setGoals [backwardGoal]
     evalTactic (← `(tactic| intro h))
     evalTactic (← `(tactic| try dsimp only [MonoidalCategory.tensorUnit] at h))
@@ -297,7 +304,7 @@ def applyKernelQuiver (goal : MVarId) (fvarId : Option FVarId) : TacticM MVarId 
           let decl ← fid.getDecl
           pure decl.type
         | none => goal.getType
-    let maxLvl ← compute_max_universe (← collectKernelUniverses expr)
+    let maxLvl ← compute_max_universe (← collectExprUniverses expr)
     let (quiverExpr, op_data, rhs, lhs) ← transformEquality maxLvl expr transformKernelToQuiver
     let eqProofType ← mkEq expr quiverExpr
     let eqProof ← mkKernelQuiverEqProof eqProofType rhs lhs maxLvl op_data
@@ -338,69 +345,3 @@ syntax "kernel_quiver" (ppSpace location)? : tactic
 elab_rules : tactic
   | `(tactic| kernel_quiver $[$loc]?) =>
     expandOptLocation (Lean.mkOptionalNode loc) |> applyLocTactic <| applyKernelQuiver
-
-example {W X Y Z : Type*} [MeasurableSpace X] [MeasurableSpace Y] [MeasurableSpace Z]
-    [MeasurableSpace W] (κ : Kernel X Y) (η : Kernel Y Z) (ξ : Kernel Z W)
-    (t : Kernel W X) [IsSFiniteKernel t]
-    [IsFiniteKernel ξ] [IsSFiniteKernel κ] [IsSFiniteKernel η] :
-    t ∘ₖ ξ ∘ₖ (κ ⊗≫ₖ η) = t ∘ₖ (ξ ∘ₖ (κ ⊗≫ₖ η)) := by
-  kernel_quiver
-  simp only [Kernel.quiver_monoComp.{max u_1 u_2 u_3 u_4}]
-  simp only [Kernel.quiver_comp.{max u_1 u_2 u_3 u_4}, Kernel.quiver_congr.{max u_1 u_2 u_3 u_4}]
-  sorry
-  --simp only [Category.assoc]
-
-example {X : Type*} [MeasurableSpace X] :
-    Kernel.id.map (Prod.snd : Unit × X → X) = (0 : Kernel (Unit × X) X) := by
-  kernel_quiver
-  rw [Kernel.leftUnitor (X := X)]
-  rw [Kernel.quiver_congr]
-
-  sorry
-
-example {X : Type*} [MeasurableSpace X] :
-    Kernel.id.map (Prod.snd : Unit × Unit → Unit) = (0 : Kernel (Unit × Unit) Unit) := by
-  kernel_quiver
-  dsimp only [MonoidalCategoryStruct.tensorUnit]
-  rw [Kernel.leftUnitor (X := Unit)]
-  rw [Kernel.quiver_congr]
-  sorry
-
-example {X : Type*} [MeasurableSpace X] :
-    Kernel.id.map (Prod.fst : Unit × Unit → Unit) = (0 : Kernel (Unit × Unit) Unit) := by
-  kernel_quiver
-  rw [Kernel.rightUnitor (X := Unit)]
-  rw [Kernel.quiver_congr]
-  sorry
-
-example {X Y : Type*} [MeasurableSpace X] [MeasurableSpace Y] (κ : Kernel X Y)
-    [IsSFiniteKernel κ] :
-    κ ∘ₖ Kernel.id.map (Prod.fst : X × Unit → X) = (0 : Kernel (X × Unit) Y) := by
-  kernel_quiver
-  rw [Kernel.rightUnitor (X := X)]
-  rw [Kernel.quiver_comp.{max u_1 u_2 0}]
-  rw [Kernel.quiver_congr.{max u_1 u_2 0}]
-  sorry
-
-open MeasurableEquiv
-example {X Y W Z : Type*} [MeasurableSpace X] [MeasurableSpace Y] [MeasurableSpace W]
-    [MeasurableSpace Z] (κ : Kernel X Y) (η : Kernel Y Z) [IsFiniteKernel η]
-    [IsSFiniteKernel κ] :
-   (Kernel.id (α := Unit)) ∥ₖ (η ∘ₖ κ) = (0 : Kernel (Unit × X) (Unit × Z)) := by
-  kernel_quiver
-  dsimp only [MonoidalCategoryStruct.tensorUnit]
-  rw [Kernel.quiver_comp]
-  rw [Kernel.WhiskerLeft.{max u_1 u_2 u_4 0, _, _, 0} (ez := punit)]
-  rw [Kernel.quiver_congr]
-  sorry
-
-/- example {X Y W Z : Type*} [MeasurableSpace X] [MeasurableSpace Y] [MeasurableSpace W]
-    [MeasurableSpace Z] (κ : Kernel X Y) (η : Kernel Y Z) [IsFiniteKernel η]
-    [IsSFiniteKernel κ] :
-   Kernel.id.map (Prod.fst : X × PUnit → X) ∥ₖ Kernel.id (α := W) = (0 : Kernel ((X × PUnit) × W) (X × W)) := by
-  kernel_quiver
-  --rw [Kernel.quiver_monoComp]
-  --dsimp only [MonoidalCategoryStruct.tensorUnit]
-  rw [Kernel.WhiskerRight.{max u_1 u_2 u_3} (ex := ulift) (ey := ulift) (ez := ulift)]
-  rw [Kernel.quiver_congr]
-  sorry -/
