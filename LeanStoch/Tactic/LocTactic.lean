@@ -11,7 +11,7 @@ open Lean Elab Tactic Meta
 def applyLocTactic (loc : Location) (tactic : MVarId → Option FVarId → TacticM MVarId) :
     TacticM Unit := do
   match loc with
-  | Location.targets hyps target => do
+  | Location.targets hyps target =>
     for hyp in hyps do
       let hFVarId ← getFVarId hyp
       let newGoal ← tactic (← getMainGoal) (some hFVarId)
@@ -19,7 +19,7 @@ def applyLocTactic (loc : Location) (tactic : MVarId → Option FVarId → Tacti
     if target then
       let newGoal ← tactic (← getMainGoal) none
       replaceMainGoal [newGoal]
-  | Location.wildcard => do
+  | Location.wildcard =>
     let goal ← getMainGoal
     goal.withContext do
       let lctx ← getLCtx

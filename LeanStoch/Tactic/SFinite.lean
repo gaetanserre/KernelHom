@@ -47,11 +47,11 @@ elab "kernel_sfinite" : tactic => do
       return ()
     throwError "kernel_sfinite tactic failed."
 
-def applyCatKernel (goal : MVarId) (fvarId : Option FVarId) : TacticM MVarId := do
+def applyCatKernel (goal : MVarId) (fvarId : Option FVarId) : TacticM MVarId :=
   goal.withContext do
     -- Apply transformations
     match fvarId with
-    | some fid => do
+    | some fid =>
       let hName := (← fid.getDecl).userName
       withMainContext do
         evalTactic (← `(tactic| try rw [Subtype.ext_iff] at $(mkIdent hName):ident))
@@ -62,7 +62,7 @@ def applyCatKernel (goal : MVarId) (fvarId : Option FVarId) : TacticM MVarId := 
           MonoidalCategory.associator, MonoidalCategory.leftUnitor, MonoidalCategory.rightUnitor]
           at $(mkIdent hName):ident))
         getMainGoal
-    | none => do
+    | none =>
       withMainContext do
         evalTactic (← `(tactic| try rw [Subtype.ext_iff]))
         evalTactic (← `(tactic| try simp only))
@@ -76,5 +76,5 @@ def applyCatKernel (goal : MVarId) (fvarId : Option FVarId) : TacticM MVarId := 
 syntax "kernel_cat" (ppSpace location)? : tactic
 
 elab_rules : tactic
-  | `(tactic| kernel_cat $[$loc]?) => do
+  | `(tactic| kernel_cat $[$loc]?) =>
     expandOptLocation (Lean.mkOptionalNode loc) |> applyLocTactic <| applyCatKernel

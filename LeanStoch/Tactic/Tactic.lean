@@ -5,7 +5,9 @@ Authors: Gaëtan Serré
 -/
 
 import LeanStoch.Tactic.SFinite
-import LeanStoch.Tactic.KernelQuiver
+import LeanStoch.Tactic.Quiver.Universe
+import LeanStoch.Tactic.Quiver.Utils
+import LeanStoch.Tactic.Quiver.KernelQuiver
+import LeanStoch.Tactic.Quiver.QuiverKernel
 import LeanStoch.Tactic.LocTactic
 import LeanStoch.Tactic.KernelCoherence
-import LeanStoch.Tactic.Universe

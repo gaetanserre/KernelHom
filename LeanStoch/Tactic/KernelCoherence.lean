@@ -4,7 +4,7 @@ Released under GNU GPL 3.0 license as described in the file LICENSE.
 Authors: Gaëtan Serré
 -/
 
-import LeanStoch.Tactic.KernelQuiver
+import LeanStoch.Tactic.Quiver.KernelQuiver
 import Mathlib.Tactic.CategoryTheory.Coherence
 
 open Lean Elab Tactic
