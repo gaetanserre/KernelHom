@@ -72,7 +72,7 @@ def compute_StochOf (X : Expr) (xLevel maxLvl : Level) : MetaM Expr := do
     mkAppOptM' stochOfconst #[lifted_X, none]
 
 def construct_unitors (X Y : Expr) (yLvl maxLvl : Level) (offset : Nat) :
-  MetaM (Expr × MonoidalOP) := do
+  MetaM (Expr × CategoryOP) := do
   let left ← if offset == 0 then pure true
     else if offset == 1 then pure false
     else throwError "Invalid offset for unitors"
@@ -127,8 +127,8 @@ def construct_whiskers_args (e X : Expr) (maxLvl : Level) (offset : Nat) :
   return (stochOfZ, κ, Z, zLvl)
 
 /-- Transform a kernel expression to its quiver representation with explicit universe level. -/
-partial def transformKernelToQuiver (maxLvl : Level) (e : Expr) (op_data : List MonoidalOP) :
-    MetaM (Expr × List MonoidalOP) := do
+partial def transformKernelToQuiver (maxLvl : Level) (e : Expr) (op_data : List CategoryOP) :
+    MetaM (Expr × List CategoryOP) := do
   match e.getAppFn with
   | Expr.const ``Kernel.comp _ =>
     let args := e.getAppArgs
@@ -154,6 +154,14 @@ partial def transformKernelToQuiver (maxLvl : Level) (e : Expr) (op_data : List 
       #[none, none, none, none, none, none, none, none, none, ex, ey]
     return (← mkAppOptM' monoComp
       #[none, none, none, none, none, none, monoCoherence, κ', η'], lη)
+  | Expr.const ``Kernel.id univs =>
+    let args := e.getAppArgs
+    let X := args[args.size - 2]!
+    let xLevel := univs[0]!
+    let stochOfX ← compute_StochOf X xLevel maxLvl
+    let ex ← construct_measurable_equiv X xLevel maxLvl
+    let idOP := .id (xLevel, ex)
+    return (← mkAppM ``CategoryStruct.id #[stochOfX], idOP :: op_data)
   | _ =>
     let (X, Y, xLevel, yLevel) ← get_types_from_kernel e
     if ← check_leftUnitor e then
@@ -184,7 +192,7 @@ partial def transformKernelToQuiver (maxLvl : Level) (e : Expr) (op_data : List 
         #[none, none, none, none, none, none, none, none, ex, ey, e, none], op_data)
 
 def mkKernelQuiverEqProof (eqProofType rhs lhs : Expr) (maxLvl : Level)
-    (op_data : List MonoidalOP) : TacticM Expr := do
+    (op_data : List CategoryOP) : TacticM Expr := do
   let maxLevelStx ← liftMacroM <| levelToSyntax maxLvl
   let rhsStx ← Term.exprToSyntax rhs
   let lhsStx ← Term.exprToSyntax lhs
@@ -202,16 +210,19 @@ def mkKernelQuiverEqProof (eqProofType rhs lhs : Expr) (maxLvl : Level)
     evalTactic (← `(tactic| try dsimp only [MonoidalCategoryStruct.tensorUnit]))
     for e in op_data do
       match e with
-      | .leftUnitor lvl_expr =>
-        let punitLevelStx ← liftMacroM <| levelToSyntax lvl_expr.1
-        let eStx ← Term.exprToSyntax lvl_expr.2
+      | .leftUnitor (lvl, expr) =>
+        let punitLevelStx ← liftMacroM <| levelToSyntax lvl
+        let eStx ← Term.exprToSyntax expr
         evalTactic (← `(tactic| try rw [Kernel.leftUnitor.{$maxLevelStx, _, $punitLevelStx}
           (ex := $eStx)]))
-      | .rightUnitor lvl_expr =>
-        let punitLevelStx ← liftMacroM <| levelToSyntax lvl_expr.1
-        let eStx ← Term.exprToSyntax lvl_expr.2
+      | .rightUnitor (lvl, expr) =>
+        let punitLevelStx ← liftMacroM <| levelToSyntax lvl
+        let eStx ← Term.exprToSyntax expr
         evalTactic (← `(tactic| try rw [Kernel.rightUnitor.{$maxLevelStx, _, $punitLevelStx}
           (ex := $eStx)]))
+      | .id (_, expr) =>
+        let eStx ← Term.exprToSyntax expr
+        evalTactic (← `(tactic| try rw [Kernel.quiver_id.{$maxLevelStx} (ex := $eStx)]))
       | _ => pure ()
     let congr_tac ← `(tactic| first
       | simp only [
@@ -228,11 +239,11 @@ def mkKernelQuiverEqProof (eqProofType rhs lhs : Expr) (maxLvl : Level)
       pure ()
     for e in op_data do
       match e with
-      | .WhiskerLeft lvl_expr =>
-        let eStx ← Term.exprToSyntax lvl_expr.2
+      | .WhiskerLeft (_, expr) =>
+        let eStx ← Term.exprToSyntax expr
         evalTactic (← `(tactic| rw [Kernel.WhiskerLeft.{$maxLevelStx} (ez := $eStx)]))
-      | .WhiskerRight lvl_expr =>
-        let eStx ← Term.exprToSyntax lvl_expr.2
+      | .WhiskerRight (_, expr) =>
+        let eStx ← Term.exprToSyntax expr
         evalTactic (← `(tactic| rw [Kernel.WhiskerRight.{$maxLevelStx} (ez := $eStx)]))
       | _ => pure ()
     try
@@ -247,16 +258,19 @@ def mkKernelQuiverEqProof (eqProofType rhs lhs : Expr) (maxLvl : Level)
     evalTactic (← `(tactic| try dsimp only [MonoidalCategory.tensorUnit] at h))
     for e in op_data do
       match e with
-      | .leftUnitor lvl_expr =>
-        let punitLevelStx ← liftMacroM <| levelToSyntax lvl_expr.1
-        let eStx ← Term.exprToSyntax lvl_expr.2
+      | .leftUnitor (lvl, expr) =>
+        let punitLevelStx ← liftMacroM <| levelToSyntax lvl
+        let eStx ← Term.exprToSyntax expr
         evalTactic (← `(tactic| try rw [Kernel.leftUnitor.{$maxLevelStx, _, $punitLevelStx}
           (ex := $eStx)] at h))
-      | .rightUnitor lvl_expr =>
-        let punitLevelStx ← liftMacroM <| levelToSyntax lvl_expr.1
-        let eStx ← Term.exprToSyntax lvl_expr.2
+      | .rightUnitor (lvl, expr) =>
+        let punitLevelStx ← liftMacroM <| levelToSyntax lvl
+        let eStx ← Term.exprToSyntax expr
         evalTactic (← `(tactic| try rw [Kernel.rightUnitor.{$maxLevelStx, _, $punitLevelStx}
           (ex := $eStx)] at h))
+      | .id (_, expr) =>
+        let eStx ← Term.exprToSyntax expr
+        evalTactic (← `(tactic| try rw [Kernel.quiver_id.{$maxLevelStx} (ex := $eStx)] at h))
       | _ => pure ()
     let congr_tac ← `(tactic| first
       | simp only [
@@ -273,11 +287,11 @@ def mkKernelQuiverEqProof (eqProofType rhs lhs : Expr) (maxLvl : Level)
       pure ()
     for e in op_data do
       match e with
-      | .WhiskerLeft lvl_expr =>
-        let eStx ← Term.exprToSyntax lvl_expr.2
+      | .WhiskerLeft (_, expr) =>
+        let eStx ← Term.exprToSyntax expr
         evalTactic (← `(tactic| rw [Kernel.WhiskerLeft.{$maxLevelStx} (ez := $eStx)] at h))
-      | .WhiskerRight lvl_expr =>
-        let eStx ← Term.exprToSyntax lvl_expr.2
+      | .WhiskerRight (_, expr) =>
+        let eStx ← Term.exprToSyntax expr
         evalTactic (← `(tactic| rw [Kernel.WhiskerRight.{$maxLevelStx} (ez := $eStx)] at h))
       | _ => pure ()
     try

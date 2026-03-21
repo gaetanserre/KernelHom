@@ -62,7 +62,7 @@ partial def get_type_from_Stoch (e : Expr) : MetaM (Expr × Level) := do
     | _ => throwError "Expected a type with a universe level ≥ 0, got: {e}"
 
 def deconstruct_unitors (iso : Expr) (eLevel : Level) (left : Bool) :
-    MetaM (Expr × MonoidalOP) := do
+    MetaM (Expr × CategoryOP) := do
   let iso_t ← inferType iso
   let (X, xLevel) ← get_type_from_Stoch iso_t.getAppArgs[3]!
   let kernel_id ←
@@ -83,7 +83,7 @@ def deconstruct_unitors (iso : Expr) (eLevel : Level) (left : Bool) :
   return (← mkAppM ``Kernel.map #[kernel_id, prod], OP)
 
 def deconstruct_whiskers_args (e : Expr) (eLevel : Level) (left : Bool) :
-    MetaM (Expr × Expr × MonoidalOP) := do
+    MetaM (Expr × Expr × CategoryOP) := do
   let args := e.getAppArgs
   let SX := if left then args[args.size - 4]! else args[args.size - 1]!
   let κ := if left then args[args.size - 1]! else args[args.size - 2]!
@@ -94,9 +94,16 @@ def deconstruct_whiskers_args (e : Expr) (eLevel : Level) (left : Bool) :
   let OP := if left then .WhiskerLeft (xLevel, exEquiv) else .WhiskerRight (xLevel, exEquiv)
   return (κ, kernel_id, OP)
 
-partial def transformQuiverToKernel (eLevel : Level) (e : Expr) (op_data : List MonoidalOP) :
-    MetaM (Expr × List MonoidalOP) := do
+partial def transformQuiverToKernel (eLevel : Level) (e : Expr) (op_data : List CategoryOP) :
+    MetaM (Expr × List CategoryOP) := do
   match e.getAppFn with
+  | Expr.const ``CategoryStruct.id _ =>
+    let args := e.getAppArgs
+    let X := args[args.size - 1]!
+    let (X', xLevel) ← get_type_from_Stoch X
+    let ex ← construct_measurable_equiv X' xLevel eLevel
+    let mX' ← synthInstance (mkApp (Expr.const ``MeasurableSpace [xLevel]) X')
+    return (← mkAppOptM ``Kernel.id #[X', mX'], .id (xLevel, ex) :: op_data)
   | Expr.const ``CategoryStruct.comp _ =>
     let args := e.getAppArgs
     let κ := args[args.size - 2]!
@@ -140,7 +147,7 @@ partial def transformQuiverToKernel (eLevel : Level) (e : Expr) (op_data : List 
   | _ => throwError "Expected a quiver expression, got: {e}"
 
 def mkQuiverKernelEqProof (eqProofType : Expr) (eLevel : Level)
-    (op_data : List MonoidalOP) : TacticM Expr := do
+    (op_data : List CategoryOP) : TacticM Expr := do
   let eLevelStx ← liftMacroM <| levelToSyntax eLevel
   let savedGoals ← getGoals
   let mvar ← mkFreshExprSyntheticOpaqueMVar eqProofType
@@ -153,17 +160,21 @@ def mkQuiverKernelEqProof (eqProofType : Expr) (eLevel : Level)
   | [forwardGoal, backwardGoal] =>
     setGoals [forwardGoal]
     evalTactic (← `(tactic| intro h))
-    evalTactic (← `(tactic| try dsimp only [MonoidalCategoryStruct.tensorUnit] at h))
+    evalTactic (← `(tactic| try dsimp only [MonoidalCategoryStruct.tensorUnit,
+      MonoidalCategoryStruct.tensorObj] at h))
     for e in op_data do
       match e with
-      | .leftUnitor lvl_expr =>
-        let eStx ← Term.exprToSyntax lvl_expr.2
+      | .leftUnitor (_, expr) =>
+        let eStx ← Term.exprToSyntax expr
         evalTactic (← `(tactic| try rw [Kernel.leftUnitor.{$eLevelStx, _, 0}
           (ex := $eStx)] at h))
-      | .rightUnitor lvl_expr =>
-        let eStx ← Term.exprToSyntax lvl_expr.2
+      | .rightUnitor (_, expr) =>
+        let eStx ← Term.exprToSyntax expr
         evalTactic (← `(tactic| try rw [Kernel.rightUnitor.{$eLevelStx, _, 0}
           (ex := $eStx)] at h))
+      | .id (_, expr) =>
+        let eStx ← Term.exprToSyntax expr
+        evalTactic (← `(tactic| try rw [Kernel.quiver_id.{$eLevelStx} (ex := $eStx)] at h))
       | _ => pure ()
     let congr_tac ← `(tactic| first
       | simp only [
@@ -180,11 +191,11 @@ def mkQuiverKernelEqProof (eqProofType : Expr) (eLevel : Level)
       pure ()
     for e in op_data do
       match e with
-      | .WhiskerLeft lvl_expr =>
-        let eStx ← Term.exprToSyntax lvl_expr.2
+      | .WhiskerLeft (_, expr) =>
+        let eStx ← Term.exprToSyntax expr
         evalTactic (← `(tactic| rw [Kernel.WhiskerLeft.{$eLevelStx} (ez := $eStx)] at h))
-      | .WhiskerRight lvl_expr =>
-        let eStx ← Term.exprToSyntax lvl_expr.2
+      | .WhiskerRight (_, expr) =>
+        let eStx ← Term.exprToSyntax expr
         evalTactic (← `(tactic| rw [Kernel.WhiskerRight.{$eLevelStx} (ez := $eStx)] at h))
       | _ => pure ()
     try
@@ -195,17 +206,21 @@ def mkQuiverKernelEqProof (eqProofType : Expr) (eLevel : Level)
 
     setGoals [backwardGoal]
     evalTactic (← `(tactic| intro h))
-    evalTactic (← `(tactic| try dsimp only [MonoidalCategoryStruct.tensorUnit]))
+    evalTactic (← `(tactic| try dsimp only [MonoidalCategoryStruct.tensorUnit,
+      MonoidalCategoryStruct.tensorObj]))
     for e in op_data do
       match e with
-      | .leftUnitor lvl_expr =>
-        let eStx ← Term.exprToSyntax lvl_expr.2
+      | .leftUnitor (_, expr) =>
+        let eStx ← Term.exprToSyntax expr
         evalTactic (← `(tactic| try rw [Kernel.leftUnitor.{$eLevelStx, _, 0}
           (ex := $eStx)]))
-      | .rightUnitor lvl_expr =>
-        let eStx ← Term.exprToSyntax lvl_expr.2
+      | .rightUnitor (_, expr) =>
+        let eStx ← Term.exprToSyntax expr
         evalTactic (← `(tactic| try rw [Kernel.rightUnitor.{$eLevelStx, _, 0}
           (ex := $eStx)]))
+      | .id (_, expr) =>
+        let eStx ← Term.exprToSyntax expr
+        evalTactic (← `(tactic| try rw [Kernel.quiver_id.{$eLevelStx} (ex := $eStx)]))
       | _ => pure ()
     let congr_tac ← `(tactic| first
       | simp only [
@@ -222,11 +237,11 @@ def mkQuiverKernelEqProof (eqProofType : Expr) (eLevel : Level)
       pure ()
     for e in op_data do
       match e with
-      | .WhiskerLeft lvl_expr =>
-        let eStx ← Term.exprToSyntax lvl_expr.2
+      | .WhiskerLeft (_, expr) =>
+        let eStx ← Term.exprToSyntax expr
         evalTactic (← `(tactic| rw [Kernel.WhiskerLeft.{$eLevelStx} (ez := $eStx)]))
-      | .WhiskerRight lvl_expr =>
-        let eStx ← Term.exprToSyntax lvl_expr.2
+      | .WhiskerRight (_, expr) =>
+        let eStx ← Term.exprToSyntax expr
         evalTactic (← `(tactic| rw [Kernel.WhiskerRight.{$eLevelStx} (ez := $eStx)]))
       | _ => pure ()
     try

@@ -82,6 +82,21 @@ end Quiver
 
 open CategoryTheory MonoidalCategory
 
+section id
+
+lemma quiver_id : 𝟙 (SFinKer.of X') = quiver (ex := ex) (ey := ex) Kernel.id := by
+  kernel_cat
+  simp only [quiver]
+  ext
+  rw [Kernel.id_map, Kernel.comap_apply', Kernel.deterministic_apply', Kernel.id_apply,
+    Measure.dirac_apply']
+  · congr
+    simp
+  all_goals try fun_prop
+  all_goals measurability
+
+end id
+
 section unitors
 
 lemma leftUnitor : (λ_ (SFinKer.of X')).hom = quiver (ex := punit.prod ex) (ey := ex)

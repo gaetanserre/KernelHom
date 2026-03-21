@@ -46,17 +46,18 @@ partial def construct_measurable_equiv (e : Expr) (eLevel maxLvl : Level) : Meta
 /-- Pairing of a universe level with an expression used to record rewrite metadata. -/
 abbrev LvlExpr := Level × Expr
 
-/-- Monoidal operations recorded during transformation for later rewriting. -/
-inductive MonoidalOP
+/-- Categorical operations recorded during transformation for later rewriting. -/
+inductive CategoryOP
   | leftUnitor (lvl_e : LvlExpr)
   | rightUnitor (lvl_e : LvlExpr)
   | WhiskerLeft (lvl_e : LvlExpr)
   | WhiskerRight (lvl_e : LvlExpr)
+  | id (lvl_e : LvlExpr)
 
 /-- Transform both sides of an equality and return the new equality plus metadata. -/
 def transformEquality (maxLvl : Level) (e : Expr)
-    (transform : Level → Expr → List MonoidalOP → MetaM (Expr × List MonoidalOP)) :
-    MetaM (Expr × List MonoidalOP × Expr × Expr) := do
+    (transform : Level → Expr → List CategoryOP → MetaM (Expr × List CategoryOP)) :
+    MetaM (Expr × List CategoryOP × Expr × Expr) := do
   let e ← instantiateMVars e
   let e ← zetaReduce e
   let e ← whnf e
