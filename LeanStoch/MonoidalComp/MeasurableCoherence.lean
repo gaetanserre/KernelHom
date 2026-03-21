@@ -22,6 +22,7 @@ variable {X : Type x} {Y : Type y} [MeasurableSpace X] [MeasurableSpace Y]
 instance : MeasurableCoherence X X where
   miso := MeasurableEquiv.refl X
 
+@[reducible]
 noncomputable
 def monoidalCoherence {X' Y' : Type w} [MeasurableSpace X'] [MeasurableSpace Y']
     (ex : X' ≃ᵐ X) (ey : Y' ≃ᵐ Y) : MonoidalCoherence (SFinKer.of X') (SFinKer.of Y') where
@@ -89,7 +90,7 @@ lemma quiver_monoComp : @monoidalComp _ _ _ _ _ _ (monoidalCoherence ex' ey')
     = quiver (ex := ew') (ey := ez') (monoComp κ η):= by
   simp only [monoComp, monoComp', fromQuiver, quiver, monoidalComp]
   kernel_cat
-  dsimp [monoidalCoherence]
+  unfold monoidalCoherence
   ext _ s hs
   simp_all only [coe_comap, Function.comp_apply, comp_apply']
   rw [Kernel.map_apply', Kernel.map_apply']
