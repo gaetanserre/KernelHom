@@ -63,9 +63,20 @@ variable [StandardBorelSpace Ω] [Nonempty Ω]
 open CategoryTheory
 open scoped MonoidalCategory
 
+lemma ext_const_measure {α : Type*} [MeasurableSpace α] (μ ν : Measure α) :
+    μ = ν ↔ Kernel.const Unit μ = Kernel.const Unit ν := by
+  constructor
+  · intro h
+    rw [h]
+  · intro h
+    replace h := DFunLike.congr (x := ()) h rfl
+    simpa using h
+
 lemma parallelProd_posterior_comp_copy_comp' :
-    (Kernel.id ∥ₖ κ†μ) ∘ₖ Kernel.copy 𝓧 ∘ₖ κ ∘ₖ (Kernel.const Unit μ)
-      = (κ ∥ₖ Kernel.id) ∘ₖ Kernel.copy Ω ∘ₖ (Kernel.const Unit μ) := by
+    (Kernel.id ∥ₖ κ†μ) ∘ₘ Kernel.copy 𝓧 ∘ₘ κ ∘ₘ μ
+      = (κ ∥ₖ Kernel.id) ∘ₘ Kernel.copy Ω ∘ₘ μ := by
+  rw [ext_const_measure]
+  simp only [← Kernel.comp_const]
   kernel_monoidal
   simp only [Iso.trans_refl, Iso.refl_hom, MonoidalCategory.whiskerLeftIso_refl, Iso.refl_trans,
     Category.comp_id, Category.id_comp, MonoidalCategory.whiskerRightIso_refl]
