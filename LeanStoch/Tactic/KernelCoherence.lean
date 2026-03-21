@@ -7,7 +7,7 @@ Authors: Gaëtan Serré
 import LeanStoch.Tactic.Quiver.KernelQuiver
 import Mathlib.Tactic.CategoryTheory.Coherence
 
-open Lean Elab Tactic
+open Lean Elab Tactic CategoryTheory
 
 elab "kernel_coherence" : tactic => do
   evalTactic (← `(tactic| kernel_quiver))
@@ -16,3 +16,5 @@ elab "kernel_coherence" : tactic => do
 elab "kernel_monoidal" : tactic => do
   evalTactic (← `(tactic| kernel_quiver))
   evalTactic (← `(tactic| monoidal))
+  evalTactic (← `(tactic| try simp [MonoidalCategory.tensorObj]))
+  evalTactic (← `(tactic| try simp))
