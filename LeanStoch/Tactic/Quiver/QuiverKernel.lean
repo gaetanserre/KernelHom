@@ -212,12 +212,10 @@ def mkQuiverKernelEqProof (eqProofType : Expr) (eLevel : Level)
       match e with
       | .leftUnitor (_, expr) =>
         let eStx ← Term.exprToSyntax expr
-        evalTactic (← `(tactic| try rw [Kernel.leftUnitor.{$eLevelStx, _, 0}
-          (ex := $eStx)]))
+        evalTactic (← `(tactic| try rw [Kernel.leftUnitor.{$eLevelStx, _, 0} (ex := $eStx)]))
       | .rightUnitor (_, expr) =>
         let eStx ← Term.exprToSyntax expr
-        evalTactic (← `(tactic| try rw [Kernel.rightUnitor.{$eLevelStx, _, 0}
-          (ex := $eStx)]))
+        evalTactic (← `(tactic| try rw [Kernel.rightUnitor.{$eLevelStx, _, 0} (ex := $eStx)]))
       | .id (_, expr) =>
         let eStx ← Term.exprToSyntax expr
         evalTactic (← `(tactic| try rw [Kernel.quiver_id.{$eLevelStx} (ex := $eStx)]))
