@@ -37,11 +37,11 @@ example (κ : Kernel X Y) (η : Kernel Y Z) [IsFiniteKernel η] [IsSFiniteKernel
   exact h
 
 example (f : Kernel X Y) (g : Kernel Y Z) [IsSFiniteKernel f] [IsSFiniteKernel g] :
-    (g ∘ₖ Kernel.id.map (Prod.fst : Y × Unit → Y)) ∘ₖ
-      (Kernel.id.map (Prod.fst : Y × Unit → Y) ∥ₖ Kernel.id (α := Unit)) ∘ₖ
-        ((f ∥ₖ Kernel.id (α := Unit)) ∥ₖ Kernel.id (α := Unit))
-    = (g ∘ₖ f ∘ₖ (Kernel.id.map (Prod.fst : X × Unit → X)) ∘ₖ
-        ((Kernel.id.map (Prod.fst : X × Unit → X)) ∥ₖ Kernel.id (α := Unit))
-      : Kernel ((X × Unit) × Unit) Z)
+    (g ∘ₖ Kernel.id.map (Prod.fst : Y × PUnit → Y)) ∘ₖ
+      (Kernel.id.map (Prod.fst : Y × PUnit → Y) ∥ₖ Kernel.id (α := PUnit)) ∘ₖ
+        ((f ∥ₖ Kernel.id (α := PUnit)) ∥ₖ Kernel.id (α := PUnit))
+    = (g ∘ₖ f ∘ₖ (Kernel.id.map (Prod.fst : X × PUnit → X)) ∘ₖ
+        ((Kernel.id.map (Prod.fst : X × PUnit → X)) ∥ₖ Kernel.id (α := PUnit))
+      : Kernel ((X × PUnit) × PUnit) Z)
      := by
   kernel_monoidal

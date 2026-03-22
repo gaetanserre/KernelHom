@@ -134,9 +134,9 @@ partial def transformKernelToQuiver (maxLvl : Level) (e : Expr) (op_data : List 
     let args := e.getAppArgs
     let κ := args[args.size - 2]!
     let η := args[args.size - 1]!
-    let (κ', lκ) ← transformKernelToQuiver maxLvl κ op_data
-    let (η', lη) ← transformKernelToQuiver maxLvl η lκ
-    return (← mkAppM ``CategoryStruct.comp #[η', κ'], lη)
+    let (η', lη) ← transformKernelToQuiver maxLvl η op_data
+    let (κ', lκ) ← transformKernelToQuiver maxLvl κ lη
+    return (← mkAppM ``CategoryStruct.comp #[η', κ'], lκ)
   | Expr.const ``Kernel.monoComp _ =>
     let args := e.getAppArgs
     let κ := args[args.size - 4]!
@@ -196,6 +196,7 @@ def mkKernelQuiverEqProof (eqProofType rhs lhs : Expr) (maxLvl : Level)
   let maxLevelStx ← liftMacroM <| levelToSyntax maxLvl
   let rhsStx ← Term.exprToSyntax rhs
   let lhsStx ← Term.exprToSyntax lhs
+  let op_data := op_data.reverse
   let savedGoals ← getGoals
   let mvar ← mkFreshExprSyntheticOpaqueMVar eqProofType
   let mvarId := mvar.mvarId!
@@ -210,19 +211,19 @@ def mkKernelQuiverEqProof (eqProofType rhs lhs : Expr) (maxLvl : Level)
     evalTactic (← `(tactic| try dsimp only [MonoidalCategoryStruct.tensorUnit]))
     for e in op_data do
       match e with
-      | .leftUnitor (lvl, expr) =>
+      | .leftUnitor (lvl, equiv) =>
         let punitLevelStx ← liftMacroM <| levelToSyntax lvl
-        let eStx ← Term.exprToSyntax expr
-        evalTactic (← `(tactic| try rw [Kernel.leftUnitor.{$maxLevelStx, _, $punitLevelStx}
+        let eStx ← Term.exprToSyntax equiv
+        evalTactic (← `(tactic| nth_rw 1 [Kernel.leftUnitor.{$maxLevelStx, _, $punitLevelStx}
           (ex := $eStx)]))
-      | .rightUnitor (lvl, expr) =>
+      | .rightUnitor (lvl, equiv) =>
         let punitLevelStx ← liftMacroM <| levelToSyntax lvl
-        let eStx ← Term.exprToSyntax expr
-        evalTactic (← `(tactic| try rw [Kernel.rightUnitor.{$maxLevelStx, _, $punitLevelStx}
+        let eStx ← Term.exprToSyntax equiv
+        evalTactic (← `(tactic| nth_rw 1 [Kernel.rightUnitor.{$maxLevelStx, _, $punitLevelStx}
           (ex := $eStx)]))
-      | .id (_, expr) =>
-        let eStx ← Term.exprToSyntax expr
-        evalTactic (← `(tactic| try rw [Kernel.quiver_id.{$maxLevelStx} (ex := $eStx)]))
+      | .id (_, equiv) =>
+        let eStx ← Term.exprToSyntax equiv
+        evalTactic (← `(tactic| rw [Kernel.quiver_id.{$maxLevelStx} (ex := $eStx)]))
       | _ => pure ()
     let congr_tac ← `(tactic| first
       | simp only [
@@ -239,12 +240,12 @@ def mkKernelQuiverEqProof (eqProofType rhs lhs : Expr) (maxLvl : Level)
       pure ()
     for e in op_data do
       match e with
-      | .WhiskerLeft (_, expr) =>
-        let eStx ← Term.exprToSyntax expr
-        evalTactic (← `(tactic| rw [Kernel.WhiskerLeft.{$maxLevelStx} (ez := $eStx)]))
-      | .WhiskerRight (_, expr) =>
-        let eStx ← Term.exprToSyntax expr
-        evalTactic (← `(tactic| rw [Kernel.WhiskerRight.{$maxLevelStx} (ez := $eStx)]))
+      | .WhiskerLeft (_, equiv) =>
+        let eStx ← Term.exprToSyntax equiv
+        evalTactic (← `(tactic| nth_rw 1 [Kernel.WhiskerLeft.{$maxLevelStx} (ez := $eStx)]))
+      | .WhiskerRight (_, equiv) =>
+        let eStx ← Term.exprToSyntax equiv
+        evalTactic (← `(tactic| nth_rw 1 [Kernel.WhiskerRight.{$maxLevelStx} (ez := $eStx)]))
       | _ => pure ()
     try
       evalTactic congr_tac
@@ -258,19 +259,19 @@ def mkKernelQuiverEqProof (eqProofType rhs lhs : Expr) (maxLvl : Level)
     evalTactic (← `(tactic| try dsimp only [MonoidalCategory.tensorUnit] at h))
     for e in op_data do
       match e with
-      | .leftUnitor (lvl, expr) =>
+      | .leftUnitor (lvl, equiv) =>
         let punitLevelStx ← liftMacroM <| levelToSyntax lvl
-        let eStx ← Term.exprToSyntax expr
-        evalTactic (← `(tactic| try rw [Kernel.leftUnitor.{$maxLevelStx, _, $punitLevelStx}
+        let eStx ← Term.exprToSyntax equiv
+        evalTactic (← `(tactic| nth_rw 1 [Kernel.leftUnitor.{$maxLevelStx, _, $punitLevelStx}
           (ex := $eStx)] at h))
-      | .rightUnitor (lvl, expr) =>
+      | .rightUnitor (lvl, equiv) =>
         let punitLevelStx ← liftMacroM <| levelToSyntax lvl
-        let eStx ← Term.exprToSyntax expr
-        evalTactic (← `(tactic| try rw [Kernel.rightUnitor.{$maxLevelStx, _, $punitLevelStx}
+        let eStx ← Term.exprToSyntax equiv
+        evalTactic (← `(tactic| nth_rw 1 [Kernel.rightUnitor.{$maxLevelStx, _, $punitLevelStx}
           (ex := $eStx)] at h))
-      | .id (_, expr) =>
-        let eStx ← Term.exprToSyntax expr
-        evalTactic (← `(tactic| try rw [Kernel.quiver_id.{$maxLevelStx} (ex := $eStx)] at h))
+      | .id (_, equiv) =>
+        let eStx ← Term.exprToSyntax equiv
+        evalTactic (← `(tactic| rw [Kernel.quiver_id.{$maxLevelStx} (ex := $eStx)] at h))
       | _ => pure ()
     let congr_tac ← `(tactic| first
       | simp only [
@@ -287,12 +288,12 @@ def mkKernelQuiverEqProof (eqProofType rhs lhs : Expr) (maxLvl : Level)
       pure ()
     for e in op_data do
       match e with
-      | .WhiskerLeft (_, expr) =>
-        let eStx ← Term.exprToSyntax expr
-        evalTactic (← `(tactic| rw [Kernel.WhiskerLeft.{$maxLevelStx} (ez := $eStx)] at h))
-      | .WhiskerRight (_, expr) =>
-        let eStx ← Term.exprToSyntax expr
-        evalTactic (← `(tactic| rw [Kernel.WhiskerRight.{$maxLevelStx} (ez := $eStx)] at h))
+      | .WhiskerLeft (_, equiv) =>
+        let eStx ← Term.exprToSyntax equiv
+        evalTactic (← `(tactic| nth_rw 1 [Kernel.WhiskerLeft.{$maxLevelStx} (ez := $eStx)] at h))
+      | .WhiskerRight (_, equiv) =>
+        let eStx ← Term.exprToSyntax equiv
+        evalTactic (← `(tactic| nth_rw 1 [Kernel.WhiskerRight.{$maxLevelStx} (ez := $eStx)] at h))
       | _ => pure ()
     try
       evalTactic congr_tac
