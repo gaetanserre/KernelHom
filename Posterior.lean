@@ -78,6 +78,8 @@ lemma parallelProd_posterior_comp_copy_comp' :
   rw [const_ext_measure]
   simp only [← Kernel.comp_const]
   kernel_monoidal
+  simp only [tensorObjSFinker, Iso.trans_refl, Iso.refl_hom, MonoidalCategory.whiskerLeftIso_refl,
+    Category.comp_id, Category.id_comp, MonoidalCategory.whiskerRightIso_refl]
   quiver_kernel
   simp only [Kernel.parallelComp_comp_copy]
   ext a s hs
