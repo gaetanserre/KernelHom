@@ -9,6 +9,12 @@ import Mathlib.Tactic.CategoryTheory.Coherence
 
 open Lean Elab Tactic CategoryTheory
 
+open scoped MonoidalCategory
+
+@[simp]
+lemma CategoryTheory.tensorObjSFinker {X Y : SFinKer} :
+    X ⊗ Y = SFinKer.of (X.carrier × Y.carrier) := rfl
+
 elab "kernel_coherence" : tactic => do
   evalTactic (← `(tactic| kernel_quiver))
   evalTactic (← `(tactic| coherence))
@@ -16,5 +22,5 @@ elab "kernel_coherence" : tactic => do
 elab "kernel_monoidal" : tactic => do
   evalTactic (← `(tactic| kernel_quiver))
   evalTactic (← `(tactic| monoidal))
-  evalTactic (← `(tactic| try simp [MonoidalCategory.tensorObj]))
-  evalTactic (← `(tactic| try simp))
+  --evalTactic (← `(tactic| try simp [MonoidalCategory.tensorObj]))
+  --evalTactic (← `(tactic| try simp))
