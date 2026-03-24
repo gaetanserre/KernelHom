@@ -1,42 +1,42 @@
 /-
 Copyright (c) 2026 Gaëtan Serré. All rights reserved.
-Released under GNU GPL 3.0 license as described in the file LICENSE.
+Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gaëtan Serré
 -/
+module
 
-import Mathlib.CategoryTheory.MarkovCategory.Basic
-import LeanStoch.Tactic.SFinite
-import LeanStoch.Mathlib.Kernel
+public import Mathlib.CategoryTheory.CopyDiscardCategory.Basic
+public import Mathlib.Probability.Kernel.Composition.KernelLemmas
+public import LeanStoch.Mathlib.CategoryTheory.Kernel.Tactics
+public import LeanStoch.Mathlib.Kernel
 
 /-!
-# The symmetric monoidal category SFinKer
+# SFinKer
 
-This file defines the category **SFinKer** of measurable spaces and s-finite kernels,
-and proves it is a symmetric monoidal category.
+The category of measurable spaces with s-finite kernels is a copy-discard category.
 
-## Main definitions
+## Main declarations
 
-* `SFinKer`: the category whose objects are measurable spaces and morphisms are s-finite kernels
-* `instance : MonoidalCategory SFinKer`: **SFinKer** has a monoidal structure
-* `instance : SymmetricCategory SFinKer`: **SFinKer** is a symmetric monoidal category
-
-## Implementation notes
-
-Morphisms in **SFinKer** are represented as subtypes `{ k : Kernel X Y // IsSFiniteKernel k }`.
-The monoidal structure is given by the categorical product of measurable spaces.
+* `LargeCategory SFinKer`: the categorical structure on `SFinKer`.
+* `MonoidalCategory SFinKer`: `SFinKer` is a monoidal category using the Cartesian product.
+* `SymmetricCategory SFinKer`: `SFinKer` is a symmetric monoidal category.
+* `CopyDiscardCategory SFinKer`: `SFinKer` is a copy-discard category.
 
 ## References
-
-* [Tobias Fritz, A synthetic approach to Markov kernels, conditional independence and theorems on sufficient statistics](https://arxiv.org/abs/1908.07021)
+* [A synthetic approach to
+Markov kernels, conditional independence and theorems on sufficient statistics][fritz2020]
 -/
+
+@[expose] public section
 
 open CategoryTheory ProbabilityTheory MeasureTheory
 
 universe u
 
-/-- The category **SFinKer** of measurable spaces and s-finite kernels. -/
+/-- The category of measurable spaces and s-finite kernels. -/
 structure SFinKer : Type (u + 1) where
   of ::
+  /-- The underlying measurable space. -/
   carrier : Type u
   [str : MeasurableSpace carrier]
 
@@ -47,28 +47,24 @@ instance : CoeSort SFinKer Type* :=
 
 noncomputable section
 
-/-- **SFinKer** is a large category with s-finite kernels as morphisms.
-Composition is given by kernel composition `∘ₖ`. -/
-instance : LargeCategory SFinKer.{u} where
+instance : LargeCategory SFinKer where
   Hom X Y := { k : Kernel X Y // IsSFiniteKernel k }
-  id X := ⟨Kernel.id, by kernel_sfinite⟩
-  comp κ₁ κ₂ := ⟨κ₂.1 ∘ₖ κ₁.1, by kernel_sfinite⟩
-  assoc κ₁ κ₂ κ₃ := by simp [Kernel.comp_assoc]
+  id X := ⟨Kernel.id, by kernel_instance⟩
+  comp κ η := ⟨η.1 ∘ₖ κ.1, by kernel_instance⟩
+  assoc κ η ξ := by simp [Kernel.comp_assoc]
 
-/-- **SFinKer** is a monoidal category with tensor product given by the categorical product.
-The unit is the terminal object `Unit`. -/
 instance : MonoidalCategory SFinKer.{u} where
   tensorObj X Y := SFinKer.of (X × Y)
-  whiskerLeft X Y₁ Y₂ κ := ⟨Kernel.id ∥ₖ κ.1, by kernel_sfinite⟩
-  whiskerRight κ Y := ⟨κ.1 ∥ₖ Kernel.id, by kernel_sfinite⟩
+  whiskerLeft X Y₁ Y₂ κ := ⟨Kernel.id ∥ₖ κ.1, by kernel_instance⟩
+  whiskerRight κ Y := ⟨κ.1 ∥ₖ Kernel.id, by kernel_instance⟩
   tensorUnit := SFinKer.of PUnit
   associator X Y Z := by
     let f₁ := fun (x : (X × Y) × Z) ↦ (x.1.1, x.1.2, x.2)
     let f₂ := fun (x : X × Y × Z) ↦ ((x.1, x.2.1), x.2.2)
     have hf₁ : Measurable f₁ := by fun_prop
     have hf₂ : Measurable f₂ := by fun_prop
-    refine ⟨⟨Kernel.id.map f₁, by kernel_sfinite⟩,
-      ⟨Kernel.id.map f₂, by kernel_sfinite⟩, ?_, ?_⟩
+    refine ⟨⟨Kernel.id.map f₁, by kernel_instance⟩,
+      ⟨Kernel.id.map f₂, by kernel_instance⟩, ?_, ?_⟩
     · kernel_cat
       rw [Kernel.id_map hf₁, Kernel.id_map hf₂, Kernel.deterministic_comp_eq_map hf₂,
         Kernel.deterministic_map hf₁ hf₂]
@@ -83,8 +79,8 @@ instance : MonoidalCategory SFinKer.{u} where
     let f₁ := fun (x : X) ↦ (PUnit.unit, x)
     have hf₁ : Measurable f₁ := by fun_prop
     have hf₂ : Measurable (Prod.snd : PUnit × X → X) := by fun_prop
-    refine ⟨⟨Kernel.id.map Prod.snd, by kernel_sfinite⟩,
-      ⟨Kernel.id.map f₁, by kernel_sfinite⟩, ?_, ?_⟩
+    refine ⟨⟨Kernel.id.map Prod.snd, by kernel_instance⟩,
+      ⟨Kernel.id.map f₁, by kernel_instance⟩, ?_, ?_⟩
     · kernel_cat
       rw [Kernel.id_map hf₁, Kernel.deterministic_comp_eq_map hf₁, Kernel.id_map hf₂,
         Kernel.deterministic_map hf₂ hf₁]
@@ -99,8 +95,8 @@ instance : MonoidalCategory SFinKer.{u} where
     let f₁ := fun (x : X) ↦ (x, PUnit.unit)
     have hf₁ : Measurable f₁ := by fun_prop
     have hf₂ : Measurable (Prod.fst : X × PUnit → X) := by fun_prop
-    refine ⟨⟨Kernel.id.map Prod.fst, by kernel_sfinite⟩,
-      ⟨Kernel.id.map f₁, by kernel_sfinite⟩, ?_, ?_⟩
+    refine ⟨⟨Kernel.id.map Prod.fst, by kernel_instance⟩,
+      ⟨Kernel.id.map f₁, by kernel_instance⟩, ?_, ?_⟩
     · kernel_cat
       rw [Kernel.id_map hf₁, Kernel.deterministic_comp_eq_map hf₁, Kernel.id_map hf₂,
         Kernel.deterministic_map hf₂ hf₁]
@@ -180,39 +176,9 @@ instance : MonoidalCategory SFinKer.{u} where
       Kernel.deterministic_comp_deterministic]
     congr
 
-instance {α : Type} [MeasurableSpace α] : IsFiniteKernel (Kernel.copy α) := by
-  dsimp [Kernel.copy]
-  infer_instance
-
-/-- Every object in **SFinKer** carries a canonical comonoid structure.
-The comultiplication is copying `Kernel.copy X : X → X ⊗ X`
-and the counit is discarding `Kernel.discard X : X → 𝟙_`. -/
-instance {X : SFinKer.{u}} : ComonObj X where
-  counit := ⟨Kernel.discard X, by kernel_sfinite⟩
-  comul := ⟨Kernel.copy X, by kernel_sfinite⟩
-  counit_comul := by
-    kernel_cat
-    simp only [Kernel.discard, Kernel.copy, Kernel.id]
-    rw [Kernel.deterministic_parallelComp_deterministic,
-      Kernel.deterministic_comp_deterministic, Kernel.deterministic_map measurable_id (by fun_prop)]
-    congr 1
-  comul_counit := by
-    kernel_cat
-    simp only [Kernel.discard, Kernel.copy, Kernel.id]
-    rw [Kernel.deterministic_parallelComp_deterministic,
-      Kernel.deterministic_comp_deterministic, Kernel.deterministic_map measurable_id (by fun_prop)]
-    congr 1
-  comul_assoc := by
-    kernel_cat
-    rw [Kernel.id_map (by fun_prop)]
-    simp [Kernel.copy, Kernel.id, Kernel.deterministic_comp_deterministic,
-      Kernel.deterministic_parallelComp_deterministic]
-    congr 1
-
-/-- **SFinKer** is a braided category with braiding given by the swap map. -/
-instance : BraidedCategory SFinKer.{u} where
+instance : SymmetricCategory SFinKer.{u} where
   braiding X Y := by
-    refine ⟨⟨Kernel.swap _ _, by kernel_sfinite⟩, ⟨Kernel.swap _ _, by kernel_sfinite⟩,
+    refine ⟨⟨Kernel.swap _ _, by kernel_instance⟩, ⟨Kernel.swap _ _, by kernel_instance⟩,
       ?_, ?_⟩
     · kernel_cat
       exact Kernel.swap_swap
@@ -240,17 +206,54 @@ instance : BraidedCategory SFinKer.{u} where
       repeat rw [Kernel.deterministic_comp_deterministic]
       congr 1
     all_goals fun_prop
-
-/-- **SFinKer** is a symmetric monoidal category. -/
-instance : SymmetricCategory SFinKer.{u} where
   symmetry X Y := by
     kernel_cat
     exact Kernel.swap_swap
 
-/-- The comonoid on each object is commutative. -/
-instance (X : SFinKer.{u}) : IsCommComonObj X where
-  comul_comm := by
+instance {X : SFinKer} : ComonObj X where
+  counit := ⟨Kernel.discard X, by kernel_instance⟩
+  comul := ⟨Kernel.copy X, by kernel_instance⟩
+  counit_comul := by
     kernel_cat
-    exact Kernel.swap_copy
+    simp only [Kernel.discard, Kernel.copy, Kernel.id]
+    rw [Kernel.deterministic_parallelComp_deterministic,
+      Kernel.deterministic_comp_deterministic, Kernel.deterministic_map measurable_id (by fun_prop)]
+    congr 1
+  comul_counit := by
+    kernel_cat
+    simp only [Kernel.discard, Kernel.copy, Kernel.id]
+    rw [Kernel.deterministic_parallelComp_deterministic,
+      Kernel.deterministic_comp_deterministic, Kernel.deterministic_map measurable_id (by fun_prop)]
+    congr 1
+  comul_assoc := by
+    kernel_cat
+    rw [Kernel.id_map (by fun_prop)]
+    simp [Kernel.copy, Kernel.id, Kernel.deterministic_comp_deterministic,
+      Kernel.deterministic_parallelComp_deterministic]
+    congr 1
+
+instance : CopyDiscardCategory SFinKer.{u} where
+  isCommComonObj X := ⟨by kernel_cat; exact Kernel.swap_copy⟩
+  copy_tensor X Y := by
+    dsimp only [MonoidalCategory.tensorμ, ComonObj.comul, BraidedCategory.braiding]
+    kernel_cat
+    repeat rw [Kernel.id_map (by fun_prop)]
+    simp only [Kernel.copy, Kernel.id, Kernel.swap]
+    repeat rw [Kernel.deterministic_parallelComp_deterministic]
+    repeat rw [Kernel.deterministic_comp_deterministic]
+    congr 1
+  discard_tensor X Y := by
+    kernel_cat
+    simp only [ComonObj.counit, Kernel.comp_id_parallelComp]
+    rw [Kernel.id_map (by fun_prop), Kernel.deterministic_comp_eq_map]
+    ext x s hs
+    rw [Kernel.map_apply _ (by fun_prop), Kernel.parallelComp_apply]
+    simp [Kernel.discard_apply]
+  copy_unit := by
+    dsimp only [ComonObj.comul]
+    kernel_cat
+    ext x s hs
+    rw [Kernel.id_map (by fun_prop)]
+    simp [Kernel.copy_apply, Kernel.deterministic_apply]
 
 end

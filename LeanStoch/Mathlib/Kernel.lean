@@ -4,7 +4,9 @@ Released under GNU GPL 3.0 license as described in the file LICENSE.
 Authors: Gaëtan Serré
 -/
 
-import Mathlib.Probability.Kernel.Composition.KernelLemmas
+module
+
+public import Mathlib.Probability.Kernel.Composition.KernelLemmas
 
 /-!
 # Auxiliary lemmas for probability kernels
@@ -17,6 +19,8 @@ of probability kernels that are used in the definition of **SFinKer** as a Marko
 * `parallelComp_id_id`: Parallel composition of two identity kernels is the identity
 * `comp_id_parallelComp`, `comp_parallelComp_id`: Simplification lemmas for kernel compositions
 -/
+
+@[expose] public section
 
 open ProbabilityTheory MeasureTheory
 

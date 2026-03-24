@@ -4,7 +4,7 @@ Released under GNU GPL 3.0 license as described in the file LICENSE.
 Authors: Gaëtan Serré
 -/
 
-import LeanStoch.SFinKer
+import LeanStoch.Mathlib.CategoryTheory.Kernel.SFinKer
 import LeanStoch.Mathlib.MeasurableEquiv
 import Mathlib.Combinatorics.Quiver.ReflQuiver
 
@@ -26,12 +26,12 @@ def fromQuiver (κ : SFinKer.of X' ⟶ SFinKer.of Y') : Kernel X Y :=
 instance {κ : SFinKer.of X' ⟶ SFinKer.of Y'} :
     IsSFiniteKernel (fromQuiver (ex := ex) (ey := ey) κ) := by
   simp only [fromQuiver]
-  kernel_sfinite
+  kernel_instance
 
 noncomputable
 def quiver (κ : Kernel X Y) [IsSFiniteKernel κ] : SFinKer.of X' ⟶ SFinKer.of Y' := by
   refine ⟨(κ.map ey.symm).comap ex (by fun_prop), ?_⟩
-  kernel_sfinite
+  kernel_instance
 
 noncomputable
 def quiver' (κ : Kernel X Y) [IsSFiniteKernel κ] :

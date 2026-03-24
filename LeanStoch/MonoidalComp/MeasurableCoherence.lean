@@ -28,8 +28,8 @@ def monoidalCoherence {X' Y' : Type w} [MeasurableSpace X'] [MeasurableSpace Y']
     (ex : X' ≃ᵐ X) (ey : Y' ≃ᵐ Y) : MonoidalCoherence (SFinKer.of X') (SFinKer.of Y') where
   iso := by
     let e := ex.trans <| mXY.miso.trans ey.symm
-    refine ⟨⟨Kernel.id.map e, by kernel_sfinite⟩,
-      ⟨Kernel.id.map e.symm, by kernel_sfinite⟩, ?_, ?_⟩
+    refine ⟨⟨Kernel.id.map e, by kernel_instance⟩,
+      ⟨Kernel.id.map e.symm, by kernel_instance⟩, ?_, ?_⟩
     all_goals kernel_cat
     · rw [Kernel.id_map (by fun_prop), Kernel.id_map (by fun_prop),
         Kernel.deterministic_comp_deterministic, Kernel.id]

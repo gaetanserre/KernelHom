@@ -4,8 +4,14 @@ Released under GNU GPL 3.0 license as described in the file LICENSE.
 Authors: Gaëtan Serré
 -/
 
-import LeanStoch.SFinKer
-import LeanStoch.Tactic.SFinite
+import LeanStoch.Mathlib.Kernel
+import LeanStoch.Mathlib.LIntegral
+import LeanStoch.Mathlib.MeasurableEquiv
+import LeanStoch.Mathlib.CategoryTheory.Widesubcategory
+import LeanStoch.Mathlib.CategoryTheory.Monoidal.Widesubcategory
+import LeanStoch.Mathlib.CategoryTheory.Kernel.Tactics
+import LeanStoch.Mathlib.CategoryTheory.Kernel.SFinKer
+import LeanStoch.Mathlib.CategoryTheory.Kernel.Stoch
 import LeanStoch.Tactic.Quiver.Universe
 import LeanStoch.Tactic.Quiver.Utils
 import LeanStoch.Tactic.Quiver.KernelQuiver
@@ -17,4 +23,3 @@ import LeanStoch.Mathlib.Kernel
 import LeanStoch.Mathlib.MeasurableEquiv
 import LeanStoch.MonoidalComp.Quiver
 import LeanStoch.MonoidalComp.MeasurableCoherence
-import LeanStoch.Tests
