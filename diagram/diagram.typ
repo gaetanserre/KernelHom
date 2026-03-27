@@ -30,16 +30,16 @@
 
   blob((-2, 0), $X$),
   blob((2, 0), $Y$),
-  blob((0, -1), $Z$),
+  blob((0, -2), $Z$),
 
-  edge((-2, 0), (0, -1), "-|>", bend: -40deg, label-sep: 0em, label: $kappa$),
-  edge((0, -1), (2, 0), "-|>", bend: -40deg, label-sep: 0em, label: $eta$),
+  edge((-2, 0), (0, -2), "-|>", bend: -40deg, label-sep: 0em, label: $kappa$),
+  edge((0, -2), (2, 0), "-|>", bend: -40deg, label-sep: 0em, label: $eta$),
   edge((-2, 0), (2, 0), "--|>", label-sep: 0em, label: $kappa gt.double eta$),
 
-  node((-2, -2), text(size: 7.7pt, $X times X$), stroke: 1pt + black, inset: 2pt, shape: circle),
-  blob((2, -2), text(size: 14pt, $I$)),
+  node((-2, -3), text(size: 7.7pt, $X times X$), stroke: 1pt + black, inset: 2pt, shape: circle),
+  blob((2, -3), text(size: 14pt, $I$)),
 
-  edge((-2, 0), (-2, -2), "=>", `copy`, label-sep: 0.3em, label-angle: 90deg, mark-scale: 120%),
-  edge((2, 0), (2, -2), "-/-|>", `delete`, label-sep: 0.3em, label-side: left, label-angle: 90deg, label-pos: 50%),
-  edge((-2, -2), (2, -2), "-/-|>", `delete`, label-sep: 0.3em),
+  edge((-2, 0), (-2, -3), "=>", `copy`, label-sep: 0.3em, label-angle: 90deg, mark-scale: 120%),
+  edge((2, 0), (2, -3), "-/-|>", `delete`, label-sep: 0.3em, label-side: left, label-angle: 90deg, label-pos: 50%),
+  edge((-2, -3), (2, -3), "-/-|>", `delete`, label-sep: 0.3em),
 )
