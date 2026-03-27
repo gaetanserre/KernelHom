@@ -1,9 +1,9 @@
-import LeanStoch.Tactic.Tactics
+import KernelHom.Tactic.Tactics
 import Mathlib
 
 open ProbabilityTheory MeasureTheory CategoryTheory MonoidalCategory
 
-/-! Tests for `kernel_quiver` and `quiver_kernel`. -/
+/-! Tests for `kernel_hom` and `hom_kernel`. -/
 
 variable {W X Y Z : Type*}
   [MeasurableSpace W] [MeasurableSpace X] [MeasurableSpace Y] [MeasurableSpace Z]
@@ -11,29 +11,29 @@ variable {W X Y Z : Type*}
 example (κ : Kernel X Y) (η : Kernel Y Z) (ξ : Kernel Z W)
     [IsSFiniteKernel κ] [IsSFiniteKernel η] [IsFiniteKernel ξ] :
     ξ ∘ₖ (η ∘ₖ κ) = ξ ∘ₖ η ∘ₖ κ := by
-  kernel_quiver
+  kernel_hom
   simp only [Category.assoc]
 
 example (κ : Kernel X Y) (η : Kernel Y Z) (ξ : Kernel Z W)
     [IsSFiniteKernel κ] [IsSFiniteKernel η] [IsFiniteKernel ξ]
     (h : ξ ∘ₖ (η ∘ₖ κ) = ξ ∘ₖ η ∘ₖ κ) :
     ξ ∘ₖ (η ∘ₖ κ) = ξ ∘ₖ η ∘ₖ κ := by
-  kernel_quiver at h
-  quiver_kernel at h
+  kernel_hom at h
+  hom_kernel at h
   exact h
 
 example (h : Kernel.id.map (Prod.snd : Unit × X → X) = (0 : Kernel (Unit × X) X)) :
     Kernel.id.map (Prod.snd : Unit × X → X) = (0 : Kernel (Unit × X) X) := by
-  kernel_quiver at h
-  quiver_kernel at h
+  kernel_hom at h
+  hom_kernel at h
   exact h
 
 example (κ : Kernel X Y) (η : Kernel Y Z) [IsFiniteKernel η] [IsSFiniteKernel κ]
     (h : (Kernel.id (α := Unit)) ∥ₖ (η ∘ₖ κ) =
       (0 : Kernel (Unit × X) (Unit × Z))) :
     (Kernel.id (α := Unit)) ∥ₖ (η ∘ₖ κ) = (0 : Kernel (Unit × X) (Unit × Z)) := by
-  kernel_quiver at h
-  quiver_kernel at h
+  kernel_hom at h
+  hom_kernel at h
   exact h
 
 example (f : Kernel X Y) (g : Kernel Y Z) [IsSFiniteKernel f] [IsSFiniteKernel g] :

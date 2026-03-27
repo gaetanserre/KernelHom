@@ -4,8 +4,8 @@ Released under GNU GPL 3.0 license as described in the file LICENSE.
 Authors: Gaëtan Serré
 -/
 
-import LeanStoch.Mathlib.LIntegral
-import LeanStoch.MonoidalComp.Quiver
+import KernelHom.Mathlib.LIntegral
+import KernelHom.Hom
 
 open CategoryTheory MonoidalCategory MeasureTheory ProbabilityTheory MeasurableEquiv
 
@@ -28,9 +28,9 @@ def monoidalCoherence {X' Y' : Type w} [MeasurableSpace X'] [MeasurableSpace Y']
     (ex : X' ≃ᵐ X) (ey : Y' ≃ᵐ Y) : MonoidalCoherence (SFinKer.of X') (SFinKer.of Y') where
   iso := by
     let e := ex.trans <| mXY.miso.trans ey.symm
-    refine ⟨⟨Kernel.id.map e, by kernel_instance⟩,
-      ⟨Kernel.id.map e.symm, by kernel_instance⟩, ?_, ?_⟩
-    all_goals kernel_cat
+    refine ⟨⟨Kernel.id.map e, inferInstance⟩,
+      ⟨Kernel.id.map e.symm, inferInstance⟩, ?_, ?_⟩
+    all_goals ext; dsimp
     · rw [Kernel.id_map (by fun_prop), Kernel.id_map (by fun_prop),
         Kernel.deterministic_comp_deterministic, Kernel.id]
       congr
@@ -60,8 +60,8 @@ variable {W' : Type max w x y z} {X' : Type max w x y z} {Y' : Type max w x y z}
 noncomputable
 def monoComp' : Kernel W Z :=
   have := monoidalCoherence ex ey
-  fromQuiver (ex := ew) (ey := ez) <| quiver (ex := ew) (ey := ex) κ ⊗≫
-    quiver (ex := ey) (ey := ez) η
+  fromHom (ex := ew) (ey := ez) <| hom (ex := ew) (ey := ex) κ ⊗≫
+    hom (ex := ey) (ey := ez) η
 
 instance monoComp'_sfinite : IsSFiniteKernel (monoComp' κ η ew ex ey ez ) := by
   simp only [monoComp']
@@ -86,12 +86,11 @@ variable {W'' : Type max v w x y z} {X'' : Type max v w x y z} {Y'' : Type max v
   [MeasurableSpace Z''] (ew' : W'' ≃ᵐ W) (ex' : X'' ≃ᵐ X) (ey' : Y'' ≃ᵐ Y) (ez' : Z'' ≃ᵐ Z)
 
 lemma quiver_monoComp : @monoidalComp _ _ _ _ _ _ (monoidalCoherence ex' ey')
-    (quiver (ex := ew') (ey := ex') κ) (quiver (ex := ey') (ey := ez') η)
-    = quiver (ex := ew') (ey := ez') (monoComp κ η):= by
-  simp only [monoComp, monoComp', fromQuiver, quiver, monoidalComp]
-  kernel_cat
+    (hom (ex := ew') (ey := ex') κ) (hom (ex := ey') (ey := ez') η)
+    = hom (ex := ew') (ey := ez') (monoComp κ η):= by
+  simp only [monoComp, monoComp', fromHom, hom, monoidalComp]
+  ext _ s hs; dsimp
   unfold monoidalCoherence
-  ext _ s hs
   simp_all only [coe_comap, Function.comp_apply, comp_apply']
   rw [Kernel.map_apply', Kernel.map_apply']
   · simp_all only [coe_comap, Function.comp_apply, MeasurableEquiv.measurableSet_preimage,

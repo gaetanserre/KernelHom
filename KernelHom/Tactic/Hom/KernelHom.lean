@@ -5,27 +5,27 @@ Authors: Gaëtan Serré
 -/
 
 import Lean.Elab.Tactic.Location
-import LeanStoch.MonoidalComp.Quiver
-import LeanStoch.MonoidalComp.MeasurableCoherence
-import LeanStoch.Mathlib.MeasurableEquiv
-import LeanStoch.Tactic.LocTactic
-import LeanStoch.Tactic.Quiver.Universe
-import LeanStoch.Tactic.Quiver.Utils
+import KernelHom.Hom
+import KernelHom.MonoidalComp.MeasurableCoherence
+import KernelHom.Mathlib.MeasurableEquiv
+import KernelHom.Tactic.LocTactic
+import KernelHom.Tactic.Hom.Universe
+import KernelHom.Tactic.Hom.Utils
 
 /-!
-# `kernel_quiver` tactic
+# `kernel_hom` tactic
 
-This file implements the `kernel_quiver` tactic, which transforms equalities of
-kernels into equivalent equalities in the monoidal quiver category.
+This file implements the `kernel_hom` tactic, which transforms equalities of
+kernels into equivalent equalities in the monoidal category.
 
 ## Main declarations
 
-- `transformKernelToQuiver`: recursive translation from kernel expressions to
-  quiver expressions.
-- `mkKernelQuiverEqProof`: construction of the equivalence proof used by the
+- `transformKernelToHom`: recursive translation from kernel expressions to
+  categorical morphism expressions.
+- `mkKernelHomEqProof`: construction of the equivalence proof used by the
   tactic.
-- `applyKernelQuiver`: core implementation on goals and hypotheses.
-- `kernel_quiver`: user-facing tactic (with location support).
+- `applyKernelHom`: core implementation on goals and hypotheses.
+- `kernel_hom`: user-facing tactic (with location support).
 -/
 
 open Lean Elab Tactic Meta CategoryTheory Parser.Tactic ProbabilityTheory MonoidalCategory
@@ -126,16 +126,16 @@ def construct_whiskers_args (e X : Expr) (maxLvl : Level) (offset : Nat) :
       else throwError "Expected right whisker with parallelComp, got: {e}"
   return (stochOfZ, κ, Z, zLvl)
 
-/-- Transform a kernel expression to its quiver representation with explicit universe level. -/
-partial def transformKernelToQuiver (maxLvl : Level) (e : Expr) (op_data : List CategoryOP) :
+/-- Transform a kernel expression to its morphism representation with explicit universe level. -/
+partial def transformKernelToHom (maxLvl : Level) (e : Expr) (op_data : List CategoryOP) :
     MetaM (Expr × List CategoryOP) := do
   match e.getAppFn with
   | Expr.const ``Kernel.comp _ =>
     let args := e.getAppArgs
     let κ := args[args.size - 2]!
     let η := args[args.size - 1]!
-    let (η', lη) ← transformKernelToQuiver maxLvl η op_data
-    let (κ', lκ) ← transformKernelToQuiver maxLvl κ lη
+    let (η', lη) ← transformKernelToHom maxLvl η op_data
+    let (κ', lκ) ← transformKernelToHom maxLvl κ lη
     return (← mkAppM ``CategoryStruct.comp #[η', κ'], lκ)
   | Expr.const ``Kernel.monoComp _ =>
     let args := e.getAppArgs
@@ -143,8 +143,8 @@ partial def transformKernelToQuiver (maxLvl : Level) (e : Expr) (op_data : List 
     let η := args[args.size - 2]!
     let (_, X, _, xLevel) ← get_types_from_kernel κ
     let (Y, _, yLevel, _) ← get_types_from_kernel η
-    let (κ', lκ) ← transformKernelToQuiver maxLvl κ op_data
-    let (η', lη) ← transformKernelToQuiver maxLvl η lκ
+    let (κ', lκ) ← transformKernelToHom maxLvl κ op_data
+    let (η', lη) ← transformKernelToHom maxLvl η lκ
     let ex ← construct_measurable_equiv X xLevel maxLvl
     let ey ← construct_measurable_equiv Y yLevel maxLvl
     let monoComp := Expr.const ``monoidalComp [maxLvl, maxLvl.succ]
@@ -172,26 +172,26 @@ partial def transformKernelToQuiver (maxLvl : Level) (e : Expr) (op_data : List 
       return (rightUnitorExpr, rightUnitorOP :: op_data)
     else if ← check_WhiskerLeft e then
       let (stochOfZ, κ, Z, zLvl) ← construct_whiskers_args e X maxLvl 0
-      let (κ', lκ) ← transformKernelToQuiver maxLvl κ op_data
+      let (κ', lκ) ← transformKernelToHom maxLvl κ op_data
       let whiskerleft ← mkAppM ``MonoidalCategoryStruct.whiskerLeft #[stochOfZ, κ']
       let ez ← construct_measurable_equiv Z zLvl maxLvl
       let leftWhiskerOP := .WhiskerLeft (zLvl, ez)
       return (whiskerleft, leftWhiskerOP :: lκ)
     else if ← check_WhiskerRight e then
       let (stochOfZ, κ, Z, zLvl) ← construct_whiskers_args e X maxLvl 1
-      let (κ', lκ) ← transformKernelToQuiver maxLvl κ op_data
+      let (κ', lκ) ← transformKernelToHom maxLvl κ op_data
       let whiskerleft ← mkAppM ``MonoidalCategoryStruct.whiskerRight #[κ', stochOfZ]
       let ez ← construct_measurable_equiv Z zLvl maxLvl
       let rightWhiskerOP := .WhiskerRight (zLvl, ez)
       return (whiskerleft, rightWhiskerOP :: lκ)
     else
-      let quiverConst := Expr.const ``Kernel.quiver [maxLvl, xLevel, yLevel]
+      let quiverConst := Expr.const ``Kernel.hom [maxLvl, xLevel, yLevel]
       let ex ← construct_measurable_equiv X xLevel maxLvl
       let ey ← construct_measurable_equiv Y yLevel maxLvl
       return( ← mkAppOptM' quiverConst
         #[none, none, none, none, none, none, none, none, ex, ey, e, none], op_data)
 
-def mkKernelQuiverEqProof (eqProofType rhs lhs : Expr) (maxLvl : Level)
+def mkKernelHomEqProof (eqProofType rhs lhs : Expr) (maxLvl : Level)
     (op_data : List CategoryOP) : TacticM Expr := do
   let maxLevelStx ← liftMacroM <| levelToSyntax maxLvl
   let rhsStx ← Term.exprToSyntax rhs
@@ -307,12 +307,12 @@ def mkKernelQuiverEqProof (eqProofType rhs lhs : Expr) (maxLvl : Level)
 
   if !(← getGoals).isEmpty then
     setGoals savedGoals
-    throwError "Failed to solve all goals while building kernel_quiver equivalence proof"
+    throwError "Failed to solve all goals while building kernel_hom equivalence proof"
 
   setGoals savedGoals
   instantiateMVars mvar
 
-def applyKernelQuiver (goal : MVarId) (fvarId : Option FVarId) : TacticM MVarId := do
+def applyKernelHom (goal : MVarId) (fvarId : Option FVarId) : TacticM MVarId := do
   goal.withContext do
     let expr ← match fvarId with
         | some fid => do
@@ -320,9 +320,9 @@ def applyKernelQuiver (goal : MVarId) (fvarId : Option FVarId) : TacticM MVarId 
           pure decl.type
         | none => goal.getType
     let maxLvl ← compute_max_universe (← collectExprUniverses expr)
-    let (quiverExpr, op_data, rhs, lhs) ← transformEquality maxLvl expr transformKernelToQuiver
+    let (quiverExpr, op_data, rhs, lhs) ← transformEquality maxLvl expr transformKernelToHom
     let eqProofType ← mkEq expr quiverExpr
-    let eqProof ← mkKernelQuiverEqProof eqProofType rhs lhs maxLvl op_data
+    let eqProof ← mkKernelHomEqProof eqProofType rhs lhs maxLvl op_data
     match fvarId with
     | some fid => do
       let mvarId ← getMainGoal
@@ -336,15 +336,15 @@ def applyKernelQuiver (goal : MVarId) (fvarId : Option FVarId) : TacticM MVarId 
       let mvarId ← getMainGoal
       mvarId.replaceTargetEq quiverExpr eqProof
 
-/-- The `kernel_quiver` tactic transforms a kernel equality to an equivalent equality in
+/-- The `kernel_hom` tactic transforms a kernel equality to an equivalent equality in
 the category of measurable spaces and s-finite kernels.
 
 The tactic supports location specifiers like `rw` or `simp`:
-- `kernel_quiver` — applies to the goal
-- `kernel_quiver at h` — applies to hypothesis `h`
-- `kernel_quiver at h₁ h₂` — applies to multiple hypotheses
-- `kernel_quiver at h ⊢` — applies to hypothesis `h` and the goal
-- `kernel_quiver at *` — applies to all hypotheses and the goal
+- `kernel_hom` — applies to the goal
+- `kernel_hom at h` — applies to hypothesis `h`
+- `kernel_hom at h₁ h₂` — applies to multiple hypotheses
+- `kernel_hom at h ⊢` — applies to hypothesis `h` and the goal
+- `kernel_hom at *` — applies to all hypotheses and the goal
 
 Example:
 ```lean
@@ -352,11 +352,11 @@ example {W X Y Z : Type*} [MeasurableSpace X] [MeasurableSpace Y] [MeasurableSpa
     [MeasurableSpace W] (κ : Kernel X Y) (η : Kernel Y Z) (ξ : Kernel Z W)
     [IsFiniteKernel ξ] [IsSFiniteKernel κ] [IsSFiniteKernel η] :
     ξ ∘ₖ (η ∘ₖ κ) = ξ ∘ₖ η ∘ₖ κ := by
-  kernel_quiver
+  kernel_hom
   exact Category.assoc _ _ _
 ``` -/
-syntax "kernel_quiver" (ppSpace location)? : tactic
+syntax "kernel_hom" (ppSpace location)? : tactic
 
 elab_rules : tactic
-  | `(tactic| kernel_quiver $[$loc]?) =>
-    expandOptLocation (Lean.mkOptionalNode loc) |> applyLocTactic <| applyKernelQuiver
+  | `(tactic| kernel_hom $[$loc]?) =>
+    expandOptLocation (Lean.mkOptionalNode loc) |> applyLocTactic <| applyKernelHom

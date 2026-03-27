@@ -5,7 +5,7 @@ Authors: Rémy Degenne
 -/
 
 import Mathlib
-import LeanStoch.Tactic.Tactics
+import KernelHom.Tactic.Tactics
 
 /-!
 
@@ -80,7 +80,7 @@ lemma parallelProd_posterior_comp_copy_comp' :
   kernel_monoidal
   simp only [tensorObjSFinker, Iso.trans_refl, Iso.refl_hom, MonoidalCategory.whiskerLeftIso_refl,
     Category.comp_id, Category.id_comp, MonoidalCategory.whiskerRightIso_refl]
-  quiver_kernel
+  hom_kernel
   simp only [Kernel.parallelComp_comp_copy]
   ext a s hs
   rw [Kernel.prod_apply' _ _ _ hs]

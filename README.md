@@ -1,47 +1,76 @@
-# LeanStoch
+# Kernel-Hom
 
-A formalization of the Markov category **Stoch** in Lean 4.
+Lean 4 project focused on tactics that translate kernel equalities into categorical equalities, and back.
 
 <p align="center">
   <img src="diagram/diagram.svg" width="500">
 </p>
 
-## Overview
+## Status
 
-This library provides a rigorous formalization of the category [**Stoch**](https://ncatlab.org/nlab/show/Stoch) whose:
-- **Objects** are measurable spaces.
-- **Morphisms** are Markov kernels (s-finite kernels with `kernel x` being a probability measure for each `x`).
+This repository is mainly about the tactics `kernel_hom` and `hom_kernel`.
 
-We prove that **Stoch** forms a Markov category ([Fritz, 2020](https://arxiv.org/abs/1908.07021)) by establishing:
-1. **Stoch** is a symmetric monoidal category with monoidal product given by the Cartesian product.
-2. Every object carries a canonical comonoid structure (copying and discarding).
-3. The copy and discard morphisms satisfy the coherence axioms of Markov categories.
+They are built on top of `SFinKer`, the category of measurable spaces with s-finite kernels as morphisms. This categorical layer is the key reason the tactic workflow works.
 
-## Main Results
+Very briefly, the tactics:
 
-### Category Structure ([`LeanStoch.Stoch`](LeanStoch/Stoch.lean))
+- translate an equality of kernels into an equality in categorical/monoidal form,
+- let you run category-theory tactics such as `coherence` or `monoidal`,
+- translate the result back to a kernel equality.
 
-- `instance : LargeCategory Stoch` - Category structure with Markov kernels as morphisms
-- `instance : MonoidalCategory Stoch` - Monoidal structure via categorical product  
-- `instance : BraidedCategory Stoch` - Braiding from the swap map
-- `instance : SymmetricCategory Stoch` - Symmetry of the braiding
+Universe handling is part of this translation: expressions are lifted to a common universe level, so rewrites stay well-typed across universe levels.
 
-### Markov Category Structure
+In addition, `SFinKer` also gives a direct route to `Stoch`, the Markov category of measurable spaces and Markov kernels, defined as the wide subcategory of `SFinKer` with Markov kernels as morphisms. The definitions/results for `SFinKer` and `Stoch` are now in mathlib (PR [#36779](https://github.com/leanprover-community/mathlib4/pull/36779)) but are also included here for ease of development and maintenance, alongside the tactics.
 
-- `instance (X : Stoch) : ComonObj X` - Canonical comonoid on each object
-- `instance (X : Stoch) : IsCommComonObj X` - Commutativity of the comonoid
-- `instance : MarkovCategory Stoch` - **Stoch** is a Markov category
+## Repository contents
 
-## Structure
+### 1) Tactics
 
-- [`LeanStoch.Stoch`](LeanStoch/Stoch.lean) - Main category definition and Markov category instance
-- [`LeanStoch.Tactics`](LeanStoch/Tactics.lean) - Custom tactics for kernel automation (`kernel_markov`, `cat_kernel`)
-- [`LeanStoch.Mathlib.Kernel`](LeanStoch/Mathlib/Kernel.lean) - Auxiliary lemmas for probability kernels
+- [KernelHom.lean](KernelHom/Tactic/Hom/KernelHom.lean):
+  implementation of `kernel_hom` (transforms kernel equalities into monoidal category equalities).
+- [HomKernel.lean](KernelHom/Tactic/Hom/HomKernel.lean):
+  implementation of `hom_kernel` (inverse transformation back to kernel equalities).
+- [KernelCoherence.lean](KernelHom/Tactic/KernelCoherence.lean):
+  helpers built on top of the translations (`kernel_coherence`, `kernel_monoidal`).
+- [Tactics.lean](KernelHom/Tactic/Tactics.lean):
+  import hub for the tactic layer.
 
-## References
+### 2) Categorical/probabilistic backbone
+
+- [SFinKer.lean](KernelHom/Mathlib/CategoryTheory/Kernel/SFinKer.lean):
+  definition of `SFinKer` and instances `LargeCategory`, `MonoidalCategory`, `SymmetricCategory`, `CopyDiscardCategory`.
+- [Stoch.lean](KernelHom/Mathlib/CategoryTheory/Kernel/Stoch.lean):
+  definition of `Stoch` as a wide subcategory of `SFinKer` (Markov morphisms) and instance `MarkovCategory`.
+- [Kernel.lean](KernelHom/Mathlib/Kernel.lean), [LIntegral.lean](KernelHom/Mathlib/LIntegral.lean), [MeasurableEquiv.lean](KernelHom/Mathlib/MeasurableEquiv.lean):
+  auxiliary lemmas used by the constructions above.
+
+### 3) Examples and ongoing work
+
+- [Tests.lean](KernelHom/Tests.lean): examples using `kernel_hom` and `hom_kernel`.
+- [Posterior.lean](Posterior.lean): exploratory developments on posterior kernels.
+
+## Usage
+
+```bash
+lake build
+```
+
+In a Lean file:
+
+```lean
+import KernelHom
+```
+
+Or, for tactics only:
+
+```lean
+import KernelHom.Tactic.Tactics
+```
+
+## Reference
 
 - Tobias Fritz. *A synthetic approach to Markov kernels, conditional independence and theorems on sufficient statistics*. Adv. Math. **370** (2020), 107239. [arXiv:1908.07021](https://arxiv.org/abs/1908.07021).
 
 ## License
 
-Released under GNU GPL 3.0. See [LICENSE](LICENSE).
+GNU GPL 3.0. See [LICENSE](LICENSE).

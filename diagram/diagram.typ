@@ -34,7 +34,7 @@
 
   edge((-2, 0), (0, -1), "-|>", bend: -40deg, label-sep: 0em, label: $kappa$),
   edge((0, -1), (2, 0), "-|>", bend: -40deg, label-sep: 0em, label: $eta$),
-  edge((-2, 0), (2, 0), "--|>", label-sep: 0em, label: $kappa comp eta$),
+  edge((-2, 0), (2, 0), "--|>", label-sep: 0em, label: $kappa gt.double eta$),
 
   node((-2, -2), text(size: 7.7pt, $X times X$), stroke: 1pt + black, inset: 2pt, shape: circle),
   blob((2, -2), text(size: 14pt, $I$)),
