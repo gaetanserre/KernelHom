@@ -1,1 +1,5 @@
-/.lake
+.lake/
+docbuild/lake-manifest.json
+docbuild/lean-toolchain
+home_page/verso
+home_page/docs

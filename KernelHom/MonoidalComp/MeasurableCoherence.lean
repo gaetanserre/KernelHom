@@ -9,7 +9,9 @@ import KernelHom.Hom
 
 open CategoryTheory MonoidalCategory MeasureTheory ProbabilityTheory MeasurableEquiv
 
+/-- A class witnessing the existence of a measurable equivalence between two measurable spaces. -/
 class MeasurableCoherence (X Y : Type*) [MeasurableSpace X] [MeasurableSpace Y] where
+  /-- A measurable equivalence between `X` and `Y`. -/
   miso : X ≃ᵐ Y
 
 namespace MeasurableCoherence
@@ -22,9 +24,9 @@ variable {X : Type x} {Y : Type y} [MeasurableSpace X] [MeasurableSpace Y]
 instance : MeasurableCoherence X X where
   miso := MeasurableEquiv.refl X
 
+/-- `MeasurableCoherence` gives an instance of `MonoidalCoherence` in the `SFinKer` category. -/
 @[reducible]
-noncomputable
-def monoidalCoherence {X' Y' : Type w} [MeasurableSpace X'] [MeasurableSpace Y']
+noncomputable def monoidalCoherence {X' Y' : Type w} [MeasurableSpace X'] [MeasurableSpace Y']
     (ex : X' ≃ᵐ X) (ey : Y' ≃ᵐ Y) : MonoidalCoherence (SFinKer.of X') (SFinKer.of Y') where
   iso := by
     let e := ex.trans <| mXY.miso.trans ey.symm
@@ -57,28 +59,26 @@ variable {W' : Type max w x y z} {X' : Type max w x y z} {Y' : Type max w x y z}
   {Z' : Type max w x y z} [MeasurableSpace W'] [MeasurableSpace X'] [MeasurableSpace Y']
   [MeasurableSpace Z'] (ew : W' ≃ᵐ W) (ex : X' ≃ᵐ X) (ey : Y' ≃ᵐ Y) (ez : Z' ≃ᵐ Z)
 
-noncomputable
-def monoComp' : Kernel W Z :=
+/-- The kernelized version of the monoidal composition of kernels using the `SFinKer` category.
+It uses arbitrary measurable equivalences to transport the kernels to the `SFinKer` category. -/
+noncomputable def monoComp₀ : Kernel W Z :=
   have := monoidalCoherence ex ey
   fromHom (ex := ew) (ey := ez) <| hom (ex := ew) (ey := ex) κ ⊗≫
     hom (ex := ey) (ey := ez) η
 
-instance monoComp'_sfinite : IsSFiniteKernel (monoComp' κ η ew ex ey ez ) := by
-  simp only [monoComp']
+instance monoComp'_sfinite : IsSFiniteKernel (monoComp₀ κ η ew ex ey ez ) := by
+  simp only [monoComp₀]
   infer_instance
 
-/-- The kernelized version of the monoidal composition of kernels using
-the `SFinKer` monoidal category. -/
-noncomputable
-def monoComp : Kernel W Z :=
-  monoComp' κ η (ulift.{_, max w x y z}) (ulift.{_, max w x y z})
+/-- The kernelized version of the monoidal composition of kernels using the `SFinKer` category. -/
+noncomputable abbrev monoComp : Kernel W Z :=
+  monoComp₀ κ η (ulift.{_, max w x y z}) (ulift.{_, max w x y z})
     (ulift.{_, max w x y z}) (ulift.{_, max w x y z})
 
 @[inherit_doc Kernel.monoComp]
 scoped[ProbabilityTheory] infixr:80 " ⊗≫ₖ " => Kernel.monoComp
 
 instance monoComp_sfinite : IsSFiniteKernel (κ ⊗≫ₖ η) := by
-  simp only [monoComp]
   infer_instance
 
 variable {W'' : Type max v w x y z} {X'' : Type max v w x y z} {Y'' : Type max v w x y z}
@@ -88,7 +88,7 @@ variable {W'' : Type max v w x y z} {X'' : Type max v w x y z} {Y'' : Type max v
 lemma quiver_monoComp : @monoidalComp _ _ _ _ _ _ (monoidalCoherence ex' ey')
     (hom (ex := ew') (ey := ex') κ) (hom (ex := ey') (ey := ez') η)
     = hom (ex := ew') (ey := ez') (monoComp κ η):= by
-  simp only [monoComp, monoComp', fromHom, hom, monoidalComp]
+  simp only [monoComp₀, fromHom, hom, monoidalComp]
   ext _ s hs; dsimp
   unfold monoidalCoherence
   simp_all only [coe_comap, Function.comp_apply, comp_apply']

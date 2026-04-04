@@ -31,7 +31,8 @@ equivalent equalities of kernels.
 
 open Lean Elab Tactic Meta CategoryTheory Parser.Tactic ProbabilityTheory MonoidalCategory
 
-partial def get_type_from_Stoch (e : Expr) : MetaM (Expr × Level) := do
+/-- Get the original type and its universe from a `SFinKer.of` expression. -/
+partial def get_type_from_SFinKer (e : Expr) : MetaM (Expr × Level) := do
   let ewhnf ← whnf e
   match ewhnf.getAppFn with
   | Expr.const ``PUnit _ | Expr.const ``Unit _ =>
@@ -40,31 +41,32 @@ partial def get_type_from_Stoch (e : Expr) : MetaM (Expr × Level) := do
     let args := ewhnf.getAppArgs
     let X := args[0]!
     let Y := args[1]!
-    let (ex, xLevel) ← get_type_from_Stoch X
-    let (ey, yLevel) ← get_type_from_Stoch Y
+    let (ex, xLevel) ← get_type_from_SFinKer X
+    let (ey, yLevel) ← get_type_from_SFinKer Y
     let res ← mkAppOptM' (Expr.const ``Prod [xLevel, yLevel]) #[ex, ey]
     return (res, Level.max xLevel yLevel)
   | Expr.const ``ULift _ =>
     let args := ewhnf.getAppArgs
     let X := args[0]!
-    return ← get_type_from_Stoch X
+    return ← get_type_from_SFinKer X
   | Expr.const ``MonoidalCategoryStruct.tensorUnit _ =>
     return (Expr.const ``Unit [], Level.zero)
   | Expr.const ``SFinKer.of _ =>
     let args := ewhnf.getAppArgs
     if args.size < 1 then
-      throwError "StochOf with insufficient arguments: {e}"
+      throwError "SFinKer.of with insufficient arguments: {e}"
     else
-      return ← get_type_from_Stoch args[0]!
+      return ← get_type_from_SFinKer args[0]!
   | _ =>
     match ← getLevel e with
     | Level.succ l => return (e, l)
     | _ => throwError "Expected a type with a universe level ≥ 0, got: {e}"
 
+/-- Deconstruct a left or right unitor isomorphism to get the underlying kernel -/
 def deconstruct_unitors (iso : Expr) (eLevel : Level) (left : Bool) :
     MetaM (Expr × CategoryOP) := do
   let iso_t ← inferType iso
-  let (X, xLevel) ← get_type_from_Stoch iso_t.getAppArgs[3]!
+  let (X, xLevel) ← get_type_from_SFinKer iso_t.getAppArgs[3]!
   let kernel_id ←
     if left then
       let UnitX ← mkAppOptM' (Expr.const ``Prod [Level.zero, xLevel]) #[Expr.const ``Unit [], X]
@@ -82,25 +84,27 @@ def deconstruct_unitors (iso : Expr) (eLevel : Level) (left : Bool) :
   let OP := if left then .leftUnitor (xLevel, ex) else .rightUnitor (xLevel, ex)
   return (← mkAppM ``Kernel.map #[kernel_id, prod], OP)
 
+/-- Deconstruct a left or right whisker to get the underlying kernel and the whiskered object -/
 def deconstruct_whiskers_args (e : Expr) (eLevel : Level) (left : Bool) :
     MetaM (Expr × Expr × CategoryOP) := do
   let args := e.getAppArgs
   let SX := if left then args[args.size - 4]! else args[args.size - 1]!
   let κ := if left then args[args.size - 1]! else args[args.size - 2]!
-  let (X, xLevel) ← get_type_from_Stoch SX
+  let (X, xLevel) ← get_type_from_SFinKer SX
   let mXUnit ← synthInstance (mkApp (Expr.const ``MeasurableSpace [xLevel]) X)
   let kernel_id ← mkAppOptM ``Kernel.id #[X, mXUnit]
   let exEquiv ← construct_measurable_equiv X xLevel eLevel
   let OP := if left then .WhiskerLeft (xLevel, exEquiv) else .WhiskerRight (xLevel, exEquiv)
   return (κ, kernel_id, OP)
 
+/-- Recursive transformation from morphism expression in `SFinKer` to kernel expression. -/
 partial def transformHomToKernel (eLevel : Level) (e : Expr) (op_data : List CategoryOP) :
     MetaM (Expr × List CategoryOP) := do
   match e.getAppFn with
   | Expr.const ``CategoryStruct.id _ =>
     let args := e.getAppArgs
     let X := args[args.size - 1]!
-    let (X', xLevel) ← get_type_from_Stoch X
+    let (X', xLevel) ← get_type_from_SFinKer X
     let ex ← construct_measurable_equiv X' xLevel eLevel
     let mX' ← synthInstance (mkApp (Expr.const ``MeasurableSpace [xLevel]) X')
     return (← mkAppOptM ``Kernel.id #[X', mX'], .id (xLevel, ex) :: op_data)
@@ -146,6 +150,7 @@ partial def transformHomToKernel (eLevel : Level) (e : Expr) (op_data : List Cat
     return (κ, op_data)
   | _ => throwError "Expected a hom expression, got: {e}"
 
+/-- Construct the proof of equivalence between the original equality and the transformed one. -/
 def mkHomKernelEqProof (eqProofType : Expr) (eLevel : Level)
     (op_data : List CategoryOP) : TacticM Expr := do
   let eLevelStx ← liftMacroM <| levelToSyntax eLevel
@@ -257,6 +262,7 @@ def mkHomKernelEqProof (eqProofType : Expr) (eLevel : Level)
   setGoals savedGoals
   instantiateMVars mvar
 
+/-- Core implementation of the `hom_kernel` tactic on a single goal or hypothesis. -/
 def applyHomKernel (goal : MVarId) (fvarId : Option FVarId) : TacticM MVarId := do
   goal.withContext do
     let expr ← match fvarId with
@@ -281,8 +287,6 @@ def applyHomKernel (goal : MVarId) (fvarId : Option FVarId) : TacticM MVarId := 
       let mvarId ← getMainGoal
       mvarId.replaceTargetEq quiverExpr eqProof
 
-syntax "hom_kernel" (ppSpace location)? : tactic
-
 /-- The `hom_kernel` tactic is the inverse of `kernel_hom`: it transforms an
 equality written in the monoidal category back to an equivalent equality of
 s-finite kernels.
@@ -295,6 +299,8 @@ The tactic supports location specifiers like `rw` or `simp`:
 - `hom_kernel at *` — applies to all hypotheses and the goal
 
 It is useful to switch back to kernel equations once categorical rewrites are done. -/
+syntax "hom_kernel" (ppSpace location)? : tactic
+
 elab_rules : tactic
   | `(tactic| hom_kernel $[$loc]?) =>
     expandOptLocation (Lean.mkOptionalNode loc) |> applyLocTactic <| applyHomKernel

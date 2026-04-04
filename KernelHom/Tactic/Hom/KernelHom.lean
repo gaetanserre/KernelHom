@@ -30,6 +30,7 @@ kernels into equivalent equalities in the monoidal category.
 
 open Lean Elab Tactic Meta CategoryTheory Parser.Tactic ProbabilityTheory MonoidalCategory
 
+/-- Check if a kernel expression corresponds to a left or right unitor. -/
 def check_unitors (κ : Expr) (offset : Nat) (prod : Name) : MetaM Bool := do
   let κ := κ.consumeMData
   if !κ.getAppFn.isConstOf ``Kernel.map then
@@ -54,11 +55,14 @@ def check_unitors (κ : Expr) (offset : Nat) (prod : Name) : MetaM Bool := do
     | _ => return false
   | _ => return false
 
+/-- Check if a kernel expression corresponds to a left unitor. -/
 def check_leftUnitor (κ : Expr) : MetaM Bool := check_unitors κ 0 ``Prod.snd
 
+/-- Check if a kernel expression corresponds to a right unitor. -/
 def check_rightUnitor (κ : Expr) : MetaM Bool := check_unitors κ 1 ``Prod.fst
 
-def compute_StochOf (X : Expr) (xLevel maxLvl : Level) : MetaM Expr := do
+/-- Compute the `SFinKer` object corresponding to a measurable space. -/
+def compute_SFinkerOf (X : Expr) (xLevel maxLvl : Level) : MetaM Expr := do
   match ← whnf X with
   | Expr.const ``PUnit _ | Expr.const ``Unit _ =>
     let sfinker := Expr.const `SFinKer [maxLvl]
@@ -68,9 +72,10 @@ def compute_StochOf (X : Expr) (xLevel maxLvl : Level) : MetaM Expr := do
   | _ =>
     let ex ← inferType (← construct_measurable_equiv X xLevel maxLvl)
     let lifted_X := ex.getAppArgs[0]!
-    let stochOfconst := Expr.const `SFinKer.of [maxLvl]
-    mkAppOptM' stochOfconst #[lifted_X, none]
+    let sfinkerOfconst := Expr.const `SFinKer.of [maxLvl]
+    mkAppOptM' sfinkerOfconst #[lifted_X, none]
 
+/-- Construct the left or right unitor morphism. -/
 def construct_unitors (X Y : Expr) (yLvl maxLvl : Level) (offset : Nat) :
   MetaM (Expr × CategoryOP) := do
   let left ← if offset == 0 then pure true
@@ -81,14 +86,15 @@ def construct_unitors (X Y : Expr) (yLvl maxLvl : Level) (offset : Nat) :
   | _ =>
     if left then throwError "Expected left unitor with source PUnit × X, got: {X}"
     else throwError "Expected right unitor with source X × PUnit, got: {X}"
-  let stochOf ← compute_StochOf Y yLvl maxLvl
-  let unitor ← if left then mkAppM ``MonoidalCategoryStruct.leftUnitor #[stochOf]
-    else mkAppM ``MonoidalCategoryStruct.rightUnitor #[stochOf]
+  let sfinkerOf ← compute_SFinkerOf Y yLvl maxLvl
+  let unitor ← if left then mkAppM ``MonoidalCategoryStruct.leftUnitor #[sfinkerOf]
+    else mkAppM ``MonoidalCategoryStruct.rightUnitor #[sfinkerOf]
   let ey ← construct_measurable_equiv Y yLvl maxLvl
   let unitorOP := if left then .leftUnitor (punit_level, ey)
     else .rightUnitor (punit_level, ey)
   return (← mkAppM ``Iso.hom #[unitor], unitorOP)
 
+/-- Check if a kernel expression corresponds to a left or right whisker. -/
 def check_Whiskers (κ : Expr) (offset : Nat) : MetaM Bool := do
   let κ := κ.consumeMData
   if !κ.getAppFn.isConstOf ``Kernel.parallelComp then
@@ -99,10 +105,14 @@ def check_Whiskers (κ : Expr) (offset : Nat) : MetaM Bool := do
     return false
   else return true
 
+/-- Check if a kernel expression corresponds to a left whisker. -/
 def check_WhiskerLeft (κ : Expr) : MetaM Bool := check_Whiskers κ 2
 
+/-- Check if a kernel expression corresponds to a right whisker. -/
 def check_WhiskerRight (κ : Expr) : MetaM Bool := check_Whiskers κ 1
 
+/-- Construct the relevant data for converting a kernel expression to its whisker morphism
+representation. -/
 def construct_whiskers_args (e X : Expr) (maxLvl : Level) (offset : Nat) :
     MetaM (Expr × Expr × Expr × Level) := do
   let left ← if offset == 0 then pure true
@@ -116,7 +126,7 @@ def construct_whiskers_args (e X : Expr) (maxLvl : Level) (offset : Nat) :
   | _ =>
     if left then throwError "Expected left whisker with source Z × X, got: {X}"
     else throwError "Expected right whisker with source X × Z, got: {X}"
-  let stochOfZ ← compute_StochOf Z zLvl maxLvl
+  let sfinkerOfZ ← compute_SFinkerOf Z zLvl maxLvl
   let κ ← match e.getAppFn with
     | Expr.const ``Kernel.parallelComp _ =>
       let args := e.getAppArgs
@@ -124,9 +134,10 @@ def construct_whiskers_args (e X : Expr) (maxLvl : Level) (offset : Nat) :
     | _ =>
       if left then throwError "Expected left whisker with parallelComp, got: {e}"
       else throwError "Expected right whisker with parallelComp, got: {e}"
-  return (stochOfZ, κ, Z, zLvl)
+  return (sfinkerOfZ, κ, Z, zLvl)
 
-/-- Transform a kernel expression to its morphism representation with explicit universe level. -/
+/-- Recursive transformation from kernel expressions to morphism expressions in the `SFinKer`
+category. -/
 partial def transformKernelToHom (maxLvl : Level) (e : Expr) (op_data : List CategoryOP) :
     MetaM (Expr × List CategoryOP) := do
   match e.getAppFn with
@@ -158,10 +169,10 @@ partial def transformKernelToHom (maxLvl : Level) (e : Expr) (op_data : List Cat
     let args := e.getAppArgs
     let X := args[args.size - 2]!
     let xLevel := univs[0]!
-    let stochOfX ← compute_StochOf X xLevel maxLvl
+    let sfinkerOfX ← compute_SFinkerOf X xLevel maxLvl
     let ex ← construct_measurable_equiv X xLevel maxLvl
     let idOP := .id (xLevel, ex)
-    return (← mkAppM ``CategoryStruct.id #[stochOfX], idOP :: op_data)
+    return (← mkAppM ``CategoryStruct.id #[sfinkerOfX], idOP :: op_data)
   | _ =>
     let (X, Y, xLevel, yLevel) ← get_types_from_kernel e
     if ← check_leftUnitor e then
@@ -171,16 +182,16 @@ partial def transformKernelToHom (maxLvl : Level) (e : Expr) (op_data : List Cat
       let (rightUnitorExpr, rightUnitorOP) ← construct_unitors X Y yLevel maxLvl 1
       return (rightUnitorExpr, rightUnitorOP :: op_data)
     else if ← check_WhiskerLeft e then
-      let (stochOfZ, κ, Z, zLvl) ← construct_whiskers_args e X maxLvl 0
+      let (sfinkerOfZ, κ, Z, zLvl) ← construct_whiskers_args e X maxLvl 0
       let (κ', lκ) ← transformKernelToHom maxLvl κ op_data
-      let whiskerleft ← mkAppM ``MonoidalCategoryStruct.whiskerLeft #[stochOfZ, κ']
+      let whiskerleft ← mkAppM ``MonoidalCategoryStruct.whiskerLeft #[sfinkerOfZ, κ']
       let ez ← construct_measurable_equiv Z zLvl maxLvl
       let leftWhiskerOP := .WhiskerLeft (zLvl, ez)
       return (whiskerleft, leftWhiskerOP :: lκ)
     else if ← check_WhiskerRight e then
-      let (stochOfZ, κ, Z, zLvl) ← construct_whiskers_args e X maxLvl 1
+      let (sfinkerOfZ, κ, Z, zLvl) ← construct_whiskers_args e X maxLvl 1
       let (κ', lκ) ← transformKernelToHom maxLvl κ op_data
-      let whiskerleft ← mkAppM ``MonoidalCategoryStruct.whiskerRight #[κ', stochOfZ]
+      let whiskerleft ← mkAppM ``MonoidalCategoryStruct.whiskerRight #[κ', sfinkerOfZ]
       let ez ← construct_measurable_equiv Z zLvl maxLvl
       let rightWhiskerOP := .WhiskerRight (zLvl, ez)
       return (whiskerleft, rightWhiskerOP :: lκ)
@@ -191,6 +202,7 @@ partial def transformKernelToHom (maxLvl : Level) (e : Expr) (op_data : List Cat
       return( ← mkAppOptM' quiverConst
         #[none, none, none, none, none, none, none, none, ex, ey, e, none], op_data)
 
+/-- Construct the proof of equivalence between the original equality and the transformed one. -/
 def mkKernelHomEqProof (eqProofType rhs lhs : Expr) (maxLvl : Level)
     (op_data : List CategoryOP) : TacticM Expr := do
   let maxLevelStx ← liftMacroM <| levelToSyntax maxLvl
@@ -312,6 +324,7 @@ def mkKernelHomEqProof (eqProofType rhs lhs : Expr) (maxLvl : Level)
   setGoals savedGoals
   instantiateMVars mvar
 
+/-- Core implementation of the `kernel_hom` tactic on a single goal or hypothesis. -/
 def applyKernelHom (goal : MVarId) (fvarId : Option FVarId) : TacticM MVarId := do
   goal.withContext do
     let expr ← match fvarId with

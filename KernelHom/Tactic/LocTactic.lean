@@ -8,6 +8,7 @@ import Lean.Elab.Tactic.Location
 
 open Lean Elab Tactic Meta
 
+/-- Apply a given tactic to all goals and/or hypotheses specified by a `Location`. -/
 def applyLocTactic (loc : Location) (tactic : MVarId → Option FVarId → TacticM MVarId) :
     TacticM Unit := do
   match loc with

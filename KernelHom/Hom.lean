@@ -19,8 +19,8 @@ variable {X : Type x} {Y : Type y} [MeasurableSpace X] [MeasurableSpace Y]
 
 section Hom
 
-noncomputable
-def fromHom (κ : SFinKer.of X' ⟶ SFinKer.of Y') : Kernel X Y :=
+/-- Transform a morphism in `SFinKer` into a kernel. -/
+noncomputable def fromHom (κ : SFinKer.of X' ⟶ SFinKer.of Y') : Kernel X Y :=
   (κ.1.comap ex.symm (by fun_prop)).map ey
 
 instance {κ : SFinKer.of X' ⟶ SFinKer.of Y'} :
@@ -29,16 +29,11 @@ instance {κ : SFinKer.of X' ⟶ SFinKer.of Y'} :
   have := κ.2
   infer_instance
 
-noncomputable
-def hom (κ : Kernel X Y) [IsSFiniteKernel κ] : SFinKer.of X' ⟶ SFinKer.of Y' := by
+/-- Transform a kernel into a morphism in `SFinKer`. -/
+noncomputable def hom (κ : Kernel X Y) [IsSFiniteKernel κ] : SFinKer.of X' ⟶ SFinKer.of Y' := by
   refine ⟨(κ.map ey.symm).comap ex (by fun_prop), ?_⟩
   have := κ.2
   infer_instance
-
-noncomputable
-def hom' (κ : Kernel X Y) [IsSFiniteKernel κ] :
-    SFinKer.of (ULift.{max w y} X) ⟶ SFinKer.of (ULift.{max w x} Y) :=
-  hom (ex := ulift) (ey := ulift) κ
 
 lemma quiver_congr {κ₁ κ₂ : Kernel X Y} [IsSFiniteKernel κ₁] [IsSFiniteKernel κ₂] :
     hom (ex := ex) (ey := ey) κ₁ = hom (ex := ex) (ey := ey) κ₂ ↔ κ₁ = κ₂ := by
