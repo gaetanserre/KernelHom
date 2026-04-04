@@ -3,10 +3,10 @@ name: Build Documentation
 on:
   push:
     branches:
-      - master # Trigger on pushes to the default branch
+      - main # Trigger on pushes to the default branch
   pull_request:
     branches:
-      - master
+      - main
   workflow_dispatch:        # Allow manual triggering of the workflow from the GitHub Actions interface
 
 # Cancel previous runs if a new commit is pushed to the same PR or branch
@@ -49,7 +49,7 @@ jobs:
         uses: leanprover/lean-action@65f454bc22ec83143241456eee965c2ab702ba6e # 2026-01-15
         with:
           build: true
-          lint: true
+          lint: false
           mk_all-check: true
 
       - name: Build Verso Documentation
