@@ -1,6 +1,5 @@
 name = "manual"
 version = "0.1.0"
-keywords = ["math"]
 
 [leanOptions]
 autoImplicit = true
