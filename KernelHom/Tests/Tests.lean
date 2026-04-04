@@ -1,5 +1,4 @@
 import KernelHom.Tactic.Tactics
-import Mathlib
 
 open ProbabilityTheory MeasureTheory CategoryTheory MonoidalCategory
 
