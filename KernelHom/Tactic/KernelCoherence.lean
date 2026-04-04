@@ -22,5 +22,3 @@ elab "kernel_coherence" : tactic => do
 elab "kernel_monoidal" : tactic => do
   evalTactic (← `(tactic| kernel_hom))
   evalTactic (← `(tactic| monoidal))
-  --evalTactic (← `(tactic| try simp [MonoidalCategory.tensorObj]))
-  --evalTactic (← `(tactic| try simp))
