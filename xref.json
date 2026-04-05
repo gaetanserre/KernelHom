@@ -1,0 +1,150 @@
+{"Verso.Genre.Manual.section":
+ {"title": "Sections or chapters of the manual",
+  "description": null,
+  "contents":
+  {"KernelHom___-Tactics-for-Categorical-Kernel-Reasoning--Universe-handling":
+   [{"id":
+     "KernelHom___-Tactics-for-Categorical-Kernel-Reasoning--Universe-handling",
+     "data":
+     {"title": "Universe handling",
+      "shortTitle": null,
+      "sectionNum": "1.",
+      "context":
+      [{"title": "KernelHom: Tactics for Categorical Kernel Reasoning",
+        "shortTitle": "Categorical Kernel Reasoning",
+        "number": null},
+       {"title": "Universe handling", "shortTitle": null, "number": "1"}]},
+     "address": "/Universe-handling/"}],
+   "KernelHom___-Tactics-for-Categorical-Kernel-Reasoning--KernelHom-tactic--Usage-examples":
+   [{"id":
+     "KernelHom___-Tactics-for-Categorical-Kernel-Reasoning--KernelHom-tactic--Usage-examples",
+     "data":
+     {"title": "Usage examples",
+      "shortTitle": null,
+      "sectionNum": "2.1.",
+      "context":
+      [{"title": "KernelHom: Tactics for Categorical Kernel Reasoning",
+        "shortTitle": "Categorical Kernel Reasoning",
+        "number": null},
+       {"title": "KernelHom tactic", "shortTitle": null, "number": "2"},
+       {"title": "Usage examples", "shortTitle": null, "number": "1"}]},
+     "address": "/KernelHom-tactic/"}],
+   "KernelHom___-Tactics-for-Categorical-Kernel-Reasoning--KernelHom-tactic":
+   [{"id":
+     "KernelHom___-Tactics-for-Categorical-Kernel-Reasoning--KernelHom-tactic",
+     "data":
+     {"title": "KernelHom tactic",
+      "shortTitle": null,
+      "sectionNum": "2.",
+      "context":
+      [{"title": "KernelHom: Tactics for Categorical Kernel Reasoning",
+        "shortTitle": "Categorical Kernel Reasoning",
+        "number": null},
+       {"title": "KernelHom tactic", "shortTitle": null, "number": "2"}]},
+     "address": "/KernelHom-tactic/"}],
+   "KernelHom___-Tactics-for-Categorical-Kernel-Reasoning--HomKernel-tactic--Usage-example":
+   [{"id":
+     "KernelHom___-Tactics-for-Categorical-Kernel-Reasoning--HomKernel-tactic--Usage-example",
+     "data":
+     {"title": "Usage example",
+      "shortTitle": null,
+      "sectionNum": "3.1.",
+      "context":
+      [{"title": "KernelHom: Tactics for Categorical Kernel Reasoning",
+        "shortTitle": "Categorical Kernel Reasoning",
+        "number": null},
+       {"title": "HomKernel tactic", "shortTitle": null, "number": "3"},
+       {"title": "Usage example", "shortTitle": null, "number": "1"}]},
+     "address": "/HomKernel-tactic/"}],
+   "KernelHom___-Tactics-for-Categorical-Kernel-Reasoning--HomKernel-tactic":
+   [{"id":
+     "KernelHom___-Tactics-for-Categorical-Kernel-Reasoning--HomKernel-tactic",
+     "data":
+     {"title": "HomKernel tactic",
+      "shortTitle": null,
+      "sectionNum": "3.",
+      "context":
+      [{"title": "KernelHom: Tactics for Categorical Kernel Reasoning",
+        "shortTitle": "Categorical Kernel Reasoning",
+        "number": null},
+       {"title": "HomKernel tactic", "shortTitle": null, "number": "3"}]},
+     "address": "/HomKernel-tactic/"}],
+   "KernelHom___-Tactics-for-Categorical-Kernel-Reasoning--Categorical-tactics-for-kernels":
+   [{"id":
+     "KernelHom___-Tactics-for-Categorical-Kernel-Reasoning--Categorical-tactics-for-kernels",
+     "data":
+     {"title": "Categorical tactics for kernels",
+      "shortTitle": null,
+      "sectionNum": "4.",
+      "context":
+      [{"title": "KernelHom: Tactics for Categorical Kernel Reasoning",
+        "shortTitle": "Categorical Kernel Reasoning",
+        "number": null},
+       {"title": "Categorical tactics for kernels",
+        "shortTitle": null,
+        "number": "4"}]},
+     "address": "/Categorical-tactics-for-kernels/"}],
+   "KernelHom___-Tactics-for-Categorical-Kernel-Reasoning":
+   [{"id": "KernelHom___-Tactics-for-Categorical-Kernel-Reasoning",
+     "data":
+     {"title": "KernelHom: Tactics for Categorical Kernel Reasoning",
+      "shortTitle": "Categorical Kernel Reasoning",
+      "sectionNum": "",
+      "context":
+      [{"title": "KernelHom: Tactics for Categorical Kernel Reasoning",
+        "shortTitle": "Categorical Kernel Reasoning",
+        "number": null}]},
+     "address": "/"}]}},
+ "Verso.Genre.Manual.example":
+ {"title": "Verso.Genre.Manual.example",
+  "description": null,
+  "contents":
+  {"transformKernelToHom":
+   [{"id": "transformKernelToHom",
+     "data":
+     {"/KernelHom-tactic/#transformKernelToHom":
+      {"display": "transformKernelToHom",
+       "context":
+       ["KernelHom: Tactics for Categorical Kernel Reasoning",
+        "KernelHom tactic"]}},
+     "address": "/KernelHom-tactic/"}],
+   "transformHomToKernel":
+   [{"id": "transformHomToKernel",
+     "data":
+     {"/HomKernel-tactic/#transformHomToKernel":
+      {"display": "transformHomToKernel",
+       "context":
+       ["KernelHom: Tactics for Categorical Kernel Reasoning",
+        "HomKernel tactic"]}},
+     "address": "/HomKernel-tactic/"}],
+   "collectExprUniverses":
+   [{"id": "collectExprUniverses",
+     "data":
+     {"/Universe-handling/#collectExprUniverses":
+      {"display": "collectExprUniverses",
+       "context":
+       ["KernelHom: Tactics for Categorical Kernel Reasoning",
+        "Universe handling"]}},
+     "address": "/Universe-handling/"}]}},
+ "Verso.Genre.Manual.doc.tech":
+ {"title": "Terminology",
+  "description": "Definitions of technical terms",
+  "contents": {}},
+ "Verso.Genre.Manual.doc.tactic.conv":
+ {"title": "Conversion Tactics",
+  "description": "Tactics for performing targeted rewriting of subterms",
+  "contents": {}},
+ "Verso.Genre.Manual.doc.tactic":
+ {"title": "Tactic Documentation",
+  "description": "Detailed descriptions of tactics",
+  "contents": {}},
+ "Verso.Genre.Manual.doc.suggestion":
+ {"title": "Lean constant suggestions",
+  "description": "Search suggestions for Lean constants",
+  "contents": {}},
+ "Verso.Genre.Manual.doc.option":
+ {"title": "Compiler options", "description": null, "contents": {}},
+ "Verso.Genre.Manual.doc":
+ {"title": "Lean constant reference",
+  "description": "Documentation for Lean constants",
+  "contents": {}}}
