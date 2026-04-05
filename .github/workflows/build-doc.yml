@@ -35,12 +35,10 @@ jobs:
           swap-storage: false
 
       - name: Checkout project
-        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
+        uses: actions/checkout@v6 # v6.0.0
         with:
-          fetch-depth: 0 # Fetch all history for all branches and tags
+          fetch-depth: 1
           
-      - uses: actions/checkout@v4
-
       - name: Build project
         uses: leanprover/lean-action@65f454bc22ec83143241456eee965c2ab702ba6e # 2026-01-15
         with:
@@ -57,13 +55,13 @@ jobs:
           cd verso
           ./build_manual.sh
       
-      # - name: Build DocGen Documentation
-      #   run: |
-      #     cd docbuild
-      #     ./build_docgen.sh
+      - name: Build DocGen Documentation
+        run: |
+          cd docbuild
+          ./build_docgen.sh
       
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+        uses: peaceiris/actions-gh-pages@v4
         with: 
           github_token: ${{ secrets.GITHUB_TOKEN }} 
           publish_dir: verso/html
