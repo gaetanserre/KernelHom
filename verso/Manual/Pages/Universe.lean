@@ -43,7 +43,7 @@ The counterpart of `Kernel X Y` in the [`SFinKer`](doc/Mathlib/Probability/Kerne
 #check SFinKer.of X ⟶ SFinKer.of Y
 ```
 
-To solve this issue, one can manually lift the carrier spaces to a common universe level using [`ULift`](https://leanprover-community.github.io/mathlib4_docs/Init/Prelude.html#ULift):
+To solve this issue, one can manually lift the carrier spaces to a common universe level using [`ULift`](doc/Init/Prelude.html#ULift):
 ```lean
 #check SFinKer.of (ULift.{max u_1 u_2} X) ⟶ SFinKer.of (ULift Y)
 ```

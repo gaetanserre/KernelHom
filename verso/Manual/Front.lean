@@ -34,8 +34,8 @@ The complete documentation for the library is available in the [API reference](d
 *Core of the project*
 
 The library introduces two main tactics:
-- `kernel_hom` : transforms a kernel equality into an equality in the monoidal category.
-- `hom_kernel` : performs the inverse transformation, bringing the categorical equality back to a kernel equality.
+- [`kernel_hom`](doc/KernelHom/Tactic/Hom/KernelHom.html#tacticKernel_hom__) : transforms a kernel equality into an equality in the monoidal category.
+- [`hom_kernel`](doc/KernelHom/Tactic/Hom/HomKernel.html#tacticHom_kernel__) : performs the inverse transformation, bringing the categorical equality back to a kernel equality.
 
 These tactics allow users to transform complex kernel equalities into categorical equalities, where powerful categorical tactics can be applied to simplify or prove them. To this end, the library provides built-in helpers like `kernel_coherence` and `kernel_monoidal` to apply categorical tactics directly to kernels without needing to manually invoke the translation tactics.
 
