@@ -1,5 +1,6 @@
 set -x -e
 
+lake exe cache get
 lake build
 rm -rf html _out
 lake exe manual
