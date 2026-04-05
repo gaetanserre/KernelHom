@@ -6,6 +6,8 @@ on:
       - main
     paths:
       - 'lean-toolchain'
+  
+  workflow_dispatch:
 
 jobs:
   create_release:
