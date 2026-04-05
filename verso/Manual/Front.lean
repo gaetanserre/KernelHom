@@ -23,7 +23,7 @@ shortTitle := "Categorical Kernel Reasoning"
 
 *Overview*
 
-*Kernel Hom* is a Lean 4 library that provides tactics to simplify kernel equalities by leveraging categorical reasoning. It automatically translates kernel equalities into equalities in a monoidal category, where tactics like [`coherence`](https://leanprover-community.github.io/mathlib4_docs/Mathlib/Tactic/CategoryTheory/Coherence.html#Mathlib.Tactic.Coherence.coherence) or [`monoidal`](https://leanprover-community.github.io/mathlib4_docs/Mathlib/Tactic/CategoryTheory/Monoidal/Basic.html#Mathlib.Tactic.Monoidal.monoidal) can be applied, and then translates the result back to a kernel equality.
+*Kernel Hom* is a Lean 4 library that provides tactics to simplify kernel equalities by leveraging categorical reasoning. It automatically translates kernel equalities into equalities in a monoidal category, where tactics like [`coherence`](doc/Mathlib/Tactic/CategoryTheory/Coherence.html#Mathlib.Tactic.Coherence.coherence) or [`monoidal`](doc/Mathlib/Tactic/CategoryTheory/Monoidal/Basic.html#Mathlib.Tactic.Monoidal.monoidal) can be applied, and then translates the result back to a kernel equality.
 
 ![](static/diagram.svg)
 
@@ -39,7 +39,7 @@ The library introduces two main tactics:
 
 These tactics allow users to transform complex kernel equalities into categorical equalities, where powerful categorical tactics can be applied to simplify or prove them. To this end, the library provides built-in helpers like `kernel_coherence` and `kernel_monoidal` to apply categorical tactics directly to kernels without needing to manually invoke the translation tactics.
 
-The library rests on `SFinKer`, the category of measurable spaces with s-finite kernels as morphisms, equipped with monoidal and symmetric structures. This category is also used to define `Stoch`, the category of measurable spaces with Markov kernels as morphisms, which is a wide subcategory of `SFinKer` (see {citep fritz2020}[]). Both categories have been merged into Mathlib (PR [#36779](https://github.com/leanprover-community/mathlib4/pull/36779)).
+The library rests on [`SFinKer`](doc/Mathlib/Probability/Kernel/Category/SFinKer.html#SFinKer), the category of measurable spaces with s-finite kernels as morphisms, equipped with monoidal and symmetric structures. This category is also used to define [`Stoch`](https://leanprover-community.github.io/mathlib4_docs/Mathlib/Probability/Kernel/Category/Stoch.html#Stoch), the category of measurable spaces with Markov kernels as morphisms, which is a wide subcategory of [`SFinKer`](doc/Mathlib/Probability/Kernel/Category/SFinKer.html#SFinKer) (see {citep fritz2020}[]). Both categories have been merged into Mathlib (PR [#36779](https://github.com/leanprover-community/mathlib4/pull/36779)).
 
 *Universe handling*
 

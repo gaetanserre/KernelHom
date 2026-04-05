@@ -37,7 +37,7 @@ variable {X Y : Type*} [MeasurableSpace X] [MeasurableSpace Y]
 ```
 Here, `Kernel X Y` lives in a universe level that depends on the universe levels of `X` and `Y`.
 
-The counterpart of `Kernel X Y` in the `SFinKer` category would be `SFinKer.of X ⟶ SFinKer.of Y`. However, it fails to typecheck as `X` and `Y` live in different universe levels:
+The counterpart of `Kernel X Y` in the [`SFinKer`](doc/Mathlib/Probability/Kernel/Category/SFinKer.html#SFinKer) category would be `SFinKer.of X ⟶ SFinKer.of Y`. However, it fails to typecheck as `X` and `Y` live in different universe levels:
 
 ```lean +error
 #check SFinKer.of X ⟶ SFinKer.of Y

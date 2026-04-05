@@ -18,7 +18,7 @@ set_option verso.exampleModule "KernelHom.Tactic.Hom.HomKernel"
 htmlSplit := .never
 %%%
 
-The {anchorTerm hom_kernel_tactic}`hom_kernel` tactic is the inverse of {anchorTerm example_hom_kernel}`kernel_hom`. It transforms categorical equalities in the `SFinKer` category back into equivalent kernel equalities. For example, given morphisms `κ.hom ≫ η.hom = ξ.hom` in the `SFinKer` category, the tactic transforms it back to the kernel equality `η ∘ₖ κ = ξ`.
+The {anchorTerm hom_kernel_tactic}`hom_kernel` tactic is the inverse of {anchorTerm example_hom_kernel}`kernel_hom`. It transforms categorical equalities in the [`SFinKer`](doc/Mathlib/Probability/Kernel/Category/SFinKer.html#SFinKer) category back into equivalent kernel equalities. For example, given morphisms `κ.hom ≫ η.hom = ξ.hom` in the [`SFinKer`](doc/Mathlib/Probability/Kernel/Category/SFinKer.html#SFinKer) category, the tactic transforms it back to the kernel equality `η ∘ₖ κ = ξ`.
 
 The tactic can be described in 3 steps:
 
