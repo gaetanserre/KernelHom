@@ -10,6 +10,17 @@ import Mathlib.Probability.Kernel.Category.SFinKer
 
 open MeasureTheory ProbabilityTheory MeasurableEquiv
 
+/-!
+# Kernel morphisms
+
+This file defines the transformation between categorical morphisms in `SFinKer` and kernel objects.
+
+## Main declarations
+
+- `fromHom`: transforms a categorical morphism in `SFinKer` to a `Kernel`.
+- `hom`: transforms a `Kernel` to a categorical morphism in `SFinKer`.
+-/
+
 namespace ProbabilityTheory.Kernel
 
 universe w x y

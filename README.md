@@ -6,6 +6,8 @@ Lean 4 project focused on tactics that translate kernel equalities into categori
   <img src="diagram/diagram.svg" width="500">
 </p>
 
+For more information, see [the project homepage](https://gaetanserre.fr/KernelHom) and the full documentation [here](https://gaetanserre.fr/KernelHom/doc).
+
 ## Status
 
 This repository is mainly about the tactics `kernel_hom` and `hom_kernel`.
@@ -20,52 +22,27 @@ Very briefly, the tactics:
 
 Universe handling is part of this translation: expressions are lifted to a common universe level, so rewrites stay well-typed across universe levels.
 
-In addition, `SFinKer` also gives a direct route to `Stoch`, the Markov category of measurable spaces and Markov kernels, defined as the wide subcategory of `SFinKer` with Markov kernels as morphisms. The definitions/results for `SFinKer` and `Stoch` are now in mathlib (PR [#36779](https://github.com/leanprover-community/mathlib4/pull/36779)) but are also included here for ease of development and maintenance, alongside the tactics.
-
-## Repository contents
-
-### 1) Tactics
-
-- [KernelHom.lean](KernelHom/Tactic/Hom/KernelHom.lean):
-  implementation of `kernel_hom` (transforms kernel equalities into monoidal category equalities).
-- [HomKernel.lean](KernelHom/Tactic/Hom/HomKernel.lean):
-  implementation of `hom_kernel` (inverse transformation back to kernel equalities).
-- [KernelCoherence.lean](KernelHom/Tactic/KernelCoherence.lean):
-  helpers built on top of the translations (`kernel_coherence`, `kernel_monoidal`).
-- [Tactics.lean](KernelHom/Tactic/Tactics.lean):
-  import hub for the tactic layer.
-
-### 2) Categorical/probabilistic backbone
-
-- [SFinKer.lean](KernelHom/Mathlib/CategoryTheory/Kernel/SFinKer.lean):
-  definition of `SFinKer` and instances `LargeCategory`, `MonoidalCategory`, `SymmetricCategory`, `CopyDiscardCategory`.
-- [Stoch.lean](KernelHom/Mathlib/CategoryTheory/Kernel/Stoch.lean):
-  definition of `Stoch` as a wide subcategory of `SFinKer` (Markov morphisms) and instance `MarkovCategory`.
-- [Kernel.lean](KernelHom/Mathlib/Kernel.lean), [LIntegral.lean](KernelHom/Mathlib/LIntegral.lean), [MeasurableEquiv.lean](KernelHom/Mathlib/MeasurableEquiv.lean):
-  auxiliary lemmas used by the constructions above.
-
-### 3) Examples and ongoing work
-
-- [Tests.lean](KernelHom/Tests.lean): examples using `kernel_hom` and `hom_kernel`.
-- [Posterior.lean](Posterior.lean): exploratory developments on posterior kernels.
+In addition, `SFinKer` also gives a direct route to `Stoch`, the Markov category of measurable spaces and Markov kernels, defined as the wide subcategory of `SFinKer` with Markov kernels as morphisms. The definitions/results for `SFinKer` and `Stoch` are now in mathlib (PR [#36779](https://github.com/leanprover-community/mathlib4/pull/36779)).
 
 ## Usage
 
-```bash
-lake build
+Add this in your `lakefile.toml`:
+
+```toml
+[[require]]
+name = "kernelhom"
+git = "https://github.com/gaetanserre/KernelHom"
 ```
 
-In a Lean file:
+If you're using a `lakefile.lean`, add:
 
 ```lean
-import KernelHom
+require verso from git "https://github.com/gaetanserre/KernelHom"@"latest"
 ```
 
-Or, for tactics only:
+## Examples
 
-```lean
-import KernelHom.Tactic.Tactics
-```
+See [Tests.lean](KernelHom/Tests.lean) for examples of how to use the tactics.
 
 ## Reference
 

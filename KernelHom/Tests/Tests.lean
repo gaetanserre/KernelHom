@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 Gaëtan Serré. All rights reserved.
+Released under GNU GPL 3.0 license as described in the file LICENSE.
+Authors: Gaëtan Serré
+-/
+
 import KernelHom.Tactic.Tactics
 
 open ProbabilityTheory MeasureTheory CategoryTheory MonoidalCategory
@@ -44,3 +50,10 @@ example (f : Kernel X Y) (g : Kernel Y Z) [IsSFiniteKernel f] [IsSFiniteKernel g
       : Kernel ((X × PUnit) × PUnit) Z)
      := by
   kernel_monoidal
+
+example (κ η : Kernel X Y) [IsSFiniteKernel κ] [IsSFiniteKernel η]
+    (h : κ = η) : κ ∘ₖ Kernel.id = η := by
+  kernel_hom
+  simp only [Category.id_comp]
+  hom_kernel
+  exact h

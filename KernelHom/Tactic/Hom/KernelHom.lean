@@ -138,6 +138,7 @@ def construct_whiskers_args (e X : Expr) (maxLvl : Level) (offset : Nat) :
 
 /-- Recursive transformation from kernel expressions to morphism expressions in the `SFinKer`
 category. -/
+-- ANCHOR: transformKernelToHom
 partial def transformKernelToHom (maxLvl : Level) (e : Expr) (op_data : List CategoryOP) :
     MetaM (Expr × List CategoryOP) := do
   match e.getAppFn with
@@ -201,6 +202,7 @@ partial def transformKernelToHom (maxLvl : Level) (e : Expr) (op_data : List Cat
       let ey ← construct_measurable_equiv Y yLevel maxLvl
       return( ← mkAppOptM' quiverConst
         #[none, none, none, none, none, none, none, none, ex, ey, e, none], op_data)
+-- ANCHOR_END: transformKernelToHom
 
 /-- Construct the proof of equivalence between the original equality and the transformed one. -/
 def mkKernelHomEqProof (eqProofType rhs lhs : Expr) (maxLvl : Level)
@@ -239,7 +241,7 @@ def mkKernelHomEqProof (eqProofType rhs lhs : Expr) (maxLvl : Level)
       | _ => pure ()
     let congr_tac ← `(tactic| first
       | simp only [
-        Kernel.quiver_monoComp.{$maxLevelStx},
+        Kernel.hom_monoComp.{$maxLevelStx},
         Kernel.quiver_comp.{$maxLevelStx},
       ]
       | simp only [
@@ -287,7 +289,7 @@ def mkKernelHomEqProof (eqProofType rhs lhs : Expr) (maxLvl : Level)
       | _ => pure ()
     let congr_tac ← `(tactic| first
       | simp only [
-        Kernel.quiver_monoComp.{$maxLevelStx},
+        Kernel.hom_monoComp.{$maxLevelStx},
         Kernel.quiver_comp.{$maxLevelStx},
       ] at h
       | simp only [
@@ -370,6 +372,31 @@ example {W X Y Z : Type*} [MeasurableSpace X] [MeasurableSpace Y] [MeasurableSpa
 ``` -/
 syntax "kernel_hom" (ppSpace location)? : tactic
 
+-- ANCHOR: kernel_hom_tactic
 elab_rules : tactic
   | `(tactic| kernel_hom $[$loc]?) =>
     expandOptLocation (Lean.mkOptionalNode loc) |> applyLocTactic <| applyKernelHom
+-- ANCHOR_END: kernel_hom_tactic
+
+variable {W X Y Z : Type*} [MeasurableSpace W] [MeasurableSpace X] [MeasurableSpace Y]
+[MeasurableSpace Z]
+
+variable (κ : Kernel X Y) (η : Kernel Y Z) (ξ : Kernel Z W)
+    [IsFiniteKernel ξ] [IsSFiniteKernel κ] [IsSFiniteKernel η]
+
+-- ANCHOR: example_kernel_hom1
+example : ξ ∘ₖ (η ∘ₖ κ) = ξ ∘ₖ η ∘ₖ κ := by
+  kernel_hom
+  simp only [Category.assoc]
+-- ANCHOR_END: example_kernel_hom1
+
+-- ANCHOR: example_kernel_hom2
+example : (η ∘ₖ Kernel.id.map (Prod.fst : Y × PUnit → Y)) ∘ₖ
+    (Kernel.id.map (Prod.fst : Y × PUnit → Y) ∥ₖ Kernel.id (α := PUnit)) ∘ₖ
+      ((κ ∥ₖ Kernel.id (α := PUnit)) ∥ₖ Kernel.id (α := PUnit))
+    = (η ∘ₖ κ ∘ₖ (Kernel.id.map (Prod.fst : X × PUnit → X)) ∘ₖ
+      ((Kernel.id.map (Prod.fst : X × PUnit → X)) ∥ₖ Kernel.id (α := PUnit))
+    : Kernel ((X × PUnit) × PUnit) Z)
+     := by
+  kernel_hom; monoidal
+-- ANCHOR_END: example_kernel_hom2

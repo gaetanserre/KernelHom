@@ -4,13 +4,7 @@ Released under GNU GPL 3.0 license as described in the file LICENSE.
 Authors: Gaëtan Serré
 -/
 
-import Lean.Elab.Tactic.Location
-import KernelHom.Hom
-import KernelHom.MonoidalComp.MeasurableCoherence
-import KernelHom.Mathlib.MeasurableEquiv
-import KernelHom.Tactic.LocTactic
-import KernelHom.Tactic.Hom.Universe
-import KernelHom.Tactic.Hom.Utils
+import KernelHom.Tactic.Hom.KernelHom
 
 /-!
 # `hom_kernel` tactic
@@ -98,6 +92,7 @@ def deconstruct_whiskers_args (e : Expr) (eLevel : Level) (left : Bool) :
   return (κ, kernel_id, OP)
 
 /-- Recursive transformation from morphism expression in `SFinKer` to kernel expression. -/
+-- ANCHOR: transformHomToKernel
 partial def transformHomToKernel (eLevel : Level) (e : Expr) (op_data : List CategoryOP) :
     MetaM (Expr × List CategoryOP) := do
   match e.getAppFn with
@@ -149,6 +144,7 @@ partial def transformHomToKernel (eLevel : Level) (e : Expr) (op_data : List Cat
     let κ := args[args.size - 2]!
     return (κ, op_data)
   | _ => throwError "Expected a hom expression, got: {e}"
+-- ANCHOR_END: transformHomToKernel
 
 /-- Construct the proof of equivalence between the original equality and the transformed one. -/
 def mkHomKernelEqProof (eqProofType : Expr) (eLevel : Level)
@@ -183,7 +179,7 @@ def mkHomKernelEqProof (eqProofType : Expr) (eLevel : Level)
       | _ => pure ()
     let congr_tac ← `(tactic| first
       | simp only [
-        Kernel.quiver_monoComp.{$eLevelStx},
+        Kernel.hom_monoComp.{$eLevelStx},
         Kernel.quiver_comp.{$eLevelStx},
       ] at h
       | simp only [
@@ -227,7 +223,7 @@ def mkHomKernelEqProof (eqProofType : Expr) (eLevel : Level)
       | _ => pure ()
     let congr_tac ← `(tactic| first
       | simp only [
-        Kernel.quiver_monoComp.{$eLevelStx},
+        Kernel.hom_monoComp.{$eLevelStx},
         Kernel.quiver_comp.{$eLevelStx},
       ]
       | simp only [
@@ -270,7 +266,7 @@ def applyHomKernel (goal : MVarId) (fvarId : Option FVarId) : TacticM MVarId := 
           let decl ← fid.getDecl
           pure decl.type
         | none => goal.getType
-    let eLevel ← get_universe_from_cat_eq expr
+    let eLevel ← get_universe_from_eq expr
     let (quiverExpr, op_data, _, _) ← transformEquality eLevel expr transformHomToKernel
     let eqProofType ← mkEq expr quiverExpr
     let eqProof ← mkHomKernelEqProof eqProofType eLevel op_data
@@ -301,6 +297,19 @@ The tactic supports location specifiers like `rw` or `simp`:
 It is useful to switch back to kernel equations once categorical rewrites are done. -/
 syntax "hom_kernel" (ppSpace location)? : tactic
 
+-- ANCHOR: hom_kernel_tactic
 elab_rules : tactic
   | `(tactic| hom_kernel $[$loc]?) =>
     expandOptLocation (Lean.mkOptionalNode loc) |> applyLocTactic <| applyHomKernel
+-- ANCHOR_END: hom_kernel_tactic
+
+variable {X Y : Type*} [MeasurableSpace X] [MeasurableSpace Y]
+
+-- ANCHOR: example_hom_kernel
+example (κ η : Kernel X Y) [IsSFiniteKernel κ] [IsSFiniteKernel η]
+    (h : κ = η) : κ ∘ₖ Kernel.id = η := by
+  kernel_hom
+  simp only [Category.id_comp]
+  hom_kernel
+  exact h
+-- ANCHOR_END: example_hom_kernel

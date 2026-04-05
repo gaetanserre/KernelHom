@@ -9,6 +9,20 @@ import Mathlib.Probability.Kernel.Basic
 
 open Lean Meta ProbabilityTheory
 
+/-!
+# Kernel transformation utilities
+
+This file provides helper functions for transforming between kernel expressions and
+categorical morphism expressions, including type extraction and equivalence construction.
+
+## Main declarations
+
+- `get_types_from_kernel`: extracts carrier types and universe levels from kernel expressions.
+- `construct_measurable_equiv`: recursively builds measurable equivalences.
+- `transformEquality`: transforms an equality expression to an other using a provided
+transformation function.
+-/
+
 /-- Extract `(X, Y, u, v)` from an expression of type `Kernel X Y`. -/
 def get_types_from_kernel (κ : Expr) : MetaM (Expr × Expr × Level × Level) := do
   let κType ← inferType κ

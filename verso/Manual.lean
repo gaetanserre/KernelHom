@@ -14,7 +14,7 @@ def extraHead : Array Verso.Output.Html := #[
     {{<script src="static/scripts.js"></script>}},
 ]
 
-def git := "https://github.com/gaetanserre/verso_doc"
+def git := "https://github.com/gaetanserre/KernelHom"
 
 def config : RenderConfig := {
   extraHead := extraHead,

@@ -6,7 +6,7 @@ import KernelHom.Tactic.Hom.HomKernel
 import KernelHom.Tactic.Hom.KernelHom
 import KernelHom.Tactic.Hom.Universe
 import KernelHom.Tactic.Hom.Utils
-import KernelHom.Tactic.KernelCoherence
+import KernelHom.Tactic.KernelCat
 import KernelHom.Tactic.LocTactic
 import KernelHom.Tactic.Tactics
 import KernelHom.Tests.Tests

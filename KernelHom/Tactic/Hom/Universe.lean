@@ -8,6 +8,19 @@ import Lean
 
 open Lean Meta
 
+/-!
+# Universe level utilities
+
+This file provides utilities for working with universe levels in metaprograms.
+It includes conversion functions between levels and syntax, and universe level collection.
+
+## Main declarations
+
+- `levelToSyntax`: converts a `Level` to quotable syntax.
+- `collectExprUniverses`: recursively collects universe levels from expressions.
+- `get_universe_from_eq`: extracts universe information from categorical equalities.
+-/
+
 /-- Convert a Level to Syntax for use in tactic quotations. -/
 partial def levelToSyntax (lvl : Level) : MacroM (TSyntax `level) := do
   match lvl with
@@ -41,10 +54,12 @@ private def collectExprUniverses.aux (e : Expr) : List Level :=
 
 /-- Recursively traverse an expression and collect universe levels found.
 Returns a list of all unique universe levels encountered. -/
+-- ANCHOR: collectExprUniverses
 partial def collectExprUniverses (e : Expr) : MetaM (List Level) := do
   let e ← instantiateMVars e
   let e ← zetaReduce e
   return (collectExprUniverses.aux e).eraseDups
+-- ANCHOR_END: collectExprUniverses
 
 /-- Compute the maximum universe level from a list of levels. -/
 def compute_max_universe (levels : List Level) : MetaM Level :=
@@ -53,7 +68,7 @@ def compute_max_universe (levels : List Level) : MetaM Level :=
     | head :: tail => pure (tail.foldl Level.max head)
 
 /-- Get the category universe level from the left side of an equality expression. -/
-def get_universe_from_cat_eq (eq : Expr) : MetaM Level := do
+def get_universe_from_eq (eq : Expr) : MetaM Level := do
   let eq ← instantiateMVars eq
   let eq ← zetaReduce eq
   let eq ← whnf eq

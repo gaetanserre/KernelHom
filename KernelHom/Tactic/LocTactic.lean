@@ -8,6 +8,17 @@ import Lean.Elab.Tactic.Location
 
 open Lean Elab Tactic Meta
 
+/-!
+# Tactic location support
+
+This module provides utilities for applying tactics to multiple goals and hypotheses
+specified by location patterns, following the standard Lean syntax (like in `rw` or `simp`).
+
+## Main declarations
+
+- `applyLocTactic`: applies a tactic to goals and hypotheses at specified locations.
+-/
+
 /-- Apply a given tactic to all goals and/or hypotheses specified by a `Location`. -/
 def applyLocTactic (loc : Location) (tactic : MVarId → Option FVarId → TacticM MVarId) :
     TacticM Unit := do

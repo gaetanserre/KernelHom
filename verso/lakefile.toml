@@ -8,10 +8,14 @@ autoImplicit = true
 name = "verso"
 git = "https://github.com/leanprover/verso"
 
+[[require]]
+name = "mathlib"
+scope = "leanprover-community"
+rev = "v4.29.0"
+
 [[lean_lib]]
 name = "Manual"
 root = "Manual"
-
 
 [[lean_exe]]
 name = "manual"

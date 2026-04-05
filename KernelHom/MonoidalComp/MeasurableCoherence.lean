@@ -9,6 +9,19 @@ import KernelHom.Hom
 
 open CategoryTheory MonoidalCategory MeasureTheory ProbabilityTheory MeasurableEquiv
 
+/-!
+# Measurable coherence
+
+This file introduces the monoidal composition for s-finite kernels (noted `⊗≫ₖ`).
+## Main declarations
+
+- `MeasurableCoherence`: class witnessing measurable equivalences between types.
+- `monoComp`: monoidal composition of kernels using measurable equivalences to transport to
+`SFinKer`.
+- `hom_monoComp`: the `SFinKer` morphism of the kernelized monoidal composition is the monoidal
+composition of the morphisms in `SFinKer`.
+-/
+
 /-- A class witnessing the existence of a measurable equivalence between two measurable spaces. -/
 class MeasurableCoherence (X Y : Type*) [MeasurableSpace X] [MeasurableSpace Y] where
   /-- A measurable equivalence between `X` and `Y`. -/
@@ -85,7 +98,7 @@ variable {W'' : Type max v w x y z} {X'' : Type max v w x y z} {Y'' : Type max v
   {Z'' : Type max v w x y z} [MeasurableSpace W''] [MeasurableSpace X''] [MeasurableSpace Y'']
   [MeasurableSpace Z''] (ew' : W'' ≃ᵐ W) (ex' : X'' ≃ᵐ X) (ey' : Y'' ≃ᵐ Y) (ez' : Z'' ≃ᵐ Z)
 
-lemma quiver_monoComp : @monoidalComp _ _ _ _ _ _ (monoidalCoherence ex' ey')
+lemma hom_monoComp : @monoidalComp _ _ _ _ _ _ (monoidalCoherence ex' ey')
     (hom (ex := ew') (ey := ex') κ) (hom (ex := ey') (ey := ez') η)
     = hom (ex := ew') (ey := ez') (monoComp κ η):= by
   simp only [monoComp₀, fromHom, hom, monoidalComp]

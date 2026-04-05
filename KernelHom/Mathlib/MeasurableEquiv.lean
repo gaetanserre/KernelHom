@@ -6,6 +6,18 @@ Authors: Gaëtan Serré
 
 import Mathlib.MeasureTheory.MeasurableSpace.Embedding
 
+/-!
+# Measurable equivalences
+
+This file extends the theory of measurable equivalences, providing utilities for
+working with products and other structures.
+
+## Main declarations
+
+- `MeasurableEquiv.prod`: product of measurable equivalences.
+- `MeasurableEquiv.punit`: measurable equivalence between `PUnit`s.
+-/
+
 namespace MeasurableEquiv
 
 universe w x y

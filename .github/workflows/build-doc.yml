@@ -56,9 +56,14 @@ jobs:
         run: |
           cd verso
           ./build_manual.sh
-
-      - name: Compile blueprint and documentation
-        uses: leanprover-community/docgen-action@dac784713171529c96f6d0470f7af30249a02a5d # 2026-02-09
-        with:
-          blueprint: false
-          homepage: home_page
+      
+      - name: Build DocGen Documentation
+        run: |
+          cd docbuild
+          ./build_docgen.sh
+      
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with: 
+          github_token: ${{ secrets.GITHUB_TOKEN }} 
+          publish_dir: verso/html

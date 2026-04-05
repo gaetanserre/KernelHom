@@ -9,4 +9,4 @@ import KernelHom.Tactic.Hom.Utils
 import KernelHom.Tactic.Hom.KernelHom
 import KernelHom.Tactic.Hom.HomKernel
 import KernelHom.Tactic.LocTactic
-import KernelHom.Tactic.KernelCoherence
+import KernelHom.Tactic.KernelCat
