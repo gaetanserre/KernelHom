@@ -45,12 +45,16 @@ jobs:
         with:
           fetch-depth: 0 # Fetch all history for all branches and tags
 
-      - name: Build and lint project
+      - name: Build project
         uses: leanprover/lean-action@65f454bc22ec83143241456eee965c2ab702ba6e # 2026-01-15
         with:
           build: true
           lint: false
           mk_all-check: true
+      
+      - name: Lint project
+        run: |
+          lake exe runLinter KernelHom
 
       - name: Build Verso Documentation
         run: |
