@@ -9,4 +9,5 @@ import KernelHom.Tactic.Hom.Utils
 import KernelHom.Tactic.KernelCat
 import KernelHom.Tactic.LocTactic
 import KernelHom.Tactic.Tactics
+import KernelHom.Tests.Posterior
 import KernelHom.Tests.Tests
