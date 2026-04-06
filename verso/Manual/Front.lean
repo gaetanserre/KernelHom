@@ -10,6 +10,7 @@ import Manual.Pages.Universe
 import Manual.Pages.KernelHom
 import Manual.Pages.HomKernel
 import Manual.Pages.CatTactics
+import Manual.Pages.MonoidalComp
 
 open Verso.Genre Manual Verso.Genre.Manual.InlineLean
 
@@ -45,6 +46,10 @@ The library rests on [`SFinKer`](doc/Mathlib/Probability/Kernel/Category/SFinKer
 
 A key aspect of the library is automatic universe management: expressions are lifted to a common universe level during translation, ensuring categorical expressions are well-typed. This allows users to work with kernels of varying universe levels without needing to manually manage universe annotations.
 
+*Kernelized monoidal composition*
+
+One consequence of the translation to [`SFinKer`](doc/Mathlib/Probability/Kernel/Category/SFinKer.html#SFinKer) is that we can adapt the categorical monoidal composition `⊗≫` to kernels, resulting in a kernelized monoidal composition `⊗≫ₖ`. This composition automatically handles measurable equivalences, allowing for seamless composition of kernels while maintaining s-finiteness.
+
 *About*
 
 This library is under active development and is under the [GNU GPL 3.0 license](https://www.gnu.org/licenses/gpl-3.0.en.html). Contributions and feedback are welcome!
@@ -56,3 +61,5 @@ This library is under active development and is under the [GNU GPL 3.0 license](
 {include 0 Manual.Pages.HomKernel}
 
 {include 0 Manual.Pages.CatTactics}
+
+{include 0 Manual.Pages.MonoidalComp}

@@ -18,7 +18,7 @@ set_option verso.exampleModule "KernelHom.Tactic.Hom.KernelHom"
 htmlSplit := .never
 %%%
 
-The {anchorTerm kernel_hom_tactic}`kernel_hom` tactic transforms a kernel equality into an equality in the [`SFinKer`](doc/Mathlib/Probability/Kernel/Category/SFinKer.html#SFinKer) category, where categorical tactics can be applied to simplify it. For example, given kernels `κ : Kernel X Y`, `η : Kernel Y Z` and `ξ : Kernel X Z`, the following kernel equality: `η ∘ₖ κ = ξ` is transformed to `κ.hom ≫ η.hom = ξ.hom` in the [`SFinKer`](doc/Mathlib/Probability/Kernel/Category/SFinKer.html#SFinKer) category, where [`hom`](doc/KernelHom/Hom.html#ProbabilityTheory.Kernel.hom) is the translation of kernels to morphisms in [`SFinKer`](doc/Mathlib/Probability/Kernel/Category/SFinKer.html#SFinKer).
+The {anchorTerm kernel_hom_tactic}`kernel_hom` tactic transforms a kernel equality into an equality in the [`SFinKer`](doc/Mathlib/Probability/Kernel/Category/SFinKer.html#SFinKer) category, where categorical tactics can be applied to simplify it. For example, given kernels `κ : Kernel X Y`, `η : Kernel Y Z` and `ξ : Kernel X Z`, the following kernel equality: `η ∘ₖ κ = ξ` is transformed to `κ.hom ≫ η.hom = ξ.hom` in the [`SFinKer`](doc/Mathlib/Probability/Kernel/Category/SFinKer.html#SFinKer) category, where [`hom`](doc/KernelHom/Kernel/Hom.html#ProbabilityTheory.Kernel.hom) is the translation of kernels to morphisms in [`SFinKer`](doc/Mathlib/Probability/Kernel/Category/SFinKer.html#SFinKer).
 
 The tactic can be described in 4 steps:
 
