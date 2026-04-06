@@ -1,5 +1,6 @@
 import KernelHom.Kernel.Hom
 import KernelHom.Kernel.MonoidalComp
+import KernelHom.Mathlib.Kernel
 import KernelHom.Mathlib.LIntegral
 import KernelHom.Mathlib.MeasurableEquiv
 import KernelHom.Tactic.Hom.HomKernel
