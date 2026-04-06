@@ -244,7 +244,15 @@ partial def transformHomToKernel (eLevel : Level) (e : Expr) (op_data : List Cat
     | Expr.const ``MonoidalCategoryStruct.associator _ =>
       let (res, associatorHomOP) ← deconstruct_associator_hom iso eLevel
       return (res, associatorHomOP :: op_data)
-    | _ => throwError "Expected a monoidal isomorphism, got: {iso}"
+    | Expr.const ``BraidedCategory.braiding _ =>
+      let args := iso.getAppArgs
+      let (X, xLevel) ← get_type_from_SFinKer args[args.size - 2]!
+      let (Y, yLevel) ← get_type_from_SFinKer args[args.size -1]!
+      let ex ← construct_measurable_equiv X xLevel eLevel
+      let ey ← construct_measurable_equiv Y yLevel eLevel
+      let e ← mkAppOptM ``Kernel.swap #[X, Y, none, none]
+      return (e, .Braiding_hom ex ey :: op_data)
+    | _ => throwError "Unexpected isomorphism {iso}"
   | Expr.const ``Iso.inv _ =>
     let args := e.getAppArgs
     let iso := args[args.size - 1]!
@@ -267,8 +275,7 @@ partial def transformHomToKernel (eLevel : Level) (e : Expr) (op_data : List Cat
   | Expr.const ``MonoidalCategoryStruct.whiskerRight _ =>
     let (κ, kernel_id, whiskerRightOP) ← deconstruct_whiskers_hom_args e eLevel false
     let (κ', lκ) ← transformHomToKernel eLevel κ op_data
-    let res ← mkAppM ``Kernel.parallelComp #[κ', kernel_id]
-    return (res, whiskerRightOP :: lκ)
+    return (← mkAppM ``Kernel.parallelComp #[κ', kernel_id], whiskerRightOP :: lκ)
   | Expr.const ``MonoidalCategoryStruct.tensorHom _ =>
     let args := e.getAppArgs
     let κ := args[args.size - 2]!
@@ -276,6 +283,17 @@ partial def transformHomToKernel (eLevel : Level) (e : Expr) (op_data : List Cat
     let (κ', lκ) ← transformHomToKernel eLevel κ op_data
     let (η', lη) ← transformHomToKernel eLevel η lκ
     return (← mkAppM ``Kernel.parallelComp #[κ', η'], lη)
+  | Expr.const ``ComonObj.counit _ =>
+    let args := e.getAppArgs
+    let (X, xLevel) ← get_type_from_SFinKer args[args.size - 2]!
+    let ex ← construct_measurable_equiv X xLevel eLevel
+    let discard_kernel_const := Expr.const ``Kernel.discard [xLevel, Level.zero]
+    return (← mkAppOptM' discard_kernel_const #[X, none], .Counit ex :: op_data)
+  | Expr.const ``ComonObj.comul _ =>
+    let args := e.getAppArgs
+    let (X, xLevel) ← get_type_from_SFinKer args[args.size - 2]!
+    let ex ← construct_measurable_equiv X xLevel eLevel
+    return (← mkAppOptM ``Kernel.copy #[X, none], .Comul ex :: op_data)
   | Expr.const ``Kernel.hom _ =>
     let args := e.getAppArgs
     let κ := args[args.size - 2]!
@@ -330,6 +348,16 @@ def mkHomKernelEqProof (eqProofType : Expr) (eLevel : Level)
         let ezStx ← Term.exprToSyntax ez
         evalTactic (← `(tactic| try rw [Kernel.associator_inv (ex := $exStx) (ey := $eyStx)
           (ez := $ezStx)] at h))
+      | .Braiding_hom ex ey =>
+        let exStx ← Term.exprToSyntax ex
+        let eyStx ← Term.exprToSyntax ey
+        evalTactic (← `(tactic| try rw [Kernel.braiding_hom (ex := $exStx) (ey := $eyStx)] at h))
+      | .Counit equiv =>
+        let eStx ← Term.exprToSyntax equiv
+        evalTactic (← `(tactic| try rw [Kernel.counit (ex := $eStx)] at h))
+      | .Comul equiv =>
+        let eStx ← Term.exprToSyntax equiv
+        evalTactic (← `(tactic| try rw [Kernel.comul (ex := $eStx)] at h))
       | _ => pure ()
 
     if !(← getGoals).isEmpty then
@@ -392,6 +420,16 @@ def mkHomKernelEqProof (eqProofType : Expr) (eLevel : Level)
         let ezStx ← Term.exprToSyntax ez
         evalTactic (← `(tactic| try rw [Kernel.associator_inv (ex := $exStx) (ey := $eyStx)
           (ez := $ezStx)]))
+      | .Braiding_hom ex ey =>
+        let exStx ← Term.exprToSyntax ex
+        let eyStx ← Term.exprToSyntax ey
+        evalTactic (← `(tactic| try rw [Kernel.braiding_hom (ex := $exStx) (ey := $eyStx)]))
+      | .Counit equiv =>
+        let eStx ← Term.exprToSyntax equiv
+        evalTactic (← `(tactic| try rw [Kernel.counit (ex := $eStx)]))
+      | .Comul equiv =>
+        let eStx ← Term.exprToSyntax equiv
+        evalTactic (← `(tactic| try rw [Kernel.comul (ex := $eStx)]))
       | _ => pure ()
 
     if !(← getGoals).isEmpty then

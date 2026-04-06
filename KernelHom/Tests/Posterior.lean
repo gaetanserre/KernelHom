@@ -51,7 +51,7 @@ denote `κ†`, but we have to also specify the measure `μ`.
 open scoped ENNReal
 
 open MeasureTheory CategoryTheory
-open scoped MonoidalCategory
+open scoped MonoidalCategory ComonObj
 
 open MonoidalCategory in
 lemma CategoryTheory.tensorObjSFinker {X Y : SFinKer} :

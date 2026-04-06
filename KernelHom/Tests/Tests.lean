@@ -79,3 +79,11 @@ example (κ η : Kernel X Y) [IsSFiniteKernel κ] [IsSFiniteKernel η]
   simp only [Category.id_comp]
   hom_kernel
   exact h
+
+open scoped ComonObj in
+example (κ : Kernel Z Y) [IsSFiniteKernel κ] :
+    (Kernel.discard.{_, 0} Z ∥ₖ κ) ∘ₖ Kernel.copy Z = (Kernel.id.map fun x ↦ ((), x)) ∘ₖ κ := by
+  kernel_hom
+  simp only [ComonObj.counit_comul_hom]
+  hom_kernel
+  rfl

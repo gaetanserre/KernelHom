@@ -68,6 +68,9 @@ inductive CategoryOP
   | id (e : Expr)
   | Associator_hom (e₁ e₂ e₃ : Expr)
   | Associator_inv (e₁ e₂ e₃ : Expr)
+  | Braiding_hom (e₁ e₂ : Expr)
+  | Counit (e : Expr)
+  | Comul (e : Expr)
 
 /-- Transform both sides of an equality and return the new equality plus metadata. -/
 def transformEquality (maxLvl : Level) (e : Expr)

@@ -177,14 +177,38 @@ partial def transformKernelToHom (maxLvl : Level) (e : Expr) (op_data : List Cat
       #[none, none, none, none, none, none, none, none, none, ex, ey]
     return (← mkAppOptM' monoComp
       #[none, none, none, none, none, none, monoCoherence, κ', η'], lη)
-  | Expr.const ``Kernel.id univs =>
-    let args := e.getAppArgs
-    let X := args[args.size - 2]!
-    let xLevel := univs[0]!
+  | Expr.const ``Kernel.id _ =>
+    let (X, _, xLevel, _) ← get_types_from_kernel e
     let sfinkerOfX ← compute_SFinkerOf X xLevel maxLvl
     let ex ← construct_measurable_equiv X xLevel maxLvl
     let idOP := .id ex
     return (← mkAppM ``CategoryStruct.id #[sfinkerOfX], idOP :: op_data)
+  | Expr.const ``Kernel.swap univs =>
+    let args := e.getAppArgs
+    let X := args[0]!
+    let Y := args[1]!
+    let xLevel := univs[0]!
+    let yLevel := univs[1]!
+    let sfinkerOfX ← compute_SFinkerOf X xLevel maxLvl
+    let sfinkerOfY ← compute_SFinkerOf Y yLevel maxLvl
+    let ex ← construct_measurable_equiv X xLevel maxLvl
+    let ey ← construct_measurable_equiv Y yLevel maxLvl
+    let braiding ← mkAppM ``Iso.hom #[← mkAppM ``BraidedCategory.braiding #[sfinkerOfX, sfinkerOfY]]
+    return (braiding, .Braiding_hom ex ey :: op_data)
+  | Expr.const ``Kernel.discard _ =>
+    let (X, _, xLevel, _) ← get_types_from_kernel e
+    let sfinkerOfX ← compute_SFinkerOf X xLevel maxLvl
+    let ex ← construct_measurable_equiv X xLevel maxLvl
+    let discardOP := .Counit ex
+    return (← mkAppOptM ``ComonObj.counit #[none, none, none, sfinkerOfX, none],
+      discardOP :: op_data)
+  | Expr.const ``Kernel.copy _ =>
+    let (X, _, xLevel, _) ← get_types_from_kernel e
+    let sfinkerOfX ← compute_SFinkerOf X xLevel maxLvl
+    let ex ← construct_measurable_equiv X xLevel maxLvl
+    let copyOP := .Comul ex
+    return (← mkAppOptM ``ComonObj.comul #[none, none, none, sfinkerOfX, none],
+      copyOP :: op_data)
   | Expr.const ``Kernel.parallelComp _ =>
     let (X, _, _, _) ← get_types_from_kernel e
     if ← check_WhiskerLeft e then
@@ -249,16 +273,27 @@ def mkKernelHomEqProof (eqProofType rhs lhs : Expr) (maxLvl : Level)
       | .leftUnitor_hom lvl equiv =>
         let punitLevelStx ← liftMacroM <| levelToSyntax lvl
         let eStx ← Term.exprToSyntax equiv
-        evalTactic (← `(tactic| nth_rw 1 [Kernel.leftUnitor_hom.{$maxLevelStx, _, $punitLevelStx}
+        evalTactic (← `(tactic| nth_rw 1 [Kernel.leftUnitor_hom.{_, _, $punitLevelStx}
           (ex := $eStx)]))
       | .rightUnitor_hom lvl equiv =>
         let punitLevelStx ← liftMacroM <| levelToSyntax lvl
         let eStx ← Term.exprToSyntax equiv
-        evalTactic (← `(tactic| nth_rw 1 [Kernel.rightUnitor_hom.{$maxLevelStx, _, $punitLevelStx}
+        evalTactic (← `(tactic| nth_rw 1 [Kernel.rightUnitor_hom.{_, _, $punitLevelStx}
           (ex := $eStx)]))
       | .id equiv =>
         let eStx ← Term.exprToSyntax equiv
-        evalTactic (← `(tactic| rw [Kernel.hom_id.{$maxLevelStx} (ex := $eStx)]))
+        evalTactic (← `(tactic| rw [Kernel.hom_id (ex := $eStx)]))
+      | .Braiding_hom ex ey =>
+        let exStx ← Term.exprToSyntax ex
+        let eyStx ← Term.exprToSyntax ey
+        evalTactic (← `(tactic| rw [Kernel.braiding_hom (ex := $exStx)
+          (ey := $eyStx)]))
+      | .Counit equiv =>
+        let eStx ← Term.exprToSyntax equiv
+        evalTactic (← `(tactic| rw [Kernel.counit (ex := $eStx)]))
+      | .Comul equiv =>
+        let eStx ← Term.exprToSyntax equiv
+        evalTactic (← `(tactic| rw [Kernel.comul (ex := $eStx)]))
       | _ => pure ()
     let congr_tac ← `(tactic| simp only [
         Kernel.hom_monoComp.{$maxLevelStx},
@@ -275,10 +310,10 @@ def mkKernelHomEqProof (eqProofType rhs lhs : Expr) (maxLvl : Level)
         match e with
         | .WhiskerLeft equiv =>
           let eStx ← Term.exprToSyntax equiv
-          evalTactic (← `(tactic| nth_rw 1 [Kernel.WhiskerLeft.{$maxLevelStx} (ez := $eStx)]))
+          evalTactic (← `(tactic| nth_rw 1 [Kernel.WhiskerLeft (ez := $eStx)]))
         | .WhiskerRight equiv =>
           let eStx ← Term.exprToSyntax equiv
-          evalTactic (← `(tactic| nth_rw 1 [Kernel.WhiskerRight.{$maxLevelStx} (ez := $eStx)]))
+          evalTactic (← `(tactic| nth_rw 1 [Kernel.WhiskerRight (ez := $eStx)]))
         | _ => pure ()
       try
         evalTactic congr_tac
@@ -296,16 +331,27 @@ def mkKernelHomEqProof (eqProofType rhs lhs : Expr) (maxLvl : Level)
       | .leftUnitor_hom lvl equiv =>
         let punitLevelStx ← liftMacroM <| levelToSyntax lvl
         let eStx ← Term.exprToSyntax equiv
-        evalTactic (← `(tactic| nth_rw 1 [Kernel.leftUnitor_hom.{$maxLevelStx, _, $punitLevelStx}
+        evalTactic (← `(tactic| nth_rw 1 [Kernel.leftUnitor_hom.{_, _, $punitLevelStx}
           (ex := $eStx)] at h))
       | .rightUnitor_hom lvl equiv =>
         let punitLevelStx ← liftMacroM <| levelToSyntax lvl
         let eStx ← Term.exprToSyntax equiv
-        evalTactic (← `(tactic| nth_rw 1 [Kernel.rightUnitor_hom.{$maxLevelStx, _, $punitLevelStx}
+        evalTactic (← `(tactic| nth_rw 1 [Kernel.rightUnitor_hom.{_, _, $punitLevelStx}
           (ex := $eStx)] at h))
       | .id equiv =>
         let eStx ← Term.exprToSyntax equiv
-        evalTactic (← `(tactic| rw [Kernel.hom_id.{$maxLevelStx} (ex := $eStx)] at h))
+        evalTactic (← `(tactic| rw [Kernel.hom_id (ex := $eStx)] at h))
+      | .Braiding_hom ex ey =>
+        let exStx ← Term.exprToSyntax ex
+        let eyStx ← Term.exprToSyntax ey
+        evalTactic (← `(tactic| rw [Kernel.braiding_hom (ex := $exStx)
+          (ey := $eyStx)] at h))
+      | .Counit equiv =>
+        let eStx ← Term.exprToSyntax equiv
+        evalTactic (← `(tactic| rw [Kernel.counit (ex := $eStx)] at h))
+      | .Comul equiv =>
+        let eStx ← Term.exprToSyntax equiv
+        evalTactic (← `(tactic| rw [Kernel.comul (ex := $eStx)] at h))
       | _ => pure ()
     if !(← getGoals).isEmpty then
       let congr_tac ← `(tactic| simp only [
@@ -322,10 +368,10 @@ def mkKernelHomEqProof (eqProofType rhs lhs : Expr) (maxLvl : Level)
         match e with
         | .WhiskerLeft equiv =>
           let eStx ← Term.exprToSyntax equiv
-          evalTactic (← `(tactic| nth_rw 1 [Kernel.WhiskerLeft.{$maxLevelStx} (ez := $eStx)] at h))
+          evalTactic (← `(tactic| nth_rw 1 [Kernel.WhiskerLeft (ez := $eStx)] at h))
         | .WhiskerRight equiv =>
           let eStx ← Term.exprToSyntax equiv
-          evalTactic (← `(tactic| nth_rw 1 [Kernel.WhiskerRight.{$maxLevelStx} (ez := $eStx)] at h))
+          evalTactic (← `(tactic| nth_rw 1 [Kernel.WhiskerRight (ez := $eStx)] at h))
         | _ => pure ()
       try
         evalTactic congr_tac

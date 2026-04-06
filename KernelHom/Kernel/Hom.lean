@@ -248,4 +248,44 @@ lemma tensorHom {κ : Kernel X Y} [IsSFiniteKernel κ] {η : Kernel V Z} [IsSFin
 
 end tensorHom
 
+section braiding
+
+lemma braiding_hom : (β_ (SFinKer.of X') (SFinKer.of Y')).hom =
+    (Kernel.swap X Y).hom (ex := ex.prod ey) (ey := ey.prod ex) := by
+  ext : 1; dsimp
+  simp only [hom]
+  ext a s hs
+  rw [swap_apply, comap_apply, map_apply, swap_apply, Measure.map_apply, Measure.dirac_apply',
+    Measure.dirac_apply']
+  · simp only [Prod.swap, Set.preimage, MeasurableEquiv.prod, symm_mk, MeasurableEquiv.coe_mk,
+    Equiv.coe_fn_symm_mk, Equiv.coe_fn_mk]
+    exact Set.indicator_eq_indicator (by simp) rfl
+  all_goals try fun_prop
+  all_goals measurability
+
+end braiding
+
+section comonobj
+
+open scoped ComonObj
+
+lemma counit : ε[SFinKer.of X'] = (Kernel.discard X).hom (ex := ex) (ey := punit) := by
+  ext : 1; dsimp
+  simp only [hom]
+  ext : 1
+  rw [discard_apply, comap_apply, map_apply]
+  · simp
+  · fun_prop
+
+lemma comul : Δ[SFinKer.of X'] = (Kernel.copy X).hom (ex := ex) (ey := ex.prod ex) := by
+  ext : 1; dsimp
+  simp only [hom]
+  ext : 1
+  rw [copy_apply, comap_apply, map_apply, copy_apply, Measure.map_dirac']
+  · congr
+    all_goals simp
+  all_goals fun_prop
+
+end comonobj
+
 end ProbabilityTheory.Kernel
