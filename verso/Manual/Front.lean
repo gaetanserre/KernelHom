@@ -15,7 +15,7 @@ open Verso.Genre Manual Verso.Genre.Manual.InlineLean
 
 set_option pp.rawOnError true
 
-#doc (Manual) "KernelHom: Tactics for Categorical Kernel Reasoning" =>
+#doc (Manual) "Kernel-Hom: Tactics for Categorical Kernel Reasoning" =>
 %%%
 authors := ["Gaëtan Serré"]
 shortTitle := "Categorical Kernel Reasoning"
