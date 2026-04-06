@@ -38,7 +38,7 @@ elab_rules : tactic
 -- ANCHOR_END: kernel_coherence_tactic
 
 /-- The `kernel_coherence` tactic applies the `kernel_hom` transformation to the goal and then
-invokes the `monoidal` tactic to solve the resulting goal. -/
+invokes the `monoidal` tactic to solve or simplify the resulting goal. -/
 syntax "kernel_monoidal" : tactic
 
 -- ANCHOR: kernel_monoidal_tactic
