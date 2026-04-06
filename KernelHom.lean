@@ -1,7 +1,7 @@
-import KernelHom.Hom
+import KernelHom.Kernel.Hom
+import KernelHom.Kernel.MonoidalComp
 import KernelHom.Mathlib.LIntegral
 import KernelHom.Mathlib.MeasurableEquiv
-import KernelHom.MonoidalComp.MeasurableCoherence
 import KernelHom.Tactic.Hom.HomKernel
 import KernelHom.Tactic.Hom.KernelHom
 import KernelHom.Tactic.Hom.Universe

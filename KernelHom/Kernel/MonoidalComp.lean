@@ -5,7 +5,7 @@ Authors: Gaëtan Serré
 -/
 
 import KernelHom.Mathlib.LIntegral
-import KernelHom.Hom
+import KernelHom.Kernel.Hom
 
 open CategoryTheory MonoidalCategory MeasureTheory ProbabilityTheory MeasurableEquiv
 
@@ -23,9 +23,11 @@ composition of the morphisms in `SFinKer`.
 -/
 
 /-- A class witnessing the existence of a measurable equivalence between two measurable spaces. -/
+-- ANCHOR: MeasurableCoherence
 class MeasurableCoherence (X Y : Type*) [MeasurableSpace X] [MeasurableSpace Y] where
   /-- A measurable equivalence between `X` and `Y`. -/
   miso : X ≃ᵐ Y
+-- ANCHOR_END: MeasurableCoherence
 
 namespace MeasurableCoherence
 
@@ -38,6 +40,7 @@ instance : MeasurableCoherence X X where
   miso := MeasurableEquiv.refl X
 
 /-- `MeasurableCoherence` gives an instance of `MonoidalCoherence` in the `SFinKer` category. -/
+-- ANCHOR: monoidalCoherence
 @[reducible]
 noncomputable def monoidalCoherence {X' Y' : Type w} [MeasurableSpace X'] [MeasurableSpace Y']
     (ex : X' ≃ᵐ X) (ey : Y' ≃ᵐ Y) : MonoidalCoherence (SFinKer.of X') (SFinKer.of Y') where
@@ -54,6 +57,7 @@ noncomputable def monoidalCoherence {X' Y' : Type w} [MeasurableSpace X'] [Measu
         Kernel.deterministic_comp_deterministic, Kernel.id]
       congr
       simp [e]
+-- ANCHOR_END: monoidalCoherence
 
 end MeasurableCoherence
 
@@ -84,12 +88,16 @@ instance monoComp'_sfinite : IsSFiniteKernel (monoComp₀ κ η ew ex ey ez ) :=
   infer_instance
 
 /-- The kernelized version of the monoidal composition of kernels using the `SFinKer` category. -/
+-- ANCHOR: monoComp
 noncomputable abbrev monoComp : Kernel W Z :=
   monoComp₀ κ η (ulift.{_, max w x y z}) (ulift.{_, max w x y z})
     (ulift.{_, max w x y z}) (ulift.{_, max w x y z})
+-- ANCHOR_END: monoComp
 
+-- ANCHOR: monoComp_infix
 @[inherit_doc Kernel.monoComp]
 scoped[ProbabilityTheory] infixr:80 " ⊗≫ₖ " => Kernel.monoComp
+-- ANCHOR_END: monoComp_infix
 
 instance monoComp_sfinite : IsSFiniteKernel (κ ⊗≫ₖ η) := by
   infer_instance

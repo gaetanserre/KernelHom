@@ -22,7 +22,11 @@ Very briefly, the tactics:
 
 Universe handling is part of this translation: expressions are lifted to a common universe level, so rewrites stay well-typed across universe levels.
 
-In addition, `SFinKer` also gives a direct route to `Stoch`, the Markov category of measurable spaces and Markov kernels, defined as the wide subcategory of `SFinKer` with Markov kernels as morphisms. The definitions/results for `SFinKer` and `Stoch` are now in mathlib (PR [#36779](https://github.com/leanprover-community/mathlib4/pull/36779)).
+In addition, `SFinKer` also gives a direct route to `Stoch`, the Markov category of measurable spaces and Markov kernels, defined as the wide subcategory of `SFinKer` with Markov kernels as morphisms. The definitions/results for `SFinKer` and `Stoch` are now in Mathlib (PR [#36779](https://github.com/leanprover-community/mathlib4/pull/36779)).
+
+## Kernelized monoidal composition
+
+One consequence of the translation to `SFinKer` is that we can adapt the categorical monoidal composition `⊗≫` to kernels, resulting in a kernelized monoidal composition `⊗≫ₖ`. This composition automatically handles measurable equivalences, allowing for seamless composition of kernels while maintaining s-finiteness.
 
 ## Usage
 

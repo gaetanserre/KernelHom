@@ -6,8 +6,8 @@
 }
 
 @font-face {
-  font-family: "LigaMenlo";
-  src: url("LigaMenlo-Regular.ttf");
+  font-family: "FiraCode";
+  src: url("FiraCode-Regular.ttf");
 }
 
 body {
@@ -36,7 +36,7 @@ p a:hover {
 .unknown,
 .keyword,
 .const {
-  font-family: "LigaMenlo" !important;
+  font-family: "FiraCode" !important;
   font-feature-settings: "calt" 1;
   font-variant-ligatures: normal !important;
 }

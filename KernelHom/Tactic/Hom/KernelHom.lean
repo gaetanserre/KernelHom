@@ -5,8 +5,7 @@ Authors: Gaëtan Serré
 -/
 
 import Lean.Elab.Tactic.Location
-import KernelHom.Hom
-import KernelHom.MonoidalComp.MeasurableCoherence
+import KernelHom.Kernel.MonoidalComp
 import KernelHom.Mathlib.MeasurableEquiv
 import KernelHom.Tactic.LocTactic
 import KernelHom.Tactic.Hom.Universe
