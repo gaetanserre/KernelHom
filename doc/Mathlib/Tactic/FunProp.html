@@ -7,14 +7,14 @@ Using the <code>fun_prop</code> tactic should be as simple as:</p><pre><code cla
 checks if every single elementary function is, e.g., <code><a href="../.././Mathlib/Topology/Defs/Basic.html#Continuous">Continuous</a></code>.</p><p>For <code>ContinuousAt/On/Within</code> variants, one has to specify a tactic to solve potential side goals
 with <code>disch := &lt;tactic&gt;</code>. For example:</p><pre><code class="language-lean">example (y : ℝ) (hy : y ≠ 0) : <a href="../.././Mathlib/Topology/Defs/Filter.html#ContinuousAt">ContinuousAt</a> (fun x : ℝ ↦ 1/x) y := by fun_prop (disch := assumption)
 </code></pre><p><strong>Basic debugging:</strong>
-The most common issue is that a function is missing the appropriate theorem. For example:</p><pre><code class="language-lean">import Mathlib.Analysis.Complex.Trigonometric
-example : <a href="../.././Mathlib/Topology/Defs/Basic.html#Continuous">Continuous</a> (fun x : ℝ ↦ x * Real.sin x) := by fun_prop
+The most common issue is that a function is missing the appropriate theorem. For example:</p><pre><code class="language-lean">import <a href="../.././Mathlib/Analysis/Complex/Trigonometric.html">Mathlib.Analysis.Complex.Trigonometric</a>
+example : <a href="../.././Mathlib/Topology/Defs/Basic.html#Continuous">Continuous</a> (fun x : ℝ ↦ x * <a href="../.././Mathlib/Analysis/Complex/Trigonometric.html#Real.sin">Real.sin</a> x) := by fun_prop
 </code></pre><p>Fails with the error:</p><pre><code class="language-lean">`fun_prop` was unable to prove `Continuous fun x ↦ x * x.sin`
 
 Issues:
   No theorems found for `Real.sin` in order to prove `Continuous fun x ↦ x.sin`
 </code></pre><p>This can be easily fixed by importing <code><a href="../.././Mathlib/Analysis/SpecialFunctions/Trigonometric/Basic.html">Mathlib/Analysis/SpecialFunctions/Trigonometric/Basic.lean</a></code>
-where the theorem <code>Real.continuous_sin</code> is marked with the <code>fun_prop</code> attribute.</p><p>When the issue is not simply a few missing theorems, you can turn on the option:</p><pre><code class="language-lean">set_option trace.Meta.Tactic.fun_prop true
+where the theorem <code><a href="../.././Mathlib/Analysis/SpecialFunctions/Trigonometric/Basic.html#Real.continuous_sin">Real.continuous_sin</a></code> is marked with the <code>fun_prop</code> attribute.</p><p>When the issue is not simply a few missing theorems, you can turn on the option:</p><pre><code class="language-lean">set_option trace.Meta.Tactic.fun_prop true
 </code></pre><p>This will display the trace of how <code>fun_prop</code> steps through the whole expression.</p><p><strong>Basic setup for a new function property:</strong></p><p>To set up <code>fun_prop</code> for a new function property, you have to:</p><ol><li>Mark the function property with the <code>fun_prop</code> attribute when defining it:</li></ol><pre><code class="language-lean">@[fun_prop]
 def <a href="../.././Mathlib/Topology/Defs/Basic.html#Continuous">Continuous</a> (f : X → Y) := ...
 </code></pre><p>or later on with:</p><pre><code class="language-lean">attribute [fun_prop] <a href="../.././Mathlib/Topology/Defs/Basic.html#Continuous">Continuous</a>
@@ -122,7 +122,7 @@ theorem continuous_clm_eval (f : X →L[𝕜] Y) : <a href="../.././Mathlib/Topo
 </code></pre><p>In this case, the head of the function body <code>f x</code> is <code><a href="../.././Mathlib/Data/FunLike/Basic.html#DFunLike.coe">DFunLike.coe</a></code>. This function is
 treated differently and its theorems are tracked separately.</p><p><code><a href="../.././Mathlib/Data/FunLike/Basic.html#DFunLike.coe">DFunLike.coe</a></code> has two arguments: the morphism <code>f</code> and the argument <code>x</code>. One difference is that
 theorems talking about the argument <code>f</code> have to be stated in the compositional form:</p><pre><code class="language-lean">@[fun_prop]
-theorem continuous_clm_apply (f : X → Y →L[𝕜] Z) (hf : <a href="../.././Mathlib/Topology/Defs/Basic.html#Continuous">Continuous</a> f) (y : Y) :
+theorem <a href="../.././Mathlib/Analysis/Normed/Module/FiniteDimension.html#continuous_clm_apply">continuous_clm_apply</a> (f : X → Y →L[𝕜] Z) (hf : <a href="../.././Mathlib/Topology/Defs/Basic.html#Continuous">Continuous</a> f) (y : Y) :
    <a href="../.././Mathlib/Topology/Defs/Basic.html#Continuous">Continuous</a> 𝕜 (fun x ↦ f x y) := ...
 </code></pre><p>Note that without notation and coercion, the function looks like
 <code>fun x ↦ <a href="../.././Mathlib/Data/FunLike/Basic.html#DFunLike.coe">DFunLike.coe</a> (f x) y</code>.</p><p>In fact, not only <code><a href="../.././Mathlib/Data/FunLike/Basic.html#DFunLike.coe">DFunLike.coe</a></code> but any function coercion is treated this way. Such function

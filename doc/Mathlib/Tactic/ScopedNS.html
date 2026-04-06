@@ -2,14 +2,14 @@
 <div class="mod_doc"><h1 id="scoped-NS-syntax" class="markdown-heading"><code>scoped[NS]</code> syntax <a class="hover-link" href="#scoped-NS-syntax">#</a></h1><p>This is a replacement for the <code>localized</code> command in mathlib. It is similar to <code>scoped</code>,
 but it scopes the syntax in the specified namespace instead of the current namespace.</p></div><div class="decl" id="Mathlib.Tactic.scopedNS"><div class="def"><div class="gh_link"><a href="https://github.com/leanprover-community/mathlib4/blob/8a178386ffc0f5fef0b77738bb5449d50efeea95/Mathlib/Tactic/ScopedNS.lean#L21-L37">source</a></div><div class="decl_header"><span class="decl_kind">def</span>
 <span class="decl_name"><a class="break_within" href="../.././Mathlib/Tactic/ScopedNS.html#Mathlib.Tactic.scopedNS"><span class="name">Mathlib</span>.<span class="name">Tactic</span>.<span class="name">scopedNS</span></a></span><span class="decl_args"> :</span><div class="decl_type"><a href="../.././Init/Prelude.html#Lean.ParserDescr">Lean.ParserDescr</a></div></div><p><code>scoped[NS]</code> is similar to the <code>scoped</code> modifier on attributes and notations,
-but it scopes the syntax in the specified namespace instead of the current namespace.</p><pre><code>scoped[Matrix] postfix:1024 &quot;ᵀ&quot; =&gt; Matrix.transpose
+but it scopes the syntax in the specified namespace instead of the current namespace.</p><pre><code>scoped[Matrix] postfix:1024 &quot;ᵀ&quot; =&gt; <a href="../.././Mathlib/LinearAlgebra/Matrix/Defs.html#Matrix.transpose">Matrix.transpose</a>
 -- declares `ᵀ` as a notation for matrix transposition
 -- which is only accessible if you `open Matrix` or `open scoped Matrix`.
 
 namespace <a href="../.././Init/Prelude.html#Nat">Nat</a>
 
 scoped[Nat.Count] attribute [instance] CountSet.fintype
--- make the definition Nat.CountSet.fintype an instance,
+-- make the definition <a href="../.././Mathlib/Data/Nat/Count.html#Nat.CountSet.fintype">Nat.CountSet.fintype</a> an instance,
 -- but only if `Nat.Count` is open
 </code></pre><details><summary>Equations</summary><ul class="equations"><li class="equation">One or more equations did not get rendered due to their size.</li></ul></details><details id="instances-for-list-Mathlib.Tactic.scopedNS" class="instances-for-list"><summary>Instances For</summary><ul class="instances-for-enum"></ul></details></div></div></main>
 <nav class="nav"><iframe src="../.././navbar.html" class="navframe" frameBorder="0"></iframe></nav></body></html>

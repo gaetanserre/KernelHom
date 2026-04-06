@@ -1,8 +1,16 @@
 {"9":
  "<code class=\"docstring\">The syntax `variable (X Y ... Z : Type*)` creates a new distinct implicit universe variable\n`&gt; 0` for each variable in the sequence. </code>",
  "8": "<code>Type u_2</code>",
+ "74":
+ "<code>MeasurableCoherence.monoidalCoherence.{w, x, y} {X : Type x} {Y : Type y} [MeasurableSpace X] [MeasurableSpace Y]\n  [mXY : MeasurableCoherence X Y] {X' Y' : Type w} [MeasurableSpace X'] [MeasurableSpace Y'] (ex : X' ≃ᵐ X)\n  (ey : Y' ≃ᵐ Y) : MonoidalCoherence { carrier := X', str := inst✝ } { carrier := Y', str := inst✝¹ }</code><span class=\"sep\"></span><code class=\"docstring\">`MeasurableCoherence` gives an instance of `MonoidalCoherence` in the `SFinKer` category. </code>",
+ "73":
+ "<code>MeasurableCoherence.miso.{u_1, u_2} {X : Type u_1} {Y : Type u_2} {inst✝ : MeasurableSpace X}\n  {inst✝¹ : MeasurableSpace Y} [self : MeasurableCoherence X Y] : X ≃ᵐ Y</code><span class=\"sep\"></span><code class=\"docstring\">A measurable equivalence between `X` and `Y`. </code>",
+ "72":
+ "<code>CategoryTheory.MonoidalCoherence.{v, u} {C : Type u} [Category.{v, u} C] (X Y : C) : Type v</code><span class=\"sep\"></span><code class=\"docstring\">A typeclass carrying a choice of monoidal structural isomorphism between two objects.\nUsed by the `⊗≫` monoidal composition operator, and the `coherence` tactic.\n</code>",
+ "71":
+ "<code>MeasurableCoherence.{u_1, u_2} (X : Type u_1) (Y : Type u_2) [MeasurableSpace X] [MeasurableSpace Y] :\n  Type (max u_1 u_2)</code><span class=\"sep\"></span><code class=\"docstring\">A class witnessing the existence of a measurable equivalence between two measurable spaces. </code>",
  "70":
- "<code class=\"docstring\">The `kernel_coherence` tactic applies the `kernel_hom` transformation to the goal and then\ninvokes the `monoidal` tactic to solve the resulting goal. </code>",
+ "<code class=\"docstring\">The `kernel_coherence` tactic applies the `kernel_hom` transformation to the goal and then\ninvokes the `monoidal` tactic to solve or simplify the resulting goal. </code>",
  "7": "<code>Type u_1</code>",
  "69":
  "<code class=\"docstring\">The `kernel_coherence` tactic applies the `kernel_hom` transformation to the goal and then\ninvokes the `coherence` tactic to solve the resulting goal. </code>",

@@ -10,7 +10,7 @@ that make it a canonically ordered additive monoid.
 finite <code>Iic</code>, such that if <code>a + b = n</code>, then <code>a, b ≤ n</code>,
 and any finiteness condition would be OK.)</p><p>For computational reasons it is better to manually provide instances for <code>ℕ</code>
 and <code>σ →₀ ℕ</code>, to avoid quadratic runtime performance.
-These instances are provided as <code><a href="../../../.././Mathlib/Data/Finset/NatAntidiagonal.html#Finset.Nat.instHasAntidiagonal">Finset.Nat.instHasAntidiagonal</a></code> and <code>Finsupp.instHasAntidiagonal</code>.
+These instances are provided as <code><a href="../../../.././Mathlib/Data/Finset/NatAntidiagonal.html#Finset.Nat.instHasAntidiagonal">Finset.Nat.instHasAntidiagonal</a></code> and <code><a href="../../../.././Mathlib/Data/Finsupp/Antidiagonal.html#Finsupp.instHasAntidiagonal">Finsupp.instHasAntidiagonal</a></code>.
 This is why <code><a href="../../../.././Mathlib/Algebra/Order/Antidiag/Prod.html#Finset.antidiagonalOfLocallyFinite">Finset.antidiagonalOfLocallyFinite</a></code> is an <code>abbrev</code> and not an <code>instance</code>.</p><p>This definition does not exactly match with that of <code><a href="../../../.././Mathlib/Data/Multiset/Antidiagonal.html#Multiset.antidiagonal">Multiset.antidiagonal</a></code>
 defined in <code><a href="../../../.././Mathlib/Data/Multiset/Antidiagonal.html">Mathlib/Data/Multiset/Antidiagonal.lean</a></code>, because of the multiplicities.
 Indeed, by counting multiplicities, <code><a href="../../../.././Mathlib/Data/Multiset/Defs.html#Multiset">Multiset</a> α</code> is equivalent to <code>α →₀ ℕ</code>,

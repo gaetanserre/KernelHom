@@ -10,7 +10,7 @@
 })()</script>
     <base href="./"><meta charset="utf-8">
     <meta name="viewport" content="height=device-height, width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
-    <title>KernelHom: Tactics for Categorical Kernel Reasoning</title><link rel="stylesheet" href="book.css">
+    <title>Kernel-Hom: Tactics for Categorical Kernel Reasoning</title><link rel="stylesheet" href="book.css">
     <link rel="stylesheet" href="verso-vars.css">
     <script src="https://cdn.jsdelivr.net/npm/marked@11.1.1/marked.min.js" integrity="sha384-zbcZAIxlvJtNE3Dp5nxLXdXtXyxwOdnILY1TDPVmKFhl4r4nSUG1r8bcFXGVa4Te" crossorigin="anonymous"></script>
     <script src="-verso-search/elasticlunr.min.js"></script>
@@ -1021,7 +1021,7 @@ window.onload = () => {
             <div class="split-toc book">
               <div class="title">
                 <label for="--verso-manual-toc-----bookRoot" class="toggle-split-toc"><input type="checkbox" class="toggle-split-toc" id="--verso-manual-toc-----bookRoot" checked="checked"></label><span class="">Table of Contents</span></div>
-              <table><tr class="numbered"><td class="num">1.</td><td><a href="Universe-handling/#KernelHom___-Tactics-for-Categorical-Kernel-Reasoning--Universe-handling">Universe handling</a></td></tr><tr class="numbered"><td class="num">2.</td><td><a href="KernelHom-tactic/#KernelHom___-Tactics-for-Categorical-Kernel-Reasoning--KernelHom-tactic">KernelHom tactic</a></td></tr><tr class="numbered"><td class="num">3.</td><td><a href="HomKernel-tactic/#KernelHom___-Tactics-for-Categorical-Kernel-Reasoning--HomKernel-tactic">HomKernel tactic</a></td></tr><tr class="numbered"><td class="num">4.</td><td><a href="Categorical-tactics-for-kernels/#KernelHom___-Tactics-for-Categorical-Kernel-Reasoning--Categorical-tactics-for-kernels">Categorical tactics for kernels</a></td></tr></table></div>
+              <table><tr class="numbered"><td class="num">1.</td><td><a href="Universe-handling/#Kernel-Hom___-Tactics-for-Categorical-Kernel-Reasoning--Universe-handling">Universe handling</a></td></tr><tr class="numbered"><td class="num">2.</td><td><a href="KernelHom-tactic/#Kernel-Hom___-Tactics-for-Categorical-Kernel-Reasoning--KernelHom-tactic">KernelHom tactic</a></td></tr><tr class="numbered"><td class="num">3.</td><td><a href="HomKernel-tactic/#Kernel-Hom___-Tactics-for-Categorical-Kernel-Reasoning--HomKernel-tactic">HomKernel tactic</a></td></tr><tr class="numbered"><td class="num">4.</td><td><a href="Categorical-tactics-for-kernels/#Kernel-Hom___-Tactics-for-Categorical-Kernel-Reasoning--Categorical-tactics-for-kernels">Categorical tactics for kernels</a></td></tr><tr class="numbered"><td class="num">5.</td><td><a href="Kernelized-monoidal-composition/#Kernel-Hom___-Tactics-for-Categorical-Kernel-Reasoning--Kernelized-monoidal-composition">Monoidal composition</a></td></tr></table></div>
             </div>
           </div>
         <div class="last">
@@ -1036,11 +1036,11 @@ window.onload = () => {
       <main><div class="content-wrapper">
           <nav class="prev-next-buttons">
             <div></div>
-            <a class="local-button active" href="Universe-handling/#KernelHom___-Tactics-for-Categorical-Kernel-Reasoning--Universe-handling" rel="next" title="1. Universe handling"><span class="where">1. Universe handling</span><span class="arrow">→</span></a></nav>
+            <a class="local-button active" href="Universe-handling/#Kernel-Hom___-Tactics-for-Categorical-Kernel-Reasoning--Universe-handling" rel="next" title="1. Universe handling"><span class="where">1. Universe handling</span><span class="arrow">→</span></a></nav>
           <section>
             <div class="titlepage">
               <h1>
-                 KernelHom: Tactics for Categorical Kernel Reasoning<span class="permalink-widget inline"><a href="find/?domain=Verso.Genre.Manual.section&amp;name=KernelHom___-Tactics-for-Categorical-Kernel-Reasoning" title="Permalink">🔗</a></span></h1>
+                 Kernel-Hom: Tactics for Categorical Kernel Reasoning<span class="permalink-widget inline"><a href="find/?domain=Verso.Genre.Manual.section&amp;name=Kernel-Hom___-Tactics-for-Categorical-Kernel-Reasoning" title="Permalink">🔗</a></span></h1>
               <div class="authors">
                 <span class="author">Gaëtan Serré</span></div>
               <p>
@@ -1068,7 +1068,7 @@ window.onload = () => {
                   </li>
                 </ul>
               <p>
-                These tactics allow users to transform complex kernel equalities into categorical equalities, where powerful categorical tactics can be applied to simplify or prove them. To this end, the library provides built-in helpers like <code>kernel_coherence</code> and <code>kernel_monoidal</code> to apply categorical tactics directly to kernels without needing to manually invoke the translation tactics.</p>
+                These tactics allow users to transform complex kernel equalities into categorical equalities, where powerful categorical tactics can be applied to simplify or prove them. To this end, the library provides built-in helpers like <a href="doc/KernelHom/Tactic/KernelCat.html#tacticKernel_coherence"><code>kernel_coherence</code></a> and <a href="doc/KernelHom/Tactic/KernelCat.html#tacticKernel_monoidal"><code>kernel_monoidal</code></a> to apply categorical tactics directly to kernels without needing to manually invoke the translation tactics.</p>
               <p>
                 The library rests on <a href="doc/Mathlib/Probability/Kernel/Category/SFinKer.html#SFinKer"><code>SFinKer</code></a>, the category of measurable spaces with s-finite kernels as morphisms, equipped with monoidal and symmetric structures. This category is also used to define <a href="https://leanprover-community.github.io/mathlib4_docs/Mathlib/Probability/Kernel/Category/Stoch.html#Stoch"><code>Stoch</code></a>, the category of measurable spaces with Markov kernels as morphisms, which is a wide subcategory of <a href="doc/Mathlib/Probability/Kernel/Category/SFinKer.html#SFinKer"><code>SFinKer</code></a> (see  (Fritz, 2020)<span class="marginalia"><span class="note"><span class="citation">Tobias Fritz, 2020. “A synthetic approach to Markov kernels, conditional independence and theorems
   on sufficient statistics”. In <em>Advances in Mathematics.</em></span></span></span>). Both categories have been merged into Mathlib (PR <a href="https://github.com/leanprover-community/mathlib4/pull/36779">#36779</a>).</p>
@@ -1076,6 +1076,10 @@ window.onload = () => {
                 <strong>Universe handling</strong></p>
               <p>
                 A key aspect of the library is automatic universe management: expressions are lifted to a common universe level during translation, ensuring categorical expressions are well-typed. This allows users to work with kernels of varying universe levels without needing to manually manage universe annotations.</p>
+              <p>
+                <strong>Kernelized monoidal composition</strong></p>
+              <p>
+                One consequence of the translation to <a href="doc/Mathlib/Probability/Kernel/Category/SFinKer.html#SFinKer"><code>SFinKer</code></a> is that we can adapt the categorical monoidal composition <code>⊗≫</code> to kernels, resulting in a kernelized monoidal composition <code>⊗≫ₖ</code>. This composition automatically handles measurable equivalences, allowing for seamless composition of kernels while maintaining s-finiteness.</p>
               <p>
                 <strong>About</strong></p>
               <p>
@@ -1086,19 +1090,21 @@ window.onload = () => {
                 Contents</h2>
               <ol class="section-toc">
                 <li>
-                  <a href="Universe-handling/#KernelHom___-Tactics-for-Categorical-Kernel-Reasoning--Universe-handling"><span class="number">1.</span> Universe handling</a></li>
+                  <a href="Universe-handling/#Kernel-Hom___-Tactics-for-Categorical-Kernel-Reasoning--Universe-handling"><span class="number">1.</span> Universe handling</a></li>
                 <li>
-                  <a href="KernelHom-tactic/#KernelHom___-Tactics-for-Categorical-Kernel-Reasoning--KernelHom-tactic"><span class="number">2.</span> KernelHom tactic</a></li>
+                  <a href="KernelHom-tactic/#Kernel-Hom___-Tactics-for-Categorical-Kernel-Reasoning--KernelHom-tactic"><span class="number">2.</span> KernelHom tactic</a></li>
                 <li>
-                  <a href="HomKernel-tactic/#KernelHom___-Tactics-for-Categorical-Kernel-Reasoning--HomKernel-tactic"><span class="number">3.</span> HomKernel tactic</a></li>
+                  <a href="HomKernel-tactic/#Kernel-Hom___-Tactics-for-Categorical-Kernel-Reasoning--HomKernel-tactic"><span class="number">3.</span> HomKernel tactic</a></li>
                 <li>
-                  <a href="Categorical-tactics-for-kernels/#KernelHom___-Tactics-for-Categorical-Kernel-Reasoning--Categorical-tactics-for-kernels"><span class="number">4.</span> Categorical tactics for kernels</a></li>
+                  <a href="Categorical-tactics-for-kernels/#Kernel-Hom___-Tactics-for-Categorical-Kernel-Reasoning--Categorical-tactics-for-kernels"><span class="number">4.</span> Categorical tactics for kernels</a></li>
+                <li>
+                  <a href="Kernelized-monoidal-composition/#Kernel-Hom___-Tactics-for-Categorical-Kernel-Reasoning--Kernelized-monoidal-composition"><span class="number">5.</span> Kernelized monoidal composition</a></li>
                 </ol>
               </section>
             </section>
           <nav class="prev-next-buttons">
             <div></div>
-            <a class="local-button active" href="Universe-handling/#KernelHom___-Tactics-for-Categorical-Kernel-Reasoning--Universe-handling" rel="next" title="1. Universe handling"><span class="where">1. Universe handling</span><span class="arrow">→</span></a></nav>
+            <a class="local-button active" href="Universe-handling/#Kernel-Hom___-Tactics-for-Categorical-Kernel-Reasoning--Universe-handling" rel="next" title="1. Universe handling"><span class="where">1. Universe handling</span><span class="arrow">→</span></a></nav>
           </div>
         </main></div>
     </body>

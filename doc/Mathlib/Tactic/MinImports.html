@@ -3,7 +3,7 @@
 sufficient for <code>stx</code> to make sense.
 If <code>stx</code> is a command, then it also elaborates <code>stx</code> and, in case it is a declaration, then
 it also finds the imports implied by the declaration.</p><p>Unlike the related <code>#find_home</code>, this command takes into account notation and tactic information.</p><h2 id="Limitations" class="markdown-heading">Limitations <a class="hover-link" href="#Limitations">#</a></h2><p>Parsing of <code>attribute</code>s is hard and the command makes minimal effort to support them.
-Here is an example where the command fails to notice a dependency:</p><pre><code class="language-lean">import Mathlib.Data.Sym.Sym2.<a href="../.././Init.html">Init</a> -- the actual minimal import
+Here is an example where the command fails to notice a dependency:</p><pre><code class="language-lean">import <a href="../.././Mathlib/Data/Sym/Sym2/Init.html">Mathlib.Data.Sym.Sym2.Init</a> -- the actual minimal import
 import <a href="../.././Aesop/Frontend/Attribute.html">Aesop.Frontend.Attribute</a>   -- the import that `#min_imports in` suggests
 
 import <a href="../.././Mathlib/Tactic/MinImports.html">Mathlib.Tactic.MinImports</a>

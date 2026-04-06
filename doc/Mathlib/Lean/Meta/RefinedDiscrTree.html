@@ -22,10 +22,10 @@ gives 1 point, and matching <code>*0</code> again after its first appearance giv
 Similarly, matching it with <code><a href="../../.././Init/Data/Nat/Basic.html#Nat.add_comm">Nat.add_comm</a></code> gives a score of 3, and <code><a href="../../.././Mathlib/Algebra/Group/Defs.html#add_assoc">add_assoc</a></code> gives a score of 5.</p></li><li><p>Patterns that have the potential to be η-reduced are put into the <code>RefinedDiscrTree</code> under all
 possible reduced key sequences. This is for terms of the form <code>fun x =&gt; f (?m x₁ .. xₙ)</code>, where
 <code>?m</code> is a metavariable, one of <code>x₁, .., xₙ</code> is <code>x</code>, and <code>f</code> is not a metavariable.
-For example, the pattern <code><a href="../../.././Mathlib/Topology/Defs/Basic.html#Continuous">Continuous</a> fun y =&gt; Real.exp (f y)])</code> is indexed by
-both <code>@Continuous *0 ℝ *1 *2 (λ, Real.exp *3)</code>
-and  <code>@Continuous *0 ℝ *1 *2 Real.exp</code>,
-so that it also comes up if you look up <code><a href="../../.././Mathlib/Topology/Defs/Basic.html#Continuous">Continuous</a> Real.exp</code>.</p></li><li><p>How to deal with number literals is waiting for this issue to be resolved:
+For example, the pattern <code><a href="../../.././Mathlib/Topology/Defs/Basic.html#Continuous">Continuous</a> fun y =&gt; <a href="../../.././Mathlib/Analysis/Complex/Exponential.html#Real.exp">Real.exp</a> (f y)])</code> is indexed by
+both <code>@Continuous *0 ℝ *1 *2 (λ, <a href="../../.././Mathlib/Analysis/Complex/Exponential.html#Real.exp">Real.exp</a> *3)</code>
+and  <code>@Continuous *0 ℝ *1 *2 <a href="../../.././Mathlib/Analysis/Complex/Exponential.html#Real.exp">Real.exp</a></code>,
+so that it also comes up if you look up <code><a href="../../.././Mathlib/Topology/Defs/Basic.html#Continuous">Continuous</a> <a href="../../.././Mathlib/Analysis/Complex/Exponential.html#Real.exp">Real.exp</a></code>.</p></li><li><p>How to deal with number literals is waiting for this issue to be resolved:
 <a href="https://github.com/leanprover/lean4/issues/2867">https://github.com/leanprover/lean4/issues/2867</a></p></li><li><p>The key <code>Key.opaque</code> only matches with a <code>Key.star</code> key.
 Depending on the configuration, β-reduction and ζ-reduction may be disabled, so the resulting
 applied lambda expressions or let-expressions are indexed by <code>Key.opaque</code>.</p></li></ul><h2 id="Lazy-computation" class="markdown-heading">Lazy computation <a class="hover-link" href="#Lazy-computation">#</a></h2><p>To encode an <code>Expr</code> as a sequence of <code>Key</code>s, we start with a <code>LazyEntry</code> and

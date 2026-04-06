@@ -3,7 +3,7 @@
 inductively defined equivalence closure of a binary relation, and the analogues of some isomorphism
 theorems for quotients of arbitrary types.</p><h2 id="Implementation-notes" class="markdown-heading">Implementation notes <a class="hover-link" href="#Implementation-notes">#</a></h2><p>The complete lattice instance for equivalence relations could have been defined by lifting
 the Galois insertion of equivalence relations on α into binary relations on α, and then using
-<code>CompleteLattice.copy</code> to define a complete lattice instance with more appropriate
+<code><a href="../../.././Mathlib/Order/Copy.html#CompleteLattice.copy">CompleteLattice.copy</a></code> to define a complete lattice instance with more appropriate
 definitional equalities (a similar example is <code>Filter.<a href="../../.././Mathlib/Order/CompleteLattice/Defs.html#CompleteLattice">CompleteLattice</a></code> in
 <code><a href="../../.././Mathlib/Order/Filter/Basic.html">Mathlib/Order/Filter/Basic.lean</a></code>). This does not save space, however, and is less clear.</p><p>Partitions are not defined as a separate structure here; users are encouraged to
 reason about them using the existing <code><a href="../../.././Init/Core.html#Setoid">Setoid</a></code> and its infrastructure.</p><h2 id="Tags" class="markdown-heading">Tags <a class="hover-link" href="#Tags">#</a></h2><p>setoid, equivalence, iseqv, relation, equivalence relation</p></div><div class="decl" id="Setoid.ext_iff"><div class="theorem"><div class="gh_link"><a href="https://github.com/leanprover-community/mathlib4/blob/8a178386ffc0f5fef0b77738bb5449d50efeea95/Mathlib/Data/Setoid/Basic.lean#L45-L45">source</a></div><div class="decl_header"><span class="decl_kind">theorem</span>
