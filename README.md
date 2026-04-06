@@ -46,7 +46,7 @@ See [Tests.lean](KernelHom/Tests.lean) for examples of how to use the tactics.
 
 ## Reference
 
-- Tobias Fritz. *A synthetic approach to Markov kernels, conditional independence and theorems on sufficient statistics*. Adv. Math. **370** (2020), 107239. [arXiv:1908.07021](https://arxiv.org/abs/1908.07021).
+- Tobias Fritz. *A synthetic approach to Markov kernels, conditional independence and theorems on sufficient statistics*. Adv. Math. 370 (2020), 107239. [arXiv:1908.07021](https://arxiv.org/abs/1908.07021).
 
 ## License
 
