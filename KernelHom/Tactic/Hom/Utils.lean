@@ -57,16 +57,17 @@ partial def construct_measurable_equiv (e : Expr) (eLevel maxLvl : Level) : Meta
     return res
   | _ => mkAppOptM' (Expr.const `MeasurableEquiv.ulift [eLevel, maxLvl]) #[e, none]
 
-/-- Pairing of a universe level with an expression used to record rewrite metadata. -/
-abbrev LvlExpr := Level × Expr
-
 /-- Categorical operations recorded during transformation for later rewriting. -/
 inductive CategoryOP
-  | leftUnitor (lvl_e : LvlExpr)
-  | rightUnitor (lvl_e : LvlExpr)
-  | WhiskerLeft (lvl_e : LvlExpr)
-  | WhiskerRight (lvl_e : LvlExpr)
-  | id (lvl_e : LvlExpr)
+  | leftUnitor_hom (lvl : Level) (e : Expr)
+  | leftUnitor_inv (lvl : Level) (e : Expr)
+  | rightUnitor_hom (lvl : Level) (e : Expr)
+  | rightUnitor_inv (lvl : Level) (e : Expr)
+  | WhiskerLeft (e : Expr)
+  | WhiskerRight (e : Expr)
+  | id (e : Expr)
+  | Associator_hom (e₁ e₂ e₃ : Expr)
+  | Associator_inv (e₁ e₂ e₃ : Expr)
 
 /-- Transform both sides of an equality and return the new equality plus metadata. -/
 def transformEquality (maxLvl : Level) (e : Expr)

@@ -5,6 +5,7 @@ Authors: Gaëtan Serré
 -/
 
 import KernelHom.Mathlib.MeasurableEquiv
+import KernelHom.Mathlib.Kernel
 import Mathlib.Combinatorics.Quiver.ReflQuiver
 import Mathlib.Probability.Kernel.Category.SFinKer
 
@@ -23,7 +24,7 @@ This file defines the transformation between categorical morphisms in `SFinKer` 
 
 namespace ProbabilityTheory.Kernel
 
-universe w x y
+universe w x y z
 
 variable {X : Type x} {Y : Type y} [MeasurableSpace X] [MeasurableSpace Y]
     {X' Y' : Type w} [MeasurableSpace X'] [MeasurableSpace Y'] {ex : X' ≃ᵐ X} {ey : Y' ≃ᵐ Y}
@@ -65,13 +66,11 @@ lemma quiver_congr {κ₁ κ₂ : Kernel X Y} [IsSFiniteKernel κ₁] [IsSFinite
 
 section Comp
 
-universe z
-
 variable {Z : Type z} [MeasurableSpace Z] {Z' : Type w} [MeasurableSpace Z'] {ez : Z' ≃ᵐ Z}
 
 open CategoryTheory
 
-lemma quiver_comp {κ₁ : Kernel X Y} {κ₂ : Kernel Z X} [IsSFiniteKernel κ₁] [IsSFiniteKernel κ₂] :
+lemma hom_comp {κ₁ : Kernel X Y} {κ₂ : Kernel Z X} [IsSFiniteKernel κ₁] [IsSFiniteKernel κ₂] :
     hom (ex := ez) (ey := ex) κ₂ ≫ hom (ex := ex) (ey := ey) κ₁
       = hom (ex := ez) (ey := ey) (κ₁ ∘ₖ κ₂) := by
   ext; dsimp
@@ -90,7 +89,7 @@ open CategoryTheory MonoidalCategory
 
 section id
 
-lemma quiver_id : 𝟙 (SFinKer.of X') = hom (ex := ex) (ey := ex) Kernel.id := by
+lemma hom_id : 𝟙 (SFinKer.of X') = hom (ex := ex) (ey := ex) Kernel.id := by
   ext; dsimp
   simp only [hom]
   rw [Kernel.id_map, Kernel.comap_apply', Kernel.deterministic_apply', Kernel.id_apply,
@@ -104,7 +103,7 @@ end id
 
 section unitors
 
-lemma leftUnitor : (λ_ (SFinKer.of X')).hom = hom (ex := punit.prod ex) (ey := ex)
+lemma leftUnitor_hom : (λ_ (SFinKer.of X')).hom = hom (ex := punit.prod ex) (ey := ex)
     (Kernel.id.map (Prod.snd : PUnit × X → X)) := by
   ext _ _ hs; dsimp
   simp only [hom]
@@ -121,7 +120,24 @@ lemma leftUnitor : (λ_ (SFinKer.of X')).hom = hom (ex := punit.prod ex) (ey := 
   all_goals try fun_prop
   all_goals measurability
 
-lemma rightUnitor : (ρ_ (SFinKer.of X')).hom = hom (ex := ex.prod punit) (ey := ex)
+lemma leftUnitor_inv : (λ_ (SFinKer.of X')).inv = hom (ex := ex) (ey := punit.prod ex)
+    (Kernel.id.map (fun x ↦ (PUnit.unit, x))) := by
+  ext _ _ hs; dsimp
+  simp only [hom]
+  rw [map_apply', comap_apply', map_apply', map_apply', id_apply, id_apply]
+  · simp only [Set.preimage, Set.mem_setOf_eq]
+    rw [Measure.dirac_apply', Measure.dirac_apply']
+    · refine Set.indicator_eq_indicator (Iff.intro (fun h ↦ ?_) (fun h ↦ ?_)) rfl
+      · simpa [punit, MeasurableEquiv.prod]
+      · simpa [punit, MeasurableEquiv.prod] using h
+    · rw [measurableSet_setOf]
+      exact Measurable.comp hs.mem <| .comp (punit.prod ex).symm.measurable measurable_prodMk_left
+    · rw [measurableSet_setOf]
+      exact Measurable.comp hs.mem measurable_prodMk_left
+  all_goals try fun_prop
+  all_goals measurability
+
+lemma rightUnitor_hom : (ρ_ (SFinKer.of X')).hom = hom (ex := ex.prod punit) (ey := ex)
     (Kernel.id.map (Prod.fst : X × PUnit → X)) := by
   ext _ _ hs; dsimp
   simp only [hom]
@@ -138,11 +154,28 @@ lemma rightUnitor : (ρ_ (SFinKer.of X')).hom = hom (ex := ex.prod punit) (ey :=
   all_goals try fun_prop
   all_goals measurability
 
+lemma rightUnitor_inv : (ρ_ (SFinKer.of X')).inv = hom (ex := ex) (ey := ex.prod punit)
+    (Kernel.id.map (fun x ↦ (x, PUnit.unit))) := by
+  ext _ _ hs; dsimp
+  simp only [hom]
+  rw [map_apply', comap_apply', map_apply', map_apply', id_apply, id_apply]
+  · simp only [Set.preimage, Set.mem_setOf_eq]
+    rw [Measure.dirac_apply', Measure.dirac_apply']
+    · refine Set.indicator_eq_indicator (Iff.intro (fun h ↦ ?_) (fun h ↦ ?_)) rfl
+      · simpa [punit, MeasurableEquiv.prod]
+      · simpa [punit, MeasurableEquiv.prod] using h
+    · rw [measurableSet_setOf]
+      exact Measurable.comp hs.mem <| .comp (ex.prod punit).symm.measurable measurable_prodMk_right
+    · rw [measurableSet_setOf]
+      exact Measurable.comp hs.mem measurable_prodMk_right
+  all_goals try fun_prop
+  all_goals measurability
+
 end unitors
 
-section whiskers
-
 variable {Z : Type z} [MeasurableSpace Z] {Z' : Type w} [MeasurableSpace Z'] {ez : Z' ≃ᵐ Z}
+
+section whiskers
 
 lemma WhiskerLeft {κ : Kernel X Y} [IsSFiniteKernel κ] :
     SFinKer.of Z' ◁ κ.hom (ex := ex) (ey := ey) =
@@ -177,5 +210,42 @@ lemma WhiskerRight {κ : Kernel X Y} [IsSFiniteKernel κ] :
   all_goals fun_prop
 
 end whiskers
+
+section associator
+
+lemma associator_hom : (α_ (SFinKer.of X') (SFinKer.of Y') (SFinKer.of Z')).hom =
+    hom (ex := (ex.prod ey).prod ez)
+      (ey := ex.prod (ey.prod ez)) (Kernel.id.map (fun a : (X × Y) × Z ↦ (a.1.1, a.1.2, a.2))) := by
+  ext : 1; dsimp
+  simp only [hom]
+  rw [id_map (by fun_prop), id_map (by fun_prop), deterministic_map (by fun_prop) (by fun_prop)]
+  congr with x
+  all_goals simp [MeasurableEquiv.prod]
+
+lemma associator_inv : (α_ (SFinKer.of X') (SFinKer.of Y') (SFinKer.of Z')).inv =
+    hom (ex := ex.prod (ey.prod ez)) (ey := (ex.prod ey).prod ez)
+      (Kernel.id.map (fun a : X × (Y × Z) ↦ ((a.1, a.2.1), a.2.2))) := by
+  ext : 1; dsimp
+  simp only [hom]
+  rw [id_map (by fun_prop), id_map (by fun_prop), deterministic_map (by fun_prop) (by fun_prop)]
+  congr with x
+  all_goals simp [MeasurableEquiv.prod]
+
+end associator
+
+section tensorHom
+
+variable {V : Type v} [MeasurableSpace V] {V' : Type w} [MeasurableSpace V'] {ev : V' ≃ᵐ V}
+
+lemma tensorHom {κ : Kernel X Y} [IsSFiniteKernel κ] {η : Kernel V Z} [IsSFiniteKernel η] :
+    κ.hom (ex := ex) (ey := ey) ⊗ₘ η.hom (ex := ev) (ey := ez) =
+      hom (ex := ex.prod ev) (ey := ey.prod ez) (κ ∥ₖ η) := by
+  ext : 1; dsimp
+  simp only [hom]
+  rw [id_parallelComp_comp_parallelComp_id, comap_parallelComp_comap, map_parallelComp_map]
+  · congr
+  all_goals fun_prop
+
+end tensorHom
 
 end ProbabilityTheory.Kernel
