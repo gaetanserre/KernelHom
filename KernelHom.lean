@@ -3,6 +3,7 @@ import KernelHom.Kernel.MonoidalComp
 import KernelHom.Mathlib.Kernel
 import KernelHom.Mathlib.LIntegral
 import KernelHom.Mathlib.MeasurableEquiv
+import KernelHom.Mathlib.SFinKer
 import KernelHom.Tactic.Hom.HomKernel
 import KernelHom.Tactic.Hom.KernelHom
 import KernelHom.Tactic.Hom.Universe
