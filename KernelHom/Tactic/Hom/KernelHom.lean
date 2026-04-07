@@ -147,6 +147,7 @@ def construct_whiskers_args (e X : Expr) (maxLvl : Level) (offset : Nat) :
       else throwError "Expected right whisker with parallelComp, got: {e}"
   return (sfinkerOfZ, κ, Z, zLvl)
 
+/-- Check if a kernel expression corresponds to an associator morphism or its inverse. -/
 def check_associator (κ : Expr) (hom : Bool) : MetaM Bool := do
   let κ := κ.consumeMData
   if !κ.getAppFn.isConstOf ``Kernel.deterministic then
@@ -167,11 +168,14 @@ def check_associator (κ : Expr) (hom : Bool) : MetaM Bool := do
       return false
   return true
 
+/-- Check if a kernel expression corresponds to an associator morphism. -/
 def check_associator_hom (κ : Expr) : MetaM Bool := check_associator κ true
 
+/-- Check if a kernel expression corresponds to an inverse associator morphism. -/
 def check_associator_inv (κ : Expr) : MetaM Bool := check_associator κ false
 
-def get_types_from_three_prod (prod : Expr) :
+/-- Get the types and universe levels from a expression of the form `X × Y × Z`. -/
+def get_types_from_three_prods (prod : Expr) :
     MetaM (Expr × Expr × Expr × Level × Level × Level) := do
   let whnfprod ← whnf prod
   match whnfprod.getAppFn with
@@ -185,10 +189,11 @@ def get_types_from_three_prod (prod : Expr) :
     | _ => throwError "Expected a product of two types, got: {whnfprod.getAppArgs[1]!}"
   | _ => throwError "Expected a product of three types, got: {prod}"
 
+/-- Construct the associator morphism or its inverse. -/
 def construct_associator (left right : Expr) (maxLvl : Level) (hom : Bool) :
     MetaM (Expr × CategoryOP) := do
-  let (X, Y, Z, xLvl, yLvl, zLvl) ← if hom then get_types_from_three_prod right
-    else get_types_from_three_prod left
+  let (X, Y, Z, xLvl, yLvl, zLvl) ← if hom then get_types_from_three_prods right
+    else get_types_from_three_prods left
   let SFinkerOfX ← compute_SFinkerOf X xLvl maxLvl
   let SFinkerOfY ← compute_SFinkerOf Y yLvl maxLvl
   let SFinkerOfZ ← compute_SFinkerOf Z zLvl maxLvl
@@ -200,9 +205,11 @@ def construct_associator (left right : Expr) (maxLvl : Level) (hom : Bool) :
     else .Associator_inv ex ey ez
   return (← mkAppM (if hom then ``Iso.hom else ``Iso.inv) #[associator], associatorOP)
 
+/-- Construct the associator morphism. -/
 def construct_associator_hom (left right : Expr) (maxLvl : Level) :=
   construct_associator left right maxLvl true
 
+/-- Construct the inverse associator morphism. -/
 def construct_associator_inv (left right : Expr) (maxLvl : Level) :=
   construct_associator left right maxLvl false
 
