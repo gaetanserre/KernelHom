@@ -302,7 +302,6 @@ def mkHomKernelEqProof (eqProofType : Expr) (eLevel : Level)
         let eStx ← Term.exprToSyntax equiv
         evalTactic (← `(tactic| nth_rw 1 [Kernel.comul (ex := $eStx)] at h))
       | _ => pure ()
-    let goals ← getGoals
     if !(← getGoals).isEmpty then
       let congr_tac ← `(tactic| simp only [
           Kernel.hom_monoComp.{$eLevelStx},
@@ -472,16 +471,3 @@ example (κ η : Kernel X Y) [IsSFiniteKernel κ] [IsSFiniteKernel η]
   hom_kernel
   exact h
 -- ANCHOR_END: example_hom_kernel
-
-variable {X : Type x} {Y : Type y} [MeasurableSpace X] [MeasurableSpace Y]
-    {X' Y' : Type w} [MeasurableSpace X'] [MeasurableSpace Y'] {ex : X' ≃ᵐ X} {ey : Y' ≃ᵐ Y}
-
-variable {Z : Type z} [MeasurableSpace Z] {Z' : Type w} [MeasurableSpace Z'] {ez : Z' ≃ᵐ Z}
-
-open MeasurableEquiv
-
-example : Kernel.deterministic (MeasurableEquiv.prodAssoc : (X × Y) × Z ≃ᵐ X × (Y × Z))
-    (by fun_prop) = 0 := by
-  kernel_hom
-  hom_kernel
-  sorry
