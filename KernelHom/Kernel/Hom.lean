@@ -7,9 +7,11 @@ Authors: Gaëtan Serré
 import KernelHom.Mathlib.MeasurableEquiv
 import KernelHom.Mathlib.Kernel
 import Mathlib.Combinatorics.Quiver.ReflQuiver
-import KernelHom.Mathlib.SFinKer
+import Mathlib.Probability.Kernel.Category.SFinKer
 
 open MeasureTheory ProbabilityTheory MeasurableEquiv
+
+open scoped SFinKer
 
 /-!
 # Kernel morphisms

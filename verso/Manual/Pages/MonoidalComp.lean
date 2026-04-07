@@ -19,7 +19,7 @@ htmlSplit := .never
 shortTitle := "Monoidal composition"
 %%%
 
-The translation of kernels to morphisms in the [`SFinKer`](doc/Mathlib/Probability/Kernel/Category/SFinKer.html#SFinKer) category allows us to adapt the `⊗≫` monoidal composition for kernels. The {anchorTerm MeasurableCoherence}`MeasurableCoherence` class witnesses measurable equivalences between types, enabling an instance of categorical {anchorTerm monoidalCoherence}`MonoidalCoherence` that makes the kernelized monoidal composition `⊗≫ₖ` possible.
+The translation of kernels to morphisms in the [`SFinKer`](doc/Mathlib/Probability/Kernel/Category/SFinKer.html#SFinKer) category allows us to adapt the “`⊗≫`” monoidal composition for kernels. The {anchorTerm MeasurableCoherence}`MeasurableCoherence` class witnesses measurable equivalences between types, enabling an instance of categorical {anchorTerm monoidalCoherence}`MonoidalCoherence` that makes the kernelized monoidal composition (noted “`⊗≫ₖ`”) possible.
 
 # Measurable Coherence
 
@@ -37,10 +37,10 @@ This allows us to bridge the gap between the notion of measurable equivalence an
 
 # Monoidal Composition of Kernels
 
-The kernelized monoidal composition `⊗≫ₖ` is defined by composing two kernels while automatically handling measurable equivalences through the categorical framework:
+The kernelized monoidal composition “`⊗≫ₖ`” is defined by composing two kernels while automatically handling measurable equivalences through the categorical framework:
 
 1. *Transport to [`SFinKer`](doc/Mathlib/Probability/Kernel/Category/SFinKer.html#SFinKer)*: Both kernels are translated to morphisms in the [`SFinKer`](doc/Mathlib/Probability/Kernel/Category/SFinKer.html#SFinKer) category using the [`hom`](doc/KernelHom/Kernel/Hom.html#ProbabilityTheory.Kernel.hom) function, which lifts carrier spaces to a common universe level.
 
-1. *Categorical composition*: The categorical monoidal composition `⊗≫` is applied to the resulting morphisms in [`SFinKer`](doc/Mathlib/Probability/Kernel/Category/SFinKer.html#SFinKer), which automatically inserts the necessary associators and unitors.
+1. *Categorical composition*: The categorical monoidal composition “`⊗≫`” is applied to the resulting morphisms in [`SFinKer`](doc/Mathlib/Probability/Kernel/Category/SFinKer.html#SFinKer), which automatically inserts the necessary associators and unitors.
 
 1. *Transport back to kernels*: The result is translated back to a kernel using the [`fromHom` ](doc/KernelHom/Kernel/Hom.html#ProbabilityTheory.Kernel.fromHom) function.

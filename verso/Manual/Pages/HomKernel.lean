@@ -29,16 +29,3 @@ The tactic can be described in 3 steps:
 1. Finally, it replaces the original goal or hypothesis with the transformed one.
 
 Note that when `PUnit` is encountered during the un-lifting process, it un-lifts to `Unit`, no matter the universe level of the original `PUnit` carrier. This is because `PUnit` is used as the unit object of the monoidal structure, which makes it hard to recover the original universe level.
-
-# Usage example
-
-The tactic {anchorTerm hom_kernel_tactic}`hom_kernel` is complementary to {anchorTerm example_hom_kernel}`kernel_hom` and allows users to bring back categorical equalities to kernel equalities after applying categorical reasoning or categorical tactics.
-
-```anchor example_hom_kernel
-example (κ η : Kernel X Y) [IsSFiniteKernel κ] [IsSFiniteKernel η]
-    (h : κ = η) : κ ∘ₖ Kernel.id = η := by
-  kernel_hom
-  simp only [Category.id_comp]
-  hom_kernel
-  exact h
-```

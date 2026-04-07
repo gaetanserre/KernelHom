@@ -18,7 +18,7 @@ set_option verso.exampleModule "KernelHom.Tactic.Hom.KernelHom"
 htmlSplit := .never
 %%%
 
-The {anchorTerm kernel_hom_tactic}`kernel_hom` tactic transforms a kernel equality into an equality in the [`SFinKer`](doc/Mathlib/Probability/Kernel/Category/SFinKer.html#SFinKer) category, where categorical tactics can be applied to simplify it. For example, given kernels `κ : Kernel X Y`, `η : Kernel Y Z` and `ξ : Kernel X Z`, the following kernel equality: `η ∘ₖ κ = ξ` is transformed to `κ.hom ≫ η.hom = ξ.hom` in the [`SFinKer`](doc/Mathlib/Probability/Kernel/Category/SFinKer.html#SFinKer) category, where [`hom`](doc/KernelHom/Kernel/Hom.html#ProbabilityTheory.Kernel.hom) is the translation of kernels to morphisms in [`SFinKer`](doc/Mathlib/Probability/Kernel/Category/SFinKer.html#SFinKer).
+The {anchorTerm kernel_hom_tactic}`kernel_hom` tactic transforms a s-finite kernel equality into an equality in the [`SFinKer`](doc/Mathlib/Probability/Kernel/Category/SFinKer.html#SFinKer) category, where categorical tactics can be applied to simplify it. For example, given kernels `κ : Kernel X Y`, `η : Kernel Y Z` and `ξ : Kernel X Z`, the following kernel equality: `η ∘ₖ κ = ξ` is transformed to `κ.hom ≫ η.hom = ξ.hom` in the [`SFinKer`](doc/Mathlib/Probability/Kernel/Category/SFinKer.html#SFinKer) category, where [`hom`](doc/KernelHom/Kernel/Hom.html#ProbabilityTheory.Kernel.hom) is the translation of kernels to morphisms in [`SFinKer`](doc/Mathlib/Probability/Kernel/Category/SFinKer.html#SFinKer).
 
 The tactic can be described in 4 steps:
 
@@ -29,24 +29,3 @@ The tactic can be described in 4 steps:
 1. Next, it constructs the proof of equivalence between the original kernel equality and the transformed categorical equality. This proof relies on the properties of the translation (e.g., that it preserves composition and identities) and on the fact that all kernels can be uniformly lifted to the common universe level using measurable equivalences.
 
 1. Finally, it replaces the original goal or hypothesis with the transformed one.
-
-# Usage examples
-
-The tactic {anchorTerm kernel_hom_tactic}`kernel_hom` allows users to leverage categorical reasoning or powerful categorical tactics to simplify kernel equalities.
-
-```anchor example_kernel_hom1
-example : ξ ∘ₖ (η ∘ₖ κ) = ξ ∘ₖ η ∘ₖ κ := by
-  kernel_hom
-  simp only [Category.assoc]
-```
-
-```anchor example_kernel_hom2
-example : (η ∘ₖ Kernel.id.map (Prod.fst : Y × PUnit → Y)) ∘ₖ
-    (Kernel.id.map (Prod.fst : Y × PUnit → Y) ∥ₖ Kernel.id (α := PUnit)) ∘ₖ
-      ((κ ∥ₖ Kernel.id (α := PUnit)) ∥ₖ Kernel.id (α := PUnit))
-    = (η ∘ₖ κ ∘ₖ (Kernel.id.map (Prod.fst : X × PUnit → X)) ∘ₖ
-      ((Kernel.id.map (Prod.fst : X × PUnit → X)) ∥ₖ Kernel.id (α := PUnit))
-    : Kernel ((X × PUnit) × PUnit) Z)
-     := by
-  kernel_hom; monoidal
-```
