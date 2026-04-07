@@ -1,5 +1,6 @@
 import KernelHom.Kernel.Hom
 import KernelHom.Kernel.MonoidalComp
+import KernelHom.Mathlib.Kernel
 import KernelHom.Mathlib.LIntegral
 import KernelHom.Mathlib.MeasurableEquiv
 import KernelHom.Tactic.Hom.HomKernel
@@ -9,5 +10,5 @@ import KernelHom.Tactic.Hom.Utils
 import KernelHom.Tactic.KernelCat
 import KernelHom.Tactic.LocTactic
 import KernelHom.Tactic.Tactics
-import KernelHom.Tests.Posterior
+import KernelHom.Tests.Examples
 import KernelHom.Tests.Tests

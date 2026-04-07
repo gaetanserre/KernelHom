@@ -15,13 +15,18 @@ body {
   background-color: var(--background);
 }
 
+
+
 p a:visited,
-p a:link {
+p a:link,
+:is(h1, h2, h3, h4, h5, h6) a:visited,
+:is(h1, h2, h3, h4, h5, h6) a:link {
   text-decoration: none;
   color: var(--accent);
 }
 
-p a:hover {
+p a:hover,
+:is(h1, h2, h3, h4, h5, h6) a:hover {
   text-decoration: underline;
 }
 

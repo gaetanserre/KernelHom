@@ -31,8 +31,8 @@ def prod : X' × Y' ≃ᵐ X × Y where
   invFun := fun (x, y) ↦ (ex.symm x, ey.symm y)
   left_inv := by simp [Function.LeftInverse]
   right_inv := by simp [Function.RightInverse, Function.LeftInverse]
-  measurable_toFun := by fun_prop
-  measurable_invFun := by fun_prop
+  measurable_toFun := by simp only [Equiv.coe_fn_mk]; fun_prop
+  measurable_invFun := by simp only [Equiv.coe_fn_symm_mk]; fun_prop
 
 /-- The measurable equivalence between two `PUnit`s. -/
 def punit : PUnit.{w + 1} ≃ᵐ PUnit.{x + 1} where

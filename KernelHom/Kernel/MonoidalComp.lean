@@ -7,7 +7,9 @@ Authors: Gaëtan Serré
 import KernelHom.Mathlib.LIntegral
 import KernelHom.Kernel.Hom
 
-open CategoryTheory MonoidalCategory MeasureTheory ProbabilityTheory MeasurableEquiv
+open CategoryTheory MeasureTheory ProbabilityTheory MeasurableEquiv
+
+open scoped MonoidalCategory SFinKer
 
 /-!
 # Measurable coherence

@@ -16,7 +16,7 @@ They are built on top of `SFinKer`, the category of measurable spaces with s-fin
 
 Very briefly, the tactics:
 
-- translate an equality of kernels into an equality in categorical/monoidal form,
+- translate an equality of s-finite kernels into an equality in categorical/monoidal form,
 - let you run category-theory tactics such as `coherence` or `monoidal`,
 - translate the result back to a kernel equality.
 
@@ -46,7 +46,7 @@ require verso from git "https://github.com/gaetanserre/KernelHom"@"latest"
 
 ## Examples
 
-See [Tests.lean](KernelHom/Tests.lean) for examples of how to use the tactics.
+See [Examples](https://gaetanserre.fr/KernelHom/Usage-and-examples/#Kernel-Hom___-Tactics-for-Categorical-Kernel-Reasoning--Usage-and-examples) for examples of how to use the tactics.
 
 ## Reference
 

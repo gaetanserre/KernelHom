@@ -19,19 +19,39 @@ example (κ : Kernel X Y) (η : Kernel Y Z) (ξ : Kernel Z W)
   kernel_hom
   simp only [Category.assoc]
 
-example (κ : Kernel X Y) (η : Kernel Y Z) (ξ : Kernel Z W)
-    [IsSFiniteKernel κ] [IsSFiniteKernel η] [IsFiniteKernel ξ]
-    (h : ξ ∘ₖ (η ∘ₖ κ) = ξ ∘ₖ η ∘ₖ κ) :
-    ξ ∘ₖ (η ∘ₖ κ) = ξ ∘ₖ η ∘ₖ κ := by
-  kernel_hom at h
-  hom_kernel at h
-  exact h
-
 example (h : Kernel.id.map (Prod.snd : Unit × X → X) = (0 : Kernel (Unit × X) X)) :
     Kernel.id.map (Prod.snd : Unit × X → X) = (0 : Kernel (Unit × X) X) := by
   kernel_hom at h
   hom_kernel at h
   exact h
+
+example (κ : Kernel W Z) [IsSFiniteKernel κ] :
+    (Kernel.id (α := Unit)) ∥ₖ κ = (0 : Kernel (Unit × W) (Unit × Z)) := by
+  kernel_hom
+  simp only [id_whiskerLeft]
+  hom_kernel
+  sorry
+
+example (κ : Kernel W Z) [IsSFiniteKernel κ] :
+    (κ ∥ₖ Kernel.id (α := Unit)) = (0 : Kernel (W × Unit) (Z × Unit)) := by
+  kernel_hom
+  simp only [whiskerRight_id]
+  hom_kernel
+  sorry
+
+open MeasurableEquiv in
+example (κ : Kernel W Z) [IsSFiniteKernel κ] :
+    (Kernel.id (α := X × Y)) ∥ₖ κ =
+    ((Kernel.deterministic prodAssoc.symm (by fun_prop)) ∘ₖ (Kernel.id ∥ₖ (Kernel.id ∥ₖ κ)) ∘ₖ
+      Kernel.deterministic prodAssoc (by fun_prop)) := by
+  kernel_monoidal
+
+example (κ : Kernel X Y) (η : Kernel Y Z) (ξ : Kernel Z W)
+    [IsSFiniteKernel κ] [IsSFiniteKernel η] [IsFiniteKernel ξ] :
+    ξ ∥ₖ κ = 0 := by
+  kernel_hom
+  hom_kernel
+  sorry
 
 example (κ : Kernel X Y) (η : Kernel Y Z) [IsFiniteKernel η] [IsSFiniteKernel κ]
     (h : (Kernel.id (α := Unit)) ∥ₖ (η ∘ₖ κ) =
@@ -57,3 +77,11 @@ example (κ η : Kernel X Y) [IsSFiniteKernel κ] [IsSFiniteKernel η]
   simp only [Category.id_comp]
   hom_kernel
   exact h
+
+open scoped ComonObj in
+example (κ : Kernel Z Y) [IsSFiniteKernel κ] :
+    (Kernel.discard.{_, 0} Z ∥ₖ κ) ∘ₖ Kernel.copy Z = (Kernel.id.map fun x ↦ ((), x)) ∘ₖ κ := by
+  kernel_hom
+  simp only [ComonObj.counit_comul_hom]
+  hom_kernel
+  rfl
