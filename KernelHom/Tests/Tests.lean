@@ -39,14 +39,12 @@ example (κ : Kernel W Z) [IsSFiniteKernel κ] :
   hom_kernel
   sorry
 
+open MeasurableEquiv in
 example (κ : Kernel W Z) [IsSFiniteKernel κ] :
     (Kernel.id (α := X × Y)) ∥ₖ κ =
-    ((Kernel.id.map fun p ↦ ((p.1, p.2.1), p.2.2)) ∘ₖ (Kernel.id ∥ₖ (Kernel.id ∥ₖ κ)) ∘ₖ
-      Kernel.id.map fun p ↦ (p.1.1, p.1.2, p.2)) := by
-  kernel_hom
-  simp only [tensor_whiskerLeft]
-  hom_kernel
-  rfl
+    ((Kernel.deterministic prodAssoc.symm (by fun_prop)) ∘ₖ (Kernel.id ∥ₖ (Kernel.id ∥ₖ κ)) ∘ₖ
+      Kernel.deterministic prodAssoc (by fun_prop)) := by
+  kernel_monoidal
 
 example (κ : Kernel X Y) (η : Kernel Y Z) (ξ : Kernel Z W)
     [IsSFiniteKernel κ] [IsSFiniteKernel η] [IsFiniteKernel ξ] :

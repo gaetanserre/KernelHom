@@ -7,7 +7,7 @@ Authors: Gaëtan Serré
 import KernelHom.Mathlib.MeasurableEquiv
 import KernelHom.Mathlib.Kernel
 import Mathlib.Combinatorics.Quiver.ReflQuiver
-import Mathlib.Probability.Kernel.Category.SFinKer
+import KernelHom.Mathlib.SFinKer
 
 open MeasureTheory ProbabilityTheory MeasurableEquiv
 
@@ -214,22 +214,22 @@ end whiskers
 section associator
 
 lemma associator_hom : (α_ (SFinKer.of X') (SFinKer.of Y') (SFinKer.of Z')).hom =
-    hom (ex := (ex.prod ey).prod ez)
-      (ey := ex.prod (ey.prod ez)) (Kernel.id.map (fun a : (X × Y) × Z ↦ (a.1.1, a.1.2, a.2))) := by
+    hom (ex := (ex.prod ey).prod ez) (ey := ex.prod (ey.prod ez))
+      (Kernel.deterministic prodAssoc (by fun_prop)) := by
   ext : 1; dsimp
   simp only [hom]
-  rw [id_map (by fun_prop), id_map (by fun_prop), deterministic_map (by fun_prop) (by fun_prop)]
+  rw [deterministic_map (by fun_prop) (by fun_prop)]
   congr with x
-  all_goals simp [MeasurableEquiv.prod]
+  all_goals simp [MeasurableEquiv.prod, prodAssoc]
 
 lemma associator_inv : (α_ (SFinKer.of X') (SFinKer.of Y') (SFinKer.of Z')).inv =
     hom (ex := ex.prod (ey.prod ez)) (ey := (ex.prod ey).prod ez)
-      (Kernel.id.map (fun a : X × (Y × Z) ↦ ((a.1, a.2.1), a.2.2))) := by
+      (Kernel.deterministic prodAssoc.symm (by fun_prop)) := by
   ext : 1; dsimp
   simp only [hom]
-  rw [id_map (by fun_prop), id_map (by fun_prop), deterministic_map (by fun_prop) (by fun_prop)]
+  rw [deterministic_map (by fun_prop) (by fun_prop)]
   congr with x
-  all_goals simp [MeasurableEquiv.prod]
+  all_goals simp [MeasurableEquiv.prod, prodAssoc]
 
 end associator
 
