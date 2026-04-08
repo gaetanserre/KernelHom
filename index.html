@@ -1021,7 +1021,7 @@ window.onload = () => {
             <div class="split-toc book">
               <div class="title">
                 <label for="--verso-manual-toc-----bookRoot" class="toggle-split-toc"><input type="checkbox" class="toggle-split-toc" id="--verso-manual-toc-----bookRoot" checked="checked"></label><span class="">Table of Contents</span></div>
-              <table><tr class="numbered"><td class="num">1.</td><td><a href="Universe-handling/#Kernel-Hom___-Tactics-for-Categorical-Kernel-Reasoning--Universe-handling">Universe handling</a></td></tr><tr class="numbered"><td class="num">2.</td><td><a href="KernelHom-tactic/#Kernel-Hom___-Tactics-for-Categorical-Kernel-Reasoning--KernelHom-tactic">KernelHom tactic</a></td></tr><tr class="numbered"><td class="num">3.</td><td><a href="HomKernel-tactic/#Kernel-Hom___-Tactics-for-Categorical-Kernel-Reasoning--HomKernel-tactic">HomKernel tactic</a></td></tr><tr class="numbered"><td class="num">4.</td><td><a href="Categorical-tactics-for-kernels/#Kernel-Hom___-Tactics-for-Categorical-Kernel-Reasoning--Categorical-tactics-for-kernels">Categorical tactics for kernels</a></td></tr><tr class="numbered"><td class="num">5.</td><td><a href="Kernelized-monoidal-composition/#Kernel-Hom___-Tactics-for-Categorical-Kernel-Reasoning--Kernelized-monoidal-composition">Monoidal composition</a></td></tr></table></div>
+              <table><tr class="numbered"><td class="num">1.</td><td><a href="Usage-and-examples/#Kernel-Hom___-Tactics-for-Categorical-Kernel-Reasoning--Usage-and-examples">Usage and examples</a></td></tr><tr class="numbered"><td class="num">2.</td><td><a href="Universe-handling/#Kernel-Hom___-Tactics-for-Categorical-Kernel-Reasoning--Universe-handling">Universe handling</a></td></tr><tr class="numbered"><td class="num">3.</td><td><a href="KernelHom-tactic/#Kernel-Hom___-Tactics-for-Categorical-Kernel-Reasoning--KernelHom-tactic">KernelHom tactic</a></td></tr><tr class="numbered"><td class="num">4.</td><td><a href="HomKernel-tactic/#Kernel-Hom___-Tactics-for-Categorical-Kernel-Reasoning--HomKernel-tactic">HomKernel tactic</a></td></tr><tr class="numbered"><td class="num">5.</td><td><a href="Categorical-tactics-for-kernels/#Kernel-Hom___-Tactics-for-Categorical-Kernel-Reasoning--Categorical-tactics-for-kernels">Categorical tactics for kernels</a></td></tr><tr class="numbered"><td class="num">6.</td><td><a href="Kernelized-monoidal-composition/#Kernel-Hom___-Tactics-for-Categorical-Kernel-Reasoning--Kernelized-monoidal-composition">Monoidal composition</a></td></tr></table></div>
             </div>
           </div>
         <div class="last">
@@ -1036,7 +1036,7 @@ window.onload = () => {
       <main><div class="content-wrapper">
           <nav class="prev-next-buttons">
             <div></div>
-            <a class="local-button active" href="Universe-handling/#Kernel-Hom___-Tactics-for-Categorical-Kernel-Reasoning--Universe-handling" rel="next" title="1. Universe handling"><span class="where">1. Universe handling</span><span class="arrow">→</span></a></nav>
+            <a class="local-button active" href="Usage-and-examples/#Kernel-Hom___-Tactics-for-Categorical-Kernel-Reasoning--Usage-and-examples" rel="next" title="1. Usage and examples"><span class="where">1. Usage and examples</span><span class="arrow">→</span></a></nav>
           <section>
             <div class="titlepage">
               <h1>
@@ -1046,7 +1046,7 @@ window.onload = () => {
               <p>
                 <strong>Overview</strong></p>
               <p>
-                <strong>Kernel Hom</strong> is a Lean 4 library that provides tactics to simplify kernel equalities by leveraging categorical reasoning. It automatically translates kernel equalities into equalities in a monoidal category, where tactics like <a href="doc/Mathlib/Tactic/CategoryTheory/Coherence.html#Mathlib.Tactic.Coherence.coherence"><code>coherence</code></a> or <a href="doc/Mathlib/Tactic/CategoryTheory/Monoidal/Basic.html#Mathlib.Tactic.Monoidal.monoidal"><code>monoidal</code></a> can be applied, and then translates the result back to a kernel equality.</p>
+                <strong>Kernel Hom</strong> is a Lean 4 library that provides tactics to simplify kernel equalities by leveraging categorical reasoning. It automatically translates s-finite kernel equalities into equalities in a monoidal category, where tactics like <a href="doc/Mathlib/Tactic/CategoryTheory/Coherence.html#Mathlib.Tactic.Coherence.coherence"><code>coherence</code></a> or <a href="doc/Mathlib/Tactic/CategoryTheory/Monoidal/Basic.html#Mathlib.Tactic.Monoidal.monoidal"><code>monoidal</code></a> can be applied, and then translates the result back to a kernel equality.</p>
               <p>
                 <img src="static/diagram.svg" alt=""></p>
               <p>
@@ -1090,21 +1090,23 @@ window.onload = () => {
                 Contents</h2>
               <ol class="section-toc">
                 <li>
-                  <a href="Universe-handling/#Kernel-Hom___-Tactics-for-Categorical-Kernel-Reasoning--Universe-handling"><span class="number">1.</span> Universe handling</a></li>
+                  <a href="Usage-and-examples/#Kernel-Hom___-Tactics-for-Categorical-Kernel-Reasoning--Usage-and-examples"><span class="number">1.</span> Usage and examples</a></li>
                 <li>
-                  <a href="KernelHom-tactic/#Kernel-Hom___-Tactics-for-Categorical-Kernel-Reasoning--KernelHom-tactic"><span class="number">2.</span> KernelHom tactic</a></li>
+                  <a href="Universe-handling/#Kernel-Hom___-Tactics-for-Categorical-Kernel-Reasoning--Universe-handling"><span class="number">2.</span> Universe handling</a></li>
                 <li>
-                  <a href="HomKernel-tactic/#Kernel-Hom___-Tactics-for-Categorical-Kernel-Reasoning--HomKernel-tactic"><span class="number">3.</span> HomKernel tactic</a></li>
+                  <a href="KernelHom-tactic/#Kernel-Hom___-Tactics-for-Categorical-Kernel-Reasoning--KernelHom-tactic"><span class="number">3.</span> KernelHom tactic</a></li>
                 <li>
-                  <a href="Categorical-tactics-for-kernels/#Kernel-Hom___-Tactics-for-Categorical-Kernel-Reasoning--Categorical-tactics-for-kernels"><span class="number">4.</span> Categorical tactics for kernels</a></li>
+                  <a href="HomKernel-tactic/#Kernel-Hom___-Tactics-for-Categorical-Kernel-Reasoning--HomKernel-tactic"><span class="number">4.</span> HomKernel tactic</a></li>
                 <li>
-                  <a href="Kernelized-monoidal-composition/#Kernel-Hom___-Tactics-for-Categorical-Kernel-Reasoning--Kernelized-monoidal-composition"><span class="number">5.</span> Kernelized monoidal composition</a></li>
+                  <a href="Categorical-tactics-for-kernels/#Kernel-Hom___-Tactics-for-Categorical-Kernel-Reasoning--Categorical-tactics-for-kernels"><span class="number">5.</span> Categorical tactics for kernels</a></li>
+                <li>
+                  <a href="Kernelized-monoidal-composition/#Kernel-Hom___-Tactics-for-Categorical-Kernel-Reasoning--Kernelized-monoidal-composition"><span class="number">6.</span> Kernelized monoidal composition</a></li>
                 </ol>
               </section>
             </section>
           <nav class="prev-next-buttons">
             <div></div>
-            <a class="local-button active" href="Universe-handling/#Kernel-Hom___-Tactics-for-Categorical-Kernel-Reasoning--Universe-handling" rel="next" title="1. Universe handling"><span class="where">1. Universe handling</span><span class="arrow">→</span></a></nav>
+            <a class="local-button active" href="Usage-and-examples/#Kernel-Hom___-Tactics-for-Categorical-Kernel-Reasoning--Usage-and-examples" rel="next" title="1. Usage and examples"><span class="where">1. Usage and examples</span><span class="arrow">→</span></a></nav>
           </div>
         </main></div>
     </body>

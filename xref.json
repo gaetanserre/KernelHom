@@ -2,18 +2,59 @@
  {"title": "Sections or chapters of the manual",
   "description": null,
   "contents":
-  {"Kernel-Hom___-Tactics-for-Categorical-Kernel-Reasoning--Universe-handling":
+  {"Kernel-Hom___-Tactics-for-Categorical-Kernel-Reasoning--Usage-and-examples--Usage":
    [{"id":
-     "Kernel-Hom___-Tactics-for-Categorical-Kernel-Reasoning--Universe-handling",
+     "Kernel-Hom___-Tactics-for-Categorical-Kernel-Reasoning--Usage-and-examples--Usage",
      "data":
-     {"title": "Universe handling",
+     {"title": "Usage",
+      "shortTitle": null,
+      "sectionNum": "1.1.",
+      "context":
+      [{"title": "Kernel-Hom: Tactics for Categorical Kernel Reasoning",
+        "shortTitle": "Categorical Kernel Reasoning",
+        "number": null},
+       {"title": "Usage and examples", "shortTitle": null, "number": "1"},
+       {"title": "Usage", "shortTitle": null, "number": "1"}]},
+     "address": "/Usage-and-examples/"}],
+   "Kernel-Hom___-Tactics-for-Categorical-Kernel-Reasoning--Usage-and-examples--Examples":
+   [{"id":
+     "Kernel-Hom___-Tactics-for-Categorical-Kernel-Reasoning--Usage-and-examples--Examples",
+     "data":
+     {"title": "Examples",
+      "shortTitle": null,
+      "sectionNum": "1.2.",
+      "context":
+      [{"title": "Kernel-Hom: Tactics for Categorical Kernel Reasoning",
+        "shortTitle": "Categorical Kernel Reasoning",
+        "number": null},
+       {"title": "Usage and examples", "shortTitle": null, "number": "1"},
+       {"title": "Examples", "shortTitle": null, "number": "2"}]},
+     "address": "/Usage-and-examples/"}],
+   "Kernel-Hom___-Tactics-for-Categorical-Kernel-Reasoning--Usage-and-examples":
+   [{"id":
+     "Kernel-Hom___-Tactics-for-Categorical-Kernel-Reasoning--Usage-and-examples",
+     "data":
+     {"title": "Usage and examples",
       "shortTitle": null,
       "sectionNum": "1.",
       "context":
       [{"title": "Kernel-Hom: Tactics for Categorical Kernel Reasoning",
         "shortTitle": "Categorical Kernel Reasoning",
         "number": null},
-       {"title": "Universe handling", "shortTitle": null, "number": "1"}]},
+       {"title": "Usage and examples", "shortTitle": null, "number": "1"}]},
+     "address": "/Usage-and-examples/"}],
+   "Kernel-Hom___-Tactics-for-Categorical-Kernel-Reasoning--Universe-handling":
+   [{"id":
+     "Kernel-Hom___-Tactics-for-Categorical-Kernel-Reasoning--Universe-handling",
+     "data":
+     {"title": "Universe handling",
+      "shortTitle": null,
+      "sectionNum": "2.",
+      "context":
+      [{"title": "Kernel-Hom: Tactics for Categorical Kernel Reasoning",
+        "shortTitle": "Categorical Kernel Reasoning",
+        "number": null},
+       {"title": "Universe handling", "shortTitle": null, "number": "2"}]},
      "address": "/Universe-handling/"}],
    "Kernel-Hom___-Tactics-for-Categorical-Kernel-Reasoning--Kernelized-monoidal-composition--Monoidal-Composition-of-Kernels":
    [{"id":
@@ -21,14 +62,14 @@
      "data":
      {"title": "Monoidal Composition of Kernels",
       "shortTitle": null,
-      "sectionNum": "5.2.",
+      "sectionNum": "6.2.",
       "context":
       [{"title": "Kernel-Hom: Tactics for Categorical Kernel Reasoning",
         "shortTitle": "Categorical Kernel Reasoning",
         "number": null},
        {"title": "Kernelized monoidal composition",
         "shortTitle": "Monoidal composition",
-        "number": "5"},
+        "number": "6"},
        {"title": "Monoidal Composition of Kernels",
         "shortTitle": null,
         "number": "2"}]},
@@ -39,14 +80,14 @@
      "data":
      {"title": "Measurable Coherence",
       "shortTitle": null,
-      "sectionNum": "5.1.",
+      "sectionNum": "6.1.",
       "context":
       [{"title": "Kernel-Hom: Tactics for Categorical Kernel Reasoning",
         "shortTitle": "Categorical Kernel Reasoning",
         "number": null},
        {"title": "Kernelized monoidal composition",
         "shortTitle": "Monoidal composition",
-        "number": "5"},
+        "number": "6"},
        {"title": "Measurable Coherence", "shortTitle": null, "number": "1"}]},
      "address": "/Kernelized-monoidal-composition/"}],
    "Kernel-Hom___-Tactics-for-Categorical-Kernel-Reasoning--Kernelized-monoidal-composition":
@@ -55,68 +96,40 @@
      "data":
      {"title": "Kernelized monoidal composition",
       "shortTitle": "Monoidal composition",
-      "sectionNum": "5.",
+      "sectionNum": "6.",
       "context":
       [{"title": "Kernel-Hom: Tactics for Categorical Kernel Reasoning",
         "shortTitle": "Categorical Kernel Reasoning",
         "number": null},
        {"title": "Kernelized monoidal composition",
         "shortTitle": "Monoidal composition",
-        "number": "5"}]},
+        "number": "6"}]},
      "address": "/Kernelized-monoidal-composition/"}],
-   "Kernel-Hom___-Tactics-for-Categorical-Kernel-Reasoning--KernelHom-tactic--Usage-examples":
-   [{"id":
-     "Kernel-Hom___-Tactics-for-Categorical-Kernel-Reasoning--KernelHom-tactic--Usage-examples",
-     "data":
-     {"title": "Usage examples",
-      "shortTitle": null,
-      "sectionNum": "2.1.",
-      "context":
-      [{"title": "Kernel-Hom: Tactics for Categorical Kernel Reasoning",
-        "shortTitle": "Categorical Kernel Reasoning",
-        "number": null},
-       {"title": "KernelHom tactic", "shortTitle": null, "number": "2"},
-       {"title": "Usage examples", "shortTitle": null, "number": "1"}]},
-     "address": "/KernelHom-tactic/"}],
    "Kernel-Hom___-Tactics-for-Categorical-Kernel-Reasoning--KernelHom-tactic":
    [{"id":
      "Kernel-Hom___-Tactics-for-Categorical-Kernel-Reasoning--KernelHom-tactic",
      "data":
      {"title": "KernelHom tactic",
       "shortTitle": null,
-      "sectionNum": "2.",
+      "sectionNum": "3.",
       "context":
       [{"title": "Kernel-Hom: Tactics for Categorical Kernel Reasoning",
         "shortTitle": "Categorical Kernel Reasoning",
         "number": null},
-       {"title": "KernelHom tactic", "shortTitle": null, "number": "2"}]},
+       {"title": "KernelHom tactic", "shortTitle": null, "number": "3"}]},
      "address": "/KernelHom-tactic/"}],
-   "Kernel-Hom___-Tactics-for-Categorical-Kernel-Reasoning--HomKernel-tactic--Usage-example":
-   [{"id":
-     "Kernel-Hom___-Tactics-for-Categorical-Kernel-Reasoning--HomKernel-tactic--Usage-example",
-     "data":
-     {"title": "Usage example",
-      "shortTitle": null,
-      "sectionNum": "3.1.",
-      "context":
-      [{"title": "Kernel-Hom: Tactics for Categorical Kernel Reasoning",
-        "shortTitle": "Categorical Kernel Reasoning",
-        "number": null},
-       {"title": "HomKernel tactic", "shortTitle": null, "number": "3"},
-       {"title": "Usage example", "shortTitle": null, "number": "1"}]},
-     "address": "/HomKernel-tactic/"}],
    "Kernel-Hom___-Tactics-for-Categorical-Kernel-Reasoning--HomKernel-tactic":
    [{"id":
      "Kernel-Hom___-Tactics-for-Categorical-Kernel-Reasoning--HomKernel-tactic",
      "data":
      {"title": "HomKernel tactic",
       "shortTitle": null,
-      "sectionNum": "3.",
+      "sectionNum": "4.",
       "context":
       [{"title": "Kernel-Hom: Tactics for Categorical Kernel Reasoning",
         "shortTitle": "Categorical Kernel Reasoning",
         "number": null},
-       {"title": "HomKernel tactic", "shortTitle": null, "number": "3"}]},
+       {"title": "HomKernel tactic", "shortTitle": null, "number": "4"}]},
      "address": "/HomKernel-tactic/"}],
    "Kernel-Hom___-Tactics-for-Categorical-Kernel-Reasoning--Categorical-tactics-for-kernels":
    [{"id":
@@ -124,14 +137,14 @@
      "data":
      {"title": "Categorical tactics for kernels",
       "shortTitle": null,
-      "sectionNum": "4.",
+      "sectionNum": "5.",
       "context":
       [{"title": "Kernel-Hom: Tactics for Categorical Kernel Reasoning",
         "shortTitle": "Categorical Kernel Reasoning",
         "number": null},
        {"title": "Categorical tactics for kernels",
         "shortTitle": null,
-        "number": "4"}]},
+        "number": "5"}]},
      "address": "/Categorical-tactics-for-kernels/"}],
    "Kernel-Hom___-Tactics-for-Categorical-Kernel-Reasoning":
    [{"id": "Kernel-Hom___-Tactics-for-Categorical-Kernel-Reasoning",
@@ -196,27 +209,7 @@
         "Measurable Coherence"]}},
      "address": "/Kernelized-monoidal-composition/"}],
    "MeasurableCoherence":
-   [{"id": "MeasurableCoherence-next-next",
-     "data":
-     {"/Kernelized-monoidal-composition/#MeasurableCoherence-next-next":
-      {"display": "MeasurableCoherence",
-       "context":
-       ["Kernel-Hom: Tactics for Categorical Kernel Reasoning",
-        "Kernelized monoidal composition",
-        "Measurable Coherence"]},
-      "/Kernelized-monoidal-composition/#MeasurableCoherence-next":
-      {"display": "MeasurableCoherence",
-       "context":
-       ["Kernel-Hom: Tactics for Categorical Kernel Reasoning",
-        "Kernelized monoidal composition",
-        "Measurable Coherence"]},
-      "/Kernelized-monoidal-composition/#MeasurableCoherence":
-      {"display": "MeasurableCoherence",
-       "context":
-       ["Kernel-Hom: Tactics for Categorical Kernel Reasoning",
-        "Kernelized monoidal composition"]}},
-     "address": "/Kernelized-monoidal-composition/"},
-    {"id": "MeasurableCoherence",
+   [{"id": "MeasurableCoherence",
      "data":
      {"/Kernelized-monoidal-composition/#MeasurableCoherence-next-next":
       {"display": "MeasurableCoherence",
@@ -237,6 +230,26 @@
         "Kernelized monoidal composition"]}},
      "address": "/Kernelized-monoidal-composition/"},
     {"id": "MeasurableCoherence-next",
+     "data":
+     {"/Kernelized-monoidal-composition/#MeasurableCoherence-next-next":
+      {"display": "MeasurableCoherence",
+       "context":
+       ["Kernel-Hom: Tactics for Categorical Kernel Reasoning",
+        "Kernelized monoidal composition",
+        "Measurable Coherence"]},
+      "/Kernelized-monoidal-composition/#MeasurableCoherence-next":
+      {"display": "MeasurableCoherence",
+       "context":
+       ["Kernel-Hom: Tactics for Categorical Kernel Reasoning",
+        "Kernelized monoidal composition",
+        "Measurable Coherence"]},
+      "/Kernelized-monoidal-composition/#MeasurableCoherence":
+      {"display": "MeasurableCoherence",
+       "context":
+       ["Kernel-Hom: Tactics for Categorical Kernel Reasoning",
+        "Kernelized monoidal composition"]}},
+     "address": "/Kernelized-monoidal-composition/"},
+    {"id": "MeasurableCoherence-next-next",
      "data":
      {"/Kernelized-monoidal-composition/#MeasurableCoherence-next-next":
       {"display": "MeasurableCoherence",

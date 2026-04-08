@@ -1,0 +1,1 @@
+window.docContents[196].resolve({"/Usage-and-examples/#Kernel-Hom___-Tactics-for-Categorical-Kernel-Reasoning--Usage-and-examples":{"contents":"\n\n\n\n","context":"Kernel-Hom: Tactics for Categorical Kernel Reasoning","header":"1. Usage and examples","id":"/Usage-and-examples/#Kernel-Hom___-Tactics-for-Categorical-Kernel-Reasoning--Usage-and-examples"}});
