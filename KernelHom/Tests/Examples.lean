@@ -5,7 +5,6 @@ Authors: Gaëtan Serré
 -/
 
 import KernelHom.Tactic.Tactics
-import Mathlib
 
 open MeasureTheory ProbabilityTheory CategoryTheory BraidedCategory MonoidalCategory
 
