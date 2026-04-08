@@ -49,7 +49,6 @@ jobs:
 
       - name: Build Verso Documentation
         run: |
-          cd verso
           ./build_manual.sh
       
       - name: Build DocGen Documentation
@@ -61,4 +60,4 @@ jobs:
         uses: peaceiris/actions-gh-pages@v4
         with: 
           github_token: ${{ secrets.GITHUB_TOKEN }} 
-          publish_dir: verso/html
+          publish_dir: html

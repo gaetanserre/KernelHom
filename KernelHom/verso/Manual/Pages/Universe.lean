@@ -4,15 +4,19 @@ Released under GNU GPL 3.0 license as described in the file LICENSE.
 Authors: Gaëtan Serré
 -/
 
-import VersoManual
+import KernelHom.Tactic.Hom.Universe
 import Mathlib.Probability.Kernel.Category.SFinKer
+import VersoManual
 
 open Verso.Genre Manual Verso.Genre.Manual.InlineLean Verso.Code.External
 open CategoryTheory ProbabilityTheory
 
+set_option linter.style.setOption false
+set_option linter.hashCommand false
+set_option linter.style.longLine false
 set_option pp.rawOnError true
 set_option verso.code.warnLineLength 100
-set_option verso.exampleProject "../"
+set_option verso.exampleProject "."
 set_option verso.exampleModule "KernelHom.Tactic.Hom.Universe"
 
 #doc (Manual) "Universe handling" =>
@@ -50,3 +54,5 @@ To solve this issue, one can manually lift the carrier spaces to a common univer
 In this setting, both `ULift X` and `ULift Y` live in the same universe level, allowing the expression to typecheck correctly.
 
 However, manually uniformizing universe levels can be cumbersome when dealing with expressions involving multiple kernels of different carrier spaces. To this end, we designed the {anchorTerm collectExprUniverses}`collectExprUniverses` function, which recursively traverses an expression and collects all universe levels found. This allows us to automatically determine the minimum common universe level for which all carrier spaces of the kernels involved in a given expression can be lifted to (most likely the maximum of all universe levels encountered), and uniformly lift them to that level during the translation process.
+
+{docstring collectExprUniverses}

@@ -494,8 +494,26 @@ def mkKernelHomEqProof (eqProofType rhs lhs : Expr) (maxLvl : Level)
   setGoals savedGoals
   instantiateMVars mvar
 
-/-- Core implementation of the `kernel_hom` tactic on a single goal or hypothesis. -/
-def applyKernelHom (goal : MVarId) (fvarId : Option FVarId) : TacticM MVarId := do
+/-- The `kernel_hom` tactic transforms a kernel equality to an equivalent equality in
+the category of measurable spaces and s-finite kernels.
+
+The tactic supports location specifiers like `rw` or `simp`:
+- `kernel_hom` — applies to the goal
+- `kernel_hom at h` — applies to hypothesis `h`
+- `kernel_hom at h₁ h₂` — applies to multiple hypotheses
+- `kernel_hom at h ⊢` — applies to hypothesis `h` and the goal
+- `kernel_hom at *` — applies to all hypotheses and the goal
+
+Example:
+```lean
+example {W X Y Z : Type*} [MeasurableSpace X] [MeasurableSpace Y] [MeasurableSpace Z]
+    [MeasurableSpace W] (κ : Kernel X Y) (η : Kernel Y Z) (ξ : Kernel Z W)
+    [IsFiniteKernel ξ] [IsSFiniteKernel κ] [IsSFiniteKernel η] :
+    ξ ∘ₖ (η ∘ₖ κ) = ξ ∘ₖ η ∘ₖ κ := by
+  kernel_hom
+  exact Category.assoc _ _ _
+``` -/
+def kernelHom (goal : MVarId) (fvarId : Option FVarId) : TacticM MVarId := do
   goal.withContext do
     let expr ← match fvarId with
         | some fid => do
@@ -519,29 +537,11 @@ def applyKernelHom (goal : MVarId) (fvarId : Option FVarId) : TacticM MVarId := 
       let mvarId ← getMainGoal
       mvarId.replaceTargetEq homExpr eqProof
 
-/-- The `kernel_hom` tactic transforms a kernel equality to an equivalent equality in
-the category of measurable spaces and s-finite kernels.
-
-The tactic supports location specifiers like `rw` or `simp`:
-- `kernel_hom` — applies to the goal
-- `kernel_hom at h` — applies to hypothesis `h`
-- `kernel_hom at h₁ h₂` — applies to multiple hypotheses
-- `kernel_hom at h ⊢` — applies to hypothesis `h` and the goal
-- `kernel_hom at *` — applies to all hypotheses and the goal
-
-Example:
-```lean
-example {W X Y Z : Type*} [MeasurableSpace X] [MeasurableSpace Y] [MeasurableSpace Z]
-    [MeasurableSpace W] (κ : Kernel X Y) (η : Kernel Y Z) (ξ : Kernel Z W)
-    [IsFiniteKernel ξ] [IsSFiniteKernel κ] [IsSFiniteKernel η] :
-    ξ ∘ₖ (η ∘ₖ κ) = ξ ∘ₖ η ∘ₖ κ := by
-  kernel_hom
-  exact Category.assoc _ _ _
-``` -/
+@[inherit_doc kernelHom]
 syntax "kernel_hom" (ppSpace location)? : tactic
 
 -- ANCHOR: kernel_hom_tactic
 elab_rules : tactic
   | `(tactic| kernel_hom $[$loc]?) =>
-    expandOptLocation (Lean.mkOptionalNode loc) |> applyLocTactic <| applyKernelHom
+    expandOptLocation (Lean.mkOptionalNode loc) |> applyLocTactic <| kernelHom
 -- ANCHOR_END: kernel_hom_tactic

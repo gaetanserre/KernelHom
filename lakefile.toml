@@ -14,8 +14,22 @@ name = "mathlib"
 scope = "leanprover-community"
 
 [[require]]
+name = "verso"
+git = "https://github.com/leanprover/verso"
+
+[[require]]
 name = "subverso"
 git = "https://github.com/leanprover/subverso"
 
 [[lean_lib]]
 name = "KernelHom"
+
+[[lean_lib]]
+name = "Manual"
+srcDir = "KernelHom/verso/"
+root = "Manual"
+
+[[lean_exe]]
+name = "manual"
+srcDir = "KernelHom/verso/"
+root = "Manual"

@@ -10,7 +10,7 @@ open Verso.Genre Manual Verso.Genre.Manual.InlineLean Verso.Code.External
 
 set_option pp.rawOnError true
 set_option verso.code.warnLineLength 100
-set_option verso.exampleProject "../"
+set_option verso.exampleProject "."
 set_option verso.exampleModule "KernelHom.Tactic.KernelCat"
 
 #doc (Manual) "Categorical tactics for kernels" =>
