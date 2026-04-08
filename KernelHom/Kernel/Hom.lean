@@ -298,19 +298,16 @@ instance {f : X → Y} {hf : Measurable f} :
   hom_counit := by
     ext : 1; dsimp
     simp only [hom]
-    rw [deterministic_map (by fun_prop) (by fun_prop)]
-    ext
-    rw [discard_apply, comp_apply, comap_apply, deterministic_apply]
-    simp only [Function.comp_apply, MeasurableSpace.measurableSet_top, Measure.dirac_apply']
-    rw [Measure.bind_apply, lintegral_dirac']
-    · simp
-    all_goals try fun_prop
-    all_goals measurability
+    have : IsMarkovKernel (((deterministic f hf).map ey.symm).comap ex (by fun_prop)) :=
+      have : IsMarkovKernel ((deterministic f hf).map ey.symm) :=
+        IsMarkovKernel.map _ (by fun_prop)
+      IsMarkovKernel.comap _ (by fun_prop)
+    exact Kernel.comp_discard _
   hom_comul := by
     ext : 1; dsimp
     simp only [hom]
-    rw [Kernel.id_parallelComp_comp_parallelComp_id]
-    rw [comap_parallelComp_comap, map_parallelComp_map, deterministic_parallelComp_deterministic,
+    rw [id_parallelComp_comp_parallelComp_id, comap_parallelComp_comap,
+      map_parallelComp_map, deterministic_parallelComp_deterministic,
       deterministic_map, deterministic_map]
     · ext _ _ hs
       rw [comp_apply, comap_apply, deterministic_apply, comp_apply, copy_apply]
@@ -321,6 +318,14 @@ instance {f : X → Y} {hf : Measurable f} :
       all_goals try measurability
       all_goals exact Kernel.measurable_coe _ hs
     all_goals fun_prop
+
+instance (X : SFinKer) : Deterministic (𝟙 X) where
+  hom_counit := by
+    ext : 1; dsimp
+    simp
+  hom_comul := by
+    ext : 1; dsimp
+    simp
 
 end deterministic
 

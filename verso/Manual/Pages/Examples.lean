@@ -47,7 +47,7 @@ import KernelHom
 
 - [`kernel_coherence`](doc/KernelHom/Tactic/KernelCat.html#tacticKernel_coherence): Applies the [`coherence`](doc/Mathlib/Tactic/CategoryTheory/Coherence.html#Mathlib.Tactic.Coherence.coherence) tactic to a s-finite kernel equality.
 
-Basically, whenever you have a equality of s-finite kernels that you want to simplify, you can apply {anchorTerm swap_parallelComp}`kernel_hom` to transform it into a categorical equality, try applying categorical tactics, simps, or manually manipulate it, and then apply {anchorTerm dummy_example}`hom_kernel` to get back to a kernel equality if needed. The built-in helpers [`kernel_coherence`](doc/KernelHom/Tactic/KernelCat.html#tacticKernel_coherence) and {anchorTerm parallelComp_id_left_comp_parallelComp}`kernel_monoidal` directly apply categorical tactics to kernels without needing to manually invoke the translation tactic.
+Basically, whenever you have a equality of s-finite kernels that you want to simplify, you can apply {anchorTerm swap_parallelComp}`kernel_hom` to transform it into a categorical equality, try applying categorical tactics, simps, or manually manipulate it, and then apply {anchorTerm dummy_example}`hom_kernel` to get back to a kernel equality if needed. The built-in helpers {anchorTerm parallelComp_id_left_comp_parallelComp}`kernel_monoidal` and [`kernel_coherence`](doc/KernelHom/Tactic/KernelCat.html#tacticKernel_coherence) directly apply categorical tactics to kernels without needing to manually invoke the translation tactic.
 
 # Examples
 
