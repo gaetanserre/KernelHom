@@ -8,6 +8,7 @@ import KernelHom.Mathlib.MeasurableEquiv
 import KernelHom.Mathlib.Kernel
 import Mathlib.Combinatorics.Quiver.ReflQuiver
 import Mathlib.Probability.Kernel.Category.SFinKer
+import Mathlib.CategoryTheory.CopyDiscardCategory.Deterministic
 
 open MeasureTheory ProbabilityTheory MeasurableEquiv
 
@@ -72,9 +73,9 @@ variable {Z : Type z} [MeasurableSpace Z] {Z' : Type w} [MeasurableSpace Z'] {ez
 
 open CategoryTheory
 
-lemma hom_comp {κ₁ : Kernel X Y} {κ₂ : Kernel Z X} [IsSFiniteKernel κ₁] [IsSFiniteKernel κ₂] :
-    hom (ex := ez) (ey := ex) κ₂ ≫ hom (ex := ex) (ey := ey) κ₁
-      = hom (ex := ez) (ey := ey) (κ₁ ∘ₖ κ₂) := by
+lemma hom_comp {κ : Kernel X Y} {η : Kernel Z X} [IsSFiniteKernel κ] [IsSFiniteKernel η] :
+    η.hom (ex := ez) (ey := ex) ≫ κ.hom (ex := ex) (ey := ey)
+      = (κ ∘ₖ η).hom (ex := ez) (ey := ey) := by
   ext; dsimp
   simp only [hom]
   rw [map_comp, ← comp_map, comap_apply, comp_apply', comp_apply', map_apply, comap_apply,
@@ -181,7 +182,7 @@ section whiskers
 
 lemma WhiskerLeft {κ : Kernel X Y} [IsSFiniteKernel κ] :
     SFinKer.of Z' ◁ κ.hom (ex := ex) (ey := ey) =
-      hom (ex := ez.prod ex) (ey := ez.prod ey) ((Kernel.id (α := Z)) ∥ₖ κ) := by
+      ((Kernel.id (α := Z)) ∥ₖ κ).hom (ex := ez.prod ex) (ey := ez.prod ey) := by
   ext _ _ hs; dsimp
   simp only [hom]
   rw [parallelComp_apply, comap_apply, map_apply, id_apply,
@@ -197,7 +198,7 @@ lemma WhiskerLeft {κ : Kernel X Y} [IsSFiniteKernel κ] :
 
 lemma WhiskerRight {κ : Kernel X Y} [IsSFiniteKernel κ] :
     κ.hom (ex := ex) (ey := ey) ▷ SFinKer.of Z' =
-      hom (ex := ex.prod ez) (ey := ey.prod ez) (κ ∥ₖ Kernel.id (α := Z)) := by
+      (κ ∥ₖ Kernel.id (α := Z)).hom (ex := ex.prod ez) (ey := ey.prod ez) := by
   ext _ _ hs; dsimp
   simp only [hom]
   rw [parallelComp_apply, comap_apply, map_apply, id_apply,
@@ -241,7 +242,7 @@ variable {V : Type v} [MeasurableSpace V] {V' : Type w} [MeasurableSpace V'] {ev
 
 lemma tensorHom {κ : Kernel X Y} [IsSFiniteKernel κ] {η : Kernel V Z} [IsSFiniteKernel η] :
     κ.hom (ex := ex) (ey := ey) ⊗ₘ η.hom (ex := ev) (ey := ez) =
-      hom (ex := ex.prod ev) (ey := ey.prod ez) (κ ∥ₖ η) := by
+      (κ ∥ₖ η).hom (ex := ex.prod ev) (ey := ey.prod ez) := by
   ext : 1; dsimp
   simp only [hom]
   rw [id_parallelComp_comp_parallelComp_id, comap_parallelComp_comap, map_parallelComp_map]
@@ -289,5 +290,38 @@ lemma comul : Δ[SFinKer.of X'] = (Kernel.copy X).hom (ex := ex) (ey := ex.prod 
   all_goals fun_prop
 
 end comonobj
+
+section deterministic
+
+instance {f : X → Y} {hf : Measurable f} :
+    Deterministic (hom (ex := ex) (ey := ey) <| (deterministic f hf)) where
+  hom_counit := by
+    ext : 1; dsimp
+    simp only [hom]
+    rw [deterministic_map (by fun_prop) (by fun_prop)]
+    ext
+    rw [discard_apply, comp_apply, comap_apply, deterministic_apply]
+    simp only [Function.comp_apply, MeasurableSpace.measurableSet_top, Measure.dirac_apply']
+    rw [Measure.bind_apply, lintegral_dirac']
+    · simp
+    all_goals try fun_prop
+    all_goals measurability
+  hom_comul := by
+    ext : 1; dsimp
+    simp only [hom]
+    rw [Kernel.id_parallelComp_comp_parallelComp_id]
+    rw [comap_parallelComp_comap, map_parallelComp_map, deterministic_parallelComp_deterministic,
+      deterministic_map, deterministic_map]
+    · ext _ _ hs
+      rw [comp_apply, comap_apply, deterministic_apply, comp_apply, copy_apply]
+      rw [Measure.bind_apply, Measure.bind_apply, lintegral_dirac', lintegral_dirac']
+      · rw [copy_apply, comap_apply, deterministic_apply]
+        congr
+      all_goals try fun_prop
+      all_goals try measurability
+      all_goals exact Kernel.measurable_coe _ hs
+    all_goals fun_prop
+
+end deterministic
 
 end ProbabilityTheory.Kernel

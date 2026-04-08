@@ -10,6 +10,7 @@ import Mathlib.Tactic.CategoryTheory.Coherence
 open Lean Elab Tactic CategoryTheory
 open Lean Elab Tactic Meta CategoryTheory Parser.Tactic ProbabilityTheory MonoidalCategory
 
+open MeasureTheory ProbabilityTheory
 
 open scoped MonoidalCategory
 
@@ -33,6 +34,7 @@ syntax "kernel_coherence" : tactic
 -- ANCHOR: kernel_coherence_tactic
 elab_rules : tactic
   | `(tactic| kernel_coherence) => do
+    evalTactic (← `(tactic| try simp only [Kernel.compProd, Kernel.prod]))
     evalTactic (← `(tactic| kernel_hom))
     evalTactic (← `(tactic| coherence))
 -- ANCHOR_END: kernel_coherence_tactic
@@ -44,6 +46,7 @@ syntax "kernel_monoidal" : tactic
 -- ANCHOR: kernel_monoidal_tactic
 elab_rules : tactic
   | `(tactic| kernel_monoidal) => do
+    evalTactic (← `(tactic| try simp only [Kernel.compProd, Kernel.prod]))
     evalTactic (← `(tactic| kernel_hom))
     evalTactic (← `(tactic| monoidal))
 -- ANCHOR_END: kernel_monoidal_tactic

@@ -71,6 +71,20 @@ example : (ξ ∥ₖ Kernel.id) ∘ₖ (η ∥ₖ κ) = (ξ ∘ₖ η) ∥ₖ κ
   kernel_monoidal
 ```
 
+- [`parallelComp_comp_parallelComp`](TODO)
+
+```anchor parallelComp_comp_parallelComp
+example : (η ∥ₖ η') ∘ₖ (κ ∥ₖ κ') = (η ∘ₖ κ) ∥ₖ (η' ∘ₖ κ') := by
+  kernel_monoidal
+```
+
+- [`parallelComp_comp_prod`](TODO)
+
+```anchor parallelComp_comp_prod
+example : (η ∥ₖ η') ∘ₖ (κ ×ₖ κ') = (η ∘ₖ κ) ×ₖ (η' ∘ₖ κ') := by
+  kernel_monoidal
+```
+
 - [`swap_parallelComp`](doc/Mathlib/Probability/Kernel/Composition/KernelLemmas.html#ProbabilityTheory.Kernel.swap_parallelComp)
 
   Object of the symmetric category are also handled by the tactic, such as [`Kernel.swap`](doc/Mathlib/Probability/Kernel/Basic.html#ProbabilityTheory.Kernel.swap) that is translated to the right braiding of [`SFinKer`](doc/Mathlib/Probability/Kernel/Category/SFinKer.html#SFinKer).
@@ -83,4 +97,22 @@ example : swap Y T ∘ₖ (κ ∥ₖ ξ) = ξ ∥ₖ κ ∘ₖ swap X Z := by
   swap; · simp [hη]
   kernel_hom
   exact braiding_naturality _ _
+```
+
+- [`deterministic_comp_copy`](TODO)
+
+  The categorical counterpart of deterministic kernels are automatically treated as [`Deterministic`](TODO) morphisms.
+
+```anchor deterministic_comp_copy
+example {f : X → Y} (hf : Measurable f) :
+    (deterministic f hf ∥ₖ deterministic f hf) ∘ₖ copy X = copy Y ∘ₖ deterministic f hf := by
+  kernel_hom
+  exact (Deterministic.copy_natural _).symm
+```
+
+```anchor discard_comp_deterministic
+example {f : X → Y} (hf : Measurable f) :
+    Kernel.discard Y ∘ₖ (deterministic f hf) = Kernel.discard X := by
+  kernel_hom
+  exact Deterministic.discard_natural _
 ```
