@@ -5,15 +5,19 @@ Authors: Gaëtan Serré
 -/
 
 import KernelHom.Tactic.Tactics
+import Mathlib
 
 open MeasureTheory ProbabilityTheory CategoryTheory BraidedCategory MonoidalCategory
 
 open scoped ComonObj
 
-variable {W X Y Z T : Type*} [MeasurableSpace W] [MeasurableSpace X] [MeasurableSpace Y]
-  [MeasurableSpace Z] [MeasurableSpace T] {κ : Kernel X Y} {η : Kernel W Z} {ξ : Kernel Z T}
+variable {X Y Z T X' Y' Z' : Type*} [MeasurableSpace X] [MeasurableSpace Y]
+  [MeasurableSpace Z] [MeasurableSpace T] [MeasurableSpace X'] [MeasurableSpace Y']
+  [MeasurableSpace Z']
 
 namespace ProbabilityTheory.Kernel
+
+variable {κ : Kernel X Y} {ξ : Kernel Z T} {η : Kernel Y Z}
 
 /-- `swap_parallelComp` -/
 -- ANCHOR: swap_parallelComp
@@ -43,6 +47,37 @@ example : (ξ ∥ₖ Kernel.id) ∘ₖ (η ∥ₖ κ) = (ξ ∘ₖ η) ∥ₖ κ
   swap; · simp [hκ]
   kernel_monoidal
 -- ANCHOR_END: parallelComp_id_right_comp_parallelComp
+
+variable [IsSFiniteKernel κ]
+
+variable {κ' : Kernel X Y'} {η' : Kernel Y' Z'} [IsSFiniteKernel κ'] [IsSFiniteKernel η']
+
+/-- `parallelComp_comp_parallelComp` -/
+-- ANCHOR: parallelComp_comp_parallelComp
+example : (η ∥ₖ η') ∘ₖ (κ ∥ₖ κ') = (η ∘ₖ κ) ∥ₖ (η' ∘ₖ κ') := by
+  kernel_monoidal
+-- ANCHOR_END: parallelComp_comp_parallelComp
+
+/-- `parallelComp_comp_prod` -/
+-- ANCHOR: parallelComp_comp_prod
+example : (η ∥ₖ η') ∘ₖ (κ ×ₖ κ') = (η ∘ₖ κ) ×ₖ (η' ∘ₖ κ') := by
+  kernel_monoidal
+-- ANCHOR_END: parallelComp_comp_prod
+
+/-- `deterministic_comp_copy` -/
+-- ANCHOR: deterministic_comp_copy
+example {f : X → Y} (hf : Measurable f) :
+    (deterministic f hf ∥ₖ deterministic f hf) ∘ₖ copy X = copy Y ∘ₖ deterministic f hf := by
+  kernel_hom
+  exact (Deterministic.copy_natural _).symm
+-- ANCHOR_END: deterministic_comp_copy
+
+-- ANCHOR: discard_comp_deterministic
+example {f : X → Y} (hf : Measurable f) :
+    Kernel.discard Y ∘ₖ (deterministic f hf) = Kernel.discard X := by
+  kernel_hom
+  exact Deterministic.discard_natural _
+-- ANCHOR_END: discard_comp_deterministic
 
 /-- Dummy example for Verso referencing -/
 -- ANCHOR: dummy_example
