@@ -43,9 +43,9 @@ import KernelHom
 
 - {anchorTerm dummy_example}`hom_kernel`: The inverse of {anchorTerm swap_parallelComp}`kernel_hom`, transforms an equality in [`SFinKer`](doc/Mathlib/Probability/Kernel/Category/SFinKer.html#SFinKer) back into a kernel equality.
 
-- {anchorTerm parallelComp_id_left_comp_parallelComp}`kernel_monoidal`: Applies the [`monoidal`](doc/Mathlib/Tactic/CategoryTheory/Monoidal/Basic.html#Mathlib.Tactic.Monoidal.monoidal) tactic to a kernel equality.
+- {anchorTerm parallelComp_id_left_comp_parallelComp}`kernel_monoidal`: Applies the [`monoidal`](doc/Mathlib/Tactic/CategoryTheory/Monoidal/Basic.html#Mathlib.Tactic.Monoidal.monoidal) tactic to a s-finite kernel equality.
 
-- [`kernel_coherence`](doc/KernelHom/Tactic/KernelCat.html#tacticKernel_coherence): Applies the [`coherence`](doc/Mathlib/Tactic/CategoryTheory/Coherence.html#Mathlib.Tactic.Coherence.coherence) tactic to a kernel equality.
+- [`kernel_coherence`](doc/KernelHom/Tactic/KernelCat.html#tacticKernel_coherence): Applies the [`coherence`](doc/Mathlib/Tactic/CategoryTheory/Coherence.html#Mathlib.Tactic.Coherence.coherence) tactic to a s-finite kernel equality.
 
 Basically, whenever you have a equality of s-finite kernels that you want to simplify, you can apply {anchorTerm swap_parallelComp}`kernel_hom` to transform it into a categorical equality, try applying categorical tactics, simps, or manually manipulate it, and then apply {anchorTerm dummy_example}`hom_kernel` to get back to a kernel equality if needed. The built-in helpers [`kernel_coherence`](doc/KernelHom/Tactic/KernelCat.html#tacticKernel_coherence) and {anchorTerm parallelComp_id_left_comp_parallelComp}`kernel_monoidal` directly apply categorical tactics to kernels without needing to manually invoke the translation tactic.
 
