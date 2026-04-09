@@ -7,7 +7,7 @@ Authors: Gaëtan Serré
 import KernelHom.Mathlib.MeasurableEquiv
 import KernelHom.Mathlib.Kernel
 import Mathlib.Combinatorics.Quiver.ReflQuiver
-import Mathlib.Probability.Kernel.Category.SFinKer
+import KernelHom.Mathlib.SFinKer
 import Mathlib.CategoryTheory.CopyDiscardCategory.Deterministic
 
 open MeasureTheory ProbabilityTheory MeasurableEquiv
@@ -318,14 +318,6 @@ instance {f : X → Y} {hf : Measurable f} :
       all_goals try measurability
       all_goals exact Kernel.measurable_coe _ hs
     all_goals fun_prop
-
-instance (X : SFinKer) : Deterministic (𝟙 X) where
-  hom_counit := by
-    ext : 1; dsimp
-    simp
-  hom_comul := by
-    ext : 1; dsimp
-    simp
 
 end deterministic
 
