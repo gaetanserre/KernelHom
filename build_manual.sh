@@ -1,11 +1,9 @@
 set -x -e
 
-lake exe cache get
-lake build
-rm -rf html _out
+rm -rf _out html
 lake exe manual
 mkdir html
 mv _out/html-multi/* html/
 rm -rf _out
 mkdir -p html/static
-cp static_files/* html/static
+cp verso/static_files/* html/static

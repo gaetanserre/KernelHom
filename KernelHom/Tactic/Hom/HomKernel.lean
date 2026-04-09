@@ -416,8 +416,19 @@ def mkHomKernelEqProof (eqProofType : Expr) (eLevel : Level)
   setGoals savedGoals
   instantiateMVars mvar
 
-/-- Core implementation of the `hom_kernel` tactic on a single goal or hypothesis. -/
-def applyHomKernel (goal : MVarId) (fvarId : Option FVarId) : TacticM MVarId := do
+/-- The `hom_kernel` tactic is the inverse of `kernel_hom`: it transforms an
+equality written in the monoidal category back to an equivalent equality of
+s-finite kernels.
+
+The tactic supports location specifiers like `rw` or `simp`:
+- `hom_kernel` — applies to the goal
+- `hom_kernel at h` — applies to hypothesis `h`
+- `hom_kernel at h₁ h₂` — applies to multiple hypotheses
+- `hom_kernel at h ⊢` — applies to hypothesis `h` and the goal
+- `hom_kernel at *` — applies to all hypotheses and the goal
+
+It is useful to switch back to kernel equations once categorical rewrites are done. -/
+def homKernel (goal : MVarId) (fvarId : Option FVarId) : TacticM MVarId := do
   goal.withContext do
     let expr ← match fvarId with
         | some fid => do
@@ -441,24 +452,13 @@ def applyHomKernel (goal : MVarId) (fvarId : Option FVarId) : TacticM MVarId := 
       let mvarId ← getMainGoal
       mvarId.replaceTargetEq kernelExpr eqProof
 
-/-- The `hom_kernel` tactic is the inverse of `kernel_hom`: it transforms an
-equality written in the monoidal category back to an equivalent equality of
-s-finite kernels.
-
-The tactic supports location specifiers like `rw` or `simp`:
-- `hom_kernel` — applies to the goal
-- `hom_kernel at h` — applies to hypothesis `h`
-- `hom_kernel at h₁ h₂` — applies to multiple hypotheses
-- `hom_kernel at h ⊢` — applies to hypothesis `h` and the goal
-- `hom_kernel at *` — applies to all hypotheses and the goal
-
-It is useful to switch back to kernel equations once categorical rewrites are done. -/
+@[inherit_doc homKernel]
 syntax "hom_kernel" (ppSpace location)? : tactic
 
 -- ANCHOR: hom_kernel_tactic
 elab_rules : tactic
   | `(tactic| hom_kernel $[$loc]?) =>
-    expandOptLocation (Lean.mkOptionalNode loc) |> applyLocTactic <| applyHomKernel
+    expandOptLocation (Lean.mkOptionalNode loc) |> applyLocTactic <| homKernel
 -- ANCHOR_END: hom_kernel_tactic
 
 variable {X Y : Type*} [MeasurableSpace X] [MeasurableSpace Y]

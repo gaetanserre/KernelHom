@@ -1,8 +1,6 @@
 :root {
   --accent: #657ed4;
   --accent-compl: #d4bb65;
-  --background: #eef0f2;
-  --background-lighter: #fafafa;
 }
 
 @font-face {
@@ -12,7 +10,6 @@
 
 body {
   text-align: justify;
-  background-color: var(--background);
 }
 
 
@@ -28,10 +25,6 @@ p a:link,
 p a:hover,
 :is(h1, h2, h3, h4, h5, h6) a:hover {
   text-decoration: underline;
-}
-
-.toc {
-  background-color: var(--background-lighter);
 }
 
 .keyword {
@@ -53,13 +46,9 @@ p a:hover,
   border-radius: 2px !important;
 }
 
-.block {
-  background-color: var(--background-lighter);
+code.block {
+  /* background-color: var(--background-lighter); */
   padding: 0.4em;
   border: 2px solid black;
   border-radius: 0.5em;
-}
-
-.tippy-box[data-theme~='lean'] {
-  background-color: var(--background-lighter) !important;
 }
