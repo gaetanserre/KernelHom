@@ -26,10 +26,10 @@ name = "KernelHom"
 
 [[lean_lib]]
 name = "Manual"
-srcDir = "KernelHom/verso/"
+srcDir = "verso/"
 root = "Manual"
 
 [[lean_exe]]
 name = "manual"
-srcDir = "KernelHom/verso/"
+srcDir = "verso/"
 root = "Manual"

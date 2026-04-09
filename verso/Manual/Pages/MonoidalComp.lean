@@ -4,10 +4,14 @@ Released under GNU GPL 3.0 license as described in the file LICENSE.
 Authors: Gaëtan Serré
 -/
 
+import KernelHom.Kernel.MonoidalComp
 import VersoManual
 
 open Verso.Genre Manual Verso.Genre.Manual.InlineLean Verso.Code.External
 
+set_option linter.style.setOption false
+set_option linter.hashCommand false
+set_option linter.style.longLine false
 set_option pp.rawOnError true
 set_option verso.code.warnLineLength 100
 set_option verso.exampleProject "."
@@ -25,11 +29,7 @@ The translation of kernels to morphisms in the [`SFinKer`](doc/Mathlib/Probabili
 
 The {anchorTerm MeasurableCoherence}`MeasurableCoherence` class witnesses the existence of measurable equivalences between two measurable spaces. It acts as a kernel-level counterpart to the categorical {anchorTerm monoidalCoherence}`MonoidalCoherence` class:
 
-```anchor MeasurableCoherence
-class MeasurableCoherence (X Y : Type*) [MeasurableSpace X] [MeasurableSpace Y] where
-  /-- A measurable equivalence between `X` and `Y`. -/
-  miso : X ≃ᵐ Y
-```
+{docstring MeasurableCoherence}
 
 This class enables an instance of {anchorTerm monoidalCoherence}`MonoidalCoherence` between [`SFinKer`](doc/Mathlib/Probability/Kernel/Category/SFinKer.html#SFinKer) objects at a common universe level via the {anchorTerm monoidalCoherence}`monoidalCoherence` function, using measurable equivalences from the original types.
 
