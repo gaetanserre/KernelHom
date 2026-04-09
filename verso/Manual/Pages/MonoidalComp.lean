@@ -23,7 +23,7 @@ htmlSplit := .never
 shortTitle := "Monoidal composition"
 %%%
 
-The translation of kernels to morphisms in the [`SFinKer`](doc/Mathlib/Probability/Kernel/Category/SFinKer.html#SFinKer) category allows us to adapt the “`⊗≫`” monoidal composition for kernels. The {anchorTerm MeasurableCoherence}`MeasurableCoherence` class witnesses measurable equivalences between types, enabling an instance of categorical {anchorTerm monoidalCoherence}`MonoidalCoherence` that makes the kernelized monoidal composition (noted “`⊗≫ₖ`”) possible.
+The translation of kernels to morphisms in the [`SFinKer`](doc/Mathlib/Probability/Kernel/Category/SFinKer.html#SFinKer) category allows to adapt the “`⊗≫`” monoidal composition for kernels. The {anchorTerm MeasurableCoherence}`MeasurableCoherence` class witnesses measurable equivalences between types, enabling an instance of categorical {anchorTerm monoidalCoherence}`MonoidalCoherence` that makes the kernelized monoidal composition (noted “`⊗≫ₖ`”) possible.
 
 # Measurable Coherence
 
@@ -33,7 +33,7 @@ The {anchorTerm MeasurableCoherence}`MeasurableCoherence` class witnesses the ex
 
 This class enables an instance of {anchorTerm monoidalCoherence}`MonoidalCoherence` between [`SFinKer`](doc/Mathlib/Probability/Kernel/Category/SFinKer.html#SFinKer) objects at a common universe level via the {anchorTerm monoidalCoherence}`monoidalCoherence` function, using measurable equivalences from the original types.
 
-This allows us to bridge the gap between the notion of measurable equivalence and the categorical notion of monoidal coherence, enabling the use of categorical machinery for kernel compositions.
+This allows to bridge the gap between the notion of measurable equivalence and the categorical notion of monoidal coherence, enabling the use of categorical machinery for kernel compositions.
 
 # Monoidal Composition of Kernels
 

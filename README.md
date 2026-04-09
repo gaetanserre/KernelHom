@@ -28,7 +28,7 @@ In addition, `SFinKer` also gives a direct route to `Stoch`, the Markov category
 
 ## Kernelized monoidal composition
 
-One consequence of the translation to `SFinKer` is that we can adapt the categorical monoidal composition `⊗≫` to kernels, resulting in a kernelized monoidal composition `⊗≫ₖ`. This composition automatically handles measurable equivalences, allowing for seamless composition of kernels while maintaining s-finiteness.
+One consequence of the translation to `SFinKer` is that one can adapt the categorical monoidal composition `⊗≫` to kernels, resulting in a kernelized monoidal composition `⊗≫ₖ`. This composition automatically handles measurable equivalences, allowing for seamless composition of kernels while maintaining s-finiteness.
 
 ## Usage
 
