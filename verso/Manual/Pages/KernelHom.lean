@@ -17,7 +17,7 @@ set_option verso.code.warnLineLength 100
 set_option verso.exampleProject "."
 set_option verso.exampleModule "KernelHom.Tactic.Hom.KernelHom"
 
-#doc (Manual) "KernelHom tactic" =>
+#doc (Manual) "kernel\\_hom tactic" =>
 %%%
 htmlSplit := .never
 %%%
