@@ -1,5 +1,7 @@
 # Kernel-Hom
 
+[![CI](https://github.com/gaetanserre/KernelHom/actions/workflows/build-doc.yml/badge.svg)](https://github.com/gaetanserre/KernelHom/actions/workflows/build-doc.yml)
+
 Lean 4 project focused on tactics that translate kernel equalities into categorical equalities, and back. This work is still in early stages, but the core tactics are already implemented and can be used to simplify kernel equalities by leveraging categorical reasoning.
 
 <p align="center">

@@ -28,7 +28,7 @@ shortTitle := "Kernel Categorical Reasoning"
 
 *Overview*
 
-*Kernel Hom* is a Lean 4 library that provides tactics to simplify kernel equalities by leveraging categorical reasoning. It automatically translates s-finite kernel equalities into equalities in a monoidal category, where tactics like [`coherence`](doc/Mathlib/Tactic/CategoryTheory/Coherence.html#Mathlib.Tactic.Coherence.coherence) or [`monoidal`](doc/Mathlib/Tactic/CategoryTheory/Monoidal/Basic.html#Mathlib.Tactic.Monoidal.monoidal) can be applied, and then translates the result back to a kernel equality.
+*Kernel-Hom* is a Lean 4 library that provides tactics to simplify kernel equalities by leveraging categorical reasoning. It automatically translates s-finite kernel equalities into equalities in a monoidal category, where tactics like [`coherence`](doc/Mathlib/Tactic/CategoryTheory/Coherence.html#Mathlib.Tactic.Coherence.coherence) or [`monoidal`](doc/Mathlib/Tactic/CategoryTheory/Monoidal/Basic.html#Mathlib.Tactic.Monoidal.monoidal) can be applied, and then translates the result back to a kernel equality.
 
 ![](static/diagram.svg)
 

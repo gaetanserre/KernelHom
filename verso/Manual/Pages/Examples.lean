@@ -20,7 +20,7 @@ htmlSplit := .never
 
 # Usage
 
-To use `Kernel-Hom`, add the following to your `lakefile.toml`:
+To use *Kernel-Hom*, add the following to your `lakefile.toml`:
 ```
 [[require]]
 name = "kernelhom"
@@ -38,7 +38,7 @@ Then, in your Lean files, you can import the library with:
 import KernelHom
 ```
 
-`Kernel-Hom` provides several tactics for working with s-finite kernels equalities. The main tactics are:
+*Kernel-Hom* provides several tactics for working with s-finite kernels equalities. The main tactics are:
 - {anchorTerm swap_parallelComp}`kernel_hom`: Transforms a s-finite kernel equality into an equality in the [`SFinKer`](doc/Mathlib/Probability/Kernel/Category/SFinKer.html#SFinKer) monoidal category.
 
 - {anchorTerm dummy_example}`hom_kernel`: The inverse of {anchorTerm swap_parallelComp}`kernel_hom`, transforms an equality in [`SFinKer`](doc/Mathlib/Probability/Kernel/Category/SFinKer.html#SFinKer) back into a kernel equality.
