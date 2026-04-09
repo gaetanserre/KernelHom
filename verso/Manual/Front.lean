@@ -52,7 +52,7 @@ A key aspect of the library is automatic universe management: expressions are li
 
 *Kernelized monoidal composition*
 
-One consequence of the translation to [`SFinKer`](doc/Mathlib/Probability/Kernel/Category/SFinKer.html#SFinKer) is that we can adapt the categorical monoidal composition `⊗≫` to kernels, resulting in a kernelized monoidal composition `⊗≫ₖ`. This composition automatically handles measurable equivalences, allowing for seamless composition of kernels while maintaining s-finiteness.
+One consequence of the translation to [`SFinKer`](doc/Mathlib/Probability/Kernel/Category/SFinKer.html#SFinKer) is that we can adapt the categorical monoidal composition “`⊗≫`” to kernels, resulting in a kernelized monoidal composition “`⊗≫ₖ`”. This composition automatically handles measurable equivalences, allowing for seamless composition of kernels while maintaining s-finiteness.
 
 *About*
 
