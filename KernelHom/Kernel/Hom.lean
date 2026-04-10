@@ -7,12 +7,8 @@ Authors: Gaëtan Serré
 import KernelHom.Mathlib.MeasurableEquiv
 import KernelHom.Mathlib.Kernel
 import Mathlib.Combinatorics.Quiver.ReflQuiver
-import KernelHom.Mathlib.SFinKer
+import Mathlib.Probability.Kernel.Category.SFinKer
 import Mathlib.CategoryTheory.CopyDiscardCategory.Deterministic
-
-open MeasureTheory ProbabilityTheory MeasurableEquiv
-
-open scoped SFinKer
 
 /-!
 # Kernel morphisms
@@ -24,6 +20,10 @@ This file defines the transformation between categorical morphisms in `SFinKer` 
 - `fromHom`: transforms a categorical morphism in `SFinKer` to a `Kernel`.
 - `hom`: transforms a `Kernel` to a categorical morphism in `SFinKer`.
 -/
+
+open MeasureTheory ProbabilityTheory MeasurableEquiv
+
+open scoped SFinKer
 
 namespace ProbabilityTheory.Kernel
 

@@ -7,13 +7,6 @@ Authors: Gaëtan Serré
 import KernelHom.Tactic.Hom.KernelHom
 import Mathlib.Tactic.CategoryTheory.Coherence
 
-open Lean Elab Tactic CategoryTheory
-open Lean Elab Tactic Meta CategoryTheory Parser.Tactic ProbabilityTheory MonoidalCategory
-
-open MeasureTheory ProbabilityTheory
-
-open scoped MonoidalCategory
-
 /-!
 # Kernel category tactics
 
@@ -27,26 +20,23 @@ resulting goal.
 - `kernel_monoidal`: tactic combining kernel_hom and categorical monoidal coherence.
 -/
 
+open Lean Elab Tactic CategoryTheory
+open Lean Elab Tactic Meta CategoryTheory Parser.Tactic ProbabilityTheory MonoidalCategory
+
 /-- The `kernel_coherence` tactic applies the `kernel_hom` transformation to the goal and then
 invokes the `coherence` tactic to solve the resulting goal. -/
-syntax "kernel_coherence" : tactic
+syntax (name := kernelCoherence) "kernel_coherence" : tactic
 
--- ANCHOR: kernel_coherence_tactic
 elab_rules : tactic
   | `(tactic| kernel_coherence) => do
-    evalTactic (← `(tactic| try simp only [Kernel.compProd, Kernel.prod]))
     evalTactic (← `(tactic| kernel_hom))
     evalTactic (← `(tactic| coherence))
--- ANCHOR_END: kernel_coherence_tactic
 
 /-- The `kernel_coherence` tactic applies the `kernel_hom` transformation to the goal and then
 invokes the `monoidal` tactic to solve or simplify the resulting goal. -/
-syntax "kernel_monoidal" : tactic
+syntax (name := kernelMonoidal) "kernel_monoidal" : tactic
 
--- ANCHOR: kernel_monoidal_tactic
 elab_rules : tactic
   | `(tactic| kernel_monoidal) => do
-    evalTactic (← `(tactic| try simp only [Kernel.compProd, Kernel.prod]))
     evalTactic (← `(tactic| kernel_hom))
     evalTactic (← `(tactic| monoidal))
--- ANCHOR_END: kernel_monoidal_tactic

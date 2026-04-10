@@ -6,15 +6,36 @@ open Lean Meta Elab Command ProofWidgets Mathlib.Tactic.Widget
 
 open Mathlib.Tactic BicategoryLike Penrose Server
 
-open MeasureTheory ProbabilityTheory
+open MeasureTheory ProbabilityTheory CategoryTheory
+
+open CategoryTheory
+
+open scoped MonoidalCategory ComonObj
 
 namespace Mathlib.Tactic.Widget.StringDiagram
 
+/-- The kernelized penrose variable associated with a node. -/
 def Node.toPenroseVar_kernel (n : Node) : MetaM PenroseVar := do
   let expr ← match n.e.getAppFn with
     | Expr.const ``SFinKer.of _ => do
       let (res, _) ← get_type_from_SFinKer n.e
       pure res
+    | Expr.const ``Iso.hom _ => do
+      let args := n.e.getAppArgs
+      let iso := args[args.size - 1]!
+      match iso.getAppFn with
+      | Expr.const ``BraidedCategory.braiding _ =>
+        let (X, Y, _, _) ← deconstruct_braiding iso
+        mkAppOptM ``Kernel.swap #[X, Y, none, none]
+      | _ => pure n.e
+    | Expr.const ``Iso.inv _ =>
+      let args := n.e.getAppArgs
+      let iso := args[args.size - 1]!
+      match iso.getAppFn with
+      | Expr.const ``BraidedCategory.braiding _ =>
+        let (X, Y, _, _) ← deconstruct_braiding iso
+        mkAppOptM ``Kernel.swap #[Y, X, none, none]
+      | _ => pure n.e
     | Expr.const ``Kernel.hom _ => do
       let args := n.e.getAppArgs
       pure args[args.size - 2]!
@@ -22,9 +43,9 @@ def Node.toPenroseVar_kernel (n : Node) : MetaM PenroseVar := do
   pure (⟨"E", [n.vPos, n.hPosSrc, n.hPosTar], expr⟩)
 
 open scoped Jsx in
-/-- Construct a string diagram from a Penrose `sub`stance program and expressions `embeds` to
-display as labels in the diagram. -/
-def mkStringDiagram_kernel (nodes : List (List Node)) (strands : List (List Strand)) :
+/-- Construct a kernelized string diagram from a Penrose `sub`stance program and
+expressions `embeds` to display as labels in the diagram. -/
+def mkKernelDiagram (nodes : List (List Node)) (strands : List (List Strand)) :
     DiagramBuilderM PUnit := do
   /- Add 2-morphisms. -/
   for x in nodes.flatten do
@@ -53,9 +74,11 @@ end Mathlib.Tactic.Widget.StringDiagram
 namespace KernelDiagram
 
 open scoped Jsx in
-def stringM? (e : Expr) : MetaM (Option Html) := do
+/-- Given a kernel expression, return a string diagram. Otherwise `none`. -/
+def KernelM? (e : Expr) : MetaM (Option Html) := do
   let e ← instantiateMVars e
   try
+    let e ← unfold_kernel_op e
     let maxLvl ← compute_max_universe (← collectExprUniverses e)
     let (e, _) ← transformKernelToHom maxLvl e []
     let k ← StringDiagram.mkKind e
@@ -76,41 +99,51 @@ def stringM? (e : Expr) : MetaM (Option Html) := do
     | none => return none
     | some (nodes, strands) => do
       DiagramBuilderM.run do
-        StringDiagram.mkStringDiagram_kernel nodes strands
+        StringDiagram.mkKernelDiagram nodes strands
         trace[string_diagram] "Penrose substance: \n{(← get).sub}"
         match ← DiagramBuilderM.buildDiagram StringDiagram.dsl StringDiagram.sty with
         | some html => return html
         | none => return <span>No non-structural morphisms found.</span>
   catch _ => return none
 
-def stringEqM? (e : Expr) : MetaM (Option Html) := do
+open scoped Jsx in
+/-- Help function for displaying two string diagrams in an equality. -/
+def mkEqHtml (lhs rhs : Html) : Html :=
+  <div className="flex">
+    <div className="w-50">
+      <details «open»={true}>
+        <summary className="mv2 pointer">Kernel diagram for LHS</summary> {lhs}
+      </details>
+    </div>
+    <div className="w-50">
+      <details «open»={true}>
+        <summary className="mv2 pointer">Kernel diagram for RHS</summary> {rhs}
+      </details>
+    </div>
+  </div>
+
+/-- Given an equality between kernels, return a string diagram of the LHS and RHS.
+Otherwise `none`. -/
+def kernelEqM? (e : Expr) : MetaM (Option Html) := do
   let e ← whnfR <| ← instantiateMVars e
   let some (_, lhs, rhs) := e.eq? | return none
-  let some lhs ← stringM? lhs | return none
-  let some rhs ← stringM? rhs | return none
-  return some <| StringDiagram.mkEqHtml lhs rhs
+  let some lhs ← KernelM? lhs | return none
+  let some rhs ← KernelM? rhs | return none
+  return some <| mkEqHtml lhs rhs
 
-def stringMorOrEqM? (e : Expr) : MetaM (Option Html) := do
+/-- Given a kernel or equality between kernels, return a string diagram.
+Otherwise `none`. -/
+def kernelMorOrEqM? (e : Expr) : MetaM (Option Html) := do
   forallTelescopeReducing (← whnfR <| ← inferType e) fun xs a => do
-    if let some html ← stringM? (mkAppN e xs) then
+    if let some html ← KernelM? (mkAppN e xs) then
       return some html
-    else if let some html ← stringEqM? a then
+    else if let some html ← kernelEqM? a then
       return some html
     else
       return none
 
-/-- The `Expr` presenter for displaying string diagrams. -/
-@[expr_presenter]
-def stringPresenter : ExprPresenter where
-  userName := "Kernel diagram"
-  layoutKind := .block
-  present type := do
-    if let some html ← stringMorOrEqM? type then
-      return html
-    throwError "Couldn't find a 2-morphism to display a kernel diagram."
-
 open scoped Jsx in
-/-- The RPC method for displaying string diagrams. -/
+/-- The RPC method for displaying kernel diagrams. -/
 @[server_rpc_method]
 def rpc (props : PanelWidgetProps) : RequestM (RequestTask Html) :=
   RequestM.asTask do
@@ -121,13 +154,27 @@ def rpc (props : PanelWidgetProps) : RequestM (RequestTask Html) :=
       g.ctx.val.runMetaM {} do
         g.mvarId.withContext do
           let type ← g.mvarId.getType
-          stringEqM? type)
+          kernelMorOrEqM? type)
     match html with
     | none => return <span>No Kernel Diagram.</span>
     | some inner => return inner
 
 end KernelDiagram
 
+/-- Display the kernel diagrams if the goal is an equality of s-finite kernels. -/
+@[widget_module]
+def KernelDiagram : Component PanelWidgetProps :=
+  mk_rpc_widget% KernelDiagram.rpc
+
+/--
+Display the kernel diagram for a given term.
+
+Example usage:
+```
+/- Kernel diagram for an equality theorem. -/
+#kernel_diagram ProbabilityTheory.Kernel.deterministic_comp_copy
+```
+-/
 syntax (name := kernelDiagram) "#kernel_diagram " term : command
 
 @[command_elab kernelDiagram]
@@ -136,7 +183,7 @@ def elabKernelDiagramCmd : CommandElab := fun
     let html ← runTermElabM fun _ => do
       let e ← try mkConstWithFreshMVarLevels (← realizeGlobalConstNoOverloadWithInfo t)
         catch _ => Term.levelMVarToParam (← instantiateMVars (← Term.elabTerm t none))
-      match ← KernelDiagram.stringMorOrEqM? e with
+      match ← KernelDiagram.kernelMorOrEqM? e with
       | some html => return html
       | none => throwError "could not find a kernel or equality: {e}"
     liftCoreM <| Widget.savePanelWidgetInfo

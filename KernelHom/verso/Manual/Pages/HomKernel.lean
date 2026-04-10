@@ -14,21 +14,19 @@ set_option linter.hashCommand false
 set_option linter.style.longLine false
 set_option pp.rawOnError true
 set_option verso.code.warnLineLength 100
-set_option verso.exampleProject "."
-set_option verso.exampleModule "KernelHom.Tactic.Hom.HomKernel"
 
 #doc (Manual) "hom\\_kernel tactic" =>
 %%%
 htmlSplit := .never
 %%%
 
-The {anchorTerm hom_kernel_tactic}`hom_kernel` tactic is the inverse of {anchorTerm example_hom_kernel}`kernel_hom`. It transforms categorical equalities in the [`SFinKer`](doc/Mathlib/Probability/Kernel/Category/SFinKer.html#SFinKer) category back into equivalent kernel equalities. For example, given morphisms `κ.hom ≫ η.hom = ξ.hom` in the [`SFinKer`](doc/Mathlib/Probability/Kernel/Category/SFinKer.html#SFinKer) category, the tactic transforms it back to the kernel equality `η ∘ₖ κ = ξ`.
+The {name homKernel}`hom_kernel` tactic is the inverse of {name kernelHom}`kernel_hom`. It transforms categorical equalities in the {name SFinKer}`SFinKer` category back into equivalent kernel equalities. For example, given morphisms `κ.hom ≫ η.hom = ξ.hom` in the {name SFinKer}`SFinKer` category, the tactic transforms it back to the kernel equality `η ∘ₖ κ = ξ`.
 
 {docstring homKernel}
 
 The tactic can be described in 3 steps:
 
-1. First, it recursively traverses the categorical equality and creates a new expression where each morphism is replaced by its translation as a kernel expression, uniformly un-lifting carrier spaces from the common universe level to their original universe levels using measurable equivalences. During this process, it recognizes patterns of categorical composition and identities, and translates them to the corresponding kernel operations (composition, identity, parallel composition, etc...). This is done using the {anchorTerm transformHomToKernel}`transformHomToKernel` function.
+1. First, it recursively traverses the categorical equality and creates a new expression where each morphism is replaced by its translation as a kernel expression, uniformly un-lifting carrier spaces from the common universe level to their original universe levels using measurable equivalences. During this process, it recognizes patterns of categorical composition and identities, and translates them to the corresponding kernel operations (composition, identity, parallel composition, etc...). This is done using the {name transformHomToKernel}`transformHomToKernel` function.
 
   {docstring transformHomToKernel}
 

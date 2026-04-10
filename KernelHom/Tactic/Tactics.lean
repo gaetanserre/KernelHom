@@ -7,6 +7,7 @@ Authors: Gaëtan Serré
 import KernelHom.Tactic.Hom.Universe
 import KernelHom.Tactic.Hom.Utils
 import KernelHom.Tactic.Hom.KernelHom
+import KernelHom.Tactic.Hom.KernelDiagram
 import KernelHom.Tactic.Hom.HomKernel
 import KernelHom.Tactic.LocTactic
 import KernelHom.Tactic.KernelCat

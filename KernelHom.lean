@@ -5,6 +5,7 @@ import KernelHom.Mathlib.LIntegral
 import KernelHom.Mathlib.MeasurableEquiv
 import KernelHom.Tactic.Hom.HomKernel
 import KernelHom.Tactic.Hom.KernelHom
+import KernelHom.Tactic.Hom.KernelDiagram
 import KernelHom.Tactic.Hom.Universe
 import KernelHom.Tactic.Hom.Utils
 import KernelHom.Tactic.KernelCat

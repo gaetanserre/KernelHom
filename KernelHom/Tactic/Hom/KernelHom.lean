@@ -215,7 +215,6 @@ def construct_associator_inv (left right : Expr) (maxLvl : Level) :=
 
 /-- Recursive transformation from kernel expressions to morphism expressions in the `SFinKer`
 category. -/
--- ANCHOR: transformKernelToHom
 partial def transformKernelToHom (maxLvl : Level) (e : Expr) (op_data : List CategoryOP) :
     MetaM (Expr × List CategoryOP) := do
   match e.getAppFn with
@@ -318,7 +317,6 @@ partial def transformKernelToHom (maxLvl : Level) (e : Expr) (op_data : List Cat
       let ey ← construct_measurable_equiv Y yLvl maxLvl
       return( ← mkAppOptM' quiverConst
         #[none, none, none, none, none, none, none, none, ex, ey, e, none], op_data)
--- ANCHOR_END: transformKernelToHom
 
 /-- Construct the proof of equivalence between the original equality and the transformed one. -/
 def mkKernelHomEqProof (eqProofType rhs lhs : Expr) (maxLvl : Level)
@@ -513,13 +511,14 @@ example {W X Y Z : Type*} [MeasurableSpace X] [MeasurableSpace Y] [MeasurableSpa
   kernel_hom
   exact Category.assoc _ _ _
 ``` -/
-def kernelHom (goal : MVarId) (fvarId : Option FVarId) : TacticM MVarId := do
+def ApplyKernelHom (goal : MVarId) (fvarId : Option FVarId) : TacticM MVarId := do
   goal.withContext do
     let expr ← match fvarId with
         | some fid => do
           let decl ← fid.getDecl
           pure decl.type
         | none => goal.getType
+    let expr ← unfold_kernel_op expr
     let maxLvl ← compute_max_universe (← collectExprUniverses expr)
     let (homExpr, op_data, rhs, lhs) ← transformEquality maxLvl expr transformKernelToHom
     let eqProofType ← mkEq expr homExpr
@@ -537,11 +536,9 @@ def kernelHom (goal : MVarId) (fvarId : Option FVarId) : TacticM MVarId := do
       let mvarId ← getMainGoal
       mvarId.replaceTargetEq homExpr eqProof
 
-@[inherit_doc kernelHom]
-syntax "kernel_hom" (ppSpace location)? : tactic
+@[inherit_doc ApplyKernelHom]
+syntax (name := kernelHom) "kernel_hom" (ppSpace location)? : tactic
 
--- ANCHOR: kernel_hom_tactic
 elab_rules : tactic
   | `(tactic| kernel_hom $[$loc]?) =>
-    expandOptLocation (Lean.mkOptionalNode loc) |> applyLocTactic <| kernelHom
--- ANCHOR_END: kernel_hom_tactic
+    expandOptLocation (Lean.mkOptionalNode loc) |> applyLocTactic <| ApplyKernelHom

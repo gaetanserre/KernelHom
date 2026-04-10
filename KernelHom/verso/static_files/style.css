@@ -12,8 +12,6 @@ body {
   text-align: justify;
 }
 
-
-
 p a:visited,
 p a:link,
 :is(h1, h2, h3, h4, h5, h6) a:visited,
@@ -27,7 +25,8 @@ p a:hover,
   text-decoration: underline;
 }
 
-.keyword {
+.keyword,
+.const {
   color: var(--accent) !important;
 }
 
