@@ -80,10 +80,7 @@ def transformEquality (maxLvl : Level) (e : Expr)
   let e ← zetaReduce e
   let e ← whnf e
   let e := e.consumeMData
-  match e with
-  | Expr.app (Expr.app (Expr.app (Expr.const ``Eq _) _) lhsExpr) rhsExpr =>
-    let (lhs, lh) ← transform maxLvl lhsExpr []
-    let (rhs, rh) ← transform maxLvl rhsExpr lh
-    return (← mkAppM `Eq #[lhs, rhs], rh, lhsExpr, rhsExpr)
-  | _ =>
-    throwError "Expected an equality, got: {e}"
+  let some (_, lhs, rhs) := e.eq? | throwError "Expected an equality, got: {e}"
+  let (lhs', lh) ← transform maxLvl lhs []
+  let (rhs', rh) ← transform maxLvl rhs lh
+  return (← mkAppM `Eq #[lhs', rhs'], rh, lhs, rhs)

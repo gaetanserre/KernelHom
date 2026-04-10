@@ -5,6 +5,7 @@ Authors: Gaëtan Serré
 -/
 
 import KernelHom.Tactic.Tactics
+import KernelHom.Tactic.Hom.KernelDiagram
 
 open MeasureTheory ProbabilityTheory CategoryTheory BraidedCategory MonoidalCategory
 
@@ -41,9 +42,7 @@ example : (Kernel.id ∥ₖ ξ) ∘ₖ (κ ∥ₖ η) = κ ∥ₖ (ξ ∘ₖ η)
 
 /-- `parallelComp_id_right_comp_parallelComp` -/
 -- ANCHOR: parallelComp_id_right_comp_parallelComp
-example : (ξ ∥ₖ Kernel.id) ∘ₖ (η ∥ₖ κ) = (ξ ∘ₖ η) ∥ₖ κ := by
-  by_cases hκ : IsSFiniteKernel κ
-  swap; · simp [hκ]
+lemma tttt [IsSFiniteKernel κ] : (ξ ∥ₖ Kernel.id) ∘ₖ (η ∥ₖ κ) = (ξ ∘ₖ η) ∥ₖ κ := by
   kernel_monoidal
 -- ANCHOR_END: parallelComp_id_right_comp_parallelComp
 
@@ -73,7 +72,7 @@ example {f : X → Y} (hf : Measurable f) :
 
 -- ANCHOR: discard_comp_deterministic
 example {f : X → Y} (hf : Measurable f) :
-    Kernel.discard Y ∘ₖ (deterministic f hf) = Kernel.discard X := by
+    discard Y ∘ₖ (deterministic f hf) = discard X := by
   kernel_hom
   exact Deterministic.discard_natural _
 -- ANCHOR_END: discard_comp_deterministic
@@ -85,5 +84,19 @@ example (h : η = 0) : η = 0 := by
   hom_kernel
   exact h
 -- ANCHOR_END: dummy_example
+
+lemma t {f : X → Y} (hf : Measurable f) :
+    discard Y ∘ₖ (deterministic f hf) = discard X := by
+  kernel_hom
+  exact Deterministic.discard_natural _
+
+lemma t' : (Kernel.id : Kernel X X) = Kernel.id (α := X) ∘ₖ Kernel.id (α := X) := by
+  simp
+
+#kernel_diagram parallelComp_comp_parallelComp
+
+lemma tt {C : Type*} [Category* C] (c : C) : 𝟙 C = 𝟙 C ≫ 𝟙 C := by
+  simp
+
 
 end ProbabilityTheory.Kernel
