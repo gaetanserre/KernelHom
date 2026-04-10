@@ -51,11 +51,11 @@ noncomputable def monoidalCoherence {X' Y' : Type w} [MeasurableSpace X'] [Measu
     · rw [Kernel.id_map (by fun_prop), Kernel.id_map (by fun_prop),
         Kernel.deterministic_comp_deterministic, Kernel.id]
       congr
-      simp [e]
+      simp
     · rw [Kernel.id_map (by fun_prop), Kernel.id_map (by fun_prop),
         Kernel.deterministic_comp_deterministic, Kernel.id]
       congr
-      simp [e]
+      simp
 
 end MeasurableCoherence
 
