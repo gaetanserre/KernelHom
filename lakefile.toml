@@ -18,8 +18,9 @@ name = "verso"
 git = "https://github.com/leanprover/verso"
 
 [[require]]
-name = "subverso"
-git = "https://github.com/leanprover/subverso"
+name = "proofwidgets"
+scope = "leanprover-community"
+rev = "main"
 
 [[lean_lib]]
 name = "KernelHom"
