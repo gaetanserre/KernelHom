@@ -23,6 +23,7 @@
     <script src="-verso-data/katex/katex.js"></script>
     <script src="-verso-data/katex/math.js"></script>
     <script src="-verso-data/popper.min.js"></script>
+    <script src="-verso-data/string-diagram/string-diagram-loader.js" defer="defer"></script>
     <script src="-verso-data/tippy-bundle.umd.min.js"></script>
     <link rel="stylesheet" href="-verso-data/tippy-border.css">
     <link rel="stylesheet" href="-verso-data/katex/katex.css">
@@ -851,6 +852,59 @@ body {
   font-weight: bold;
   margin-right: 0.5em;
 }
+</style><style>
+:root {
+  --vscode-editor-foreground: var(--verso-text-color, #111);
+  --vscode-editor-background: #fff;
+  --vscode-editorHoverWidget-background: #fff;
+  --vscode-editorHoverWidget-foreground: var(--verso-text-color, #111);
+  --vscode-editorHoverWidget-border: #98B2C0;
+}
+
+.verso-string-diagram {
+  margin: 1rem 0;
+  color: var(--verso-text-color, #111);
+}
+
+.verso-string-diagram-root {
+  overflow-x: auto;
+}
+
+.verso-string-diagram .sd-loading {
+  color: var(--verso-fg-secondary, #666);
+  font-style: italic;
+}
+
+.verso-string-diagram .sd-inline-code {
+  font-family: var(--verso-font-mono, monospace);
+  font-size: 0.85rem;
+  line-height: 1.3;
+  white-space: pre-wrap;
+  color: var(--verso-code-color, #111);
+  background: transparent;
+}
+
+.verso-string-diagram .relative { position: relative; }
+.verso-string-diagram .absolute { position: absolute; }
+.verso-string-diagram .dib { display: inline-block; }
+.verso-string-diagram .flex { display: flex; gap: 1rem; flex-wrap: nowrap; align-items:flex-start; }
+.verso-string-diagram .w-50 { flex: 1 1 0; min-width: 0; }
+
+@media (max-width: 900px) {
+  .verso-string-diagram .flex { flex-wrap: wrap; }
+  .verso-string-diagram .w-50 { flex-basis: 24rem; }
+}
+.verso-string-diagram .top-0 { top: 0; }
+.verso-string-diagram .right-0 { right: 0; }
+.verso-string-diagram .pv1 { padding-top: 0.25rem; padding-bottom: 0.25rem; }
+.verso-string-diagram .ph2 { padding-left: 0.5rem; padding-right: 0.5rem; }
+.verso-string-diagram .mv2 { margin-top: 0.5rem; margin-bottom: 0.5rem; }
+.verso-string-diagram .pointer { cursor: pointer; }
+.verso-string-diagram .link { text-decoration: none; }
+.verso-string-diagram .dim { opacity: 0.85; }
+.verso-string-diagram .dim:hover { opacity: 1; }
+.verso-string-diagram .o-30 { opacity: 0.3; }
+.verso-string-diagram .red { color: #b00020; }
 </style><style>
 
 .hl.lean {
@@ -1798,7 +1852,7 @@ window.onload = () => {
               <p>
                 <strong>Overview</strong></p>
               <p>
-                <strong>Kernel-Hom</strong> is a Lean 4 library that provides tactics to simplify kernel equalities by leveraging categorical reasoning. It automatically translates s-finite kernel equalities into equalities in a monoidal category, where tactics like <a href="doc/Mathlib/Tactic/CategoryTheory/Coherence.html#Mathlib.Tactic.Coherence.coherence"><code>coherence</code></a> or <a href="doc/Mathlib/Tactic/CategoryTheory/Monoidal/Basic.html#Mathlib.Tactic.Monoidal.monoidal"><code>monoidal</code></a> can be applied, and then translates the result back to a kernel equality.</p>
+                <strong>Kernel-Hom</strong> is a Lean 4 library that provides tactics to simplify kernel equalities by leveraging categorical reasoning. It automatically translates s-finite kernel equalities into equalities in a monoidal category, where tactics like <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Mathlib.Tactic.Monoidal.monoidal" data-verso-hover="0">monoidal</span></code> or <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Mathlib.Tactic.Coherence.coherence" data-verso-hover="1">coherence</span></code> can be applied, and then translates the result back to a kernel equality if needed. The translation from kernels to categorical expressions also allows to use any tool from category theory within the context of kernels, such as string diagram visualization or monoidal composition.</p>
               <p>
                 <img src="static/diagram.svg" alt=""></p>
               <p>
@@ -1812,26 +1866,30 @@ window.onload = () => {
               <ul>
                 <li>
                   <p>
-                    <a href="doc/KernelHom/Tactic/Hom/KernelHom.html#kernelHom"><code>kernel_hom</code></a> : transforms a kernel equality into an equality in the monoidal category.</p>
+                    <code class="hl lean inline" data-lean-context="examples"><a href="kernel_hom-tactic/#kernelHom" title="Documentation for kernelHom"><span class="const token" data-binding="const-kernelHom" data-verso-hover="2">kernel_hom</span></a></code> : transforms a kernel equality into an equality in the monoidal category.</p>
                   </li>
                 <li>
                   <p>
-                    <a href="doc/KernelHom/Tactic/Hom/HomKernel.html#homKernel"><code>hom_kernel</code></a> : performs the inverse transformation, bringing the categorical equality back to a kernel equality.</p>
+                    <code class="hl lean inline" data-lean-context="examples"><a href="hom_kernel-tactic/#homKernel" title="Documentation for homKernel"><span class="const token" data-binding="const-homKernel" data-verso-hover="3">kernel_hom</span></a></code> : performs the inverse transformation, bringing the categorical equality back to a kernel equality.</p>
                   </li>
                 </ul>
               <p>
-                These tactics allow users to transform complex kernel equalities into categorical equalities, where powerful categorical tactics can be applied to simplify or prove them. To this end, the library provides built-in helpers like <a href="doc/KernelHom/Tactic/KernelCat.html#tacticKernel_monoidal"><code>kernel_monoidal</code></a> and <a href="doc/KernelHom/Tactic/KernelCat.html#tacticKernel_coherence"><code>kernel_coherence</code></a> to apply categorical tactics directly to kernels without needing to manually invoke the translation tactics.</p>
+                These tactics allow users to transform complex kernel equalities into categorical equalities, where powerful categorical tactics can be applied to simplify or prove them. To this end, the library provides built-in helpers like <code class="hl lean inline" data-lean-context="examples"><a href="Categorical-tactics-for-kernels/#kernelMonoidal" title="Documentation for kernelMonoidal"><span class="const token" data-binding="const-kernelMonoidal" data-verso-hover="4">kernel_monoidal</span></a></code> and <code class="hl lean inline" data-lean-context="examples"><a href="Categorical-tactics-for-kernels/#kernelCoherence" title="Documentation for kernelCoherence"><span class="const token" data-binding="const-kernelCoherence" data-verso-hover="5">kernel_coherence</span></a></code> to apply categorical tactics directly to kernels without needing to manually invoke the translation tactics.</p>
               <p>
-                The library rests on <a href="doc/Mathlib/Probability/Kernel/Category/SFinKer.html#SFinKer"><code>SFinKer</code></a>, the category of measurable spaces with s-finite kernels as morphisms, equipped with monoidal and symmetric structures. This category is also used to define <a href="https://leanprover-community.github.io/mathlib4_docs/Mathlib/Probability/Kernel/Category/Stoch.html#Stoch"><code>Stoch</code></a>, the category of measurable spaces with Markov kernels as morphisms, which is a wide subcategory of <a href="doc/Mathlib/Probability/Kernel/Category/SFinKer.html#SFinKer"><code>SFinKer</code></a> (see  (Fritz, 2020)<span class="marginalia"><span class="note"><span class="citation">Tobias Fritz, 2020. “A synthetic approach to Markov kernels, conditional independence and theorems
+                The library rests on <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-SFinKer" data-verso-hover="6">SFinKer</span></code>, the category of measurable spaces with s-finite kernels as morphisms, equipped with monoidal and symmetric structures. This category is also used to define <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Stoch" data-verso-hover="7">Stoch</span></code>, the category of measurable spaces with Markov kernels as morphisms, which is a wide subcategory of <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-SFinKer" data-verso-hover="6">SFinKer</span></code> (see  (Fritz, 2020)<span class="marginalia"><span class="note"><span class="citation">Tobias Fritz, 2020. “A synthetic approach to Markov kernels, conditional independence and theorems
   on sufficient statistics”. In <em>Advances in Mathematics.</em></span></span></span>). Both categories have been merged into Mathlib (PR <a href="https://github.com/leanprover-community/mathlib4/pull/36779">#36779</a>).</p>
               <p>
                 <strong>Universe handling</strong></p>
               <p>
                 A key aspect of the library is automatic universe management: expressions are lifted to a common universe level during translation, ensuring categorical expressions are well-typed. This allows users to work with kernels of varying universe levels without needing to manually manage universe annotations.</p>
               <p>
+                <strong>Kernel diagrams</strong></p>
+              <p>
+                The library provides the <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-kernelDiagram" data-verso-hover="8">kernel_diagram</span></code> command, which generates string diagrams for kernel expressions. This is an adaptation of the <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Mathlib.Tactic.Widget.stringDiagram" data-verso-hover="9">string_diagram</span></code> command, where s-finite kernels are represented as morphisms using <code class="hl lean inline" data-lean-context="examples"><a href="kernel_hom-tactic/#kernelHom" title="Documentation for kernelHom"><span class="const token" data-binding="const-kernelHom" data-verso-hover="2">kernel_hom</span></a></code>. This provides a visual representation of kernel compositions and transformations, aiding intuition and understanding. The visualization of such diagrams in this documentation is made possible by the Verso code block expander made by <a href="https://github.com/yuma-mizuno/coherence-tactics/blob/master/CoherenceTactics/VersoStringDiagram.lean">@Yuma Mizuno</a>.</p>
+              <p>
                 <strong>Kernelized monoidal composition</strong></p>
               <p>
-                One consequence of the translation to <a href="doc/Mathlib/Probability/Kernel/Category/SFinKer.html#SFinKer"><code>SFinKer</code></a> is that we can adapt the categorical monoidal composition “<code>⊗≫</code>” to kernels, resulting in a kernelized monoidal composition “<code>⊗≫ₖ</code>”. This composition automatically handles measurable equivalences, allowing for seamless composition of kernels while maintaining s-finiteness.</p>
+                An additional consequence of the translation to <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-SFinKer" data-verso-hover="6">SFinKer</span></code> is that one can adapt the categorical monoidal composition “<code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-CategoryTheory.monoidalComp" data-verso-hover="10">⊗≫</span></code>” to kernels, resulting in a kernelized monoidal composition “<code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-ProbabilityTheory.Kernel.monoComp" data-verso-hover="11">⊗≫ₖ</span></code>”. This composition automatically handles measurable equivalences, allowing for seamless composition of kernels while maintaining s-finiteness.</p>
               <p>
                 <strong>About</strong></p>
               <p>

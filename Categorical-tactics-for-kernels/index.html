@@ -23,6 +23,7 @@
     <script src="-verso-data/katex/katex.js"></script>
     <script src="-verso-data/katex/math.js"></script>
     <script src="-verso-data/popper.min.js"></script>
+    <script src="-verso-data/string-diagram/string-diagram-loader.js" defer="defer"></script>
     <script src="-verso-data/tippy-bundle.umd.min.js"></script>
     <link rel="stylesheet" href="-verso-data/tippy-border.css">
     <link rel="stylesheet" href="-verso-data/katex/katex.css">
@@ -851,6 +852,59 @@ body {
   font-weight: bold;
   margin-right: 0.5em;
 }
+</style><style>
+:root {
+  --vscode-editor-foreground: var(--verso-text-color, #111);
+  --vscode-editor-background: #fff;
+  --vscode-editorHoverWidget-background: #fff;
+  --vscode-editorHoverWidget-foreground: var(--verso-text-color, #111);
+  --vscode-editorHoverWidget-border: #98B2C0;
+}
+
+.verso-string-diagram {
+  margin: 1rem 0;
+  color: var(--verso-text-color, #111);
+}
+
+.verso-string-diagram-root {
+  overflow-x: auto;
+}
+
+.verso-string-diagram .sd-loading {
+  color: var(--verso-fg-secondary, #666);
+  font-style: italic;
+}
+
+.verso-string-diagram .sd-inline-code {
+  font-family: var(--verso-font-mono, monospace);
+  font-size: 0.85rem;
+  line-height: 1.3;
+  white-space: pre-wrap;
+  color: var(--verso-code-color, #111);
+  background: transparent;
+}
+
+.verso-string-diagram .relative { position: relative; }
+.verso-string-diagram .absolute { position: absolute; }
+.verso-string-diagram .dib { display: inline-block; }
+.verso-string-diagram .flex { display: flex; gap: 1rem; flex-wrap: nowrap; align-items:flex-start; }
+.verso-string-diagram .w-50 { flex: 1 1 0; min-width: 0; }
+
+@media (max-width: 900px) {
+  .verso-string-diagram .flex { flex-wrap: wrap; }
+  .verso-string-diagram .w-50 { flex-basis: 24rem; }
+}
+.verso-string-diagram .top-0 { top: 0; }
+.verso-string-diagram .right-0 { right: 0; }
+.verso-string-diagram .pv1 { padding-top: 0.25rem; padding-bottom: 0.25rem; }
+.verso-string-diagram .ph2 { padding-left: 0.5rem; padding-right: 0.5rem; }
+.verso-string-diagram .mv2 { margin-top: 0.5rem; margin-bottom: 0.5rem; }
+.verso-string-diagram .pointer { cursor: pointer; }
+.verso-string-diagram .link { text-decoration: none; }
+.verso-string-diagram .dim { opacity: 0.85; }
+.verso-string-diagram .dim:hover { opacity: 1; }
+.verso-string-diagram .o-30 { opacity: 0.3; }
+.verso-string-diagram .red { color: #b00020; }
 </style><style>
 
 .hl.lean {
@@ -1776,7 +1830,13 @@ window.onload = () => {
               <table><tr class="numbered"><td class="num">1.</td><td><a href="Usage-and-examples/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Usage-and-examples">Usage and examples</a></td></tr><tr class="numbered"><td class="num">2.</td><td><a href="Universe-handling/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Universe-handling">Universe handling</a></td></tr><tr class="numbered"><td class="num">3.</td><td><a href="kernel_hom-tactic/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--kernel_hom-tactic">kernel_hom tactic</a></td></tr><tr class="numbered"><td class="num">4.</td><td><a href="hom_kernel-tactic/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--hom_kernel-tactic">hom_kernel tactic</a></td></tr><tr class="current numbered"><td class="num">5.</td><td><a href="Categorical-tactics-for-kernels/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Categorical-tactics-for-kernels">Categorical tactics for kernels</a></td></tr><tr class="numbered"><td class="num">6.</td><td><a href="Kernelized-monoidal-composition/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Kernelized-monoidal-composition">Monoidal composition</a></td></tr></table></div>
             <div class="split-toc">
               <div class="title">
-                <span class="no-toggle"></span><span class="number">5.</span> <span class="current"><a href="Categorical-tactics-for-kernels/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Categorical-tactics-for-kernels">Categorical tactics for kernels</a></span></div>
+                <label for="--verso-manual-toc-Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Categorical-tactics-for-kernels" class="toggle-split-toc"><input type="checkbox" class="toggle-split-toc" id="--verso-manual-toc-Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Categorical-tactics-for-kernels" checked="checked"></label><span class="number">5.</span> <span class="current"><a href="Categorical-tactics-for-kernels/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Categorical-tactics-for-kernels">Categorical tactics for kernels</a></span></div>
+              <ol>
+                <li>
+                  <a href="Categorical-tactics-for-kernels/#kernelMonoidal"><code>kernelMonoidal</code></a></li>
+                <li>
+                  <a href="Categorical-tactics-for-kernels/#kernelCoherence"><code>kernelCoherence</code></a></li>
+                </ol>
               </div>
             </div>
           </div>
@@ -1796,7 +1856,23 @@ window.onload = () => {
             <h1>
               5. Categorical tactics for kernels<span class="permalink-widget inline"><a href="find/?domain=Verso.Genre.Manual.section&amp;name=Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Categorical-tactics-for-kernels" title="Permalink">🔗</a></span></h1>
             <p>
-              Two of the most powerful tactics for categories is Mathlib are <code class="hl lean inline" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Mathlib.Tactic.Monoidal.tacticMonoidal-1800" data-verso-hover="112">monoidal</span></code> and <code class="hl lean inline" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Mathlib.Tactic.Coherence.coherence-1303" data-verso-hover="113">coherence</span></code>. To facilitate the use of these tactics for kernel equalities, we provide the <code class="hl lean inline" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-tacticKernel_monoidal-1627" data-verso-hover="2">kernel_monoidal</span></code> and <code class="hl lean inline" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-tacticKernel_coherence-1129" data-verso-hover="114">kernel_coherence</span></code> tactics, which first apply <code class="hl lean inline" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-tacticKernel_hom__-1260" data-verso-hover="0">kernel_hom</span></code> to the goal to translate the kernel equality into a categorical equality in the <a href="doc/Mathlib/Probability/Kernel/Category/SFinKer.html#SFinKer"><code>SFinKer</code></a> category, then apply <code class="hl lean inline" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Mathlib.Tactic.Monoidal.tacticMonoidal-1800" data-verso-hover="112">monoidal</span></code> or <code class="hl lean inline" data-lean-context="examples"><span class="keyword token" data-binding="kw-occ-Mathlib.Tactic.Coherence.coherence-1303" data-verso-hover="113">coherence</span></code> to solve or simplify the categorical equality.
+              Two of the most powerful tactics for categories is Mathlib are <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Mathlib.Tactic.Monoidal.monoidal" data-verso-hover="0">monoidal</span></code> and <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Mathlib.Tactic.Coherence.coherence" data-verso-hover="1">coherence</span></code>. To facilitate the use of these tactics for kernel equalities, <strong>Kernel-Hom</strong> provide the <code class="hl lean inline" data-lean-context="examples"><a href="Categorical-tactics-for-kernels/#kernelMonoidal" title="Documentation for kernelMonoidal"><span class="const token" data-binding="const-kernelMonoidal" data-verso-hover="4">kernel_monoidal</span></a></code> and <code class="hl lean inline" data-lean-context="examples"><a href="Categorical-tactics-for-kernels/#kernelCoherence" title="Documentation for kernelCoherence"><span class="const token" data-binding="const-kernelCoherence" data-verso-hover="5">kernel_coherence</span></a></code> tactics, which first apply <code class="hl lean inline" data-lean-context="examples"><a href="kernel_hom-tactic/#kernelHom" title="Documentation for kernelHom"><span class="const token" data-binding="const-kernelHom" data-verso-hover="2">kernel_hom</span></a></code> to the goal to translate the kernel equality into a categorical equality in the <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-SFinKer" data-verso-hover="6">SFinKer</span></code> category, then apply <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Mathlib.Tactic.Monoidal.monoidal" data-verso-hover="0">monoidal</span></code> or <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Mathlib.Tactic.Coherence.coherence" data-verso-hover="1">coherence</span></code> to solve or simplify the categorical equality.</p>
+            <div class="namedocs" id="kernelMonoidal">
+              <span class="permalink-widget block"><a href="find/?domain=Verso.Genre.Manual.doc&amp;name=kernelMonoidal" title="Permalink">🔗</a></span><span class="label">def</span><pre class="signature hl lean block"><div class="wide-only"><a href="Categorical-tactics-for-kernels/#kernelMonoidal" title="Documentation for kernelMonoidal"><span class="const token" data-binding="const-kernelMonoidal" data-verso-hover="4">kernelMonoidal</span></a><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-Lean.ParserDescr" data-verso-hover="117">Lean.ParserDescr</span></div><div class="narrow-only"><a href="Categorical-tactics-for-kernels/#kernelMonoidal" title="Documentation for kernelMonoidal"><span class="const token" data-binding="const-kernelMonoidal" data-verso-hover="4">kernelMonoidal</span></a><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-Lean.ParserDescr" data-verso-hover="117">Lean.ParserDescr</span></div></pre><div class="text">
+                <p>
+                  The <code class="hl lean inline" data-lean-context="docstring-examples"><span class="keyword token" data-binding="kw-occ-kernelCoherence-0" data-verso-hover="127">kernel_coherence</span></code> tactic applies the <code class="hl lean inline" data-lean-context="docstring-examples"><span class="keyword token" data-binding="kw-occ-kernelHom-0" data-verso-hover="64">kernel_hom</span></code> transformation to the goal and then
+invokes the <code class="hl lean inline" data-lean-context="docstring-examples"><span class="keyword token" data-binding="kw-occ-Mathlib.Tactic.Monoidal.tacticMonoidal-0" data-verso-hover="128">monoidal</span></code> tactic to solve or simplify the resulting goal.</p>
+                </div>
+              </div>
+            <div class="namedocs" id="kernelCoherence">
+              <span class="permalink-widget block"><a href="find/?domain=Verso.Genre.Manual.doc&amp;name=kernelCoherence" title="Permalink">🔗</a></span><span class="label">def</span><pre class="signature hl lean block"><div class="wide-only"><a href="Categorical-tactics-for-kernels/#kernelCoherence" title="Documentation for kernelCoherence"><span class="const token" data-binding="const-kernelCoherence" data-verso-hover="5">kernelCoherence</span></a><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-Lean.ParserDescr" data-verso-hover="117">Lean.ParserDescr</span></div><div class="narrow-only"><a href="Categorical-tactics-for-kernels/#kernelCoherence" title="Documentation for kernelCoherence"><span class="const token" data-binding="const-kernelCoherence" data-verso-hover="5">kernelCoherence</span></a><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-Lean.ParserDescr" data-verso-hover="117">Lean.ParserDescr</span></div></pre><div class="text">
+                <p>
+                  The <code class="hl lean inline" data-lean-context="docstring-examples"><span class="keyword token" data-binding="kw-occ-kernelCoherence-0" data-verso-hover="127">kernel_coherence</span></code> tactic applies the <code class="hl lean inline" data-lean-context="docstring-examples"><span class="keyword token" data-binding="kw-occ-kernelHom-0" data-verso-hover="64">kernel_hom</span></code> transformation to the goal and then
+invokes the <code class="hl lean inline" data-lean-context="docstring-examples"><span class="keyword token" data-binding="kw-occ-Mathlib.Tactic.Coherence.coherence-0" data-verso-hover="129">coherence</span></code> tactic to solve the resulting goal.</p>
+                </div>
+              </div>
+            <p>
+              For more details on the implementation of the <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Mathlib.Tactic.Monoidal.monoidal" data-verso-hover="0">monoidal</span></code> and <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Mathlib.Tactic.Coherence.coherence" data-verso-hover="1">coherence</span></code> tactics, see the <a href="https://yuma-mizuno.github.io/coherence-tactics/">documentation</a> made by <a href="https://yuma-mizuno.github.io/">@Yuma Mizuno</a>.
 </p>
             </section>
           <nav class="prev-next-buttons">

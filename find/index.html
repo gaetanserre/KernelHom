@@ -22,6 +22,7 @@
     <script src="-verso-data/katex/katex.js"></script>
     <script src="-verso-data/katex/math.js"></script>
     <script src="-verso-data/popper.min.js"></script>
+    <script src="-verso-data/string-diagram/string-diagram-loader.js" defer="defer"></script>
     <script src="-verso-data/tippy-bundle.umd.min.js"></script>
     <link rel="stylesheet" href="-verso-data/tippy-border.css">
     <link rel="stylesheet" href="-verso-data/katex/katex.css">
@@ -851,6 +852,59 @@ body {
   margin-right: 0.5em;
 }
 </style><style>
+:root {
+  --vscode-editor-foreground: var(--verso-text-color, #111);
+  --vscode-editor-background: #fff;
+  --vscode-editorHoverWidget-background: #fff;
+  --vscode-editorHoverWidget-foreground: var(--verso-text-color, #111);
+  --vscode-editorHoverWidget-border: #98B2C0;
+}
+
+.verso-string-diagram {
+  margin: 1rem 0;
+  color: var(--verso-text-color, #111);
+}
+
+.verso-string-diagram-root {
+  overflow-x: auto;
+}
+
+.verso-string-diagram .sd-loading {
+  color: var(--verso-fg-secondary, #666);
+  font-style: italic;
+}
+
+.verso-string-diagram .sd-inline-code {
+  font-family: var(--verso-font-mono, monospace);
+  font-size: 0.85rem;
+  line-height: 1.3;
+  white-space: pre-wrap;
+  color: var(--verso-code-color, #111);
+  background: transparent;
+}
+
+.verso-string-diagram .relative { position: relative; }
+.verso-string-diagram .absolute { position: absolute; }
+.verso-string-diagram .dib { display: inline-block; }
+.verso-string-diagram .flex { display: flex; gap: 1rem; flex-wrap: nowrap; align-items:flex-start; }
+.verso-string-diagram .w-50 { flex: 1 1 0; min-width: 0; }
+
+@media (max-width: 900px) {
+  .verso-string-diagram .flex { flex-wrap: wrap; }
+  .verso-string-diagram .w-50 { flex-basis: 24rem; }
+}
+.verso-string-diagram .top-0 { top: 0; }
+.verso-string-diagram .right-0 { right: 0; }
+.verso-string-diagram .pv1 { padding-top: 0.25rem; padding-bottom: 0.25rem; }
+.verso-string-diagram .ph2 { padding-left: 0.5rem; padding-right: 0.5rem; }
+.verso-string-diagram .mv2 { margin-top: 0.5rem; margin-bottom: 0.5rem; }
+.verso-string-diagram .pointer { cursor: pointer; }
+.verso-string-diagram .link { text-decoration: none; }
+.verso-string-diagram .dim { opacity: 0.85; }
+.verso-string-diagram .dim:hover { opacity: 1; }
+.verso-string-diagram .o-30 { opacity: 0.3; }
+.verso-string-diagram .red { color: #b00020; }
+</style><style>
 
 .hl.lean {
   white-space: pre;
@@ -1675,72 +1729,78 @@ Some CSS frameworks customize details/summary in ways not compatible with Verso'
  {"title": "Verso.Genre.Manual.example",
   "description": null,
   "contents":
-  {"transformKernelToHom":
-   [{"id": "transformKernelToHom",
+  {"ProbabilityTheory.Kernel.swap_parallelComp₀":
+   [{"id": "ProbabilityTheory___Kernel___swap_parallelComp___",
      "data":
-     {"/kernel_hom-tactic/#transformKernelToHom":
-      {"display": "transformKernelToHom",
+     {"/Usage-and-examples/#ProbabilityTheory___Kernel___swap_parallelComp___":
+      {"display": "swap_parallelComp₀",
        "context":
        ["Kernel-Hom: Tactics for Kernel Categorical Reasoning",
-        "kernel_hom tactic"]}},
-     "address": "/kernel_hom-tactic/"}],
-   "transformHomToKernel":
-   [{"id": "transformHomToKernel",
+        "Usage and examples",
+        "Examples"]}},
+     "address": "/Usage-and-examples/"}],
+   "ProbabilityTheory.Kernel.parallelComp_id_right_comp_parallelComp₀":
+   [{"id":
+     "ProbabilityTheory___Kernel___parallelComp_id_right_comp_parallelComp___",
      "data":
-     {"/hom_kernel-tactic/#transformHomToKernel":
-      {"display": "transformHomToKernel",
+     {"/Usage-and-examples/#ProbabilityTheory___Kernel___parallelComp_id_right_comp_parallelComp___":
+      {"display": "parallelComp_id_right_comp_parallelComp₀",
        "context":
        ["Kernel-Hom: Tactics for Kernel Categorical Reasoning",
-        "hom_kernel tactic"]}},
-     "address": "/hom_kernel-tactic/"}],
-   "collectExprUniverses":
-   [{"id": "collectExprUniverses",
+        "Usage and examples",
+        "Examples"]}},
+     "address": "/Usage-and-examples/"}],
+   "ProbabilityTheory.Kernel.parallelComp_id_left_comp_parallelComp₀":
+   [{"id":
+     "ProbabilityTheory___Kernel___parallelComp_id_left_comp_parallelComp___",
      "data":
-     {"/Universe-handling/#collectExprUniverses":
-      {"display": "collectExprUniverses",
+     {"/Usage-and-examples/#ProbabilityTheory___Kernel___parallelComp_id_left_comp_parallelComp___":
+      {"display": "parallelComp_id_left_comp_parallelComp₀",
        "context":
        ["Kernel-Hom: Tactics for Kernel Categorical Reasoning",
-        "Universe handling"]}},
-     "address": "/Universe-handling/"}],
-   "MeasurableCoherence.monoidalCoherence":
-   [{"id": "MeasurableCoherence___monoidalCoherence",
+        "Usage and examples",
+        "Examples"]}},
+     "address": "/Usage-and-examples/"}],
+   "ProbabilityTheory.Kernel.parallelComp_comp_prod₀":
+   [{"id": "ProbabilityTheory___Kernel___parallelComp_comp_prod___",
      "data":
-     {"/Kernelized-monoidal-composition/#MeasurableCoherence___monoidalCoherence":
-      {"display": "monoidalCoherence",
+     {"/Usage-and-examples/#ProbabilityTheory___Kernel___parallelComp_comp_prod___":
+      {"display": "parallelComp_comp_prod₀",
        "context":
        ["Kernel-Hom: Tactics for Kernel Categorical Reasoning",
-        "Kernelized monoidal composition",
-        "Measurable Coherence"]}},
-     "address": "/Kernelized-monoidal-composition/"}],
-   "MeasurableCoherence":
-   [{"id": "MeasurableCoherence-next",
+        "Usage and examples",
+        "Examples"]}},
+     "address": "/Usage-and-examples/"}],
+   "ProbabilityTheory.Kernel.parallelComp_comp_parallelComp₀":
+   [{"id": "ProbabilityTheory___Kernel___parallelComp_comp_parallelComp___",
      "data":
-     {"/Kernelized-monoidal-composition/#MeasurableCoherence-next":
-      {"display": "MeasurableCoherence",
+     {"/Usage-and-examples/#ProbabilityTheory___Kernel___parallelComp_comp_parallelComp___":
+      {"display": "parallelComp_comp_parallelComp₀",
        "context":
        ["Kernel-Hom: Tactics for Kernel Categorical Reasoning",
-        "Kernelized monoidal composition",
-        "Measurable Coherence"]},
-      "/Kernelized-monoidal-composition/#MeasurableCoherence":
-      {"display": "MeasurableCoherence",
-       "context":
-       ["Kernel-Hom: Tactics for Kernel Categorical Reasoning",
-        "Kernelized monoidal composition"]}},
-     "address": "/Kernelized-monoidal-composition/"},
-    {"id": "MeasurableCoherence",
+        "Usage and examples",
+        "Examples"]}},
+     "address": "/Usage-and-examples/"}],
+   "ProbabilityTheory.Kernel.discard_comp_deterministic":
+   [{"id": "ProbabilityTheory___Kernel___discard_comp_deterministic",
      "data":
-     {"/Kernelized-monoidal-composition/#MeasurableCoherence-next":
-      {"display": "MeasurableCoherence",
+     {"/Usage-and-examples/#ProbabilityTheory___Kernel___discard_comp_deterministic":
+      {"display": "discard_comp_deterministic",
        "context":
        ["Kernel-Hom: Tactics for Kernel Categorical Reasoning",
-        "Kernelized monoidal composition",
-        "Measurable Coherence"]},
-      "/Kernelized-monoidal-composition/#MeasurableCoherence":
-      {"display": "MeasurableCoherence",
+        "Usage and examples",
+        "Examples"]}},
+     "address": "/Usage-and-examples/"}],
+   "ProbabilityTheory.Kernel.deterministic_comp_copy₀":
+   [{"id": "ProbabilityTheory___Kernel___deterministic_comp_copy___",
+     "data":
+     {"/Usage-and-examples/#ProbabilityTheory___Kernel___deterministic_comp_copy___":
+      {"display": "deterministic_comp_copy₀",
        "context":
        ["Kernel-Hom: Tactics for Kernel Categorical Reasoning",
-        "Kernelized monoidal composition"]}},
-     "address": "/Kernelized-monoidal-composition/"}]}},
+        "Usage and examples",
+        "Examples"]}},
+     "address": "/Usage-and-examples/"}]}},
  "Verso.Genre.Manual.doc.tech":
  {"title": "Terminology",
   "description": "Definitions of technical terms",
@@ -1764,21 +1824,33 @@ Some CSS frameworks customize details/summary in ways not compatible with Verso'
   "description": "Documentation for Lean constants",
   "contents":
   {"transformKernelToHom":
-   [{"id": "transformKernelToHom-next",
+   [{"id": "transformKernelToHom",
      "data": null,
      "address": "/kernel_hom-tactic/"}],
    "transformHomToKernel":
-   [{"id": "transformHomToKernel-next",
+   [{"id": "transformHomToKernel",
      "data": null,
      "address": "/hom_kernel-tactic/"}],
+   "kernelMonoidal":
+   [{"id": "kernelMonoidal",
+     "data": null,
+     "address": "/Categorical-tactics-for-kernels/"}],
    "kernelHom":
    [{"id": "kernelHom", "data": null, "address": "/kernel_hom-tactic/"}],
+   "kernelCoherence":
+   [{"id": "kernelCoherence",
+     "data": null,
+     "address": "/Categorical-tactics-for-kernels/"}],
    "homKernel":
    [{"id": "homKernel", "data": null, "address": "/hom_kernel-tactic/"}],
    "collectExprUniverses":
-   [{"id": "collectExprUniverses-next",
+   [{"id": "collectExprUniverses",
      "data": null,
      "address": "/Universe-handling/"}],
+   "MeasurableCoherence.monoidalCoherence":
+   [{"id": "MeasurableCoherence___monoidalCoherence",
+     "data": null,
+     "address": "/Kernelized-monoidal-composition/"}],
    "MeasurableCoherence.mk":
    [{"id": "MeasurableCoherence___mk",
      "data": null,

@@ -161,72 +161,78 @@
  {"title": "Verso.Genre.Manual.example",
   "description": null,
   "contents":
-  {"transformKernelToHom":
-   [{"id": "transformKernelToHom",
+  {"ProbabilityTheory.Kernel.swap_parallelComp₀":
+   [{"id": "ProbabilityTheory___Kernel___swap_parallelComp___",
      "data":
-     {"/kernel_hom-tactic/#transformKernelToHom":
-      {"display": "transformKernelToHom",
+     {"/Usage-and-examples/#ProbabilityTheory___Kernel___swap_parallelComp___":
+      {"display": "swap_parallelComp₀",
        "context":
        ["Kernel-Hom: Tactics for Kernel Categorical Reasoning",
-        "kernel_hom tactic"]}},
-     "address": "/kernel_hom-tactic/"}],
-   "transformHomToKernel":
-   [{"id": "transformHomToKernel",
+        "Usage and examples",
+        "Examples"]}},
+     "address": "/Usage-and-examples/"}],
+   "ProbabilityTheory.Kernel.parallelComp_id_right_comp_parallelComp₀":
+   [{"id":
+     "ProbabilityTheory___Kernel___parallelComp_id_right_comp_parallelComp___",
      "data":
-     {"/hom_kernel-tactic/#transformHomToKernel":
-      {"display": "transformHomToKernel",
+     {"/Usage-and-examples/#ProbabilityTheory___Kernel___parallelComp_id_right_comp_parallelComp___":
+      {"display": "parallelComp_id_right_comp_parallelComp₀",
        "context":
        ["Kernel-Hom: Tactics for Kernel Categorical Reasoning",
-        "hom_kernel tactic"]}},
-     "address": "/hom_kernel-tactic/"}],
-   "collectExprUniverses":
-   [{"id": "collectExprUniverses",
+        "Usage and examples",
+        "Examples"]}},
+     "address": "/Usage-and-examples/"}],
+   "ProbabilityTheory.Kernel.parallelComp_id_left_comp_parallelComp₀":
+   [{"id":
+     "ProbabilityTheory___Kernel___parallelComp_id_left_comp_parallelComp___",
      "data":
-     {"/Universe-handling/#collectExprUniverses":
-      {"display": "collectExprUniverses",
+     {"/Usage-and-examples/#ProbabilityTheory___Kernel___parallelComp_id_left_comp_parallelComp___":
+      {"display": "parallelComp_id_left_comp_parallelComp₀",
        "context":
        ["Kernel-Hom: Tactics for Kernel Categorical Reasoning",
-        "Universe handling"]}},
-     "address": "/Universe-handling/"}],
-   "MeasurableCoherence.monoidalCoherence":
-   [{"id": "MeasurableCoherence___monoidalCoherence",
+        "Usage and examples",
+        "Examples"]}},
+     "address": "/Usage-and-examples/"}],
+   "ProbabilityTheory.Kernel.parallelComp_comp_prod₀":
+   [{"id": "ProbabilityTheory___Kernel___parallelComp_comp_prod___",
      "data":
-     {"/Kernelized-monoidal-composition/#MeasurableCoherence___monoidalCoherence":
-      {"display": "monoidalCoherence",
+     {"/Usage-and-examples/#ProbabilityTheory___Kernel___parallelComp_comp_prod___":
+      {"display": "parallelComp_comp_prod₀",
        "context":
        ["Kernel-Hom: Tactics for Kernel Categorical Reasoning",
-        "Kernelized monoidal composition",
-        "Measurable Coherence"]}},
-     "address": "/Kernelized-monoidal-composition/"}],
-   "MeasurableCoherence":
-   [{"id": "MeasurableCoherence-next",
+        "Usage and examples",
+        "Examples"]}},
+     "address": "/Usage-and-examples/"}],
+   "ProbabilityTheory.Kernel.parallelComp_comp_parallelComp₀":
+   [{"id": "ProbabilityTheory___Kernel___parallelComp_comp_parallelComp___",
      "data":
-     {"/Kernelized-monoidal-composition/#MeasurableCoherence-next":
-      {"display": "MeasurableCoherence",
+     {"/Usage-and-examples/#ProbabilityTheory___Kernel___parallelComp_comp_parallelComp___":
+      {"display": "parallelComp_comp_parallelComp₀",
        "context":
        ["Kernel-Hom: Tactics for Kernel Categorical Reasoning",
-        "Kernelized monoidal composition",
-        "Measurable Coherence"]},
-      "/Kernelized-monoidal-composition/#MeasurableCoherence":
-      {"display": "MeasurableCoherence",
-       "context":
-       ["Kernel-Hom: Tactics for Kernel Categorical Reasoning",
-        "Kernelized monoidal composition"]}},
-     "address": "/Kernelized-monoidal-composition/"},
-    {"id": "MeasurableCoherence",
+        "Usage and examples",
+        "Examples"]}},
+     "address": "/Usage-and-examples/"}],
+   "ProbabilityTheory.Kernel.discard_comp_deterministic":
+   [{"id": "ProbabilityTheory___Kernel___discard_comp_deterministic",
      "data":
-     {"/Kernelized-monoidal-composition/#MeasurableCoherence-next":
-      {"display": "MeasurableCoherence",
+     {"/Usage-and-examples/#ProbabilityTheory___Kernel___discard_comp_deterministic":
+      {"display": "discard_comp_deterministic",
        "context":
        ["Kernel-Hom: Tactics for Kernel Categorical Reasoning",
-        "Kernelized monoidal composition",
-        "Measurable Coherence"]},
-      "/Kernelized-monoidal-composition/#MeasurableCoherence":
-      {"display": "MeasurableCoherence",
+        "Usage and examples",
+        "Examples"]}},
+     "address": "/Usage-and-examples/"}],
+   "ProbabilityTheory.Kernel.deterministic_comp_copy₀":
+   [{"id": "ProbabilityTheory___Kernel___deterministic_comp_copy___",
+     "data":
+     {"/Usage-and-examples/#ProbabilityTheory___Kernel___deterministic_comp_copy___":
+      {"display": "deterministic_comp_copy₀",
        "context":
        ["Kernel-Hom: Tactics for Kernel Categorical Reasoning",
-        "Kernelized monoidal composition"]}},
-     "address": "/Kernelized-monoidal-composition/"}]}},
+        "Usage and examples",
+        "Examples"]}},
+     "address": "/Usage-and-examples/"}]}},
  "Verso.Genre.Manual.doc.tech":
  {"title": "Terminology",
   "description": "Definitions of technical terms",
@@ -250,21 +256,33 @@
   "description": "Documentation for Lean constants",
   "contents":
   {"transformKernelToHom":
-   [{"id": "transformKernelToHom-next",
+   [{"id": "transformKernelToHom",
      "data": null,
      "address": "/kernel_hom-tactic/"}],
    "transformHomToKernel":
-   [{"id": "transformHomToKernel-next",
+   [{"id": "transformHomToKernel",
      "data": null,
      "address": "/hom_kernel-tactic/"}],
+   "kernelMonoidal":
+   [{"id": "kernelMonoidal",
+     "data": null,
+     "address": "/Categorical-tactics-for-kernels/"}],
    "kernelHom":
    [{"id": "kernelHom", "data": null, "address": "/kernel_hom-tactic/"}],
+   "kernelCoherence":
+   [{"id": "kernelCoherence",
+     "data": null,
+     "address": "/Categorical-tactics-for-kernels/"}],
    "homKernel":
    [{"id": "homKernel", "data": null, "address": "/hom_kernel-tactic/"}],
    "collectExprUniverses":
-   [{"id": "collectExprUniverses-next",
+   [{"id": "collectExprUniverses",
      "data": null,
      "address": "/Universe-handling/"}],
+   "MeasurableCoherence.monoidalCoherence":
+   [{"id": "MeasurableCoherence___monoidalCoherence",
+     "data": null,
+     "address": "/Kernelized-monoidal-composition/"}],
    "MeasurableCoherence.mk":
    [{"id": "MeasurableCoherence___mk",
      "data": null,
