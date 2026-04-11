@@ -86,6 +86,7 @@ def transformEquality (maxLvl : Level) (e : Expr)
   let (rhs', rh) ← transform maxLvl rhs lh
   return (← mkAppM `Eq #[lhs', rhs'], rh, lhs, rhs)
 
+/-- Unfold kernel operations in an expression. -/
 def unfold_kernel_op (e : Expr) : MetaM Expr := do
   let names := (.empty |> NameSet.insert <| ``Kernel.prod) |> NameSet.insert <| ``Kernel.compProd
   transform e (post := fun e => do

@@ -147,6 +147,7 @@ def deconstruct_associator_inv (iso : Expr) (eLevel : Level) : MetaM (Expr × Ca
   let OP := .Associator_inv ex ey ez
   return (kernel_determistic, OP)
 
+/-- Deconstruct the braiding morphism to get the underlying swapped objects -/
 def deconstruct_braiding (iso : Expr) : MetaM (Expr × Expr × Expr × Expr) := do
   let args := iso.getAppArgs
   let (X, xLvl) ← get_type_from_SFinKer args[args.size - 2]!

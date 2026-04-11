@@ -177,7 +177,7 @@ Example usage:
 -/
 syntax (name := kernelDiagram) "#kernel_diagram " term : command
 
-@[command_elab kernelDiagram]
+@[command_elab kernelDiagram, inherit_doc kernelDiagram]
 def elabKernelDiagramCmd : CommandElab := fun
   | stx@`(#kernel_diagram $t:term) => do
     let html ← runTermElabM fun _ => do
