@@ -21,11 +21,11 @@ git = "https://github.com/leanprover/verso"
 name = "KernelHom"
 
 [[lean_lib]]
-name = "Manual"
+name = "KernelHomManual"
 srcDir = "KernelHom/verso/"
-root = "Manual"
+root = "KernelHomManual"
 
 [[lean_exe]]
 name = "manual"
 srcDir = "KernelHom/verso/"
-root = "Manual"
+root = "KernelHomManual"
