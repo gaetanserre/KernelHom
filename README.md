@@ -39,7 +39,7 @@ The library provides the `kernel_diagram` command that generates a string diagra
 ```
 
 <p align="center">
-  <img src="diagram/kernel_diagram.svg" width="300">
+  <img src="diagram/kernel_diagram.svg" width="500">
 </p>
 
 ## Kernelized monoidal composition
