@@ -5,8 +5,8 @@ Authors: Gaëtan Serré
 -/
 
 import KernelHom.Tests.Examples
-import KernelHom.verso.Tools.VersoKernelDiagram
-import KernelHom.verso.Tools.LeanDecl
+import KernelHomManual.Tools.VersoKernelDiagram
+import KernelHomManual.Tools.LeanDecl
 import VersoManual
 
 open Verso.Genre Manual Verso.Genre.Manual.InlineLean Verso.Code.External Mathlib.Tactic
