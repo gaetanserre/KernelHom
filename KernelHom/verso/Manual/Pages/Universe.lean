@@ -10,6 +10,7 @@ import VersoManual
 
 open Verso.Genre Manual Verso.Genre.Manual.InlineLean Verso.Code.External
 open CategoryTheory ProbabilityTheory
+open Lean
 
 set_option linter.style.setOption false
 set_option linter.hashCommand false
@@ -29,28 +30,41 @@ variable {C : Type u} [Category.{v, u} C] (c c' : C)
 #check C
 #check c ⟶ c'
 ```
-One can see that the objects of the category `C` live in `Type u`, while the morphisms live in `Type v`.
+One can see that the objects of the category are terms of `C : Type u`, and the morphisms are terms of `c ⟶ c' : Type v`
 
-In the context of kernel equalities, we often have kernels where the carrier spaces live in different universe levels:
+In the context of kernel equalities, we often have kernels where the carrier spaces have different universe levels:
 
 ```lean
-variable {X Y : Type*} [MeasurableSpace X] [MeasurableSpace Y]
+variable {X : Type x} {Y : Type y} [MeasurableSpace X] [MeasurableSpace Y]
 #check Kernel X Y
 ```
-Here, `Kernel X Y` lives in a universe level that depends on the universe levels of `X` and `Y`.
+Here, `Kernel X Y` has a universe level that depends on the universe levels of `X` and `Y`: {name Level.max}`max` `x y`.
 
-The counterpart of `Kernel X Y` in the [`SFinKer`](doc/Mathlib/Probability/Kernel/Category/SFinKer.html#SFinKer) category would be `SFinKer.of X ⟶ SFinKer.of Y`. However, it fails to typecheck as `X` and `Y` live in different universe levels:
+The counterpart of `Kernel X Y` in the {name SFinKer}`SFinKer` category would be `SFinKer.of X ⟶ SFinKer.of Y`. However, it fails to typecheck as `X` and `Y` have different universe levels:
 
 ```lean +error
 #check SFinKer.of X ⟶ SFinKer.of Y
 ```
 
-To solve this issue, one can manually lift the carrier spaces to a common universe level using [`ULift`](doc/Init/Prelude.html#ULift):
+To solve this issue, one can manually lift the carrier spaces to a common universe level using {name ULift}`ULift`:
 ```lean
-#check SFinKer.of (ULift.{max u_1 u_2} X) ⟶ SFinKer.of (ULift Y)
+#check SFinKer.of (ULift.{max x y} X) ⟶ SFinKer.of (ULift Y)
 ```
-In this setting, both `ULift X` and `ULift Y` live in the same universe level, allowing the expression to typecheck correctly.
+In this setting, both `ULift X` and `ULift Y` have the same universe level, allowing the expression to typecheck correctly, as a morphism in {name SFinKer}`SFinKer.{max x y}`.
 
-However, manually uniformizing universe levels can be cumbersome when dealing with expressions involving multiple kernels of different carrier spaces. To overcome this limitation, the {name collectExprUniverses}`collectExprUniverses` function recursively traverses an expression and collects all universe levels found. This allows to automatically determine the minimum common universe level for which all carrier spaces of the kernels involved in a given expression can be lifted to (most likely the maximum of all universe levels encountered), and uniformly lift them to that level during the translation process.
+To translate an equality of kernels into an equality of morphisms in {name SFinKer}`SFinKer`, all kernels must be translated to morphisms in {name SFinKer}`SFinKer` by lifting their carrier spaces to a common universe level. However, determining this common universe level requires care.
+
+One might naively take the universe level of the equality's result (left or right-hand side), but this can fail. Consider the following example:
+
+```lean
+variable {Z : Type z} [MeasurableSpace Z] {κ : Kernel X Y} {η : Kernel Z X}
+#check κ ∘ₖ η
+#check Kernel Z Y
+```
+The type of the composition `κ ∘ₖ η` has universe level {name Level.max}`max` `y z`. However, to transform `κ` into a morphism in {name SFinKer}`SFinKer`, we must lift its carrier space `X` (along with `Y`) to a common level. If one naively tries to lift `X` to only {name Level.max}`max` `y z`, it is impossible because `x` might be larger than {name Level.max}`max` `y z`: we cannot lift a type from a larger universe to a smaller one.
+
+The correct approach is to *lift all carrier spaces to the maximum universe level of every space in the entire expression*, which is {name Level.max}`max` `x y z` in this example. This includes spaces that may "disappear" in the final result but still need consistent lifting.
+
+To automate this, the {name collectExprUniverses}`collectExprUniverses` function recursively collects all universe levels found in an expression. This allows us to determine the appropriate common universe level and uniformly lift all carrier spaces to it.
 
 {docstring collectExprUniverses}
