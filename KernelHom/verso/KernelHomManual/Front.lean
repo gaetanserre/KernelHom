@@ -5,13 +5,13 @@ Authors: Gaëtan Serré
 -/
 
 import VersoManual
-import Manual.Papers
-import Manual.Pages.Examples
-import Manual.Pages.Universe
-import Manual.Pages.KernelHom
-import Manual.Pages.HomKernel
-import Manual.Pages.CatTactics
-import Manual.Pages.MonoidalComp
+import KernelHomManual.Papers
+import KernelHomManual.Pages.Examples
+import KernelHomManual.Pages.Universe
+import KernelHomManual.Pages.KernelHom
+import KernelHomManual.Pages.HomKernel
+import KernelHomManual.Pages.CatTactics
+import KernelHomManual.Pages.MonoidalComp
 import KernelHom.Tactic.Hom.KernelDiagram
 import Mathlib.Probability.Kernel.Category.Stoch
 
@@ -64,14 +64,14 @@ An additional consequence of the translation to {name SFinKer}`SFinKer` is that 
 
 This library is under active development and is under the [GNU GPL 3.0 license](https://www.gnu.org/licenses/gpl-3.0.en.html). Contributions and feedback are welcome!
 
-{include 0 Pages.Examples}
+{include 0 KernelHomManual.Pages.Examples}
 
-{include 0 Pages.Universe}
+{include 0 KernelHomManual.Pages.Universe}
 
-{include 0 Pages.KernelHom}
+{include 0 KernelHomManual.Pages.KernelHom}
 
-{include 0 Pages.HomKernel}
+{include 0 KernelHomManual.Pages.HomKernel}
 
-{include 0 Pages.CatTactics}
+{include 0 KernelHomManual.Pages.CatTactics}
 
-{include 0 Pages.MonoidalComp}
+{include 0 KernelHomManual.Pages.MonoidalComp}

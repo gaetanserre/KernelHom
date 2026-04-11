@@ -4,7 +4,7 @@
 
 import VersoManual
 
-import Manual.Front
+import KernelHomManual.Front
 
 open Verso.Genre.Manual Verso.Output.Html
 
@@ -22,4 +22,4 @@ def config : RenderConfig := {
   issueLink := some (git ++ "/issues"),
 }
 
-def main := manualMain (%doc Manual.Front) (config := config)
+def main := manualMain (%doc KernelHomManual.Front) (config := config)
