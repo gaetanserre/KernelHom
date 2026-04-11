@@ -52,7 +52,7 @@ To solve this issue, one can manually lift the carrier spaces to a common univer
 ```
 In this setting, both `ULift X` and `ULift Y` have the same universe level, allowing the expression to typecheck correctly, as a morphism in {name SFinKer}`SFinKer.{max x y}`.
 
-To translate an equality of kernels into an equality of morphisms in {name SFinKer}`SFinKer`, all kernels must be translated to morphisms in {name SFinKer}`SFinKer` by lifting their carrier spaces to a common universe level. However, determining this common universe level requires care.
+To translate an equality of kernels into an equality of morphisms in {name SFinKer}`SFinKer`, all kernels must be translated to morphisms in {name SFinKer}`SFinKer` by lifting their carrier spaces to a common universe level, using the {name MeasurableEquiv.ulift}`ulift` measurable equivalence. However, determining this common universe level requires care.
 
 One might naively take the universe level of the equality's result (left or right-hand side), but this can fail. Consider the following example:
 
