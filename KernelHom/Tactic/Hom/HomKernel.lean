@@ -147,8 +147,16 @@ def deconstruct_associator_inv (iso : Expr) (eLevel : Level) : MetaM (Expr × Ca
   let OP := .Associator_inv ex ey ez
   return (kernel_determistic, OP)
 
+/-- Deconstruct the braiding morphism to get the underlying swapped objects -/
+def deconstruct_braiding (iso : Expr) : MetaM (Expr × Expr × Expr × Expr) := do
+  let args := iso.getAppArgs
+  let (X, xLvl) ← get_type_from_SFinKer args[args.size - 2]!
+  let (Y, yLvl) ← get_type_from_SFinKer args[args.size - 1]!
+  let ex ← construct_measurable_equiv X xLvl xLvl
+  let ey ← construct_measurable_equiv Y yLvl yLvl
+  return (X, Y, ex, ey)
+
 /-- Recursive transformation from morphism expression in `SFinKer` to kernel expression. -/
--- ANCHOR: transformHomToKernel
 partial def transformHomToKernel (eLevel : Level) (e : Expr) (op_data : List CategoryOP) :
     MetaM (Expr × List CategoryOP) := do
   match e.getAppFn with
@@ -188,11 +196,7 @@ partial def transformHomToKernel (eLevel : Level) (e : Expr) (op_data : List Cat
       let (res, associatorHomOP) ← deconstruct_associator_hom iso eLevel
       return (res, associatorHomOP :: op_data)
     | Expr.const ``BraidedCategory.braiding _ =>
-      let args := iso.getAppArgs
-      let (X, xLvl) ← get_type_from_SFinKer args[args.size - 2]!
-      let (Y, yLvl) ← get_type_from_SFinKer args[args.size -1]!
-      let ex ← construct_measurable_equiv X xLvl eLevel
-      let ey ← construct_measurable_equiv Y yLvl eLevel
+      let (X, Y, ex, ey) ← deconstruct_braiding iso
       let e ← mkAppOptM ``Kernel.swap #[X, Y, none, none]
       return (e, .Braiding_hom ex ey :: op_data)
     | _ => throwError "Unexpected isomorphism {iso}"
@@ -200,16 +204,20 @@ partial def transformHomToKernel (eLevel : Level) (e : Expr) (op_data : List Cat
     let args := e.getAppArgs
     let iso := args[args.size - 1]!
     match iso.getAppFn with
-    | Expr.const ``MonoidalCategoryStruct.associator _ =>
-      let (res, associatorInvOP) ← deconstruct_associator_inv iso eLevel
-      return (res, associatorInvOP :: op_data)
     | Expr.const ``MonoidalCategoryStruct.leftUnitor _ =>
       let (res, leftUnitorInvOP) ← deconstruct_unitors_inv iso eLevel true
       return (res, leftUnitorInvOP :: op_data)
     | Expr.const ``MonoidalCategoryStruct.rightUnitor _ =>
       let (res, rightUnitorInvOP) ← deconstruct_unitors_inv iso eLevel false
       return (res, rightUnitorInvOP :: op_data)
-    | _ => throwError "Expected a monoidal isomorphism, got: {iso}"
+    | Expr.const ``MonoidalCategoryStruct.associator _ =>
+      let (res, associatorInvOP) ← deconstruct_associator_inv iso eLevel
+      return (res, associatorInvOP :: op_data)
+    | Expr.const ``BraidedCategory.braiding _ =>
+      let (X, Y, ex, ey) ← deconstruct_braiding iso
+      let e ← mkAppOptM ``Kernel.swap #[Y, X, none, none]
+      return (e, .Braiding_hom ex ey :: op_data)
+    | _ => throwError "Unexpected isomorphism {iso}"
   | Expr.const ``MonoidalCategoryStruct.whiskerLeft _ =>
     let (κ, kernel_id, whiskerLeftOP) ← deconstruct_whiskers_hom_args e eLevel true
     let (κ', lκ) ← transformHomToKernel eLevel κ op_data
@@ -242,7 +250,6 @@ partial def transformHomToKernel (eLevel : Level) (e : Expr) (op_data : List Cat
     let κ := args[args.size - 2]!
     return (κ, op_data)
   | _ => throwError "Expected a hom expression, got: {e}"
--- ANCHOR_END: transformHomToKernel
 
 /-- Construct the proof of equivalence between the original equality and the transformed one. -/
 def mkHomKernelEqProof (eqProofType : Expr) (eLevel : Level)
@@ -428,7 +435,7 @@ The tactic supports location specifiers like `rw` or `simp`:
 - `hom_kernel at *` — applies to all hypotheses and the goal
 
 It is useful to switch back to kernel equations once categorical rewrites are done. -/
-def homKernel (goal : MVarId) (fvarId : Option FVarId) : TacticM MVarId := do
+def ApplyHomKernel (goal : MVarId) (fvarId : Option FVarId) : TacticM MVarId := do
   goal.withContext do
     let expr ← match fvarId with
         | some fid => do
@@ -452,22 +459,9 @@ def homKernel (goal : MVarId) (fvarId : Option FVarId) : TacticM MVarId := do
       let mvarId ← getMainGoal
       mvarId.replaceTargetEq kernelExpr eqProof
 
-@[inherit_doc homKernel]
-syntax "hom_kernel" (ppSpace location)? : tactic
+@[inherit_doc ApplyHomKernel]
+syntax (name := homKernel) "hom_kernel" (ppSpace location)? : tactic
 
--- ANCHOR: hom_kernel_tactic
 elab_rules : tactic
   | `(tactic| hom_kernel $[$loc]?) =>
-    expandOptLocation (Lean.mkOptionalNode loc) |> applyLocTactic <| homKernel
--- ANCHOR_END: hom_kernel_tactic
-
-variable {X Y : Type*} [MeasurableSpace X] [MeasurableSpace Y]
-
--- ANCHOR: example_hom_kernel
-example (κ η : Kernel X Y) [IsSFiniteKernel κ] [IsSFiniteKernel η]
-    (h : κ = η) : κ ∘ₖ Kernel.id = η := by
-  kernel_hom
-  simp only [Category.id_comp]
-  hom_kernel
-  exact h
--- ANCHOR_END: example_hom_kernel
+    expandOptLocation (Lean.mkOptionalNode loc) |> applyLocTactic <| ApplyHomKernel

@@ -10,26 +10,22 @@ weak.linter.mathlibStandardSet = true
 maxSynthPendingDepth = 3
 
 [[require]]
-name = "mathlib"
-scope = "leanprover-community"
-
-[[require]]
 name = "verso"
 git = "https://github.com/leanprover/verso"
 
 [[require]]
-name = "subverso"
-git = "https://github.com/leanprover/subverso"
+name = "mathlib"
+scope = "leanprover-community"
 
 [[lean_lib]]
 name = "KernelHom"
 
 [[lean_lib]]
 name = "Manual"
-srcDir = "verso/"
+srcDir = "KernelHom/verso/"
 root = "Manual"
 
 [[lean_exe]]
 name = "manual"
-srcDir = "verso/"
+srcDir = "KernelHom/verso/"
 root = "Manual"

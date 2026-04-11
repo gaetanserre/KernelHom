@@ -6,8 +6,6 @@ Authors: Gaëtan Serré
 
 import Lean
 
-open Lean Meta
-
 /-!
 # Universe level utilities
 
@@ -20,6 +18,8 @@ It includes conversion functions between levels and syntax, and universe level c
 - `collectExprUniverses`: recursively collects universe levels from expressions.
 - `get_universe_from_eq`: extracts universe information from categorical equalities.
 -/
+
+open Lean Meta
 
 /-- Convert a Level to Syntax for use in tactic quotations. -/
 partial def levelToSyntax (lvl : Level) : MacroM (TSyntax `level) := do
@@ -54,12 +54,10 @@ private def collectExprUniverses.aux (e : Expr) : List Level :=
 
 /-- Recursively traverse an expression and collect universe levels found.
 Returns a list of all unique universe levels encountered. -/
--- ANCHOR: collectExprUniverses
 partial def collectExprUniverses (e : Expr) : MetaM (List Level) := do
   let e ← instantiateMVars e
   let e ← zetaReduce e
   return (collectExprUniverses.aux e).eraseDups
--- ANCHOR_END: collectExprUniverses
 
 /-- Compute the maximum universe level from a list of levels. -/
 def compute_max_universe (levels : List Level) : MetaM Level :=

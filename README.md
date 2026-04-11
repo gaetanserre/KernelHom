@@ -8,7 +8,7 @@ Lean 4 project focused on tactics that translate kernel equalities into categori
   <img src="diagram/diagram.svg" width="500">
 </p>
 
-For more information, see [the project homepage](https://gaetanserre.fr/KernelHom) and the full documentation [here](https://gaetanserre.fr/KernelHom/doc).
+For more information, see [the project homepage](https://gaetanserre.fr/KernelHom) and the [full documentation](https://gaetanserre.fr/KernelHom/doc).
 
 ## Status
 
@@ -26,9 +26,25 @@ Universe handling is part of this translation: expressions are lifted to a commo
 
 In addition, `SFinKer` also gives a direct route to `Stoch`, the Markov category of measurable spaces and Markov kernels, defined as the wide subcategory of `SFinKer` with Markov kernels as morphisms. The definitions/results for `SFinKer` and `Stoch` are now in Mathlib (PR [#36779](https://github.com/leanprover-community/mathlib4/pull/36779)).
 
+## Additional advantages of the translation to categories
+
+The translation from kernels to categorical expressions allows to use any tool from category theory within the context of kernels, such as string diagram visualization or monoidal composition.
+
+### Kernel diagrams
+
+The library provides the `kernel_diagram` command that generates a string diagram for a given kernel expression. This can be useful for visualizing complex kernel compositions and understanding the structure of kernel equalities.
+
+```lean4
+#kernel_diagram ProbabilityTheory.Kernel.deterministic_comp_copy
+```
+
+<p align="center">
+  <img src="diagram/kernel_diagram.svg" width="300">
+</p>
+
 ## Kernelized monoidal composition
 
-One consequence of the translation to `SFinKer` is that we can adapt the categorical monoidal composition `⊗≫` to kernels, resulting in a kernelized monoidal composition `⊗≫ₖ`. This composition automatically handles measurable equivalences, allowing for seamless composition of kernels while maintaining s-finiteness.
+An additional consequence of the translation to `SFinKer` is that one can adapt the categorical monoidal composition `⊗≫` to kernels, resulting in a kernelized monoidal composition `⊗≫ₖ`. This composition automatically handles measurable equivalences, allowing for seamless composition of kernels while maintaining s-finiteness.
 
 ## Usage
 

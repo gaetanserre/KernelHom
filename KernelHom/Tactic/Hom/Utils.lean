@@ -5,9 +5,8 @@ Authors: Gaëtan Serré
 -/
 
 import Lean
-import Mathlib.Probability.Kernel.Basic
-
-open Lean Meta ProbabilityTheory
+import Mathlib.Probability.Kernel.Composition.Prod
+import Mathlib.Probability.Kernel.Composition.CompProd
 
 /-!
 # Kernel transformation utilities
@@ -22,6 +21,8 @@ categorical morphism expressions, including type extraction and equivalence cons
 - `transformEquality`: transforms an equality expression to an other using a provided
 transformation function.
 -/
+
+open Lean Meta ProbabilityTheory
 
 /-- Extract `(X, Y, u, v)` from an expression of type `Kernel X Y`. -/
 def get_types_from_kernel (κ : Expr) : MetaM (Expr × Expr × Level × Level) := do
@@ -80,10 +81,15 @@ def transformEquality (maxLvl : Level) (e : Expr)
   let e ← zetaReduce e
   let e ← whnf e
   let e := e.consumeMData
-  match e with
-  | Expr.app (Expr.app (Expr.app (Expr.const ``Eq _) _) lhsExpr) rhsExpr =>
-    let (lhs, lh) ← transform maxLvl lhsExpr []
-    let (rhs, rh) ← transform maxLvl rhsExpr lh
-    return (← mkAppM `Eq #[lhs, rhs], rh, lhsExpr, rhsExpr)
-  | _ =>
-    throwError "Expected an equality, got: {e}"
+  let some (_, lhs, rhs) := e.eq? | throwError "Expected an equality, got: {e}"
+  let (lhs', lh) ← transform maxLvl lhs []
+  let (rhs', rh) ← transform maxLvl rhs lh
+  return (← mkAppM `Eq #[lhs', rhs'], rh, lhs, rhs)
+
+/-- Unfold kernel operations in an expression. -/
+def unfold_kernel_op (e : Expr) : MetaM Expr := do
+  let names := (.empty |> NameSet.insert <| ``Kernel.prod) |> NameSet.insert <| ``Kernel.compProd
+  transform e (post := fun e => do
+    let e' ← deltaExpand e names.contains
+    let e' ← Core.betaReduce e'
+    return .done e')

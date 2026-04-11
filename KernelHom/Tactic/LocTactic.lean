@@ -6,8 +6,6 @@ Authors: Gaëtan Serré
 
 import Lean.Elab.Tactic.Location
 
-open Lean Elab Tactic Meta
-
 /-!
 # Tactic location support
 
@@ -18,6 +16,8 @@ specified by location patterns, following the standard Lean syntax (like in `rw`
 
 - `applyLocTactic`: applies a tactic to goals and hypotheses at specified locations.
 -/
+
+open Lean Elab Tactic Meta
 
 /-- Apply a given tactic to all goals and/or hypotheses specified by a `Location`. -/
 def applyLocTactic (loc : Location) (tactic : MVarId → Option FVarId → TacticM MVarId) :

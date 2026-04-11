@@ -10,10 +10,6 @@ import Mathlib.Combinatorics.Quiver.ReflQuiver
 import Mathlib.Probability.Kernel.Category.SFinKer
 import Mathlib.CategoryTheory.CopyDiscardCategory.Deterministic
 
-open MeasureTheory ProbabilityTheory MeasurableEquiv
-
-open scoped SFinKer
-
 /-!
 # Kernel morphisms
 
@@ -24,6 +20,10 @@ This file defines the transformation between categorical morphisms in `SFinKer` 
 - `fromHom`: transforms a categorical morphism in `SFinKer` to a `Kernel`.
 - `hom`: transforms a `Kernel` to a categorical morphism in `SFinKer`.
 -/
+
+open MeasureTheory ProbabilityTheory MeasurableEquiv
+
+open scoped SFinKer
 
 namespace ProbabilityTheory.Kernel
 
@@ -318,14 +318,6 @@ instance {f : X → Y} {hf : Measurable f} :
       all_goals try measurability
       all_goals exact Kernel.measurable_coe _ hs
     all_goals fun_prop
-
-instance (X : SFinKer) : Deterministic (𝟙 X) where
-  hom_counit := by
-    ext : 1; dsimp
-    simp
-  hom_comul := by
-    ext : 1; dsimp
-    simp
 
 end deterministic
 
