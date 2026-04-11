@@ -154,88 +154,93 @@
  "17": "<code>Kernel Z T</code>",
  "16":
  "<code>ProbabilityTheory.Kernel.id.{u_1} {α : Type u_1} {mα : MeasurableSpace α} : Kernel α α</code><span class=\"sep\"></span><code class=\"docstring\">The identity kernel, that maps `x : α` to the Dirac measure at `x`. </code>",
+ "152":
+ "<code>ProbabilityTheory.Kernel.fromHom.{w, x, y} {X : Type x} {Y : Type y} [MeasurableSpace X] [MeasurableSpace Y]\n  {X' Y' : Type w} [MeasurableSpace X'] [MeasurableSpace Y'] {ex : X' ≃ᵐ X} {ey : Y' ≃ᵐ Y}\n  (κ : { carrier := X', str := inst✝ } ⟶ { carrier := Y', str := inst✝¹ }) : ProbabilityTheory.Kernel X Y</code><span class=\"sep\"></span><code class=\"docstring\">Transform a morphism in `SFinKer` into a kernel. </code>",
+ "151": "<code>MeasurableSpace Y'</code>",
+ "150": "<code>MeasurableSpace X'</code>",
  "15":
  "<code>ProbabilityTheory.Kernel.parallelComp_id_left_comp_parallelComp₀.{u_1, u_2, u_3, u_4} {X : Type u_1} {Y : Type u_2}\n  {Z : Type u_3} {T : Type u_4} [MeasurableSpace X] [MeasurableSpace Y] [MeasurableSpace Z] [MeasurableSpace T]\n  {κ : Kernel X Y} {ξ : Kernel Z T} {η : Kernel Y Z} [IsSFiniteKernel η] [IsSFiniteKernel ξ] :\n  Kernel.id ∥ₖ ξ ∘ₖ (κ ∥ₖ η) = κ ∥ₖ (ξ ∘ₖ η)</code>",
- "146":
- "<code>ProbabilityTheory.Kernel.fromHom.{w, x, y} {X : Type x} {Y : Type y} [MeasurableSpace X] [MeasurableSpace Y]\n  {X' Y' : Type w} [MeasurableSpace X'] [MeasurableSpace Y'] {ex : X' ≃ᵐ X} {ey : Y' ≃ᵐ Y}\n  (κ : { carrier := X', str := inst✝ } ⟶ { carrier := Y', str := inst✝¹ }) : ProbabilityTheory.Kernel X Y</code><span class=\"sep\"></span><code class=\"docstring\">Transform a morphism in `SFinKer` into a kernel. </code>",
- "145": "<code>MeasurableSpace Y'</code>",
- "144": "<code>MeasurableSpace X'</code>",
- "143": "<code>MeasurableSpace X'</code>",
- "142":
+ "149": "<code>MeasurableSpace X'</code>",
+ "148":
  "<code>Type w</code><span class=\"sep\"></span><code class=\"docstring\">The underlying measurable space. </code>",
- "141": "<code>Y' ≃ᵐ Y</code>",
- "140": "<code>X' ≃ᵐ X</code>",
+ "147": "<code>Y' ≃ᵐ Y</code>",
+ "146": "<code>X' ≃ᵐ X</code>",
+ "145": "<code>Type w</code>",
+ "144": "<code>MeasurableCoherence X Y</code>",
+ "143":
+ "<code>CategoryTheory.MonoidalCoherence.{v, u} {C : Type u} [CategoryTheory.Category.{v, u} C] (X Y : C) : Type v</code><span class=\"sep\"></span><code class=\"docstring\">A typeclass carrying a choice of monoidal structural isomorphism between two objects.\nUsed by the `⊗≫` monoidal composition operator, and the `coherence` tactic.\n</code>",
+ "142":
+ "<code>MeasurableEquiv.{u_6, u_7} (α : Type u_6) (β : Type u_7) [MeasurableSpace α] [MeasurableSpace β] : Type (max u_6 u_7)</code><span class=\"sep\"></span><code class=\"docstring\">Equivalences between measurable spaces. Main application is the simplification of measurability\nstatements along measurable equivalences. </code>",
+ "141":
+ "<code>X ≃ᵐ Y</code><span class=\"sep\"></span><code class=\"docstring\">A measurable equivalence between `X` and `Y`. </code>",
+ "140":
+ "<code>MeasurableCoherence.mk.{u_1, u_2} {X : Type u_1} {Y : Type u_2} [MeasurableSpace X] [MeasurableSpace Y]\n  (miso : X ≃ᵐ Y) : MeasurableCoherence X Y</code>",
  "14":
  "<code>ProbabilityTheory.Kernel.parallelComp_id_left_comp_parallelComp.{u_1, u_2, u_3, u_4, u_5} {X : Type u_1} {Y : Type u_2}\n  {Z : Type u_3} {T : Type u_4} {mX : MeasurableSpace X} {mY : MeasurableSpace Y} {mZ : MeasurableSpace Z}\n  {mT : MeasurableSpace T} {κ : Kernel X Y} {X' : Type u_5} {mX' : MeasurableSpace X'} {η : Kernel X' Z}\n  [IsSFiniteKernel η] {ξ : Kernel Z T} [IsSFiniteKernel ξ] : Kernel.id ∥ₖ ξ ∘ₖ (κ ∥ₖ η) = κ ∥ₖ (ξ ∘ₖ η)</code>",
- "139": "<code>Type w</code>",
- "138": "<code>MeasurableCoherence X Y</code>",
- "137": "<code>Type y</code>",
- "136": "<code>Type x</code>",
- "135":
- "<code>CategoryTheory.MonoidalCoherence.{v, u} {C : Type u} [CategoryTheory.Category.{v, u} C] (X Y : C) : Type v</code><span class=\"sep\"></span><code class=\"docstring\">A typeclass carrying a choice of monoidal structural isomorphism between two objects.\nUsed by the `⊗≫` monoidal composition operator, and the `coherence` tactic.\n</code>",
- "134":
- "<code>MeasurableEquiv.{u_6, u_7} (α : Type u_6) (β : Type u_7) [MeasurableSpace α] [MeasurableSpace β] : Type (max u_6 u_7)</code><span class=\"sep\"></span><code class=\"docstring\">Equivalences between measurable spaces. Main application is the simplification of measurability\nstatements along measurable equivalences. </code>",
- "133":
- "<code>X ≃ᵐ Y</code><span class=\"sep\"></span><code class=\"docstring\">A measurable equivalence between `X` and `Y`. </code>",
- "132":
- "<code>MeasurableCoherence.mk.{u_1, u_2} {X : Type u_1} {Y : Type u_2} [MeasurableSpace X] [MeasurableSpace Y]\n  (miso : X ≃ᵐ Y) : MeasurableCoherence X Y</code>",
- "131":
+ "139":
  "<code>MeasurableCoherence.monoidalCoherence.{w, x, y} {X : Type x} {Y : Type y} [MeasurableSpace X] [MeasurableSpace Y]\n  [mXY : MeasurableCoherence X Y] {X' Y' : Type w} [MeasurableSpace X'] [MeasurableSpace Y'] (ex : X' ≃ᵐ X)\n  (ey : Y' ≃ᵐ Y) : CategoryTheory.MonoidalCoherence { carrier := X', str := inst✝ } { carrier := Y', str := inst✝¹ }</code><span class=\"sep\"></span><code class=\"docstring\">`MeasurableCoherence` gives an instance of `MonoidalCoherence` in the `SFinKer` category. </code>",
- "130":
+ "138":
  "<code>MeasurableCoherence.{u_1, u_2} (X : Type u_1) (Y : Type u_2) [MeasurableSpace X] [MeasurableSpace Y] :\n  Type (max u_1 u_2)</code><span class=\"sep\"></span><code class=\"docstring\">A class witnessing the existence of a measurable equivalence between two measurable spaces. </code>",
+ "137":
+ "<code class=\"docstring\">Use the coherence theorem for monoidal categories to solve equations in a monoidal equation,\nwhere the two sides only differ by replacing strings of monoidal structural morphisms\n(that is, associators, unitors, and identities)\nwith different strings of structural morphisms with the same source and target.\n\nThat is, `coherence` can handle goals of the form\n`a ≫ f ≫ b ≫ g ≫ c = a' ≫ f ≫ b' ≫ g ≫ c'`\nwhere `a = a'`, `b = b'`, and `c = c'` can be proved using `pure_coherence`.\n\n(If you have very large equations on which `coherence` is unexpectedly failing,\nyou may need to increase the typeclass search depth,\nusing e.g. `set_option synthInstance.maxSize 500`.)\n</code>",
+ "136":
+ "<code class=\"docstring\">Use the coherence theorem for monoidal categories to solve equations in a monoidal category,\nwhere the two sides only differ by replacing strings of monoidal structural morphisms\n(that is, associators, unitors, and identities)\nwith different strings of structural morphisms with the same source and target.\n\nThat is, `monoidal` can handle goals of the form\n`a ≫ f ≫ b ≫ g ≫ c = a' ≫ f ≫ b' ≫ g ≫ c'`\nwhere `a = a'`, `b = b'`, and `c = c'` can be proved using `monoidal_coherence`.\n</code>",
+ "135":
+ "<code class=\"docstring\">The `kernel_coherence` tactic applies the `kernel_hom` transformation to the goal and then\ninvokes the `coherence` tactic to solve the resulting goal. </code>",
+ "134":
+ "<code>transformHomToKernel (eLevel : Lean.Level) (e : Lean.Expr) (op_data : List CategoryOP) :\n  Lean.MetaM (Lean.Expr × List CategoryOP)</code><span class=\"sep\"></span><code class=\"docstring\">Recursive transformation from morphism expression in `SFinKer` to kernel expression. </code>",
+ "133":
+ "<code class=\"docstring\">The `hom_kernel` tactic is the inverse of `kernel_hom`: it transforms an\nequality written in the monoidal category back to an equivalent equality of\ns-finite kernels.\n\nThe tactic supports location specifiers like `rw` or `simp`:\n- `hom_kernel` — applies to the goal\n- `hom_kernel at h` — applies to hypothesis `h`\n- `hom_kernel at h₁ h₂` — applies to multiple hypotheses\n- `hom_kernel at h ⊢` — applies to hypothesis `h` and the goal\n- `hom_kernel at *` — applies to all hypotheses and the goal\n\nIt is useful to switch back to kernel equations once categorical rewrites are done. </code>",
+ "132":
+ "<code>Prod.{u, v} (α : Type u) (β : Type v) : Type (max u v)</code><span class=\"sep\"></span><code class=\"docstring\">The product type, usually written `α × β`. Product types are also called pair or tuple types.\nElements of this type are pairs in which the first element is an `α` and the second element is a\n`β`.\n\nProducts nest to the right, so `(x, y, z) : α × β × γ` is equivalent to `(x, (y, z)) : α × (β × γ)`.\n\n\nConventions for notations in identifiers:\n\n * The recommended spelling of `×` in identifiers is `Prod`.</code>",
+ "131":
+ "<code>CategoryOP : Type</code><span class=\"sep\"></span><code class=\"docstring\">Categorical operations recorded during transformation for later rewriting. </code>",
+ "130": "<code>List CategoryOP</code>",
  "13":
  "<code>ProbabilityTheory.Kernel.deterministic_comp_copy.{u_1, u_2} {X : Type u_1} {Y : Type u_2} {mX : MeasurableSpace X}\n  {mY : MeasurableSpace Y} {f : X → Y} (hf : Measurable f) :\n  deterministic f hf ∥ₖ deterministic f hf ∘ₖ copy X = copy Y ∘ₖ deterministic f hf</code><span class=\"sep\"></span><code class=\"docstring\">For a deterministic kernel, copying then applying the kernel to the two copies is the same\nas first applying the kernel then copying. </code>",
- "129":
- "<code class=\"docstring\">Use the coherence theorem for monoidal categories to solve equations in a monoidal equation,\nwhere the two sides only differ by replacing strings of monoidal structural morphisms\n(that is, associators, unitors, and identities)\nwith different strings of structural morphisms with the same source and target.\n\nThat is, `coherence` can handle goals of the form\n`a ≫ f ≫ b ≫ g ≫ c = a' ≫ f ≫ b' ≫ g ≫ c'`\nwhere `a = a'`, `b = b'`, and `c = c'` can be proved using `pure_coherence`.\n\n(If you have very large equations on which `coherence` is unexpectedly failing,\nyou may need to increase the typeclass search depth,\nusing e.g. `set_option synthInstance.maxSize 500`.)\n</code>",
- "128":
- "<code class=\"docstring\">Use the coherence theorem for monoidal categories to solve equations in a monoidal category,\nwhere the two sides only differ by replacing strings of monoidal structural morphisms\n(that is, associators, unitors, and identities)\nwith different strings of structural morphisms with the same source and target.\n\nThat is, `monoidal` can handle goals of the form\n`a ≫ f ≫ b ≫ g ≫ c = a' ≫ f ≫ b' ≫ g ≫ c'`\nwhere `a = a'`, `b = b'`, and `c = c'` can be proved using `monoidal_coherence`.\n</code>",
+ "129": "<code>Lean.Expr</code>",
+ "128": "<code>Lean.Level</code>",
  "127":
- "<code class=\"docstring\">The `kernel_coherence` tactic applies the `kernel_hom` transformation to the goal and then\ninvokes the `coherence` tactic to solve the resulting goal. </code>",
- "126":
- "<code>transformHomToKernel (eLevel : Lean.Level) (e : Lean.Expr) (op_data : List CategoryOP) :\n  Lean.MetaM (Lean.Expr × List CategoryOP)</code><span class=\"sep\"></span><code class=\"docstring\">Recursive transformation from morphism expression in `SFinKer` to kernel expression. </code>",
- "125":
- "<code class=\"docstring\">The `hom_kernel` tactic is the inverse of `kernel_hom`: it transforms an\nequality written in the monoidal category back to an equivalent equality of\ns-finite kernels.\n\nThe tactic supports location specifiers like `rw` or `simp`:\n- `hom_kernel` — applies to the goal\n- `hom_kernel at h` — applies to hypothesis `h`\n- `hom_kernel at h₁ h₂` — applies to multiple hypotheses\n- `hom_kernel at h ⊢` — applies to hypothesis `h` and the goal\n- `hom_kernel at *` — applies to all hypotheses and the goal\n\nIt is useful to switch back to kernel equations once categorical rewrites are done. </code>",
- "124":
- "<code>Prod.{u, v} (α : Type u) (β : Type v) : Type (max u v)</code><span class=\"sep\"></span><code class=\"docstring\">The product type, usually written `α × β`. Product types are also called pair or tuple types.\nElements of this type are pairs in which the first element is an `α` and the second element is a\n`β`.\n\nProducts nest to the right, so `(x, y, z) : α × β × γ` is equivalent to `(x, (y, z)) : α × (β × γ)`.\n\n\nConventions for notations in identifiers:\n\n * The recommended spelling of `×` in identifiers is `Prod`.</code>",
- "123":
- "<code>CategoryOP : Type</code><span class=\"sep\"></span><code class=\"docstring\">Categorical operations recorded during transformation for later rewriting. </code>",
- "122": "<code>List CategoryOP</code>",
- "121": "<code>Lean.Level</code>",
- "120":
  "<code>transformKernelToHom (maxLvl : Lean.Level) (e : Lean.Expr) (op_data : List CategoryOP) :\n  Lean.MetaM (Lean.Expr × List CategoryOP)</code><span class=\"sep\"></span><code class=\"docstring\">Recursive transformation from kernel expressions to morphism expressions in the `SFinKer`\ncategory. </code>",
+ "126":
+ "<code class=\"docstring\">Location specifications are used by many tactics that can operate on either the\nhypotheses or the goal. It can have one of the forms:\n* 'empty' is not actually present in this syntax, but most tactics use\n  `(location)?` matchers. It means to target the goal only.\n* `at h₁ ... hₙ`: target the hypotheses `h₁`, ..., `hₙ`\n* `at h₁ h₂ ⊢`: target the hypotheses `h₁` and `h₂`, and the goal\n* `at *`: target all hypotheses and the goal\n</code>",
+ "125":
+ "<code class=\"docstring\">`rw` is like `rewrite`, but also tries to close the goal by \"cheap\" (reducible) `rfl` afterwards.\n</code>",
+ "124":
+ "<code>Lean.ParserDescr : Type</code><span class=\"sep\"></span><code class=\"docstring\">A `ParserDescr` is a grammar for parsers. This is used by the `syntax` command\nto produce parsers without having to `import Lean`.\n</code>",
+ "123":
+ "<code>ProbabilityTheory.Kernel.hom.{w, x, y} {X : Type x} {Y : Type y} [MeasurableSpace X] [MeasurableSpace Y]\n  {X' Y' : Type w} [MeasurableSpace X'] [MeasurableSpace Y'] {ex : X' ≃ᵐ X} {ey : Y' ≃ᵐ Y}\n  (κ : ProbabilityTheory.Kernel X Y) [ProbabilityTheory.IsSFiniteKernel κ] :\n  { carrier := X', str := inst✝ } ⟶ { carrier := Y', str := inst✝¹ }</code><span class=\"sep\"></span><code class=\"docstring\">Transform a kernel into a morphism in `SFinKer`. </code>",
+ "122": "<code>Lean.Level : Type</code>",
+ "121":
+ "<code>List.{u} (α : Type u) : Type u</code><span class=\"sep\"></span><code class=\"docstring\">Linked lists: ordered lists, in which each element has a reference to the next element.\n\nMost operations on linked lists take time proportional to the length of the list, because each\nelement must be traversed to find the next element.\n\n`List α` is isomorphic to `Array α`, but they are useful for different things:\n* `List α` is easier for reasoning, and `Array α` is modeled as a wrapper around `List α`.\n* `List α` works well as a persistent data structure, when many copies of the tail are shared. When\n  the value is not shared, `Array α` will have better performance because it can do destructive\n  updates.\n</code>",
+ "120":
+ "<code>Lean.Meta.MetaM (α : Type) : Type</code><span class=\"sep\"></span><code class=\"docstring\">The `MetaM` monad is a core component of Lean's metaprogramming framework, facilitating the\nconstruction and manipulation of expressions (`Lean.Expr`) within Lean.\n\nIt builds on top of `CoreM` and additionally provides:\n- A `LocalContext` for managing free variables.\n- A `MetavarContext` for managing metavariables.\n- A `Cache` for caching results of the key `MetaM` operations.\n\nThe key operations provided by `MetaM` are:\n- `inferType`, which attempts to automatically infer the type of a given expression.\n- `whnf`, which reduces an expression to the point where the outermost part is no longer reducible\n  but the inside may still contain unreduced expression.\n- `isDefEq`, which determines whether two expressions are definitionally equal, possibly assigning\n  meta variables in the process.\n- `forallTelescope` and `lambdaTelescope`, which make it possible to automatically move into\n  (nested) binders while updating the local context.\n\nThe following is a small example that demonstrates how to obtain and manipulate the type of a\n`Fin` expression:\n```\npublic import Lean\n\nopen Lean Meta\n\ndef getFinBound (e : Expr) : MetaM (Option Expr) := do\n  let type ← whnf (← inferType e)\n  let_expr Fin bound := type | return none\n  return bound\n\ndef a : Fin 100 := 42\n\nrun_meta\n  match ← getFinBound (.const ``a []) with\n  | some limit =&gt; IO.println (← ppExpr limit)\n  | none =&gt; IO.println \"no limit found\"\n```\n</code>",
  "12":
  "<code class=\"docstring\">Display the kernel diagram for a given term.\n\nExample usage:\n```\n/- Kernel diagram for an equality theorem. -/\n#kernel_diagram ProbabilityTheory.Kernel.deterministic_comp_copy\n```\n</code>",
  "119":
- "<code class=\"docstring\">Location specifications are used by many tactics that can operate on either the\nhypotheses or the goal. It can have one of the forms:\n* 'empty' is not actually present in this syntax, but most tactics use\n  `(location)?` matchers. It means to target the goal only.\n* `at h₁ ... hₙ`: target the hypotheses `h₁`, ..., `hₙ`\n* `at h₁ h₂ ⊢`: target the hypotheses `h₁` and `h₂`, and the goal\n* `at *`: target all hypotheses and the goal\n</code>",
- "118":
- "<code class=\"docstring\">`rw` is like `rewrite`, but also tries to close the goal by \"cheap\" (reducible) `rfl` afterwards.\n</code>",
- "117":
- "<code>Lean.ParserDescr : Type</code><span class=\"sep\"></span><code class=\"docstring\">A `ParserDescr` is a grammar for parsers. This is used by the `syntax` command\nto produce parsers without having to `import Lean`.\n</code>",
- "116":
- "<code>ProbabilityTheory.Kernel.hom.{w, x, y} {X : Type x} {Y : Type y} [MeasurableSpace X] [MeasurableSpace Y]\n  {X' Y' : Type w} [MeasurableSpace X'] [MeasurableSpace Y'] {ex : X' ≃ᵐ X} {ey : Y' ≃ᵐ Y}\n  (κ : ProbabilityTheory.Kernel X Y) [ProbabilityTheory.IsSFiniteKernel κ] :\n  { carrier := X', str := inst✝ } ⟶ { carrier := Y', str := inst✝¹ }</code><span class=\"sep\"></span><code class=\"docstring\">Transform a kernel into a morphism in `SFinKer`. </code>",
- "115": "<code>Lean.Level : Type</code>",
- "114":
- "<code>List.{u} (α : Type u) : Type u</code><span class=\"sep\"></span><code class=\"docstring\">Linked lists: ordered lists, in which each element has a reference to the next element.\n\nMost operations on linked lists take time proportional to the length of the list, because each\nelement must be traversed to find the next element.\n\n`List α` is isomorphic to `Array α`, but they are useful for different things:\n* `List α` is easier for reasoning, and `Array α` is modeled as a wrapper around `List α`.\n* `List α` works well as a persistent data structure, when many copies of the tail are shared. When\n  the value is not shared, `Array α` will have better performance because it can do destructive\n  updates.\n</code>",
- "113":
- "<code>Lean.Meta.MetaM (α : Type) : Type</code><span class=\"sep\"></span><code class=\"docstring\">The `MetaM` monad is a core component of Lean's metaprogramming framework, facilitating the\nconstruction and manipulation of expressions (`Lean.Expr`) within Lean.\n\nIt builds on top of `CoreM` and additionally provides:\n- A `LocalContext` for managing free variables.\n- A `MetavarContext` for managing metavariables.\n- A `Cache` for caching results of the key `MetaM` operations.\n\nThe key operations provided by `MetaM` are:\n- `inferType`, which attempts to automatically infer the type of a given expression.\n- `whnf`, which reduces an expression to the point where the outermost part is no longer reducible\n  but the inside may still contain unreduced expression.\n- `isDefEq`, which determines whether two expressions are definitionally equal, possibly assigning\n  meta variables in the process.\n- `forallTelescope` and `lambdaTelescope`, which make it possible to automatically move into\n  (nested) binders while updating the local context.\n\nThe following is a small example that demonstrates how to obtain and manipulate the type of a\n`Fin` expression:\n```\npublic import Lean\n\nopen Lean Meta\n\ndef getFinBound (e : Expr) : MetaM (Option Expr) := do\n  let type ← whnf (← inferType e)\n  let_expr Fin bound := type | return none\n  return bound\n\ndef a : Fin 100 := 42\n\nrun_meta\n  match ← getFinBound (.const ``a []) with\n  | some limit =&gt; IO.println (← ppExpr limit)\n  | none =&gt; IO.println \"no limit found\"\n```\n</code>",
- "112":
  "<code>Lean.Expr : Type</code><span class=\"sep\"></span><code class=\"docstring\">Lean expressions. This data structure is used in the kernel and\nelaborator. However, expressions sent to the kernel should not\ncontain metavariables.\n\nRemark: we use the `E` suffix (short for `Expr`) to avoid collision with keywords.\nWe considered using «...», but it is too inconvenient to use.\n</code>",
- "111": "<code>Lean.Expr</code>",
+ "118": "<code>Expr</code>",
+ "117":
+ "<code>collectExprUniverses (e : Expr) : MetaM (List Level)</code><span class=\"sep\"></span><code class=\"docstring\">Recursively traverse an expression and collect universe levels found.\nReturns a list of all unique universe levels encountered. </code>",
+ "116": "<code>Kernel Z X</code>",
+ "115": "<code class=\"docstring\">The universe parameter z</code>",
+ "114": "<code>Type z</code>",
+ "113": "<code>MeasurableSpace (ULift.{x, y} Y)</code>",
+ "112":
+ "<code>Type (max y x)</code><span class=\"sep\"></span><code class=\"docstring\">The underlying measurable space. </code>",
+ "111": "<code>MeasurableSpace (ULift.{max x y, x} X)</code>",
  "110":
- "<code>collectExprUniverses (e : Lean.Expr) : Lean.MetaM (List Lean.Level)</code><span class=\"sep\"></span><code class=\"docstring\">Recursively traverse an expression and collect universe levels found.\nReturns a list of all unique universe levels encountered. </code>",
+ "<code>Type (max x y)</code><span class=\"sep\"></span><code class=\"docstring\">The underlying measurable space. </code>",
  "11":
  "<code>ProbabilityTheory.Kernel.monoComp.{w, x, y, z} {W : Type w} {X : Type x} {Y : Type y} {Z : Type z} [MeasurableSpace W]\n  [MeasurableSpace X] [MeasurableSpace Y] [MeasurableSpace Z] [MeasurableCoherence X Y]\n  (κ : ProbabilityTheory.Kernel W X) [ProbabilityTheory.IsSFiniteKernel κ] (η : ProbabilityTheory.Kernel Y Z)\n  [ProbabilityTheory.IsSFiniteKernel η] : ProbabilityTheory.Kernel W Z</code><span class=\"sep\"></span><code class=\"docstring\">The kernelized version of the monoidal composition of kernels using the `SFinKer` category. </code>",
- "109": "<code>MeasurableSpace (ULift.{u_1, u_2} Y)</code>",
+ "109": "<code>MeasurableSpace X</code>",
  "108":
- "<code>Type (max u_2 u_1)</code><span class=\"sep\"></span><code class=\"docstring\">The underlying measurable space. </code>",
- "107": "<code>MeasurableSpace (ULift.{max u_1 u_2, u_1} X)</code>",
- "106":
- "<code>Type (max u_1 u_2)</code><span class=\"sep\"></span><code class=\"docstring\">The underlying measurable space. </code>",
- "105": "<code>MeasurableSpace X</code>",
- "104":
- "<code>Type u_1</code><span class=\"sep\"></span><code class=\"docstring\">The underlying measurable space. </code>",
- "103":
- "<code class=\"docstring\">The syntax `variable (X Y ... Z : Type*)` creates a new distinct implicit universe variable\n`&gt; 0` for each variable in the sequence. </code>",
+ "<code>Type x</code><span class=\"sep\"></span><code class=\"docstring\">The underlying measurable space. </code>",
+ "107": "<code>Lean.Level.max : Level → Level → Level</code>",
+ "106": "<code class=\"docstring\">The universe parameter y</code>",
+ "105": "<code>Type y</code>",
+ "104": "<code class=\"docstring\">The universe parameter x</code>",
+ "103": "<code>Type x</code>",
  "102":
  "<code>Quiver.Hom.{v, u} {V : Type u} [self : Quiver V] : V → V → Type v</code><span class=\"sep\"></span><code class=\"docstring\">The type of edges/arrows/morphisms between a given source and target. </code>",
  "101": "<code>C</code>",
