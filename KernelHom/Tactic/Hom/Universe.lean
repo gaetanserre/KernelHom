@@ -71,11 +71,8 @@ def get_universe_from_eq (eq : Expr) : MetaM Level := do
   let eq ← zetaReduce eq
   let eq ← whnf eq
   let eq := eq.consumeMData
-  match eq with
-  | Expr.app (Expr.app (Expr.app (Expr.const ``Eq _) _) lhsExpr) _ =>
-    let l ← getLevel (← inferType lhsExpr)
-    match l with
-    | Level.succ l' => return l'
-    | _ => throwError "Expected a universe level ≥ 1, got: {l}"
-  | _ =>
-    throwError "Expected an equality, got: {eq}"
+  let some (_, lhs, _) := eq.eq? | throwError "Expected an equality, got: {eq}"
+  let l ← getLevel (← inferType lhs)
+  match l with
+  | Level.succ l' => return l'
+  | _ => throwError "Expected a universe level ≥ 1, got: {l}"
