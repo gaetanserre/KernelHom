@@ -64,14 +64,14 @@ An additional consequence of the translation to {name SFinKer}`SFinKer` is that 
 
 This library is under active development and is under the [GNU GPL 3.0 license](https://www.gnu.org/licenses/gpl-3.0.en.html). Contributions and feedback are welcome!
 
-{include 0 Manual.Pages.Examples}
+{include 0 Pages.Examples}
 
-{include 0 Manual.Pages.Universe}
+{include 0 Pages.Universe}
 
-{include 0 Manual.Pages.KernelHom}
+{include 0 Pages.KernelHom}
 
-{include 0 Manual.Pages.HomKernel}
+{include 0 Pages.HomKernel}
 
-{include 0 Manual.Pages.CatTactics}
+{include 0 Pages.CatTactics}
 
-{include 0 Manual.Pages.MonoidalComp}
+{include 0 Pages.MonoidalComp}

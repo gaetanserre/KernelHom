@@ -46,7 +46,6 @@ p a:hover,
 }
 
 code.block {
-  /* background-color: var(--background-lighter); */
   padding: 0.4em;
   border: 2px solid black;
   border-radius: 0.5em;
