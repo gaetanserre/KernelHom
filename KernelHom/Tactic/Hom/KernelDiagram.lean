@@ -16,31 +16,19 @@ namespace Mathlib.Tactic.Widget.StringDiagram
 
 /-- The kernelized penrose variable associated with a node. -/
 def Node.toPenroseVar_kernel (n : Node) : MetaM PenroseVar := do
-  let expr ← match n.e.getAppFn with
-    | Expr.const ``SFinKer.of _ => do
-      let (res, _) ← get_type_from_SFinKer n.e
-      pure res
-    | Expr.const ``Iso.hom _ => do
-      let args := n.e.getAppArgs
-      let iso := args[args.size - 1]!
-      match iso.getAppFn with
-      | Expr.const ``BraidedCategory.braiding _ =>
-        let (X, Y, _, _) ← deconstruct_braiding iso
-        mkAppOptM ``Kernel.swap #[X, Y, none, none]
-      | _ => pure n.e
-    | Expr.const ``Iso.inv _ =>
-      let args := n.e.getAppArgs
-      let iso := args[args.size - 1]!
-      match iso.getAppFn with
-      | Expr.const ``BraidedCategory.braiding _ =>
-        let (X, Y, _, _) ← deconstruct_braiding iso
-        mkAppOptM ``Kernel.swap #[Y, X, none, none]
-      | _ => pure n.e
-    | Expr.const ``Kernel.hom _ => do
-      let args := n.e.getAppArgs
-      pure args[args.size - 2]!
-    | _ => pure n.e
-  pure (⟨"E", [n.vPos, n.hPosSrc, n.hPosTar], expr⟩)
+  let expr ←
+    try
+      match n.e.getAppFn with
+      | Expr.const ``SFinKer.of _ => do
+        let (res, _) ← get_type_from_SFinKer n.e
+        pure res
+      | _ => do
+        let (expr, _) ← transformHomToKernel Level.zero n.e []
+        pure expr
+    catch _ =>
+      pure n.e
+  return (⟨"E", [n.vPos, n.hPosSrc, n.hPosTar], expr⟩)
+
 
 open scoped Jsx in
 /-- Construct a kernelized string diagram from a Penrose `sub`stance program and
