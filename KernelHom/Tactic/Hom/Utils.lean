@@ -16,10 +16,11 @@ categorical morphism expressions, including type extraction and equivalence cons
 
 ## Main declarations
 
-- `get_types_from_kernel`: extracts carrier types and universe levels from kernel expressions.
-- `construct_measurable_equiv`: recursively builds measurable equivalences.
-- `transformEquality`: transforms an equality expression to an other using a provided
-transformation function.
+* `get_types_from_kernel`: extracts carrier types and universe levels from kernel expressions.
+* `construct_measurable_equiv`: recursively builds measurable equivalences.
+* `transformEquality`: transforms an equality expression to an other using a provided
+  transformation function.
+* `unfold_kernel_op`: unfolds kernel operations in an expression for easier matching.
 -/
 
 open Lean Meta ProbabilityTheory

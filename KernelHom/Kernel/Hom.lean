@@ -17,8 +17,8 @@ This file defines the transformation between categorical morphisms in `SFinKer` 
 
 ## Main declarations
 
-- `fromHom`: transforms a categorical morphism in `SFinKer` to a `Kernel`.
-- `hom`: transforms a `Kernel` to a categorical morphism in `SFinKer`.
+* `fromHom`: transforms a categorical morphism in `SFinKer` to a `Kernel`.
+* `hom`: transforms a `Kernel` to a categorical morphism in `SFinKer`.
 -/
 
 open MeasureTheory ProbabilityTheory MeasurableEquiv

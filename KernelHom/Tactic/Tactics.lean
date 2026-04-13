@@ -11,3 +11,4 @@ import KernelHom.Tactic.Hom.KernelDiagram
 import KernelHom.Tactic.Hom.HomKernel
 import KernelHom.Tactic.LocTactic
 import KernelHom.Tactic.KernelCat
+import KernelHom.Tactic.Delaborators

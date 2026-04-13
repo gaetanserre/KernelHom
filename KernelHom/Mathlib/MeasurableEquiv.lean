@@ -14,8 +14,8 @@ working with products and other structures.
 
 ## Main declarations
 
-- `MeasurableEquiv.prod`: product of measurable equivalences.
-- `MeasurableEquiv.punit`: measurable equivalence between `PUnit`s.
+* `MeasurableEquiv.prod`: product of measurable equivalences.
+* `MeasurableEquiv.punit`: measurable equivalence between `PUnit`s.
 -/
 
 namespace MeasurableEquiv

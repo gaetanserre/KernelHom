@@ -15,7 +15,7 @@ This file provides helper lemmas for the Lebesgue integral with Dirac measures.
 
 ## Main declarations
 
-- `lintegral_lintegral_dirac`: computing nested integrals with Dirac measures.
+* `lintegral_lintegral_dirac`: computing nested integrals with Dirac measures.
 -/
 
 lemma lintegral_lintegral_dirac {α β : Type*} [MeasurableSpace α] [MeasurableSpace β]

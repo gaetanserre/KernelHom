@@ -16,8 +16,8 @@ resulting goal.
 
 ## Main declarations
 
-- `kernel_coherence`: tactic combining kernel_hom and categorical coherence.
-- `kernel_monoidal`: tactic combining kernel_hom and categorical monoidal coherence.
+* `kernel_coherence`: tactic combining kernel_hom and categorical coherence.
+* `kernel_monoidal`: tactic combining kernel_hom and categorical monoidal coherence.
 -/
 
 open Lean Elab Tactic CategoryTheory

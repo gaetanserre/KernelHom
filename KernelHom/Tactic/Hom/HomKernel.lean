@@ -15,12 +15,12 @@ equivalent equalities of kernels.
 
 ## Main declarations
 
-- `transformHomToKernel`: recursive translation from categorical morphism expressions to
+* `transformHomToKernel`: recursive translation from categorical morphism expressions to
   kernel expressions.
-- `mkHomKernelEqProof`: construction of the equivalence proof used by the
+* `mkHomKernelEqProof`: construction of the equivalence proof used by the
   tactic.
-- `applyHomKernel`: core implementation on goals and hypotheses.
-- `hom_kernel`: user-facing tactic (with location support).
+* `applyHomKernel`: core implementation on goals and hypotheses.
+* `hom_kernel`: user-facing tactic (with location support).
 -/
 
 open Lean Elab Tactic Meta CategoryTheory Parser.Tactic ProbabilityTheory MonoidalCategory
