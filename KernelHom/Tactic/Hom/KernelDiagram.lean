@@ -2,6 +2,28 @@ import Lean.Elab.Tactic.Location
 import KernelHom.Tactic.Hom.HomKernel
 import Mathlib.Tactic.Widget.StringDiagram
 
+/-!
+# Kernel Diagram Widget
+
+This file provides meta infrastructure for displaying string diagrams for s-finite kernels in the
+infoview. To enable the kernel diagram widget, you need to import this file and inserting
+`with_panel_widgets [KernelDiagram]` at the beginning of the proof. Alternatively, you can also
+write
+```lean
+open Mathlib.Tactic.Widget
+show_panel_widgets [local KernelDiagram]
+```
+to enable the string diagram widget in the current section.
+
+We also have the `#kernel_diagram` command. For example,
+```lean
+#string_diagram ProbabilityTheory.Kernel.deterministic_comp_copy
+```
+
+This is an adaptation of the string diagram widget where kernels are transformed into morphisms of
+the `SFinKer` monoidal category using the `kernel_hom` tactic.
+-/
+
 open Lean Meta Elab Command ProofWidgets Mathlib.Tactic.Widget
 
 open Mathlib.Tactic BicategoryLike Penrose Server
@@ -142,7 +164,7 @@ def rpc (props : PanelWidgetProps) : RequestM (RequestTask Html) :=
       g.ctx.val.runMetaM {} do
         g.mvarId.withContext do
           let type ← g.mvarId.getType
-          kernelMorOrEqM? type)
+          kernelEqM? type)
     match html with
     | none => return <span>No Kernel Diagram.</span>
     | some inner => return inner
