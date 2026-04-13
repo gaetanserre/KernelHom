@@ -1178,22 +1178,29 @@ example : ∀ (f : <a href="./Init/Prelude.html#Nat">Nat</a> → Nat), AllEven f
      a✝ : AllEven f✝
      ⊢ AllEven fun k =&gt; f✝ (k + 1) -/
   sorry
-</code></pre></p><dl><dt>Tags:</dt><dd></dd><dt>Defined in module:</dt><dd><a href="./Init/Tactics.html#Lean.Parser.Tactic.intros">Init.Tactics</a></dd></dl></div><div id="Mathlib.Tactic.introv"><h2>introv</h2><p><p>The tactic <code>introv</code> allows the user to automatically introduce the variables of a theorem and
-explicitly name the non-dependent hypotheses.
-Any dependent hypotheses are assigned their default names.</p><p>Examples:</p><pre><code>example : ∀ a b : Nat, a = b → b = a := by
-  introv h,
+</code></pre></p><dl><dt>Tags:</dt><dd></dd><dt>Defined in module:</dt><dd><a href="./Init/Tactics.html#Lean.Parser.Tactic.intros">Init.Tactics</a></dd></dl></div><div id="Mathlib.Tactic.introv"><h2>introv</h2><p><p><code>introv</code> introduces the parameters to a dependent function according to their parameter name. If the
+first parameter is not depended on by the rest of the function type, <code>introv</code> with no (remaining)
+arguments does nothing.</p><ul><li><code>introv h₁ h₂ ...</code> introduces non-depended-on parameters in between sequences of depended-on
+parameters, using the names <code>h₁</code>, <code>h₂</code>, ... in turn. Use <code>_</code> to anonymize a specific hypothesis.</li></ul><p>Examples:</p><pre><code>example : ∀ a b : Nat, a = b → b = a := by
+  introv h
+  /-
+  The goal state is:
+  a b : ℕ,
+  h : a = b
+  ⊢ b = a
+  -/
   exact h.<a href="./Mathlib/Order/Defs/Unbundled.html#symm">symm</a>
-</code></pre><p>The state after <code>introv h</code> is</p><pre><code>a b : ℕ,
-h : a = b
-⊢ b = a
 </code></pre><pre><code>example : ∀ a b : Nat, a = b → ∀ c, b = c → a = c := by
-  introv h₁ h₂,
+  introv h₁ h₂
+  /-
+  The goal state is:
+  a b : ℕ,
+  h₁ : a = b,
+  c : ℕ,
+  h₂ : b = c
+  ⊢ a = c
+  -/
   exact h₁.<a href="./Mathlib/Order/Defs/Unbundled.html#trans">trans</a> h₂
-</code></pre><p>The state after <code>introv h₁ h₂</code> is</p><pre><code>a b : ℕ,
-h₁ : a = b,
-c : ℕ,
-h₂ : b = c
-⊢ a = c
 </code></pre></p><dl><dt>Tags:</dt><dd></dd><dt>Defined in module:</dt><dd><a href="./Mathlib/Tactic/Basic.html#Mathlib.Tactic.introv">Mathlib.Tactic.Basic</a></dd></dl></div><div id="Filter.tacticIsBoundedDefault"><h2>isBoundedDefault</h2><p><p>Filters are automatically bounded or cobounded in complete lattices. To use the same statements
 in complete and conditionally complete lattices but let automation fill automatically the
 boundedness proofs in complete lattices, we use the tactic <code>isBoundedDefault</code> in the statements,
@@ -2207,24 +2214,26 @@ By default, the entire context is reverted to produce <code>this</code>.</li></u
 goal. In this way, the wlog-claim <code>this</code> can be applied to <code>x</code> and <code>y</code> in different orders
 (exploiting symmetry, which is the typical use case).</li><li><code>wlog! h : P</code> also calls <code>push <a href="./Init/Prelude.html#Not">Not</a></code> at the generated hypothesis <code>h</code>.
 <code>wlog! h : P ∧ Q</code> will transform <code>¬ (P ∧ Q)</code> to <code>P → ¬ Q</code></li><li><code>wlog! +distrib h : P</code> also calls <code>push +distrib <a href="./Init/Prelude.html#Not">Not</a></code> at the generated hypothesis <code>h</code>.
-<code>wlog! +distrib h : P ∧ Q</code> will transform <code>¬ (P ∧ Q)</code> to <code>¬P ∨ ¬Q</code>.</li></ul></p><dl><dt>Tags:</dt><dd></dd><dt>Defined in module:</dt><dd><a href="./Mathlib/Tactic/WLOG.html#Mathlib.Tactic.wlog">Mathlib.Tactic.WLOG</a></dd></dl></div><div id="Mathlib.Tactic.Zify.zify"><h2>zify</h2><p><p>The <code>zify</code> tactic is used to shift propositions from <code><a href="./Init/Prelude.html#Nat">Nat</a></code> to <code><a href="./Init/Data/Int/Basic.html#Int">Int</a></code>.
-This is often useful since <code><a href="./Init/Data/Int/Basic.html#Int">Int</a></code> has well-behaved subtraction.</p><pre><code>example (a b c x y z : Nat) (h : ¬ x*y*z &lt; 0) : c &lt; a + 3*b := by
+<code>wlog! +distrib h : P ∧ Q</code> will transform <code>¬ (P ∧ Q)</code> to <code>¬P ∨ ¬Q</code>.</li></ul></p><dl><dt>Tags:</dt><dd></dd><dt>Defined in module:</dt><dd><a href="./Mathlib/Tactic/WLOG.html#Mathlib.Tactic.wlog">Mathlib.Tactic.WLOG</a></dd></dl></div><div id="Mathlib.Tactic.Zify.zify"><h2>zify</h2><p><p><code>zify</code> rewrites the main goal by shifting propositions from <code>ℕ</code> to <code>ℤ</code>.
+This is often useful since <code>ℤ</code> has well-behaved subtraction.</p><p><code>zify</code> makes use of the <code>@[zify_simps]</code> attribute to insert casts into propositions, and the
+<code>push_cast</code> tactic to simplify the <code>ℤ</code>-valued expressions.</p><p><code>zify</code> is in some sense dual to the <code>lift</code> tactic. <code>lift (z : Int) to <a href="./Init/Prelude.html#Nat">Nat</a></code> will change the type of
+an integer <code>z</code> (in the supertype) to <code><a href="./Init/Prelude.html#Nat">Nat</a></code> (the subtype), given a proof that <code>z ≥ 0</code>; propositions
+concerning <code>z</code> will still be over <code><a href="./Init/Data/Int/Basic.html#Int">Int</a></code>. <code>zify</code> changes propositions about <code><a href="./Init/Prelude.html#Nat">Nat</a></code> (the subtype) to
+propositions about <code><a href="./Init/Data/Int/Basic.html#Int">Int</a></code> (the supertype), without changing the type of any variable.</p><ul><li><code>zify at l1 l2 ...</code> rewrites at the given locations.</li><li><code>zify [h₁, ..., hₙ]</code> uses the expressions <code>h₁</code>, ..., <code>hₙ</code> as extra lemmas for simplification.
+This is especially useful in the presence of nat subtraction or of division: passing arguments of
+type <code>· ≤ ·</code> will allow <code>push_cast</code> to do more work.</li></ul><p>Examples:</p><pre><code>example (a b c x y z : Nat) (h : ¬ x*y*z &lt; 0) : c &lt; a + 3*b := by
   zify
   zify at h
   /-
   h : ¬↑x * ↑y * ↑z &lt; 0
   ⊢ ↑c &lt; ↑a + 3 * ↑b
   -/
-</code></pre><p><code>zify</code> can be given extra lemmas to use in simplification. This is especially useful in the
-presence of nat subtraction: passing <code>≤</code> arguments will allow <code>push_cast</code> to do more work.</p><pre><code>example (a b c : Nat) (h : a - b &lt; c) (hab : b ≤ a) : false := by
+  sorry
+
+example (a b c : Nat) (h : a - b &lt; c) (hab : b ≤ a) : <a href="./Init/Prelude.html#False">False</a> := by
+  -- Nonnegativity hypothesis allows pushing `· - ·`.
   zify [hab] at h
   /- h : ↑a - ↑b &lt; ↑c -/
-</code></pre><p><code>zify</code> makes use of the <code>@[zify_simps]</code> attribute to move propositions,
-and the <code>push_cast</code> tactic to simplify the <code><a href="./Init/Data/Int/Basic.html#Int">Int</a></code>-valued expressions.
-<code>zify</code> is in some sense dual to the <code>lift</code> tactic.
-<code>lift (z : Int) to <a href="./Init/Prelude.html#Nat">Nat</a></code> will change the type of an
-integer <code>z</code> (in the supertype) to <code><a href="./Init/Prelude.html#Nat">Nat</a></code> (the subtype), given a proof that <code>z ≥ 0</code>;
-propositions concerning <code>z</code> will still be over <code><a href="./Init/Data/Int/Basic.html#Int">Int</a></code>.
-<code>zify</code> changes propositions about <code><a href="./Init/Prelude.html#Nat">Nat</a></code> (the subtype) to propositions about <code><a href="./Init/Data/Int/Basic.html#Int">Int</a></code> (the supertype),
-without changing the type of any variable.</p></p><dl><dt>Tags:</dt><dd></dd><dt>Defined in module:</dt><dd><a href="./Mathlib/Tactic/Zify.html#Mathlib.Tactic.Zify.zify">Mathlib.Tactic.Zify</a></dd></dl></div><div id="«tactic∎»"><h2>∎</h2><p><p><code>∎</code> (typed as <code>\qed</code>) is a macro that expands to <code><a href="./Mathlib/Control/Basic.html#try?">try?</a></code> in tactic mode.</p></p><dl><dt>Tags:</dt><dd></dd><dt>Defined in module:</dt><dd><a href="./Init/Try.html#«tactic∎»">Init.Try</a></dd></dl></div></main>
+  sorry
+</code></pre></p><dl><dt>Tags:</dt><dd></dd><dt>Defined in module:</dt><dd><a href="./Mathlib/Tactic/Zify.html#Mathlib.Tactic.Zify.zify">Mathlib.Tactic.Zify</a></dd></dl></div><div id="«tactic∎»"><h2>∎</h2><p><p><code>∎</code> (typed as <code>\qed</code>) is a macro that expands to <code><a href="./Mathlib/Control/Basic.html#try?">try?</a></code> in tactic mode.</p></p><dl><dt>Tags:</dt><dd></dd><dt>Defined in module:</dt><dd><a href="./Init/Try.html#«tactic∎»">Init.Try</a></dd></dl></div></main>
 <nav class="nav"><iframe src="./navbar.html" class="navframe" frameBorder="0"></iframe></nav></body></html>
