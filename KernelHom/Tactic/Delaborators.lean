@@ -12,29 +12,31 @@ import Lean
 
 This file implements delaborators that provide simplified pretty-printing kernel-related
 categorical operations that are generated using the `kernel_hom` tactic.
+
+To use these delaborators, simply open the `KernelHom` namespace.
 -/
 
 open Lean Meta Elab Command PrettyPrinter Delaborator
 open Lean.PrettyPrinter.Delaborator.SubExpr
 
-namespace KernelHom.Delaborators
+namespace KernelHom
 
 /-- Removes the `ULift` wrapper for readability. -/
-@[app_delab ULift]
+@[scoped app_delab ULift]
 meta def delabULift : Delab := do
   let x ← withNaryArg 0 delab
   `($x)
 
 /-- Only display the carrier space of `SFinKer.of` for readability. -/
-@[app_delab SFinKer.of]
+@[scoped app_delab SFinKer.of]
 meta def delabSFinKerOf : Delab := do
   let x ← withNaryArg 0 delab
   `($x)
 
 /-- Only display the underlying kernel of `Kernel.hom` for readability. -/
-@[app_delab ProbabilityTheory.Kernel.hom]
+@[scoped app_delab ProbabilityTheory.Kernel.hom]
 meta def delabKernelHom : Delab := do
   let x ← withNaryArg 10 delab
   `($x)
 
-end KernelHom.Delaborators
+end KernelHom
