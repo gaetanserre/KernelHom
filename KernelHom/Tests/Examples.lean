@@ -6,8 +6,9 @@ Authors: Gaëtan Serré
 
 import KernelHom.Tactic.Tactics
 
-open MeasureTheory ProbabilityTheory CategoryTheory BraidedCategory MonoidalCategory
+open MeasureTheory ProbabilityTheory CategoryTheory BraidedCategory
 
+open scoped MonoidalCategory ComonObj
 
 variable {X Y Z T X' Y' Z' : Type*} [MeasurableSpace X] [MeasurableSpace Y]
   [MeasurableSpace Z] [MeasurableSpace T] [MeasurableSpace X'] [MeasurableSpace Y']

@@ -14,7 +14,7 @@ specified by location patterns, following the standard Lean syntax (like in `rw`
 
 ## Main declarations
 
-- `applyLocTactic`: applies a tactic to goals and hypotheses at specified locations.
+* `applyLocTactic`: applies a tactic to goals and hypotheses at specified locations.
 -/
 
 open Lean Elab Tactic Meta

@@ -6,6 +6,18 @@ Authors: Gaëtan Serré
 
 import Mathlib.Probability.Kernel.Composition.ParallelComp
 
+/-!
+# Kernel utilities
+
+This file provides helper lemmas for working with kernels.
+
+## Main declarations
+
+* `comap_parallelComp_comap`: the comap of a parallel composition is the parallel composition of
+  the comaps.
+* `map_parallelComp_map`: the map of a parallel composition is the parallel composition of the maps.
+-/
+
 open ProbabilityTheory MeasureTheory
 
 variable {α β γ ι : Type*} [MeasurableSpace α] [MeasurableSpace β] [MeasurableSpace γ]

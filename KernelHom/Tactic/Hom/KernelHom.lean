@@ -19,12 +19,12 @@ kernels into equivalent equalities in the monoidal category.
 
 ## Main declarations
 
-- `transformKernelToHom`: recursive translation from kernel expressions to
+* `transformKernelToHom`: recursive translation from kernel expressions to
   categorical morphism expressions.
-- `mkKernelHomEqProof`: construction of the equivalence proof used by the
+* `mkKernelHomEqProof`: construction of the equivalence proof used by the
   tactic.
-- `applyKernelHom`: core implementation on goals and hypotheses.
-- `kernel_hom`: user-facing tactic (with location support).
+* `applyKernelHom`: core implementation on goals and hypotheses.
+* `kernel_hom`: user-facing tactic (with location support).
 -/
 
 open Lean Elab Tactic Meta CategoryTheory Parser.Tactic ProbabilityTheory MonoidalCategory
@@ -496,11 +496,11 @@ def mkKernelHomEqProof (eqProofType rhs lhs : Expr) (maxLvl : Level)
 the category of measurable spaces and s-finite kernels.
 
 The tactic supports location specifiers like `rw` or `simp`:
-- `kernel_hom` — applies to the goal
-- `kernel_hom at h` — applies to hypothesis `h`
-- `kernel_hom at h₁ h₂` — applies to multiple hypotheses
-- `kernel_hom at h ⊢` — applies to hypothesis `h` and the goal
-- `kernel_hom at *` — applies to all hypotheses and the goal
+* `kernel_hom` — applies to the goal
+* `kernel_hom at h` — applies to hypothesis `h`
+* `kernel_hom at h₁ h₂` — applies to multiple hypotheses
+* `kernel_hom at h ⊢` — applies to hypothesis `h` and the goal
+* `kernel_hom at *` — applies to all hypotheses and the goal
 
 Example:
 ```lean

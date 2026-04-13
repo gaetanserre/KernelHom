@@ -14,9 +14,9 @@ It includes conversion functions between levels and syntax, and universe level c
 
 ## Main declarations
 
-- `levelToSyntax`: converts a `Level` to quotable syntax.
-- `collectExprUniverses`: recursively collects universe levels from expressions.
-- `get_universe_from_eq`: extracts universe information from categorical equalities.
+* `levelToSyntax`: converts a `Level` to quotable syntax.
+* `collectExprUniverses`: recursively collects universe levels from expressions.
+* `get_universe_from_eq`: extracts universe information from categorical equalities.
 -/
 
 open Lean Meta
