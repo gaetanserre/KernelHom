@@ -7,7 +7,7 @@
   --verso-link: #657ed4;
 }
 
-.hl.lean.block {
+code.block {
   background-color: #f6f8fa;
   padding: 1rem 1rem 1rem 1rem;
   border-radius: 8px;
