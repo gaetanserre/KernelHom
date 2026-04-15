@@ -7,6 +7,11 @@
   --verso-link: #657ed4;
 }
 
+@font-face {
+  font-family: "FiraCode";
+  src: url("FiraCode-Regular.ttf");
+}
+
 code.block {
   background-color: #f6f8fa;
   padding: 1rem 1rem 1rem 1rem;
@@ -18,18 +23,19 @@ code.block {
   margin: 1.5em 0;
   color: var(--verso-code-color);
   font-style: italic;
+  overflow-x: auto;
 }
 
 .hl.lean.block .token {
   font-style: normal !important;
+  color: var(--verso-link) !important;
+  font-family: "FiraCode" !important;
+  font-feature-settings: "calt" 1;
+  font-variant-ligatures: normal !important;
 }
 
 .hl.lean.block .keyword {
   color: var(--verso-code-keyword-color) !important;
-}
-
-.const {
-  color: var(--verso-link) !important;
 }
 
 .hl.lean.block .var {
@@ -52,6 +58,7 @@ code.block {
   z-index: 10;
   opacity: 0;
   transition: opacity 0.2s ease;
+  pointer-events: auto;
 }
 
 .hl.lean.block:hover .code-block-actions {
