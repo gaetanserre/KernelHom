@@ -55,7 +55,7 @@ window.addEventListener('load', () => {
     `;
 
     actions.appendChild(copyButton);
-    actions.appendChild(tryItButton);
+    //actions.appendChild(tryItButton);
     block.appendChild(actions);
   });
 });
