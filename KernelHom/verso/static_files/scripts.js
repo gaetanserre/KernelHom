@@ -23,7 +23,9 @@ window.addEventListener('load', () => {
     // Create actions container
     const actions = document.createElement('div');
     actions.className = 'code-block-actions';
-
+    block.addEventListener('scroll', () => {
+      actions.style.transform = `translateX(${block.scrollLeft}px)`;
+    });
     // Copy button
     const copyButton = document.createElement('button');
     copyButton.className = 'copy-button';
