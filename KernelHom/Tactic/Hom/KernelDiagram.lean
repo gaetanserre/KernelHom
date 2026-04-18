@@ -10,7 +10,6 @@ infoview. To enable the kernel diagram widget, you need to import this file and 
 `with_panel_widgets [KernelDiagram]` at the beginning of the proof. Alternatively, you can also
 write
 ```lean
-open Mathlib.Tactic.Widget
 show_panel_widgets [local KernelDiagram]
 ```
 to enable the string diagram widget in the current section.
