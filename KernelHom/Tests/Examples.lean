@@ -10,6 +10,8 @@ open MeasureTheory ProbabilityTheory CategoryTheory BraidedCategory
 
 open scoped MonoidalCategory ComonObj KernelHom
 
+show_panel_widgets [local KernelDiagram]
+
 variable {X Y Z T X' Y' Z' : Type*} [MeasurableSpace X] [MeasurableSpace Y]
   [MeasurableSpace Z] [MeasurableSpace T] [MeasurableSpace X'] [MeasurableSpace Y']
   [MeasurableSpace Z']
