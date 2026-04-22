@@ -25,42 +25,71 @@ htmlSplit := .never
 
 To translate kernel equalities into categorical equalities, one needs to handle universe levels carefully as categorical expressions occur in a common universe level:
 
-```lean
+```lean (name := checkCategory)
 variable {C : Type u} [Category.{v, u} C] (c c' : C)
 #check C
 #check c ⟶ c'
+```
+```leanOutput checkCategory
+C : Type u
+```
+```leanOutput checkCategory
+c ⟶ c' : Type v
 ```
 One can see that the objects of the category are terms of `C : Type u`, and the morphisms are terms of `c ⟶ c' : Type v`
 
 In the context of kernel equalities, we often have kernels where the carrier spaces have different universe levels:
 
-```lean
+```lean (name := checkKernel)
 variable {X : Type x} {Y : Type y} [MeasurableSpace X] [MeasurableSpace Y]
 #check Kernel X Y
 ```
+```leanOutput checkKernel
+Kernel X Y : Type (max x y)
+```
+
 Here, `Kernel X Y` has a universe level that depends on the universe levels of `X` and `Y`: {name Level.max}`max` `x y`.
 
 The counterpart of `Kernel X Y` in the {name SFinKer}`SFinKer` category would be `SFinKer.of X ⟶ SFinKer.of Y`. However, it fails to typecheck as `X` and `Y` have different universe levels:
 
-```lean +error
+```lean +error (name := checkSFinKer)
 #check SFinKer.of X ⟶ SFinKer.of Y
+```
+```leanOutput checkSFinKer
+Application type mismatch: The argument
+  Y
+has type
+  Type y
+of sort `Type (y + 1)` but is expected to have type
+  Type x
+of sort `Type (x + 1)` in the application
+  @SFinKer.of Y
 ```
 
 To solve this issue, one can manually lift the carrier spaces to a common universe level using {name ULift}`ULift`:
+
 ```lean
 #check SFinKer.of (ULift.{max x y} X) ⟶ SFinKer.of (ULift Y)
 ```
+
 In this setting, both `ULift X` and `ULift Y` have the same universe level, allowing the expression to typecheck correctly, as a morphism in {name SFinKer}`SFinKer.{max x y}`.
 
 To translate an equality of kernels into an equality of morphisms in {name SFinKer}`SFinKer`, all kernels must be translated to morphisms in {name SFinKer}`SFinKer` by lifting their carrier spaces to a common universe level, using the {name MeasurableEquiv.ulift}`ulift` measurable equivalence. However, determining this common universe level requires care.
 
 One might naively take the universe level of the equality's result (left or right-hand side), but this can fail. Consider the following example:
 
-```lean
+```lean (name := checkComposition)
 variable {Z : Type z} [MeasurableSpace Z] {κ : Kernel X Y} {η : Kernel Z X}
 #check κ ∘ₖ η
 #check Kernel Z Y
 ```
+```leanOutput checkComposition
+κ ∘ₖ η : Kernel Z Y
+```
+```leanOutput checkComposition
+Kernel Z Y : Type (max z y)
+```
+
 The type of the composition `κ ∘ₖ η` has universe level {name Level.max}`max` `y z`. However, to transform `κ` into a morphism in {name SFinKer}`SFinKer`, we must lift its carrier space `X` (along with `Y`) to a common level. If one naively tries to lift `X` to only {name Level.max}`max` `y z`, it is impossible because `x` might be larger than {name Level.max}`max` `y z`: we cannot lift a type from a larger universe to a smaller one.
 
 The correct approach is to *lift all carrier spaces to the maximum universe level of every space in the entire expression*, which is {name Level.max}`max` `x y z` in this example. This includes spaces that may "disappear" in the final result but still need consistent lifting.
