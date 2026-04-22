@@ -70,7 +70,7 @@ partial def decomposeProductToSFinker (X : Expr) (maxLvl : Level) : MetaM Expr :
     let a2 ← decomposeProductToSFinker args[1]! maxLvl
     let sfinkerOf1 := Expr.const `SFinKer.of [maxLvl]
     let t1 ← mkAppOptM' sfinkerOf1 #[a1, none]
-    mkAppM ``MonoidalCategoryStruct.tensorObj #[t1, a2]
+    mkAppM ``tensorObj #[t1, a2]
   | _ =>
     let sfinkerOfX := Expr.const `SFinKer.of [maxLvl]
     mkAppOptM' sfinkerOfX #[X, none]
@@ -81,7 +81,7 @@ def compute_SFinkerOf (X : Expr) (xLvl maxLvl : Level) : MetaM Expr := do
   | Expr.const ``PUnit _ | Expr.const ``Unit _ =>
     let sfinker := Expr.const `SFinKer [maxLvl]
     let tensorunit :=
-      Expr.const ``MonoidalCategoryStruct.tensorUnit [maxLvl, maxLvl.succ]
+      Expr.const ``tensorUnit [maxLvl, maxLvl.succ]
     mkAppOptM' tensorunit #[sfinker, none, none]
   | _ =>
     let ex ← inferType (← construct_measurable_equiv X xLvl maxLvl)
@@ -100,8 +100,8 @@ def construct_unitors (X Y : Expr) (yLvl maxLvl : Level) (offset : Nat) :
     if left then throwError "Expected left unitor with source PUnit × X, got: {X}"
     else throwError "Expected right unitor with source X × PUnit, got: {X}"
   let sfinkerOf ← compute_SFinkerOf Y yLvl maxLvl
-  let unitor ← if left then mkAppM ``MonoidalCategoryStruct.leftUnitor #[sfinkerOf]
-    else mkAppM ``MonoidalCategoryStruct.rightUnitor #[sfinkerOf]
+  let unitor ← if left then mkAppM ``leftUnitor #[sfinkerOf]
+    else mkAppM ``rightUnitor #[sfinkerOf]
   let ey ← construct_measurable_equiv Y yLvl maxLvl
   let unitorOP := if left then .leftUnitor_hom punit_level ey
     else .rightUnitor_hom punit_level ey
@@ -197,7 +197,7 @@ def construct_associator (left right : Expr) (maxLvl : Level) (hom : Bool) :
   let SFinkerOfX ← compute_SFinkerOf X xLvl maxLvl
   let SFinkerOfY ← compute_SFinkerOf Y yLvl maxLvl
   let SFinkerOfZ ← compute_SFinkerOf Z zLvl maxLvl
-  let associator ← mkAppM ``MonoidalCategoryStruct.associator #[SFinkerOfX, SFinkerOfY, SFinkerOfZ]
+  let associator ← mkAppM ``associator #[SFinkerOfX, SFinkerOfY, SFinkerOfZ]
   let ex ← construct_measurable_equiv X xLvl maxLvl
   let ey ← construct_measurable_equiv Y yLvl maxLvl
   let ez ← construct_measurable_equiv Z zLvl maxLvl
@@ -247,14 +247,14 @@ partial def transformKernelToHom (maxLvl : Level) (e : Expr) (op_data : List Cat
     if ← check_WhiskerLeft e then
       let (sfinkerOfZ, κ, Z, zLvl) ← construct_whiskers_args e X maxLvl 0
       let (κ', lκ) ← transformKernelToHom maxLvl κ op_data
-      let whiskerleft ← mkAppM ``MonoidalCategoryStruct.whiskerLeft #[sfinkerOfZ, κ']
+      let whiskerleft ← mkAppM ``whiskerLeft #[sfinkerOfZ, κ']
       let ez ← construct_measurable_equiv Z zLvl maxLvl
       let leftWhiskerOP := .WhiskerLeft ez
       return (whiskerleft, leftWhiskerOP :: lκ)
     else if ← check_WhiskerRight e then
       let (sfinkerOfZ, κ, Z, zLvl) ← construct_whiskers_args e X maxLvl 1
       let (κ', lκ) ← transformKernelToHom maxLvl κ op_data
-      let whiskerleft ← mkAppM ``MonoidalCategoryStruct.whiskerRight #[κ', sfinkerOfZ]
+      let whiskerleft ← mkAppM ``whiskerRight #[κ', sfinkerOfZ]
       let ez ← construct_measurable_equiv Z zLvl maxLvl
       let rightWhiskerOP := .WhiskerRight ez
       return (whiskerleft, rightWhiskerOP :: lκ)
@@ -264,7 +264,7 @@ partial def transformKernelToHom (maxLvl : Level) (e : Expr) (op_data : List Cat
       let η := args[args.size - 1]!
       let (κ', lκ) ← transformKernelToHom maxLvl κ op_data
       let (η', lη) ← transformKernelToHom maxLvl η lκ
-      return (← mkAppM ``MonoidalCategoryStruct.tensorHom #[κ', η'], lη)
+      return (← mkAppM ``tensorHom #[κ', η'], lη)
   | Expr.const ``Kernel.id _ =>
     let (X, _, xLvl, _) ← get_types_from_kernel e
     let sfinkerOfX ← compute_SFinkerOf X xLvl maxLvl
@@ -336,8 +336,7 @@ def mkKernelHomEqProof (eqProofType rhs lhs : Expr) (maxLvl : Level)
   | [forwardGoal, backwardGoal] =>
     setGoals [forwardGoal]
     evalTactic (← `(tactic| intro h))
-    evalTactic (← `(tactic| try dsimp only [MonoidalCategoryStruct.tensorUnit,
-      MonoidalCategoryStruct.tensorObj]))
+    evalTactic (← `(tactic| try dsimp only [tensorUnit, tensorObj]))
     for e in op_data do
       match e with
       | .leftUnitor_hom lvl equiv =>
@@ -410,8 +409,7 @@ def mkKernelHomEqProof (eqProofType rhs lhs : Expr) (maxLvl : Level)
 
     setGoals [backwardGoal]
     evalTactic (← `(tactic| intro h))
-    evalTactic (← `(tactic| try dsimp only [MonoidalCategory.tensorUnit,
-      MonoidalCategoryStruct.tensorObj] at h))
+    evalTactic (← `(tactic| try dsimp only [tensorUnit, tensorObj] at h))
     for e in op_data do
       match e with
       | .leftUnitor_hom lvl equiv =>

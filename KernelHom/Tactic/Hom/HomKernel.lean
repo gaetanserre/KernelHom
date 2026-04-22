@@ -43,7 +43,7 @@ partial def get_type_from_SFinKer (e : Expr) : MetaM (Expr × Level) := do
     let args := ewhnf.getAppArgs
     let X := args[0]!
     return ← get_type_from_SFinKer X
-  | Expr.const ``MonoidalCategoryStruct.tensorUnit _ =>
+  | Expr.const ``tensorUnit _ =>
     return (Expr.const ``Unit [], Level.zero)
   | Expr.const ``SFinKer.of _ =>
     let args := ewhnf.getAppArgs
@@ -186,13 +186,13 @@ partial def transformHomToKernel (eLevel : Level) (e : Expr) (op_data : List Cat
     let args := e.getAppArgs
     let iso := args[args.size - 1]!
     match iso.getAppFn with
-    | Expr.const ``MonoidalCategoryStruct.leftUnitor _ =>
+    | Expr.const ``leftUnitor _ =>
       let (res, leftUnitorOP) ← deconstruct_unitors_hom iso eLevel true
       return (res, leftUnitorOP :: op_data)
-    | Expr.const ``MonoidalCategoryStruct.rightUnitor _ =>
+    | Expr.const ``rightUnitor _ =>
       let (res, rightUnitorOP) ← deconstruct_unitors_hom iso eLevel false
       return (res, rightUnitorOP :: op_data)
-    | Expr.const ``MonoidalCategoryStruct.associator _ =>
+    | Expr.const ``associator _ =>
       let (res, associatorHomOP) ← deconstruct_associator_hom iso eLevel
       return (res, associatorHomOP :: op_data)
     | Expr.const ``BraidedCategory.braiding _ =>
@@ -204,13 +204,13 @@ partial def transformHomToKernel (eLevel : Level) (e : Expr) (op_data : List Cat
     let args := e.getAppArgs
     let iso := args[args.size - 1]!
     match iso.getAppFn with
-    | Expr.const ``MonoidalCategoryStruct.leftUnitor _ =>
+    | Expr.const ``leftUnitor _ =>
       let (res, leftUnitorInvOP) ← deconstruct_unitors_inv iso eLevel true
       return (res, leftUnitorInvOP :: op_data)
-    | Expr.const ``MonoidalCategoryStruct.rightUnitor _ =>
+    | Expr.const ``rightUnitor _ =>
       let (res, rightUnitorInvOP) ← deconstruct_unitors_inv iso eLevel false
       return (res, rightUnitorInvOP :: op_data)
-    | Expr.const ``MonoidalCategoryStruct.associator _ =>
+    | Expr.const ``associator _ =>
       let (res, associatorInvOP) ← deconstruct_associator_inv iso eLevel
       return (res, associatorInvOP :: op_data)
     | Expr.const ``BraidedCategory.braiding _ =>
@@ -218,16 +218,16 @@ partial def transformHomToKernel (eLevel : Level) (e : Expr) (op_data : List Cat
       let e ← mkAppOptM ``Kernel.swap #[Y, X, none, none]
       return (e, .Braiding_hom ex ey :: op_data)
     | _ => throwError "Unexpected isomorphism {iso}"
-  | Expr.const ``MonoidalCategoryStruct.whiskerLeft _ =>
+  | Expr.const ``whiskerLeft _ =>
     let (κ, kernel_id, whiskerLeftOP) ← deconstruct_whiskers_hom_args e eLevel true
     let (κ', lκ) ← transformHomToKernel eLevel κ op_data
     let res ← mkAppM ``Kernel.parallelComp #[kernel_id, κ']
     return (res, whiskerLeftOP :: lκ)
-  | Expr.const ``MonoidalCategoryStruct.whiskerRight _ =>
+  | Expr.const ``whiskerRight _ =>
     let (κ, kernel_id, whiskerRightOP) ← deconstruct_whiskers_hom_args e eLevel false
     let (κ', lκ) ← transformHomToKernel eLevel κ op_data
     return (← mkAppM ``Kernel.parallelComp #[κ', kernel_id], whiskerRightOP :: lκ)
-  | Expr.const ``MonoidalCategoryStruct.tensorHom _ =>
+  | Expr.const ``tensorHom _ =>
     let args := e.getAppArgs
     let κ := args[args.size - 2]!
     let η := args[args.size - 1]!
@@ -267,8 +267,7 @@ def mkHomKernelEqProof (eqProofType : Expr) (eLevel : Level)
   | [forwardGoal, backwardGoal] =>
     setGoals [forwardGoal]
     evalTactic (← `(tactic| intro h))
-    evalTactic (← `(tactic| try dsimp only [MonoidalCategoryStruct.tensorUnit,
-      MonoidalCategoryStruct.tensorObj] at h))
+    evalTactic (← `(tactic| try dsimp only [tensorUnit, tensorObj] at h))
     for e in op_data do
       match e with
       | .leftUnitor_hom _ expr =>
@@ -341,8 +340,7 @@ def mkHomKernelEqProof (eqProofType : Expr) (eLevel : Level)
 
     setGoals [backwardGoal]
     evalTactic (← `(tactic| intro h))
-    evalTactic (← `(tactic| try dsimp only [MonoidalCategoryStruct.tensorUnit,
-      MonoidalCategoryStruct.tensorObj]))
+    evalTactic (← `(tactic| try dsimp only [tensorUnit, tensorObj]))
     for e in op_data do
       match e with
       | .leftUnitor_hom _ expr =>
