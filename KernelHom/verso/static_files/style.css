@@ -6,6 +6,8 @@
   --verso-code-separator-color: #d11c41;
   --verso-link: #657ed4;
   --verso-info-indicator-color: #657ed4;
+  --verso-error-color: #d11c41;
+  --verso-error-indicator-color: #d11c41;
 }
 
 @font-face {
