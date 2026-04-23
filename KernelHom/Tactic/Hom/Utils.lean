@@ -25,7 +25,7 @@ categorical morphism expressions, including type extraction and equivalence cons
 * `unfold_kernel_op`: unfolds kernel operations in an expression for easier matching.
 -/
 
-@[expose] public section
+public meta section
 
 open Lean Meta ProbabilityTheory
 

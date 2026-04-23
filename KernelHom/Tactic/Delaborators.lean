@@ -18,7 +18,7 @@ categorical operations that are generated using the `kernel_hom` tactic.
 To use these delaborators, simply open the `KernelHom` namespace.
 -/
 
-@[expose] public section
+public meta section
 
 open Lean Meta Elab Command PrettyPrinter Delaborator
 open Lean.PrettyPrinter.Delaborator.SubExpr

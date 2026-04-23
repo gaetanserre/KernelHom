@@ -25,7 +25,7 @@ equivalent equalities of kernels.
 * `hom_kernel`: user-facing tactic (with location support).
 -/
 
-@[expose] public section
+public meta section
 
 open Lean Elab Tactic Meta CategoryTheory Parser.Tactic ProbabilityTheory MonoidalCategory
 

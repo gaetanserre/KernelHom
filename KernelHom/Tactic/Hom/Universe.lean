@@ -21,7 +21,7 @@ It includes conversion functions between levels and syntax, and universe level c
 * `get_universe_from_eq`: extracts universe information from categorical equalities.
 -/
 
-@[expose] public section
+public meta section
 
 open Lean Meta
 

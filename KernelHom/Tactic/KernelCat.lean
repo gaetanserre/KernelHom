@@ -22,7 +22,7 @@ resulting goal.
 * `kernel_monoidal`: tactic combining kernel_hom and categorical monoidal coherence.
 -/
 
-@[expose] public section
+public meta section
 
 open Lean Elab Tactic CategoryTheory
 open Lean Elab Tactic Meta CategoryTheory Parser.Tactic ProbabilityTheory MonoidalCategory

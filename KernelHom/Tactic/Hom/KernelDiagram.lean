@@ -31,7 +31,7 @@ This is an adaptation of the string diagram widget where kernels are transformed
 the `SFinKer` monoidal category using the `kernel_hom` tactic.
 -/
 
-@[expose] public section
+public meta section
 
 open Lean Meta Elab Command ProofWidgets Mathlib.Tactic.Widget
 

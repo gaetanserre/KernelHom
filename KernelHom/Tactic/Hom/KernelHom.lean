@@ -11,7 +11,7 @@ public import KernelHom.Kernel.MonoidalComp
 public import KernelHom.Mathlib.MeasurableEquiv
 public import KernelHom.Tactic.LocTactic
 public import KernelHom.Tactic.Hom.Universe
-import KernelHom.Tactic.Hom.Utils
+public import KernelHom.Tactic.Hom.Utils
 
 /-!
 # `kernel_hom` tactic
@@ -29,7 +29,7 @@ kernels into equivalent equalities in the monoidal category.
 * `kernel_hom`: user-facing tactic (with location support).
 -/
 
-@[expose] public section
+public meta section
 
 open Lean Elab Tactic Meta CategoryTheory Parser.Tactic ProbabilityTheory MonoidalCategory
 
