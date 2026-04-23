@@ -4,11 +4,13 @@ Released under GNU GPL 3.0 license as described in the file LICENSE.
 Authors: Gaëtan Serré
 -/
 
-import KernelHom.Mathlib.MeasurableEquiv
-import KernelHom.Mathlib.Kernel
-import Mathlib.Combinatorics.Quiver.ReflQuiver
-import Mathlib.Probability.Kernel.Category.SFinKer
-import Mathlib.CategoryTheory.CopyDiscardCategory.Deterministic
+module
+
+public import KernelHom.Mathlib.MeasurableEquiv
+public import KernelHom.Mathlib.Kernel
+public import Mathlib.Combinatorics.Quiver.ReflQuiver
+public import Mathlib.Probability.Kernel.Category.SFinKer
+public import Mathlib.CategoryTheory.CopyDiscardCategory.Deterministic
 
 /-!
 # Kernel morphisms
@@ -20,6 +22,8 @@ This file defines the transformation between categorical morphisms in `SFinKer` 
 * `fromHom`: transforms a categorical morphism in `SFinKer` to a `Kernel`.
 * `hom`: transforms a `Kernel` to a categorical morphism in `SFinKer`.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory MeasurableEquiv
 

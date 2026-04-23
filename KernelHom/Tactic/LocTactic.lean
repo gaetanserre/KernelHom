@@ -4,7 +4,9 @@ Released under GNU GPL 3.0 license as described in the file LICENSE.
 Authors: Gaëtan Serré
 -/
 
-import Lean.Elab.Tactic.Location
+module
+
+public import Lean.Elab.Tactic.Location
 
 /-!
 # Tactic location support
@@ -16,6 +18,8 @@ specified by location patterns, following the standard Lean syntax (like in `rw`
 
 * `applyLocTactic`: applies a tactic to goals and hypotheses at specified locations.
 -/
+
+@[expose] public section
 
 open Lean Elab Tactic Meta
 

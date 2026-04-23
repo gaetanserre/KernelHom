@@ -4,8 +4,10 @@ Released under GNU GPL 3.0 license as described in the file LICENSE.
 Authors: Gaëtan Serré
 -/
 
-import KernelHom.Mathlib.LIntegral
-import KernelHom.Kernel.Hom
+module
+
+public import KernelHom.Mathlib.LIntegral
+public import KernelHom.Kernel.Hom
 
 /-!
 # Measurable coherence
@@ -19,6 +21,8 @@ This file introduces the monoidal composition for s-finite kernels (noted `⊗�
 * `hom_monoComp`: the `SFinKer` morphism of the kernelized monoidal composition is the monoidal
   composition of the morphisms in `SFinKer`.
 -/
+
+@[expose] public section
 
 open CategoryTheory MeasureTheory ProbabilityTheory MeasurableEquiv
 

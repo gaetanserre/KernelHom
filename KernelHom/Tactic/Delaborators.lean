@@ -4,8 +4,10 @@ Released under GNU GPL 3.0 license as described in the file LICENSE.
 Authors: Gaëtan Serré
 -/
 
-import KernelHom.Kernel.Hom
-import Lean
+module
+
+public import KernelHom.Kernel.Hom
+public import Lean
 
 /-!
 # Delaborators for simplified kernel presentations
@@ -15,6 +17,8 @@ categorical operations that are generated using the `kernel_hom` tactic.
 
 To use these delaborators, simply open the `KernelHom` namespace.
 -/
+
+@[expose] public section
 
 open Lean Meta Elab Command PrettyPrinter Delaborator
 open Lean.PrettyPrinter.Delaborator.SubExpr

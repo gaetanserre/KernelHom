@@ -4,7 +4,9 @@ Released under GNU GPL 3.0 license as described in the file LICENSE.
 Authors: Gaëtan Serré
 -/
 
-import Mathlib.Probability.Kernel.Composition.ParallelComp
+module
+
+public import Mathlib.Probability.Kernel.Composition.ParallelComp
 
 /-!
 # Kernel utilities
@@ -17,6 +19,8 @@ This file provides helper lemmas for working with kernels.
   the comaps.
 * `map_parallelComp_map`: the map of a parallel composition is the parallel composition of the maps.
 -/
+
+@[expose] public section
 
 open ProbabilityTheory MeasureTheory
 

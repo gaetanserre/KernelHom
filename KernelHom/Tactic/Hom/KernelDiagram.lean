@@ -1,6 +1,14 @@
-import Lean.Elab.Tactic.Location
-import KernelHom.Tactic.Hom.HomKernel
-import Mathlib.Tactic.Widget.StringDiagram
+/-
+Copyright (c) 2026 Gaëtan Serré. All rights reserved.
+Released under GNU GPL 3.0 license as described in the file LICENSE.
+Authors: Gaëtan Serré
+-/
+
+module
+
+public import Lean.Elab.Tactic.Location
+public import KernelHom.Tactic.Hom.HomKernel
+public import Mathlib.Tactic.Widget.StringDiagram
 
 /-!
 # Kernel Diagram Widget
@@ -22,6 +30,8 @@ We also have the `#kernel_diagram` command. For example,
 This is an adaptation of the string diagram widget where kernels are transformed into morphisms of
 the `SFinKer` monoidal category using the `kernel_hom` tactic.
 -/
+
+@[expose] public section
 
 open Lean Meta Elab Command ProofWidgets Mathlib.Tactic.Widget
 

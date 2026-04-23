@@ -4,7 +4,9 @@ Released under GNU GPL 3.0 license as described in the file LICENSE.
 Authors: Gaëtan Serré
 -/
 
-import KernelHom.Tactic.Hom.KernelHom
+module
+
+public import KernelHom.Tactic.Hom.KernelHom
 
 /-!
 # `hom_kernel` tactic
@@ -22,6 +24,8 @@ equivalent equalities of kernels.
 * `applyHomKernel`: core implementation on goals and hypotheses.
 * `hom_kernel`: user-facing tactic (with location support).
 -/
+
+@[expose] public section
 
 open Lean Elab Tactic Meta CategoryTheory Parser.Tactic ProbabilityTheory MonoidalCategory
 

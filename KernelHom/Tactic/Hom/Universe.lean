@@ -4,7 +4,9 @@ Released under GNU GPL 3.0 license as described in the file LICENSE.
 Authors: Gaëtan Serré
 -/
 
-import Lean
+module
+
+public import Lean
 
 /-!
 # Universe level utilities
@@ -18,6 +20,8 @@ It includes conversion functions between levels and syntax, and universe level c
 * `collectExprUniverses`: recursively collects universe levels from expressions.
 * `get_universe_from_eq`: extracts universe information from categorical equalities.
 -/
+
+@[expose] public section
 
 open Lean Meta
 
@@ -40,7 +44,7 @@ partial def levelToSyntax (lvl : Level) : MacroM (TSyntax `level) := do
     `(level| imax $l1Stx $l2Stx)
 
 /-- Recursively traverses an expression and collects all universe levels. -/
-private def collectExprUniverses.aux (e : Expr) : List Level :=
+def collectExprUniverses.aux (e : Expr) : List Level :=
   match e with
   | Expr.const _ univs => univs
   | Expr.sort u => [u]
@@ -54,7 +58,7 @@ private def collectExprUniverses.aux (e : Expr) : List Level :=
 
 /-- Recursively traverse an expression and collect universe levels found.
 Returns a list of all unique universe levels encountered. -/
-partial def collectExprUniverses (e : Expr) : MetaM (List Level) := do
+def collectExprUniverses (e : Expr) : MetaM (List Level) := do
   let e ← instantiateMVars e
   let e ← zetaReduce e
   return (collectExprUniverses.aux e).eraseDups

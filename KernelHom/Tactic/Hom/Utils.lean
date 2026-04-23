@@ -4,9 +4,11 @@ Released under GNU GPL 3.0 license as described in the file LICENSE.
 Authors: Gaëtan Serré
 -/
 
-import Lean
-import Mathlib.Probability.Kernel.Composition.Prod
-import Mathlib.Probability.Kernel.Composition.CompProd
+module
+
+public import Lean
+public import Mathlib.Probability.Kernel.Composition.Prod
+public import Mathlib.Probability.Kernel.Composition.CompProd
 
 /-!
 # Kernel transformation utilities
@@ -22,6 +24,8 @@ categorical morphism expressions, including type extraction and equivalence cons
   transformation function.
 * `unfold_kernel_op`: unfolds kernel operations in an expression for easier matching.
 -/
+
+@[expose] public section
 
 open Lean Meta ProbabilityTheory
 

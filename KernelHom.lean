@@ -1,15 +1,15 @@
-import KernelHom.Kernel.Hom
-import KernelHom.Kernel.MonoidalComp
-import KernelHom.Mathlib.Kernel
-import KernelHom.Mathlib.LIntegral
-import KernelHom.Mathlib.MeasurableEquiv
-import KernelHom.Tactic.Hom.HomKernel
-import KernelHom.Tactic.Hom.KernelHom
-import KernelHom.Tactic.Hom.KernelDiagram
-import KernelHom.Tactic.Hom.Universe
-import KernelHom.Tactic.Hom.Utils
-import KernelHom.Tactic.KernelCat
-import KernelHom.Tactic.LocTactic
-import KernelHom.Tactic.Tactics
-import KernelHom.Tests.Examples
-import KernelHom.Tests.Tests
+module
+
+public import KernelHom.Kernel.Hom
+public import KernelHom.Kernel.MonoidalComp
+public import KernelHom.Mathlib.Kernel
+public import KernelHom.Mathlib.LIntegral
+public import KernelHom.Mathlib.MeasurableEquiv
+public import KernelHom.Tactic.Hom.HomKernel
+public import KernelHom.Tactic.Hom.KernelHom
+public import KernelHom.Tactic.Hom.KernelDiagram
+public import KernelHom.Tactic.Hom.Universe
+public import KernelHom.Tactic.Hom.Utils
+public import KernelHom.Tactic.KernelCat
+public import KernelHom.Tactic.LocTactic
+public import KernelHom.Tactic.Tactics

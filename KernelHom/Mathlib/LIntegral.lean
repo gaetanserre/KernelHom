@@ -4,7 +4,11 @@ Released under GNU GPL 3.0 license as described in the file LICENSE.
 Authors: Gaëtan Serré
 -/
 
-import Mathlib.MeasureTheory.Integral.Lebesgue.Countable
+module
+
+public import Mathlib.MeasureTheory.Integral.Lebesgue.Countable
+
+@[expose] public section
 
 open ENNReal MeasureTheory
 
