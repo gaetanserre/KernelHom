@@ -90,9 +90,9 @@ variable {Z : Type z} [MeasurableSpace Z] {κ : Kernel X Y} {η : Kernel Z X}
 Kernel Z Y : Type (max z y)
 ```
 
-The type of the composition `κ ∘ₖ η` has universe level {name Level.max}`max` `y z`. However, to transform `κ` into a morphism in {name SFinKer}`SFinKer`, we must lift its carrier space `X` (along with `Y`) to a common level. If one naively tries to lift `X` to only {name Level.max}`max` `y z`, it is impossible because `x` might be larger than {name Level.max}`max` `y z`: we cannot lift a type from a larger universe to a smaller one.
+The type of the composition `κ ∘ₖ η` has universe level {name Level.max}`max` `y z`. The {name SFinKer}`SFinKer` counterpart of this expression would be `η.hom ≫ κ.hom`, where `Kernel.hom` would represent the translation of a kernel into a morphism in {name SFinKer}`SFinKer`. However, to transform `κ` and `η` into morphisms, we need to lift their carrier space `X` (along with `Y` and `Z`) to a common level. If we naively try to lift `X` to only {name Level.max}`max` `y z`, it is impossible because `x` might be larger than {name Level.max}`max` `y z`: we cannot lift a type from a larger universe to a smaller one.
 
-The correct approach is to *lift all carrier spaces to the maximum universe level of every space in the entire expression*, which is {name Level.max}`max` `x y z` in this example. This includes spaces that may "disappear" in the final result but still need consistent lifting.
+The correct approach is to *lift all carrier spaces to the maximum universe level of every space in the entire expression*, which is {name Level.max}`max` `x y z` in this example. This includes spaces that may "disappear" in the type of the final expression but still need consistent lifting.
 
 To automate this, the {name collectExprUniverses}`collectExprUniverses` function recursively collects all universe levels found in an expression. This allows us to determine the appropriate common universe level and uniformly lift all carrier spaces to it.
 

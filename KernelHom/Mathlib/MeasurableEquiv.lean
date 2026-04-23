@@ -4,7 +4,9 @@ Released under GNU GPL 3.0 license as described in the file LICENSE.
 Authors: Gaëtan Serré
 -/
 
-import Mathlib.MeasureTheory.MeasurableSpace.Embedding
+module
+
+public import Mathlib.MeasureTheory.MeasurableSpace.Embedding
 
 /-!
 # Measurable equivalences
@@ -17,6 +19,8 @@ working with products and other structures.
 * `MeasurableEquiv.prod`: product of measurable equivalences.
 * `MeasurableEquiv.punit`: measurable equivalence between `PUnit`s.
 -/
+
+@[expose] public section
 
 namespace MeasurableEquiv
 

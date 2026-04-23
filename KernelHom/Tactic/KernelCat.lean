@@ -4,8 +4,10 @@ Released under GNU GPL 3.0 license as described in the file LICENSE.
 Authors: Gaëtan Serré
 -/
 
-import KernelHom.Tactic.Hom.KernelHom
-import Mathlib.Tactic.CategoryTheory.Coherence
+module
+
+public import KernelHom.Tactic.Hom.KernelHom
+public import Mathlib.Tactic.CategoryTheory.Coherence
 
 /-!
 # Kernel category tactics
@@ -19,6 +21,8 @@ resulting goal.
 * `kernel_coherence`: tactic combining kernel_hom and categorical coherence.
 * `kernel_monoidal`: tactic combining kernel_hom and categorical monoidal coherence.
 -/
+
+public meta section
 
 open Lean Elab Tactic CategoryTheory
 open Lean Elab Tactic Meta CategoryTheory Parser.Tactic ProbabilityTheory MonoidalCategory
