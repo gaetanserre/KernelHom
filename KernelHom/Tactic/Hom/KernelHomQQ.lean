@@ -23,12 +23,12 @@ partial def transformKernelToHomQ' {u v : Level} {α : Q(Type u)} {β : Q(Type v
     {mα : Q(MeasurableSpace $α)} {mβ : Q(MeasurableSpace $β)} (κ : Q(Kernel $α $β))
     (maxLvl : Level) :
     MetaM (
-      (_u' : Level)
-      × (α' : Q(SFinKer.{_u'}))
-      × (β' : Q(SFinKer.{_u'}))
-      × Q(($α').carrier ≃ᵐ $α)
-      × Q(($β').carrier ≃ᵐ $β)
-      × Q($α' ⟶ $β')
+      (_u' : Level) -- The common universe level where all types are lifted to
+      × (α' : Q(SFinKer.{_u'})) -- The lifted source type
+      × (β' : Q(SFinKer.{_u'})) -- The lifted target type
+      × Q(($α').carrier ≃ᵐ $α) -- Measurable equivalence from the lifted source to the original
+      × Q(($β').carrier ≃ᵐ $β) -- Measurable equivalence from the lifted target to the original
+      × Q($α' ⟶ $β') -- The corresponding morphism in the category of S-finite kernels
     ) := do
   match κ with
   | ~q($κ ∘ₖ $η) =>
