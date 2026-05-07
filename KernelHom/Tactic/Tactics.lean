@@ -9,6 +9,7 @@ module
 public import KernelHom.Tactic.Hom.Universe
 public import KernelHom.Tactic.Hom.Utils
 public import KernelHom.Tactic.Hom.KernelHom
+public import KernelHom.Tactic.Hom.KernelHomQQ
 public import KernelHom.Tactic.Hom.KernelDiagram
 public import KernelHom.Tactic.Hom.HomKernel
 public import KernelHom.Tactic.LocTactic
