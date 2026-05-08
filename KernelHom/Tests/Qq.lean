@@ -8,6 +8,6 @@ variable {T X Y Z : Type*} [MeasurableSpace T] [MeasurableSpace X]
 variable {κ : Kernel X Y} {ξ : Kernel Z T} {η : Kernel Y Z} [IsSFiniteKernel κ]
   [IsSFiniteKernel ξ] [IsSFiniteKernel η] [MeasurableCoherence Y Z]
 
-example : κ ⊗≫ₖ η = 0 := by
+example : Kernel.id = (0 : Kernel X X) := by
   kernel_homQ
   sorry
