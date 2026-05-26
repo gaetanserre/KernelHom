@@ -72,4 +72,4 @@ See [Examples](https://gaetanserre.fr/KernelHom/Usage-and-examples/#Kernel-Hom__
 
 ## License
 
-GNU GPL 3.0. See [LICENSE](LICENSE).
+Apache 2.0. See [LICENSE](LICENSE).
