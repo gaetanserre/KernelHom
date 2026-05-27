@@ -51,7 +51,7 @@ def Node.toPenroseVar_kernel (n : Node) : MetaM PenroseVar := do
     try
       match n.e.getAppFn with
       | Expr.const ``SFinKer.of _ => do
-        let (res, _) ← get_type_from_SFinKer n.e
+        let (res, _) ← getTypeFromSFinKer n.e
         pure res
       | _ => do
         let (expr, _) ← transformHomToKernel Level.zero n.e []
@@ -97,8 +97,8 @@ open scoped Jsx in
 def KernelM? (e : Expr) : MetaM (Option Html) := do
   let e ← instantiateMVars e
   try
-    let e ← unfold_kernel_op e
-    let maxLvl ← compute_max_universe (← collectExprUniverses e)
+    let e ← unfoldKernelOp e
+    let maxLvl ← computeMaxUniverse (← collectExprUniverses e)
     let (e, _) ← transformKernelToHom maxLvl e []
     let k ← StringDiagram.mkKind e
     let x : Option (List (List StringDiagram.Node) × List (List StringDiagram.Strand))
