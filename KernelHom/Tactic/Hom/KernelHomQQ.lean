@@ -179,8 +179,8 @@ def ApplyKernelHomQ (goal : MVarId) (fvarId : Option FVarId) : TacticM MVarId :=
           let decl ← fid.getDecl
           pure decl.type
         | none => goal.getType
-    let expr ← unfold_kernel_op expr
-    let maxLvl ← compute_max_universe (← collectExprUniverses expr)
+    let expr ← unfoldKernelOp expr
+    let maxLvl ← computeMaxUniverse (← collectExprUniverses expr)
     let (homExpr, op_data, rhs, lhs) ← transformEquality maxLvl expr transformKernelToHomQ
     let eqProofType ← mkEq expr homExpr
     getMainGoal
