@@ -18,7 +18,7 @@ It includes conversion functions between levels and syntax, and universe level c
 
 * `levelToSyntax`: converts a `Level` to quotable syntax.
 * `collectExprUniverses`: recursively collects universe levels from expressions.
-* `get_universe_from_eq`: extracts universe information from categorical equalities.
+* `getUniverseFromEq`: extracts universe information from categorical equalities.
 -/
 
 public meta section
@@ -64,13 +64,13 @@ def collectExprUniverses (e : Expr) : MetaM (List Level) := do
   return (collectExprUniverses.aux e).eraseDups
 
 /-- Compute the maximum universe level from a list of levels. -/
-def compute_max_universe (levels : List Level) : MetaM Level :=
+def computeMaxUniverse (levels : List Level) : MetaM Level :=
   match levels with
     | [] => throwError "Expected at least one universe level, got an empty list"
     | head :: tail => pure (tail.foldl Level.max head)
 
 /-- Get the category universe level from the left side of an equality expression. -/
-def get_universe_from_eq (eq : Expr) : MetaM Level := do
+def getUniverseFromEq (eq : Expr) : MetaM Level := do
   let eq ← instantiateMVars eq
   let eq ← zetaReduce eq
   let eq ← whnf eq

@@ -18,11 +18,11 @@ categorical morphism expressions, including type extraction and equivalence cons
 
 ## Main declarations
 
-* `get_types_from_kernel`: extracts carrier types and universe levels from kernel expressions.
-* `construct_measurable_equiv`: recursively builds measurable equivalences.
+* `getTypesFromKernel`: extracts carrier types and universe levels from kernel expressions.
+* `constructMeasurableEquiv`: recursively builds measurable equivalences.
 * `transformEquality`: transforms an equality expression to an other using a provided
   transformation function.
-* `unfold_kernel_op`: unfolds kernel operations in an expression for easier matching.
+* `unfoldKernelOp`: unfolds kernel operations in an expression for easier matching.
 -/
 
 public meta section
@@ -30,7 +30,7 @@ public meta section
 open Lean Meta ProbabilityTheory
 
 /-- Extract `(X, Y, u, v)` from an expression of type `Kernel X Y`. -/
-def get_types_from_kernel (κ : Expr) : MetaM (Expr × Expr × Level × Level) := do
+def getTypesFromKernel (κ : Expr) : MetaM (Expr × Expr × Level × Level) := do
   let κType ← inferType κ
   match κType.getAppFn with
   | Expr.const ``Kernel univs =>
@@ -45,7 +45,7 @@ def get_types_from_kernel (κ : Expr) : MetaM (Expr × Expr × Level × Level) :
   | _ => throwError "Expected a kernel type, got: {κType}"
 
 /-- Build a measurable equivalence for `e` into universe `maxLvl` (recursive on products). -/
-partial def construct_measurable_equiv (e : Expr) (eLevel maxLvl : Level) : MetaM Expr := do
+partial def constructMeasurableEquiv (e : Expr) (eLevel maxLvl : Level) : MetaM Expr := do
   let ewhnf ← whnf e
   match ewhnf.getAppFn with
   | Expr.const ``PUnit _ | Expr.const ``Unit _ =>
@@ -56,8 +56,8 @@ partial def construct_measurable_equiv (e : Expr) (eLevel maxLvl : Level) : Meta
     let Y := args[1]!
     let xLevel := univs[0]!
     let yLevel := univs[1]!
-    let ex ← construct_measurable_equiv X xLevel maxLvl
-    let ey ← construct_measurable_equiv Y yLevel maxLvl
+    let ex ← constructMeasurableEquiv X xLevel maxLvl
+    let ey ← constructMeasurableEquiv Y yLevel maxLvl
     let res ← mkAppOptM' (Expr.const `MeasurableEquiv.prod [maxLvl, xLevel, yLevel])
       #[none, none, none, none, none, none, none, none, ex, ey]
     return res
@@ -92,7 +92,7 @@ def transformEquality (maxLvl : Level) (e : Expr)
   return (← mkAppM `Eq #[lhs', rhs'], rh, lhs, rhs)
 
 /-- Unfold kernel operations in an expression. -/
-def unfold_kernel_op (e : Expr) : MetaM Expr := do
+def unfoldKernelOp (e : Expr) : MetaM Expr := do
   let names := (.empty |> NameSet.insert <| ``Kernel.prod) |> NameSet.insert <| ``Kernel.compProd
   transform e (post := fun e => do
     let e' ← deltaExpand e names.contains

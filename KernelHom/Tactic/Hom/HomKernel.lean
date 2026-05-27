@@ -30,7 +30,7 @@ public meta section
 open Lean Elab Tactic Meta CategoryTheory Parser.Tactic ProbabilityTheory MonoidalCategory
 
 /-- Get the original type and its universe from a `SFinKer.of` expression. -/
-partial def get_type_from_SFinKer (e : Expr) : MetaM (Expr × Level) := do
+partial def getTypeFromSFinKer (e : Expr) : MetaM (Expr × Level) := do
   let ewhnf ← whnf e
   match ewhnf.getAppFn with
   | Expr.const ``PUnit _ | Expr.const ``Unit _ =>
@@ -39,14 +39,14 @@ partial def get_type_from_SFinKer (e : Expr) : MetaM (Expr × Level) := do
     let args := ewhnf.getAppArgs
     let X := args[0]!
     let Y := args[1]!
-    let (ex, xLvl) ← get_type_from_SFinKer X
-    let (ey, yLvl) ← get_type_from_SFinKer Y
+    let (ex, xLvl) ← getTypeFromSFinKer X
+    let (ey, yLvl) ← getTypeFromSFinKer Y
     let res ← mkAppOptM' (Expr.const ``Prod [xLvl, yLvl]) #[ex, ey]
     return (res, Level.max xLvl yLvl)
   | Expr.const ``ULift _ =>
     let args := ewhnf.getAppArgs
     let X := args[0]!
-    return ← get_type_from_SFinKer X
+    return ← getTypeFromSFinKer X
   | Expr.const ``tensorUnit _ =>
     return (Expr.const ``Unit [], Level.zero)
   | Expr.const ``SFinKer.of _ =>
@@ -54,17 +54,17 @@ partial def get_type_from_SFinKer (e : Expr) : MetaM (Expr × Level) := do
     if args.size < 1 then
       throwError "SFinKer.of with insufficient arguments: {e}"
     else
-      return ← get_type_from_SFinKer args[0]!
+      return ← getTypeFromSFinKer args[0]!
   | _ =>
     match ← getLevel e with
     | Level.succ l => return (e, l)
     | _ => throwError "Expected a type with a universe level ≥ 0, got: {e}"
 
 /-- Deconstruct a left or right unitor morphism to get the underlying kernel -/
-def deconstruct_unitors_hom (iso : Expr) (eLevel : Level) (left : Bool) :
+def deconstructUnitorsHom (iso : Expr) (eLevel : Level) (left : Bool) :
     MetaM (Expr × CategoryOP) := do
   let iso_t ← inferType iso
-  let (X, xLvl) ← get_type_from_SFinKer iso_t.getAppArgs[3]!
+  let (X, xLvl) ← getTypeFromSFinKer iso_t.getAppArgs[3]!
   let kernel_id ←
     if left then
       let UnitX ← mkAppOptM' (Expr.const ``Prod [Level.zero, xLvl]) #[Expr.const ``Unit [], X]
@@ -78,15 +78,15 @@ def deconstruct_unitors_hom (iso : Expr) (eLevel : Level) (left : Bool) :
       mkAppOptM ``Prod.snd #[Expr.const ``Unit [], X]
     else
       mkAppOptM ``Prod.fst #[X, Expr.const ``Unit []]
-  let ex ← construct_measurable_equiv X xLvl eLevel
+  let ex ← constructMeasurableEquiv X xLvl eLevel
   let OP := if left then .leftUnitor_hom xLvl ex else .rightUnitor_hom xLvl ex
   return (← mkAppM ``Kernel.map #[kernel_id, prod], OP)
 
 /-- Deconstruct a left or right unitor inverse morphism to get the underlying kernel -/
-def deconstruct_unitors_inv (iso : Expr) (eLevel : Level) (left : Bool) :
+def deconstructUnitorsInv (iso : Expr) (eLevel : Level) (left : Bool) :
     MetaM (Expr × CategoryOP) := do
   let iso_t ← inferType iso
-  let (X, xLvl) ← get_type_from_SFinKer iso_t.getAppArgs[3]!
+  let (X, xLvl) ← getTypeFromSFinKer iso_t.getAppArgs[3]!
   let kernel_id ← do
     let mX ← synthInstance (mkApp (Expr.const ``MeasurableSpace [xLvl]) X)
     mkAppOptM ``Kernel.id #[X, mX]
@@ -101,63 +101,63 @@ def deconstruct_unitors_inv (iso : Expr) (eLevel : Level) (left : Bool) :
         (((.const ``Prod.mk [xLvl, Level.zero] |> Expr.app <| X) |> Expr.app
         <| .const ``Unit []) |> Expr.app <| .bvar 0) |> Expr.app <| .const ``Unit.unit []
       ) .default
-  let ex ← construct_measurable_equiv X xLvl eLevel
+  let ex ← constructMeasurableEquiv X xLvl eLevel
   let OP := if left then .leftUnitor_inv xLvl ex else .rightUnitor_inv xLvl ex
   return (← mkAppM ``Kernel.map #[kernel_id, f], OP)
 
 /-- Deconstruct a left or right whisker to get the underlying kernel and the whiskered object -/
-def deconstruct_whiskers_hom_args (e : Expr) (eLevel : Level) (left : Bool) :
+def deconstructWhiskersHomArgs (e : Expr) (eLevel : Level) (left : Bool) :
     MetaM (Expr × Expr × CategoryOP) := do
   let args := e.getAppArgs
   let SX := if left then args[args.size - 4]! else args[args.size - 1]!
   let κ := if left then args[args.size - 1]! else args[args.size - 2]!
-  let (X, xLvl) ← get_type_from_SFinKer SX
+  let (X, xLvl) ← getTypeFromSFinKer SX
   let mXUnit ← synthInstance (mkApp (Expr.const ``MeasurableSpace [xLvl]) X)
   let kernel_id ← mkAppOptM ``Kernel.id #[X, mXUnit]
-  let exEquiv ← construct_measurable_equiv X xLvl eLevel
+  let exEquiv ← constructMeasurableEquiv X xLvl eLevel
   let OP := if left then .WhiskerLeft exEquiv else .WhiskerRight exEquiv
   return (κ, kernel_id, OP)
 
 /-- Deconstruct the associator morphism to get the underlying kernel -/
-def deconstruct_associator_hom (iso : Expr) (eLevel : Level) : MetaM (Expr × CategoryOP) := do
+def deconstructAssociatorHom (iso : Expr) (eLevel : Level) : MetaM (Expr × CategoryOP) := do
   let args := iso.getAppArgs
-  let (X, xLvl) ← get_type_from_SFinKer args[args.size - 3]!
-  let (Y, yLvl) ← get_type_from_SFinKer args[args.size - 2]!
-  let (Z, zLvl) ← get_type_from_SFinKer args[args.size - 1]!
+  let (X, xLvl) ← getTypeFromSFinKer args[args.size - 3]!
+  let (Y, yLvl) ← getTypeFromSFinKer args[args.size - 2]!
+  let (Z, zLvl) ← getTypeFromSFinKer args[args.size - 1]!
   let mequiv_prodassoc ← mkAppOptM ``MeasurableEquiv.prodAssoc #[X, Y, Z, none, none, none]
   let measurable_instance ← mkAppM ``MeasurableEquiv.measurable #[mequiv_prodassoc]
   let dfuncoe ← mkAppM ``DFunLike.coe #[mequiv_prodassoc]
   let kernel_determistic ← mkAppM ``Kernel.deterministic #[dfuncoe, measurable_instance]
-  let ex ← construct_measurable_equiv X xLvl eLevel
-  let ey ← construct_measurable_equiv Y yLvl eLevel
-  let ez ← construct_measurable_equiv Z zLvl eLevel
+  let ex ← constructMeasurableEquiv X xLvl eLevel
+  let ey ← constructMeasurableEquiv Y yLvl eLevel
+  let ez ← constructMeasurableEquiv Z zLvl eLevel
   let OP := .Associator_hom ex ey ez
   return (kernel_determistic, OP)
 
 /-- Deconstruct the associator inverse morphism to get the underlying kernel -/
-def deconstruct_associator_inv (iso : Expr) (eLevel : Level) : MetaM (Expr × CategoryOP) := do
+def deconstructAssociatorInv (iso : Expr) (eLevel : Level) : MetaM (Expr × CategoryOP) := do
   let args := iso.getAppArgs
-  let (X, xLvl) ← get_type_from_SFinKer args[args.size - 3]!
-  let (Y, yLvl) ← get_type_from_SFinKer args[args.size - 2]!
-  let (Z, zLvl) ← get_type_from_SFinKer args[args.size - 1]!
+  let (X, xLvl) ← getTypeFromSFinKer args[args.size - 3]!
+  let (Y, yLvl) ← getTypeFromSFinKer args[args.size - 2]!
+  let (Z, zLvl) ← getTypeFromSFinKer args[args.size - 1]!
   let mequiv_prodassoc ← mkAppM ``MeasurableEquiv.symm
     #[← mkAppOptM ``MeasurableEquiv.prodAssoc #[X, Y, Z, none, none, none]]
   let measurable_instance ← mkAppM ``MeasurableEquiv.measurable #[mequiv_prodassoc]
   let dfuncoe ← mkAppM ``DFunLike.coe #[mequiv_prodassoc]
   let kernel_determistic ← mkAppM ``Kernel.deterministic #[dfuncoe, measurable_instance]
-  let ex ← construct_measurable_equiv X xLvl eLevel
-  let ey ← construct_measurable_equiv Y yLvl eLevel
-  let ez ← construct_measurable_equiv Z zLvl eLevel
+  let ex ← constructMeasurableEquiv X xLvl eLevel
+  let ey ← constructMeasurableEquiv Y yLvl eLevel
+  let ez ← constructMeasurableEquiv Z zLvl eLevel
   let OP := .Associator_inv ex ey ez
   return (kernel_determistic, OP)
 
 /-- Deconstruct the braiding morphism to get the underlying swapped objects -/
-def deconstruct_braiding (iso : Expr) : MetaM (Expr × Expr × Expr × Expr) := do
+def deconstructBraiding (iso : Expr) : MetaM (Expr × Expr × Expr × Expr) := do
   let args := iso.getAppArgs
-  let (X, xLvl) ← get_type_from_SFinKer args[args.size - 2]!
-  let (Y, yLvl) ← get_type_from_SFinKer args[args.size - 1]!
-  let ex ← construct_measurable_equiv X xLvl xLvl
-  let ey ← construct_measurable_equiv Y yLvl yLvl
+  let (X, xLvl) ← getTypeFromSFinKer args[args.size - 2]!
+  let (Y, yLvl) ← getTypeFromSFinKer args[args.size - 1]!
+  let ex ← constructMeasurableEquiv X xLvl xLvl
+  let ey ← constructMeasurableEquiv Y yLvl yLvl
   return (X, Y, ex, ey)
 
 /-- Recursive transformation from morphism expression in `SFinKer` to kernel expression. -/
@@ -167,8 +167,8 @@ partial def transformHomToKernel (eLevel : Level) (e : Expr) (op_data : List Cat
   | Expr.const ``CategoryStruct.id _ =>
     let args := e.getAppArgs
     let X := args[args.size - 1]!
-    let (X', xLvl) ← get_type_from_SFinKer X
-    let ex ← construct_measurable_equiv X' xLvl eLevel
+    let (X', xLvl) ← getTypeFromSFinKer X
+    let ex ← constructMeasurableEquiv X' xLvl eLevel
     let mX' ← synthInstance (mkApp (Expr.const ``MeasurableSpace [xLvl]) X')
     return (← mkAppOptM ``Kernel.id #[X', mX'], .id ex :: op_data)
   | Expr.const ``CategoryStruct.comp _ =>
@@ -191,16 +191,16 @@ partial def transformHomToKernel (eLevel : Level) (e : Expr) (op_data : List Cat
     let iso := args[args.size - 1]!
     match iso.getAppFn with
     | Expr.const ``leftUnitor _ =>
-      let (res, leftUnitorOP) ← deconstruct_unitors_hom iso eLevel true
+      let (res, leftUnitorOP) ← deconstructUnitorsHom iso eLevel true
       return (res, leftUnitorOP :: op_data)
     | Expr.const ``rightUnitor _ =>
-      let (res, rightUnitorOP) ← deconstruct_unitors_hom iso eLevel false
+      let (res, rightUnitorOP) ← deconstructUnitorsHom iso eLevel false
       return (res, rightUnitorOP :: op_data)
     | Expr.const ``associator _ =>
-      let (res, associatorHomOP) ← deconstruct_associator_hom iso eLevel
+      let (res, associatorHomOP) ← deconstructAssociatorHom iso eLevel
       return (res, associatorHomOP :: op_data)
     | Expr.const ``BraidedCategory.braiding _ =>
-      let (X, Y, ex, ey) ← deconstruct_braiding iso
+      let (X, Y, ex, ey) ← deconstructBraiding iso
       let e ← mkAppOptM ``Kernel.swap #[X, Y, none, none]
       return (e, .Braiding_hom ex ey :: op_data)
     | _ => throwError "Unexpected isomorphism {iso}"
@@ -209,26 +209,26 @@ partial def transformHomToKernel (eLevel : Level) (e : Expr) (op_data : List Cat
     let iso := args[args.size - 1]!
     match iso.getAppFn with
     | Expr.const ``leftUnitor _ =>
-      let (res, leftUnitorInvOP) ← deconstruct_unitors_inv iso eLevel true
+      let (res, leftUnitorInvOP) ← deconstructUnitorsInv iso eLevel true
       return (res, leftUnitorInvOP :: op_data)
     | Expr.const ``rightUnitor _ =>
-      let (res, rightUnitorInvOP) ← deconstruct_unitors_inv iso eLevel false
+      let (res, rightUnitorInvOP) ← deconstructUnitorsInv iso eLevel false
       return (res, rightUnitorInvOP :: op_data)
     | Expr.const ``associator _ =>
-      let (res, associatorInvOP) ← deconstruct_associator_inv iso eLevel
+      let (res, associatorInvOP) ← deconstructAssociatorInv iso eLevel
       return (res, associatorInvOP :: op_data)
     | Expr.const ``BraidedCategory.braiding _ =>
-      let (X, Y, ex, ey) ← deconstruct_braiding iso
+      let (X, Y, ex, ey) ← deconstructBraiding iso
       let e ← mkAppOptM ``Kernel.swap #[Y, X, none, none]
       return (e, .Braiding_hom ex ey :: op_data)
     | _ => throwError "Unexpected isomorphism {iso}"
   | Expr.const ``whiskerLeft _ =>
-    let (κ, kernel_id, whiskerLeftOP) ← deconstruct_whiskers_hom_args e eLevel true
+    let (κ, kernel_id, whiskerLeftOP) ← deconstructWhiskersHomArgs e eLevel true
     let (κ', lκ) ← transformHomToKernel eLevel κ op_data
     let res ← mkAppM ``Kernel.parallelComp #[kernel_id, κ']
     return (res, whiskerLeftOP :: lκ)
   | Expr.const ``whiskerRight _ =>
-    let (κ, kernel_id, whiskerRightOP) ← deconstruct_whiskers_hom_args e eLevel false
+    let (κ, kernel_id, whiskerRightOP) ← deconstructWhiskersHomArgs e eLevel false
     let (κ', lκ) ← transformHomToKernel eLevel κ op_data
     return (← mkAppM ``Kernel.parallelComp #[κ', kernel_id], whiskerRightOP :: lκ)
   | Expr.const ``tensorHom _ =>
@@ -240,14 +240,14 @@ partial def transformHomToKernel (eLevel : Level) (e : Expr) (op_data : List Cat
     return (← mkAppM ``Kernel.parallelComp #[κ', η'], lη)
   | Expr.const ``ComonObj.counit _ =>
     let args := e.getAppArgs
-    let (X, xLvl) ← get_type_from_SFinKer args[args.size - 2]!
-    let ex ← construct_measurable_equiv X xLvl eLevel
+    let (X, xLvl) ← getTypeFromSFinKer args[args.size - 2]!
+    let ex ← constructMeasurableEquiv X xLvl eLevel
     let discard_kernel_const := Expr.const ``Kernel.discard [xLvl, Level.zero]
     return (← mkAppOptM' discard_kernel_const #[X, none], .Counit ex :: op_data)
   | Expr.const ``ComonObj.comul _ =>
     let args := e.getAppArgs
-    let (X, xLvl) ← get_type_from_SFinKer args[args.size - 2]!
-    let ex ← construct_measurable_equiv X xLvl eLevel
+    let (X, xLvl) ← getTypeFromSFinKer args[args.size - 2]!
+    let ex ← constructMeasurableEquiv X xLvl eLevel
     return (← mkAppOptM ``Kernel.copy #[X, none], .Comul ex :: op_data)
   | Expr.const ``Kernel.hom _ =>
     let args := e.getAppArgs
@@ -444,7 +444,7 @@ def ApplyHomKernel (goal : MVarId) (fvarId : Option FVarId) : TacticM MVarId := 
           let decl ← fid.getDecl
           pure decl.type
         | none => goal.getType
-    let eLevel ← get_universe_from_eq expr
+    let eLevel ← getUniverseFromEq expr
     let (kernelExpr, op_data, _, _) ← transformEquality eLevel expr transformHomToKernel
     let eqProofType ← mkEq expr kernelExpr
     let eqProof ← mkHomKernelEqProof eqProofType eLevel op_data
