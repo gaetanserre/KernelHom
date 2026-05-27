@@ -67,7 +67,7 @@ lemma parallelComp_comp_prod₀ :
     (η ∥ₖ η') ∘ₖ (κ ×ₖ κ') = (η ∘ₖ κ) ×ₖ (η' ∘ₖ κ') := by
   kernel_monoidal
 
-lemma deterministic_comp_copy₀ {f : X → Y} (hf : Measurable f) :
+lemma parallelComp_self_comp_copy₀ {f : X → Y} (hf : Measurable f) :
     (deterministic f hf ∥ₖ deterministic f hf) ∘ₖ copy X = copy Y ∘ₖ deterministic f hf := by
   kernel_hom
   exact (Deterministic.copy_natural _).symm
