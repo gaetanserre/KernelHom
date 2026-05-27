@@ -12,13 +12,16 @@
     <title>Cross-Reference Redirection</title><link rel="stylesheet" href="book.css">
     <link rel="stylesheet" href="verso-vars.css">
     <script src="https://cdn.jsdelivr.net/npm/marked@11.1.1/marked.min.js" integrity="sha384-zbcZAIxlvJtNE3Dp5nxLXdXtXyxwOdnILY1TDPVmKFhl4r4nSUG1r8bcFXGVa4Te" crossorigin="anonymous"></script>
-    <script src="-verso-search/elasticlunr.min.js"></script>
-    <script src="-verso-search/fuzzysort.min.js"></script>
-    <script src="-verso-search/searchIndex.js"></script>
+    <script defer="defer" src="-verso-search/elasticlunr.min.js"></script>
+    <script defer="defer" src="-verso-search/fuzzysort.min.js"></script>
+    <script defer="defer" src="-verso-search/searchIndex.js"></script>
+    <script defer="defer" src="-verso-search/search-config.js"></script>
     <script type="module" src="-verso-search/search-init.js"></script>
     <link rel="stylesheet" href="-verso-search/search-box.css">
+    <link rel="stylesheet" href="-verso-search/search-page.css">
     <link rel="stylesheet" href="-verso-search/search-highlight.css">
     <link rel="stylesheet" href="-verso-search/domain-display.css">
+    <script src="-verso-search/search-highlight.js" defer="defer"></script>
     <script src="-verso-data/katex/katex.js"></script>
     <script src="-verso-data/katex/math.js"></script>
     <script src="-verso-data/popper.min.js"></script>
@@ -1577,6 +1580,7 @@ Some CSS frameworks customize details/summary in ways not compatible with Verso'
      {"title": "kernel_hom tactic",
       "shortTitle": null,
       "sectionNum": "3.",
+      "searchPriority": 50,
       "context":
       [{"title": "Kernel-Hom: Tactics for Kernel Categorical Reasoning",
         "shortTitle": "Kernel Categorical Reasoning",
@@ -1590,6 +1594,7 @@ Some CSS frameworks customize details/summary in ways not compatible with Verso'
      {"title": "hom_kernel tactic",
       "shortTitle": null,
       "sectionNum": "4.",
+      "searchPriority": 50,
       "context":
       [{"title": "Kernel-Hom: Tactics for Kernel Categorical Reasoning",
         "shortTitle": "Kernel Categorical Reasoning",
@@ -1603,6 +1608,7 @@ Some CSS frameworks customize details/summary in ways not compatible with Verso'
      {"title": "Usage",
       "shortTitle": null,
       "sectionNum": "1.1.",
+      "searchPriority": 50,
       "context":
       [{"title": "Kernel-Hom: Tactics for Kernel Categorical Reasoning",
         "shortTitle": "Kernel Categorical Reasoning",
@@ -1617,6 +1623,7 @@ Some CSS frameworks customize details/summary in ways not compatible with Verso'
      {"title": "Examples",
       "shortTitle": null,
       "sectionNum": "1.2.",
+      "searchPriority": 50,
       "context":
       [{"title": "Kernel-Hom: Tactics for Kernel Categorical Reasoning",
         "shortTitle": "Kernel Categorical Reasoning",
@@ -1631,6 +1638,7 @@ Some CSS frameworks customize details/summary in ways not compatible with Verso'
      {"title": "Usage and examples",
       "shortTitle": null,
       "sectionNum": "1.",
+      "searchPriority": 50,
       "context":
       [{"title": "Kernel-Hom: Tactics for Kernel Categorical Reasoning",
         "shortTitle": "Kernel Categorical Reasoning",
@@ -1644,6 +1652,7 @@ Some CSS frameworks customize details/summary in ways not compatible with Verso'
      {"title": "Universe handling",
       "shortTitle": null,
       "sectionNum": "2.",
+      "searchPriority": 50,
       "context":
       [{"title": "Kernel-Hom: Tactics for Kernel Categorical Reasoning",
         "shortTitle": "Kernel Categorical Reasoning",
@@ -1657,6 +1666,7 @@ Some CSS frameworks customize details/summary in ways not compatible with Verso'
      {"title": "Monoidal Composition of Kernels",
       "shortTitle": null,
       "sectionNum": "6.2.",
+      "searchPriority": 50,
       "context":
       [{"title": "Kernel-Hom: Tactics for Kernel Categorical Reasoning",
         "shortTitle": "Kernel Categorical Reasoning",
@@ -1675,6 +1685,7 @@ Some CSS frameworks customize details/summary in ways not compatible with Verso'
      {"title": "Measurable Coherence",
       "shortTitle": null,
       "sectionNum": "6.1.",
+      "searchPriority": 50,
       "context":
       [{"title": "Kernel-Hom: Tactics for Kernel Categorical Reasoning",
         "shortTitle": "Kernel Categorical Reasoning",
@@ -1691,6 +1702,7 @@ Some CSS frameworks customize details/summary in ways not compatible with Verso'
      {"title": "Kernelized monoidal composition",
       "shortTitle": "Monoidal composition",
       "sectionNum": "6.",
+      "searchPriority": 50,
       "context":
       [{"title": "Kernel-Hom: Tactics for Kernel Categorical Reasoning",
         "shortTitle": "Kernel Categorical Reasoning",
@@ -1706,6 +1718,7 @@ Some CSS frameworks customize details/summary in ways not compatible with Verso'
      {"title": "Categorical tactics for kernels",
       "shortTitle": null,
       "sectionNum": "5.",
+      "searchPriority": 50,
       "context":
       [{"title": "Kernel-Hom: Tactics for Kernel Categorical Reasoning",
         "shortTitle": "Kernel Categorical Reasoning",
@@ -1720,6 +1733,7 @@ Some CSS frameworks customize details/summary in ways not compatible with Verso'
      {"title": "Kernel-Hom: Tactics for Kernel Categorical Reasoning",
       "shortTitle": "Kernel Categorical Reasoning",
       "sectionNum": "",
+      "searchPriority": 50,
       "context":
       [{"title": "Kernel-Hom: Tactics for Kernel Categorical Reasoning",
         "shortTitle": "Kernel Categorical Reasoning",
@@ -1734,6 +1748,16 @@ Some CSS frameworks customize details/summary in ways not compatible with Verso'
      "data":
      {"/Usage-and-examples/#ProbabilityTheory___Kernel___swap_parallelComp___":
       {"display": "swap_parallelComp₀",
+       "context":
+       ["Kernel-Hom: Tactics for Kernel Categorical Reasoning",
+        "Usage and examples",
+        "Examples"]}},
+     "address": "/Usage-and-examples/"}],
+   "ProbabilityTheory.Kernel.parallelComp_self_comp_copy₀":
+   [{"id": "ProbabilityTheory___Kernel___parallelComp_self_comp_copy___",
+     "data":
+     {"/Usage-and-examples/#ProbabilityTheory___Kernel___parallelComp_self_comp_copy___":
+      {"display": "parallelComp_self_comp_copy₀",
        "context":
        ["Kernel-Hom: Tactics for Kernel Categorical Reasoning",
         "Usage and examples",
@@ -1786,16 +1810,6 @@ Some CSS frameworks customize details/summary in ways not compatible with Verso'
      "data":
      {"/Usage-and-examples/#ProbabilityTheory___Kernel___discard_comp_deterministic":
       {"display": "discard_comp_deterministic",
-       "context":
-       ["Kernel-Hom: Tactics for Kernel Categorical Reasoning",
-        "Usage and examples",
-        "Examples"]}},
-     "address": "/Usage-and-examples/"}],
-   "ProbabilityTheory.Kernel.deterministic_comp_copy₀":
-   [{"id": "ProbabilityTheory___Kernel___deterministic_comp_copy___",
-     "data":
-     {"/Usage-and-examples/#ProbabilityTheory___Kernel___deterministic_comp_copy___":
-      {"display": "deterministic_comp_copy₀",
        "context":
        ["Kernel-Hom: Tactics for Kernel Categorical Reasoning",
         "Usage and examples",
@@ -2240,7 +2254,6 @@ window.onload = () => {
     <link rel="icon" type="image/x-icon" href="static/favicon.svg">
     <link rel="stylesheet" href="static/style.css">
     <script src="static/scripts.js"></script>
-    <script src="-verso-search/search-highlight.js" defer="defer"></script>
     </head>
   <body>
     <header>

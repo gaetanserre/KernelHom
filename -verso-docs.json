@@ -44,11 +44,11 @@
  "75": "<code>Measurable f</code>",
  "74": "<code>X → Y</code>",
  "73":
- "<code>ProbabilityTheory.Kernel.deterministic_comp_copy₀.{u_1, u_2} {X : Type u_1} {Y : Type u_2} [MeasurableSpace X]\n  [MeasurableSpace Y] {f : X → Y} (hf : Measurable f) :\n  deterministic f hf ∥ₖ deterministic f hf ∘ₖ copy X = copy Y ∘ₖ deterministic f hf</code>",
- "72":
  "<code>CategoryTheory.Deterministic.{v, u} {C : Type u} [CategoryTheory.Category.{v, u} C] [CategoryTheory.MonoidalCategory C]\n  [CategoryTheory.CopyDiscardCategory C] {X Y : C} (f : X ⟶ Y) : Prop</code><span class=\"sep\"></span><code class=\"docstring\">A morphism is deterministic if it preserves the comonoid structure.\n\nIn probabilistic contexts, these are morphisms without randomness. </code>",
- "71":
+ "72":
  "<code>ProbabilityTheory.Kernel.deterministic.{u_1, u_2} {α : Type u_1} {β : Type u_2} {mα : MeasurableSpace α}\n  {mβ : MeasurableSpace β} (f : α → β) (hf : Measurable f) : Kernel α β</code><span class=\"sep\"></span><code class=\"docstring\">Kernel which to `a` associates the dirac measure at `f a`. This is a Markov kernel. </code>",
+ "71":
+ "<code>ProbabilityTheory.Kernel.parallelComp_self_comp_copy.{u_1, u_2} {α : Type u_1} {β : Type u_2} {mα : MeasurableSpace α}\n  {mβ : MeasurableSpace β} {κ : Kernel α β} [IsDeterministic κ] : κ ∥ₖ κ ∘ₖ copy α = copy β ∘ₖ κ</code>",
  "70":
  "<code>CategoryTheory.BraidedCategory.braiding_naturality.{v, u} {C : Type u} [Category.{v, u} C] [MonoidalCategory C]\n  [BraidedCategory C] {X X' Y Y' : C} (f : X ⟶ Y) (g : X' ⟶ Y') : (f ⊗ₘ g) ≫ (β_ Y Y').hom = (β_ X X').hom ≫ (g ⊗ₘ f)</code>",
  "7":
@@ -175,7 +175,7 @@
  "130":
  "<code>MeasurableCoherence.{u_1, u_2} (X : Type u_1) (Y : Type u_2) [MeasurableSpace X] [MeasurableSpace Y] :\n  Type (max u_1 u_2)</code><span class=\"sep\"></span><code class=\"docstring\">A class witnessing the existence of a measurable equivalence between two measurable spaces. </code>",
  "13":
- "<code>ProbabilityTheory.Kernel.deterministic_comp_copy.{u_1, u_2} {X : Type u_1} {Y : Type u_2} {mX : MeasurableSpace X}\n  {mY : MeasurableSpace Y} {f : X → Y} (hf : Measurable f) :\n  deterministic f hf ∥ₖ deterministic f hf ∘ₖ copy X = copy Y ∘ₖ deterministic f hf</code><span class=\"sep\"></span><code class=\"docstring\">For a deterministic kernel, copying then applying the kernel to the two copies is the same\nas first applying the kernel then copying. </code>",
+ "<code>ProbabilityTheory.Kernel.parallelComp_self_comp_copy₀.{u_1, u_2} {X : Type u_1} {Y : Type u_2} [MeasurableSpace X]\n  [MeasurableSpace Y] {f : X → Y} (hf : Measurable f) :\n  deterministic f hf ∥ₖ deterministic f hf ∘ₖ copy X = copy Y ∘ₖ deterministic f hf</code>",
  "129":
  "<code class=\"docstring\">Use the coherence theorem for monoidal categories to solve equations in a monoidal equation,\nwhere the two sides only differ by replacing strings of monoidal structural morphisms\n(that is, associators, unitors, and identities)\nwith different strings of structural morphisms with the same source and target.\n\nThat is, `coherence` can handle goals of the form\n`a ≫ f ≫ b ≫ g ≫ c = a' ≫ f ≫ b' ≫ g ≫ c'`\nwhere `a = a'`, `b = b'`, and `c = c'` can be proved using `pure_coherence`.\n\n(If you have very large equations on which `coherence` is unexpectedly failing,\nyou may need to increase the typeclass search depth,\nusing e.g. `set_option synthInstance.maxSize 500`.)\n</code>",
  "128":

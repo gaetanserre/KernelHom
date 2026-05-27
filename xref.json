@@ -9,6 +9,7 @@
      {"title": "kernel_hom tactic",
       "shortTitle": null,
       "sectionNum": "3.",
+      "searchPriority": 50,
       "context":
       [{"title": "Kernel-Hom: Tactics for Kernel Categorical Reasoning",
         "shortTitle": "Kernel Categorical Reasoning",
@@ -22,6 +23,7 @@
      {"title": "hom_kernel tactic",
       "shortTitle": null,
       "sectionNum": "4.",
+      "searchPriority": 50,
       "context":
       [{"title": "Kernel-Hom: Tactics for Kernel Categorical Reasoning",
         "shortTitle": "Kernel Categorical Reasoning",
@@ -35,6 +37,7 @@
      {"title": "Usage",
       "shortTitle": null,
       "sectionNum": "1.1.",
+      "searchPriority": 50,
       "context":
       [{"title": "Kernel-Hom: Tactics for Kernel Categorical Reasoning",
         "shortTitle": "Kernel Categorical Reasoning",
@@ -49,6 +52,7 @@
      {"title": "Examples",
       "shortTitle": null,
       "sectionNum": "1.2.",
+      "searchPriority": 50,
       "context":
       [{"title": "Kernel-Hom: Tactics for Kernel Categorical Reasoning",
         "shortTitle": "Kernel Categorical Reasoning",
@@ -63,6 +67,7 @@
      {"title": "Usage and examples",
       "shortTitle": null,
       "sectionNum": "1.",
+      "searchPriority": 50,
       "context":
       [{"title": "Kernel-Hom: Tactics for Kernel Categorical Reasoning",
         "shortTitle": "Kernel Categorical Reasoning",
@@ -76,6 +81,7 @@
      {"title": "Universe handling",
       "shortTitle": null,
       "sectionNum": "2.",
+      "searchPriority": 50,
       "context":
       [{"title": "Kernel-Hom: Tactics for Kernel Categorical Reasoning",
         "shortTitle": "Kernel Categorical Reasoning",
@@ -89,6 +95,7 @@
      {"title": "Monoidal Composition of Kernels",
       "shortTitle": null,
       "sectionNum": "6.2.",
+      "searchPriority": 50,
       "context":
       [{"title": "Kernel-Hom: Tactics for Kernel Categorical Reasoning",
         "shortTitle": "Kernel Categorical Reasoning",
@@ -107,6 +114,7 @@
      {"title": "Measurable Coherence",
       "shortTitle": null,
       "sectionNum": "6.1.",
+      "searchPriority": 50,
       "context":
       [{"title": "Kernel-Hom: Tactics for Kernel Categorical Reasoning",
         "shortTitle": "Kernel Categorical Reasoning",
@@ -123,6 +131,7 @@
      {"title": "Kernelized monoidal composition",
       "shortTitle": "Monoidal composition",
       "sectionNum": "6.",
+      "searchPriority": 50,
       "context":
       [{"title": "Kernel-Hom: Tactics for Kernel Categorical Reasoning",
         "shortTitle": "Kernel Categorical Reasoning",
@@ -138,6 +147,7 @@
      {"title": "Categorical tactics for kernels",
       "shortTitle": null,
       "sectionNum": "5.",
+      "searchPriority": 50,
       "context":
       [{"title": "Kernel-Hom: Tactics for Kernel Categorical Reasoning",
         "shortTitle": "Kernel Categorical Reasoning",
@@ -152,6 +162,7 @@
      {"title": "Kernel-Hom: Tactics for Kernel Categorical Reasoning",
       "shortTitle": "Kernel Categorical Reasoning",
       "sectionNum": "",
+      "searchPriority": 50,
       "context":
       [{"title": "Kernel-Hom: Tactics for Kernel Categorical Reasoning",
         "shortTitle": "Kernel Categorical Reasoning",
@@ -166,6 +177,16 @@
      "data":
      {"/Usage-and-examples/#ProbabilityTheory___Kernel___swap_parallelComp___":
       {"display": "swap_parallelComp₀",
+       "context":
+       ["Kernel-Hom: Tactics for Kernel Categorical Reasoning",
+        "Usage and examples",
+        "Examples"]}},
+     "address": "/Usage-and-examples/"}],
+   "ProbabilityTheory.Kernel.parallelComp_self_comp_copy₀":
+   [{"id": "ProbabilityTheory___Kernel___parallelComp_self_comp_copy___",
+     "data":
+     {"/Usage-and-examples/#ProbabilityTheory___Kernel___parallelComp_self_comp_copy___":
+      {"display": "parallelComp_self_comp_copy₀",
        "context":
        ["Kernel-Hom: Tactics for Kernel Categorical Reasoning",
         "Usage and examples",
@@ -218,16 +239,6 @@
      "data":
      {"/Usage-and-examples/#ProbabilityTheory___Kernel___discard_comp_deterministic":
       {"display": "discard_comp_deterministic",
-       "context":
-       ["Kernel-Hom: Tactics for Kernel Categorical Reasoning",
-        "Usage and examples",
-        "Examples"]}},
-     "address": "/Usage-and-examples/"}],
-   "ProbabilityTheory.Kernel.deterministic_comp_copy₀":
-   [{"id": "ProbabilityTheory___Kernel___deterministic_comp_copy___",
-     "data":
-     {"/Usage-and-examples/#ProbabilityTheory___Kernel___deterministic_comp_copy___":
-      {"display": "deterministic_comp_copy₀",
        "context":
        ["Kernel-Hom: Tactics for Kernel Categorical Reasoning",
         "Usage and examples",
