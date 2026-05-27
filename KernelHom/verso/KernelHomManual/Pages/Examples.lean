@@ -66,11 +66,11 @@ Basically, whenever you have a equality of s-finite kernels that you want to sim
 The library also provides the {name kernelDiagram}`kernel_diagram` command, which generates string diagrams for kernel expressions. This is an adaptation of the {name Widget.stringDiagram}`string_diagram` command, where s-finite kernels are represented as morphisms using {name kernelHom}`kernel_hom`. This provides a visual representation of kernel compositions and transformations, aiding intuition and understanding. The use of this command is similar to {name Widget.stringDiagram}`string_diagram`:
 
 ```lean
-#kernel_diagram deterministic_comp_copy
+#kernel_diagram parallelComp_self_comp_copy₀
 ```
 
 ```VersoTools.kernelDiagram
-deterministic_comp_copy
+parallelComp_self_comp_copy₀
 ```
 
 # Examples
@@ -130,16 +130,16 @@ ProbabilityTheory.Kernel.swap_parallelComp₀
 ProbabilityTheory.Kernel.swap_parallelComp_diag
 ```
 
-- {name deterministic_comp_copy}`deterministic_comp_copy`
+- {name parallelComp_self_comp_copy}`parallelComp_self_comp_copy`
 
   The categorical counterpart of {name ProbabilityTheory.Kernel.deterministic}`Kernel.deterministic` are automatically treated as {name CategoryTheory.Deterministic}`Deterministic` morphisms.
 
 ```VersoTools.leanDecl
-ProbabilityTheory.Kernel.deterministic_comp_copy₀
+ProbabilityTheory.Kernel.parallelComp_self_comp_copy₀
 ```
 
 ```VersoTools.kernelDiagram
-ProbabilityTheory.Kernel.deterministic_comp_copy₀
+ProbabilityTheory.Kernel.parallelComp_self_comp_copy₀
 ```
 
 ```VersoTools.leanDecl
