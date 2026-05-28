@@ -444,6 +444,7 @@ def ApplyHomKernel (goal : MVarId) (fvarId : Option FVarId) : TacticM MVarId := 
           let decl ← fid.getDecl
           pure decl.type
         | none => goal.getType
+    let expr ← whnfR <| ← instantiateMVars expr
     let eLevel ← getUniverseFromEq expr
     let (kernelExpr, op_data, _, _) ← transformEquality eLevel expr transformHomToKernel
     let eqProofType ← mkEq expr kernelExpr

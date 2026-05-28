@@ -520,7 +520,7 @@ def ApplyKernelHom (goal : MVarId) (fvarId : Option FVarId) : TacticM MVarId := 
           let decl ← fid.getDecl
           pure decl.type
         | none => goal.getType
-    let expr ← unfoldKernelOp expr
+    let expr ← whnfR <| ← unfoldKernelOp <| ← instantiateMVars expr
     let maxLvl ← computeMaxUniverse (← collectExprUniverses expr)
     let (homExpr, op_data, rhs, lhs) ← transformEquality maxLvl expr transformKernelToHom
     let eqProofType ← mkEq expr homExpr

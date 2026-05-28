@@ -94,11 +94,9 @@ namespace KernelDiagram
 
 open scoped Jsx in
 /-- Given a kernel expression, return a string diagram. Otherwise `none`. -/
-def KernelM? (e : Expr) : MetaM (Option Html) := do
+def KernelM? (e : Expr) (maxLvl : Level) : MetaM (Option Html) := do
   let e ← instantiateMVars e
   try
-    let e ← unfoldKernelOp e
-    let maxLvl ← computeMaxUniverse (← collectExprUniverses e)
     let (e, _) ← transformKernelToHom maxLvl e []
     let k ← StringDiagram.mkKind e
     let x : Option (List (List StringDiagram.Node) × List (List StringDiagram.Strand))
@@ -144,22 +142,12 @@ def mkEqHtml (lhs rhs : Html) : Html :=
 /-- Given an equality between kernels, return a string diagram of the LHS and RHS.
 Otherwise `none`. -/
 def kernelEqM? (e : Expr) : MetaM (Option Html) := do
-  let e ← whnfR <| ← instantiateMVars e
+  let e ← whnfR <| ← unfoldKernelOp <| ← instantiateMVars e
+  let maxLvl ← computeMaxUniverse (← collectExprUniverses e)
   let some (_, lhs, rhs) := e.eq? | return none
-  let some lhs ← KernelM? lhs | return none
-  let some rhs ← KernelM? rhs | return none
+  let some lhs ← KernelM? lhs maxLvl | return none
+  let some rhs ← KernelM? rhs maxLvl | return none
   return some <| mkEqHtml lhs rhs
-
-/-- Given a kernel or equality between kernels, return a string diagram.
-Otherwise `none`. -/
-def kernelMorOrEqM? (e : Expr) : MetaM (Option Html) := do
-  forallTelescopeReducing (← whnfR <| ← inferType e) fun xs a => do
-    if let some html ← KernelM? (mkAppN e xs) then
-      return some html
-    else if let some html ← kernelEqM? a then
-      return some html
-    else
-      return none
 
 open scoped Jsx in
 /-- The RPC method for displaying kernel diagrams. -/
@@ -202,9 +190,9 @@ def elabKernelDiagramCmd : CommandElab := fun
     let html ← runTermElabM fun _ => do
       let e ← try mkConstWithFreshMVarLevels (← realizeGlobalConstNoOverloadWithInfo t)
         catch _ => Term.levelMVarToParam (← instantiateMVars (← Term.elabTerm t none))
-      match ← KernelDiagram.kernelMorOrEqM? e with
+      match ← KernelDiagram.kernelEqM? e with
       | some html => return html
-      | none => throwError "could not find a kernel or equality: {e}"
+      | none => throwError "could not find an equality of kernels: {e}"
     liftCoreM <| Widget.savePanelWidgetInfo
       (hash HtmlDisplay.javascript)
       (return json% { html: $(← Server.RpcEncodable.rpcEncode html) })
