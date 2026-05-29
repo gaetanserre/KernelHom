@@ -149,6 +149,8 @@ def kernelEqM? (e : Expr) : MetaM (Option Html) := do
   let some rhs ← KernelM? rhs maxLvl | return none
   return some <| mkEqHtml lhs rhs
 
+/-- Reduce a forall expression and try to display a kernel diagram
+if it is an equality of kernels. -/
 def kernelEqMReduce? (e : Expr) : MetaM (Option Html) := do
   forallTelescopeReducing (← whnfR <| ← inferType e) fun _ expr => do
     kernelEqM? expr
