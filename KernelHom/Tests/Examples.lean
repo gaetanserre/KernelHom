@@ -26,12 +26,12 @@ lemma swap_parallelComp₀ : swap Y T ∘ₖ (κ ∥ₖ ξ) = ξ ∥ₖ κ ∘�
   by_cases hη : IsSFiniteKernel ξ
   swap; · simp [hη]
   kernel_hom
-  exact braiding_naturality _ _
+  cat_disch
 
 lemma swap_parallelComp_diag [IsSFiniteKernel κ] [IsSFiniteKernel ξ] :
     swap Y T ∘ₖ (κ ∥ₖ ξ) = ξ ∥ₖ κ ∘ₖ swap X Z := by
   kernel_hom
-  exact braiding_naturality _ _
+  cat_disch
 
 variable [IsSFiniteKernel η] [IsSFiniteKernel ξ]
 
@@ -70,11 +70,11 @@ lemma parallelComp_comp_prod₀ :
 lemma parallelComp_self_comp_copy₀ {f : X → Y} (hf : Measurable f) :
     (deterministic f hf ∥ₖ deterministic f hf) ∘ₖ copy X = copy Y ∘ₖ deterministic f hf := by
   kernel_hom
-  exact (Deterministic.copy_natural _).symm
+  cat_disch
 
 lemma discard_comp_deterministic {f : X → Y} (hf : Measurable f) :
     discard Y ∘ₖ (deterministic f hf) = discard X := by
   kernel_hom
-  exact Deterministic.discard_natural _
+  cat_disch
 
 end ProbabilityTheory.Kernel
