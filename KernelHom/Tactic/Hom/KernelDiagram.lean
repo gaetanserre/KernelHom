@@ -142,12 +142,16 @@ def mkEqHtml (lhs rhs : Html) : Html :=
 /-- Given an equality between kernels, return a string diagram of the LHS and RHS.
 Otherwise `none`. -/
 def kernelEqM? (e : Expr) : MetaM (Option Html) := do
-  let e ← whnfR <| ← unfoldKernelOp <| ← instantiateMVars e
+  let e ← unfoldKernelOp <| ← instantiateMVars e
   let maxLvl ← computeMaxUniverse (← collectExprUniverses e)
   let some (_, lhs, rhs) := e.eq? | return none
   let some lhs ← KernelM? lhs maxLvl | return none
   let some rhs ← KernelM? rhs maxLvl | return none
   return some <| mkEqHtml lhs rhs
+
+def kernelEqMReduce? (e : Expr) : MetaM (Option Html) := do
+  forallTelescopeReducing (← whnfR <| ← inferType e) fun _ expr => do
+    kernelEqM? expr
 
 open scoped Jsx in
 /-- The RPC method for displaying kernel diagrams. -/
@@ -190,7 +194,7 @@ def elabKernelDiagramCmd : CommandElab := fun
     let html ← runTermElabM fun _ => do
       let e ← try mkConstWithFreshMVarLevels (← realizeGlobalConstNoOverloadWithInfo t)
         catch _ => Term.levelMVarToParam (← instantiateMVars (← Term.elabTerm t none))
-      match ← KernelDiagram.kernelEqM? e with
+      match ← KernelDiagram.kernelEqMReduce? e with
       | some html => return html
       | none => throwError "could not find an equality of kernels: {e}"
     liftCoreM <| Widget.savePanelWidgetInfo

@@ -158,7 +158,7 @@ private def mkKernelDiagramPayload (stx : TSyntax `term) : DocElabM StringDiagra
         Term.levelMVarToParam e
     pure e : TermElabM Expr)
   let some html ← liftM <| (do
-    let html ← KernelDiagram.kernelMorOrEqM? e
+    let html ← KernelDiagram.kernelEqMReduce? e
     pure html : TermElabM (Option ProofWidgets.Html))
     | throwErrorAt stx "could not find a morphism or equality for a string diagram"
   let html := (Lean.Server.RpcEncodable.rpcEncode html).run {} |>.1
