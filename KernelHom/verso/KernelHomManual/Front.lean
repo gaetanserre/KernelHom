@@ -62,7 +62,7 @@ An additional consequence of the translation to {name SFinKer}`SFinKer` is that 
 
 *About*
 
-This library is under active development and is under the [GNU GPL 3.0 license](https://www.gnu.org/licenses/gpl-3.0.en.html). Contributions and feedback are welcome!
+This library is under active development and is under the [Apache 2.0 license](https://www.apache.org/licenses/LICENSE-2.0). Contributions and feedback are welcome!
 
 {include 0 KernelHomManual.Pages.Examples}
 
