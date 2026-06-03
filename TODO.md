@@ -7,5 +7,5 @@
 - [x] StringDiagram for kernels
 - [ ] `kernel_disch` tactic
 - [ ] Cast a kernel on product to a morphism on tensor product
-- [ ] define attributes to automatically generate lemmas such as `reassoc`
+- [ ] define attributes to automatically generate lemmas such as `reassoc` (check Thunk NameMapEnv from to_additive)
 - [ ] Try to leverage the property of copy-discard categories in a adaptation of the `monoidal` tactic
