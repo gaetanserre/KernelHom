@@ -26,6 +26,16 @@ public meta section
 open Lean Elab Tactic CategoryTheory
 open Lean Elab Tactic Meta CategoryTheory Parser.Tactic ProbabilityTheory MonoidalCategory
 
+
+/-- The `kernel_monoidal` tactic applies the `kernel_hom` transformation to the goal and then
+invokes the `monoidal` tactic to solve or simplify the resulting goal. -/
+syntax (name := kernelMonoidal) "kernel_monoidal" : tactic
+
+elab_rules : tactic
+  | `(tactic| kernel_monoidal) => do
+    evalTactic (← `(tactic| kernel_hom))
+    evalTactic (← `(tactic| monoidal))
+
 /-- The `kernel_coherence` tactic applies the `kernel_hom` transformation to the goal and then
 invokes the `coherence` tactic to solve the resulting goal. -/
 syntax (name := kernelCoherence) "kernel_coherence" : tactic
@@ -35,11 +45,11 @@ elab_rules : tactic
     evalTactic (← `(tactic| kernel_hom))
     evalTactic (← `(tactic| coherence))
 
-/-- The `kernel_coherence` tactic applies the `kernel_hom` transformation to the goal and then
-invokes the `monoidal` tactic to solve or simplify the resulting goal. -/
-syntax (name := kernelMonoidal) "kernel_monoidal" : tactic
+/-- The `kernel_disch` tactic applies the `kernel_hom` transformation to the goal and then
+invokes the `cat_disch` tactic to solve the resulting goal. -/
+syntax (name := kernelDisch) "kernel_disch" : tactic
 
 elab_rules : tactic
-  | `(tactic| kernel_monoidal) => do
+  | `(tactic| kernel_disch) => do
     evalTactic (← `(tactic| kernel_hom))
-    evalTactic (← `(tactic| monoidal))
+    evalTactic (← `(tactic| cat_disch))

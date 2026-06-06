@@ -64,18 +64,18 @@ partial def constructMeasurableEquiv (e : Expr) (eLevel maxLvl : Level) : MetaM 
 
 /-- Categorical operations recorded during transformation for later rewriting. -/
 inductive CategoryOP
-  | leftUnitor_hom (lvl : Level) (e : Expr)
-  | leftUnitor_inv (lvl : Level) (e : Expr)
-  | rightUnitor_hom (lvl : Level) (e : Expr)
-  | rightUnitor_inv (lvl : Level) (e : Expr)
-  | WhiskerLeft (e : Expr)
-  | WhiskerRight (e : Expr)
-  | id (e : Expr)
-  | Associator_hom (e₁ e₂ e₃ : Expr)
-  | Associator_inv (e₁ e₂ e₃ : Expr)
-  | Braiding_hom (e₁ e₂ : Expr)
-  | Counit (e : Expr)
-  | Comul (e : Expr)
+  | leftUnitor_hom (lvl : Level) (sfinker equiv : Expr)
+  | leftUnitor_inv (lvl : Level) (sfinker equiv : Expr)
+  | rightUnitor_hom (lvl : Level) (sfinker equiv : Expr)
+  | rightUnitor_inv (lvl : Level) (sfinker equiv : Expr)
+  | WhiskerLeft (sfinker equiv : Expr)
+  | WhiskerRight (sfinker equiv : Expr)
+  | id (sfinker equiv : Expr)
+  | Associator_hom (sfinker₁ equiv₁ sfinker₂ equiv₂ sfinker₃ equiv₃ : Expr)
+  | Associator_inv (sfinker₁ equiv₁ sfinker₂ equiv₂ sfinker₃ equiv₃ : Expr)
+  | Braiding_hom (sfinker₁ equiv₁ sfinker₂ equiv₂ : Expr)
+  | Counit (sfinker equiv : Expr)
+  | Comul (sfinker equiv : Expr)
 
 /-- Transform both sides of an equality and return the new equality plus metadata. -/
 def transformEquality (maxLvl : Level) (e : Expr)

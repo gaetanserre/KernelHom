@@ -67,14 +67,16 @@ lemma parallelComp_comp_prod₀ :
     (η ∥ₖ η') ∘ₖ (κ ×ₖ κ') = (η ∘ₖ κ) ×ₖ (η' ∘ₖ κ') := by
   kernel_monoidal
 
-lemma parallelComp_self_comp_copy₀ {f : X → Y} (hf : Measurable f) :
-    (deterministic f hf ∥ₖ deterministic f hf) ∘ₖ copy X = copy Y ∘ₖ deterministic f hf := by
-  kernel_hom
-  cat_disch
-
 lemma discard_comp_deterministic {f : X → Y} (hf : Measurable f) :
     discard Y ∘ₖ (deterministic f hf) = discard X := by
   kernel_hom
-  cat_disch
+  simp only [IsComonHom.hom_counit]
+
+variable {κ : Kernel (X × Y) Z}
+
+lemma parallelComp_self_comp_copy₀ [IsMarkovKernel κ] [IsDeterministic κ] :
+    (κ ∥ₖ κ) ∘ₖ copy (X × Y) = copy Z ∘ₖ κ := by
+  kernel_disch
+
 
 end ProbabilityTheory.Kernel

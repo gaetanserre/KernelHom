@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gaëtan Serré
 -/
 
-import KernelHom.Tests.Examples
+import KernelHomTests.Examples
 import KernelHomManual.Tools.VersoKernelDiagram
 import KernelHomManual.Tools.LeanDecl
 import VersoManual
@@ -21,7 +21,7 @@ set_option linter.style.longLine false
 set_option pp.rawOnError true
 set_option verso.code.warnLineLength 100
 set_option verso.exampleProject "."
-set_option verso.exampleModule "KernelHom.Tests.Examples"
+set_option verso.exampleModule "KernelHomTests.Examples"
 
 #doc (Manual) "Usage and examples" =>
 %%%
@@ -58,6 +58,8 @@ The library provides several tactics for working with s-finite kernels equalitie
 - {name kernelMonoidal}`kernel_monoidal`: Applies the {name Monoidal.monoidal}`monoidal` tactic to a s-finite kernel equality.
 
 - {name kernelCoherence}`kernel_coherence`: Applies the {name Coherence.coherence}`coherence` tactic to a s-finite kernel equality.
+
+- {name kernelDisch}`kernel_disch`: Applies the {name CategoryTheory.categoryTheoryDischarger}`cat_disch` tactic to a s-finite kernel equality.
 
 Basically, whenever you have a equality of s-finite kernels that you want to simplify, you can apply {name kernelHom}`kernel_hom` to transform it into a categorical equality, try applying categorical tactics, simps, or manually manipulate it, and then apply {name homKernel}`hom_kernel` to get back to a kernel equality if needed. The built-in helpers {name kernelMonoidal}`kernel_monoidal` and {name kernelCoherence}`kernel_coherence` directly apply categorical tactics to kernels without needing to manually invoke the translation tactic.
 

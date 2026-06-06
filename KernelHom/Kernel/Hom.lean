@@ -33,13 +33,12 @@ namespace ProbabilityTheory.Kernel
 universe w x y z
 
 variable {X : Type x} {Y : Type y} [MeasurableSpace X] [MeasurableSpace Y]
-    {X' Y' : Type w} [MeasurableSpace X'] [MeasurableSpace Y'] {ex : X' ≃ᵐ X} {ey : Y' ≃ᵐ Y}
+    {X' Y' : SFinKer.{w}} {ex : X'.carrier ≃ᵐ X} {ey : Y'.carrier ≃ᵐ Y}
 
 section Hom
 
 /-- Transform a morphism in `SFinKer` into a kernel. -/
-noncomputable def fromHom (κ : SFinKer.of X' ⟶ SFinKer.of Y') : Kernel X Y :=
-  (κ.1.comap ex.symm (by fun_prop)).map ey
+noncomputable def fromHom (κ : X' ⟶ Y') : Kernel X Y := (κ.1.comap ex.symm (by fun_prop)).map ey
 
 instance {κ : SFinKer.of X' ⟶ SFinKer.of Y'} :
     IsSFiniteKernel (fromHom (ex := ex) (ey := ey) κ) := by
@@ -48,7 +47,7 @@ instance {κ : SFinKer.of X' ⟶ SFinKer.of Y'} :
   infer_instance
 
 /-- Transform a kernel into a morphism in `SFinKer`. -/
-noncomputable def hom (κ : Kernel X Y) [IsSFiniteKernel κ] : SFinKer.of X' ⟶ SFinKer.of Y' := by
+noncomputable def hom (κ : Kernel X Y) [IsSFiniteKernel κ] : X' ⟶ Y' := by
   refine ⟨(κ.map ey.symm).comap ex (by fun_prop), ?_⟩
   have := κ.2
   infer_instance
@@ -71,7 +70,7 @@ lemma hom_congr {κ₁ κ₂ : Kernel X Y} [IsSFiniteKernel κ₁] [IsSFiniteKer
 
 section Comp
 
-variable {Z : Type z} [MeasurableSpace Z] {Z' : Type w} [MeasurableSpace Z'] {ez : Z' ≃ᵐ Z}
+variable {Z : Type z} [MeasurableSpace Z] {Z' : SFinKer.{w}} {ez : Z'.carrier ≃ᵐ Z}
 
 open CategoryTheory
 
@@ -178,7 +177,7 @@ lemma rightUnitor_inv : (ρ_ (SFinKer.of X')).inv = hom (ex := ex) (ey := ex.pro
 
 end unitors
 
-variable {Z : Type z} [MeasurableSpace Z] {Z' : Type w} [MeasurableSpace Z'] {ez : Z' ≃ᵐ Z}
+variable {Z : Type z} [MeasurableSpace Z] {Z' : SFinKer.{w}} {ez : Z'.carrier ≃ᵐ Z}
 
 section whiskers
 
@@ -240,7 +239,7 @@ end associator
 
 section tensorHom
 
-variable {V : Type v} [MeasurableSpace V] {V' : Type w} [MeasurableSpace V'] {ev : V' ≃ᵐ V}
+variable {V : Type v} [MeasurableSpace V] {V' : SFinKer.{w}} {ev : V'.carrier ≃ᵐ V}
 
 lemma tensorHom {κ : Kernel X Y} [IsSFiniteKernel κ] {η : Kernel V Z} [IsSFiniteKernel η] :
     κ.hom (ex := ex) (ey := ey) ⊗ₘ η.hom (ex := ev) (ey := ez) =
@@ -295,31 +294,52 @@ end comonobj
 
 section deterministic
 
-instance {f : X → Y} {hf : Measurable f} :
-    Deterministic (hom (ex := ex) (ey := ey) <| (deterministic f hf)) where
+instance {κ : Kernel X Y} [IsMarkovKernel κ] [IsDeterministic κ] :
+    Deterministic (hom (ex := ex) (ey := ey) κ) where
   hom_counit := by
     ext : 1; dsimp
     simp only [hom]
-    have : IsMarkovKernel (((deterministic f hf).map ey.symm).comap ex (by fun_prop)) :=
-      have : IsMarkovKernel ((deterministic f hf).map ey.symm) :=
+    have : IsMarkovKernel ((κ.map ey.symm).comap ex (by fun_prop)) :=
+      have : IsMarkovKernel (κ.map ey.symm) :=
         IsMarkovKernel.map _ (by fun_prop)
       IsMarkovKernel.comap _ (by fun_prop)
     exact Kernel.comp_discard _
   hom_comul := by
     ext : 1; dsimp
     simp only [hom]
-    rw [id_parallelComp_comp_parallelComp_id, comap_parallelComp_comap,
-      map_parallelComp_map, deterministic_parallelComp_deterministic,
-      deterministic_map, deterministic_map]
-    · ext _ _ hs
-      rw [comp_apply, comap_apply, deterministic_apply, comp_apply, copy_apply]
-      rw [Measure.bind_apply, Measure.bind_apply, lintegral_dirac', lintegral_dirac']
-      · rw [copy_apply, comap_apply, deterministic_apply]
-        congr
+    rw [id_parallelComp_comp_parallelComp_id, comap_parallelComp_comap, map_parallelComp_map]
+    · ext a s hs
+      have := (κ.parallelComp_self_comp_copy).symm
+      replace this := DFunLike.congr_fun this <| ex a
+      replace this := DFunLike.congr_fun this (ey.prod ey '' s)
+      rw [comp_apply, comp_apply] at this ⊢
+      rw [comap_apply, map_apply, copy_apply]
+      · rw [Measure.bind_apply, Measure.bind_apply] at this ⊢
+        · rw [MeasureTheory.lintegral_map, lintegral_dirac', comap_apply, map_apply',
+          parallelComp_apply']
+          · convert this using 1
+            · congr with y
+              simp only [copy_apply]
+              rw [Measure.dirac_apply', Measure.dirac_apply']
+              · refine Set.indicator_eq_indicator ?_ rfl
+                simp [MeasurableEquiv.prod]
+                aesop
+              all_goals try measurability
+            · rw [copy_apply, lintegral_dirac', parallelComp_apply']
+              · congr with y
+                simp
+                congr 2
+                simp [MeasurableEquiv.prod, Set.image, Set.preimage]
+                aesop
+              all_goals try measurability
+              exact Kernel.measurable_coe _ (by measurability)
+          all_goals try fun_prop
+          all_goals try measurability
+          all_goals exact Kernel.measurable_coe _ hs
+        all_goals try fun_prop
+        all_goals try measurability
       all_goals try fun_prop
-      all_goals try measurability
-      all_goals exact Kernel.measurable_coe _ hs
-    all_goals fun_prop
+    all_goals try fun_prop
 
 end deterministic
 

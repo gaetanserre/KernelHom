@@ -46,6 +46,10 @@ jobs:
       - name: Lint project
         run: |
           lake exe runLinter KernelHom
+      
+      - name: Test project
+        run: |
+          lake test
 
       - name: Build Verso Documentation
         run: |
