@@ -2,6 +2,7 @@ name = "KernelHom"
 version = "0.1.0"
 keywords = ["math"]
 defaultTargets = ["KernelHom"]
+testDriver = "KernelHomTests"
 
 [leanOptions]
 pp.unicode.fun = true                 # pretty-prints `fun a ↦ b`
@@ -21,11 +22,15 @@ scope = "leanprover-community"
 name = "KernelHom"
 
 [[lean_lib]]
+name = "KernelHomTests"
+globs = ["KernelHomTests.+"]
+
+[[lean_lib]]
 name = "KernelHomManual"
-srcDir = "KernelHom/verso/"
+srcDir = "Verso/"
 root = "KernelHomManual"
 
 [[lean_exe]]
 name = "manual"
-srcDir = "KernelHom/verso/"
+srcDir = "Verso/"
 root = "KernelHomManual"

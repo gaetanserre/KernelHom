@@ -63,7 +63,8 @@ partial def getTypeFromSFinKer (e : Expr) : MetaM (Expr × Level) := do
 def deconstructUnitorsHom (iso : Expr) (eLevel : Level) (left : Bool) :
     MetaM (Expr × CategoryOP) := do
   let iso_t ← inferType iso
-  let (X, xLvl) ← getTypeFromSFinKer iso_t.getAppArgs[3]!
+  let SX := iso_t.getAppArgs[3]!
+  let (X, xLvl) ← getTypeFromSFinKer SX
   let kernel_id ←
     if left then
       let UnitX ← mkAppOptM' (Expr.const ``Prod [Level.zero, xLvl]) #[Expr.const ``Unit [], X]
@@ -78,14 +79,15 @@ def deconstructUnitorsHom (iso : Expr) (eLevel : Level) (left : Bool) :
     else
       mkAppOptM ``Prod.fst #[X, Expr.const ``Unit []]
   let ex ← constructMeasurableEquiv X xLvl eLevel
-  let OP := if left then .leftUnitor_hom xLvl ex else .rightUnitor_hom xLvl ex
+  let OP := if left then .leftUnitor_hom xLvl SX ex else .rightUnitor_hom xLvl SX ex
   return (← mkAppM ``Kernel.map #[kernel_id, prod], OP)
 
 /-- Deconstruct a left or right unitor inverse morphism to get the underlying kernel -/
 def deconstructUnitorsInv (iso : Expr) (eLevel : Level) (left : Bool) :
     MetaM (Expr × CategoryOP) := do
   let iso_t ← inferType iso
-  let (X, xLvl) ← getTypeFromSFinKer iso_t.getAppArgs[3]!
+  let SX := iso_t.getAppArgs[3]!
+  let (X, xLvl) ← getTypeFromSFinKer SX
   let kernel_id ← do
     let mX ← synthInstance (mkApp (Expr.const ``MeasurableSpace [xLvl]) X)
     mkAppOptM ``Kernel.id #[X, mX]
@@ -101,8 +103,59 @@ def deconstructUnitorsInv (iso : Expr) (eLevel : Level) (left : Bool) :
         <| .const ``Unit []) |> Expr.app <| .bvar 0) |> Expr.app <| .const ``Unit.unit []
       ) .default
   let ex ← constructMeasurableEquiv X xLvl eLevel
-  let OP := if left then .leftUnitor_inv xLvl ex else .rightUnitor_inv xLvl ex
+  let OP := if left then .leftUnitor_inv xLvl SX ex else .rightUnitor_inv xLvl SX ex
   return (← mkAppM ``Kernel.map #[kernel_id, f], OP)
+
+/-- Deconstruct the associator morphism to get the underlying kernel -/
+def deconstructAssociatorHom (iso : Expr) (eLevel : Level) : MetaM (Expr × CategoryOP) := do
+  let args := iso.getAppArgs
+  let SX := args[args.size - 3]!
+  let SY := args[args.size - 2]!
+  let SZ := args[args.size - 1]!
+  let (X, xLvl) ← getTypeFromSFinKer SX
+  let (Y, yLvl) ← getTypeFromSFinKer SY
+  let (Z, zLvl) ← getTypeFromSFinKer SZ
+  let mequiv_prodassoc ← mkAppOptM ``MeasurableEquiv.prodAssoc #[X, Y, Z, none, none, none]
+  let measurable_instance ← mkAppM ``MeasurableEquiv.measurable #[mequiv_prodassoc]
+  let dfuncoe ← mkAppM ``DFunLike.coe #[mequiv_prodassoc]
+  let kernel_deterministic ← mkAppM ``Kernel.deterministic #[dfuncoe, measurable_instance]
+  let ex ← constructMeasurableEquiv X xLvl eLevel
+  let ey ← constructMeasurableEquiv Y yLvl eLevel
+  let ez ← constructMeasurableEquiv Z zLvl eLevel
+  let OP := .Associator_hom SX ex SY ey SZ ez
+  return (kernel_deterministic, OP)
+
+/-- Deconstruct the associator inverse morphism to get the underlying kernel -/
+def deconstructAssociatorInv (iso : Expr) (eLevel : Level) : MetaM (Expr × CategoryOP) := do
+  let args := iso.getAppArgs
+  let SX := args[args.size - 3]!
+  let SY := args[args.size - 2]!
+  let SZ := args[args.size - 1]!
+  let (X, xLvl) ← getTypeFromSFinKer SX
+  let (Y, yLvl) ← getTypeFromSFinKer SY
+  let (Z, zLvl) ← getTypeFromSFinKer SZ
+  let mequiv_prodassoc ← mkAppM ``MeasurableEquiv.symm
+    #[← mkAppOptM ``MeasurableEquiv.prodAssoc #[X, Y, Z, none, none, none]]
+  let measurable_instance ← mkAppM ``MeasurableEquiv.measurable #[mequiv_prodassoc]
+  let dfuncoe ← mkAppM ``DFunLike.coe #[mequiv_prodassoc]
+  let kernel_deterministic ← mkAppM ``Kernel.deterministic #[dfuncoe, measurable_instance]
+  let ex ← constructMeasurableEquiv X xLvl eLevel
+  let ey ← constructMeasurableEquiv Y yLvl eLevel
+  let ez ← constructMeasurableEquiv Z zLvl eLevel
+  let OP := .Associator_inv SX ex SY ey SZ ez
+  return (kernel_deterministic, OP)
+
+/-- Deconstruct the braiding morphism to get the underlying swapped objects -/
+def deconstructBraiding (iso : Expr) (eLevel : Level) :
+    MetaM (Expr × Expr × Expr × Expr × Expr × Expr) := do
+  let args := iso.getAppArgs
+  let SX := args[args.size - 2]!
+  let SY := args[args.size - 1]!
+  let (X, xLvl) ← getTypeFromSFinKer SX
+  let (Y, yLvl) ← getTypeFromSFinKer SY
+  let ex ← constructMeasurableEquiv X xLvl eLevel
+  let ey ← constructMeasurableEquiv Y yLvl eLevel
+  return (X, Y, SX, ex, SY, ey)
 
 /-- Deconstruct a left or right whisker to get the underlying kernel and the whiskered object -/
 def deconstructWhiskersHomArgs (e : Expr) (eLevel : Level) (left : Bool) :
@@ -113,51 +166,9 @@ def deconstructWhiskersHomArgs (e : Expr) (eLevel : Level) (left : Bool) :
   let (X, xLvl) ← getTypeFromSFinKer SX
   let mXUnit ← synthInstance (mkApp (Expr.const ``MeasurableSpace [xLvl]) X)
   let kernel_id ← mkAppOptM ``Kernel.id #[X, mXUnit]
-  let exEquiv ← constructMeasurableEquiv X xLvl eLevel
-  let OP := if left then .WhiskerLeft exEquiv else .WhiskerRight exEquiv
+  let ex ← constructMeasurableEquiv X xLvl eLevel
+  let OP := if left then .WhiskerLeft SX ex else .WhiskerRight SX ex
   return (κ, kernel_id, OP)
-
-/-- Deconstruct the associator morphism to get the underlying kernel -/
-def deconstructAssociatorHom (iso : Expr) (eLevel : Level) : MetaM (Expr × CategoryOP) := do
-  let args := iso.getAppArgs
-  let (X, xLvl) ← getTypeFromSFinKer args[args.size - 3]!
-  let (Y, yLvl) ← getTypeFromSFinKer args[args.size - 2]!
-  let (Z, zLvl) ← getTypeFromSFinKer args[args.size - 1]!
-  let mequiv_prodassoc ← mkAppOptM ``MeasurableEquiv.prodAssoc #[X, Y, Z, none, none, none]
-  let measurable_instance ← mkAppM ``MeasurableEquiv.measurable #[mequiv_prodassoc]
-  let dfuncoe ← mkAppM ``DFunLike.coe #[mequiv_prodassoc]
-  let kernel_determistic ← mkAppM ``Kernel.deterministic #[dfuncoe, measurable_instance]
-  let ex ← constructMeasurableEquiv X xLvl eLevel
-  let ey ← constructMeasurableEquiv Y yLvl eLevel
-  let ez ← constructMeasurableEquiv Z zLvl eLevel
-  let OP := .Associator_hom ex ey ez
-  return (kernel_determistic, OP)
-
-/-- Deconstruct the associator inverse morphism to get the underlying kernel -/
-def deconstructAssociatorInv (iso : Expr) (eLevel : Level) : MetaM (Expr × CategoryOP) := do
-  let args := iso.getAppArgs
-  let (X, xLvl) ← getTypeFromSFinKer args[args.size - 3]!
-  let (Y, yLvl) ← getTypeFromSFinKer args[args.size - 2]!
-  let (Z, zLvl) ← getTypeFromSFinKer args[args.size - 1]!
-  let mequiv_prodassoc ← mkAppM ``MeasurableEquiv.symm
-    #[← mkAppOptM ``MeasurableEquiv.prodAssoc #[X, Y, Z, none, none, none]]
-  let measurable_instance ← mkAppM ``MeasurableEquiv.measurable #[mequiv_prodassoc]
-  let dfuncoe ← mkAppM ``DFunLike.coe #[mequiv_prodassoc]
-  let kernel_determistic ← mkAppM ``Kernel.deterministic #[dfuncoe, measurable_instance]
-  let ex ← constructMeasurableEquiv X xLvl eLevel
-  let ey ← constructMeasurableEquiv Y yLvl eLevel
-  let ez ← constructMeasurableEquiv Z zLvl eLevel
-  let OP := .Associator_inv ex ey ez
-  return (kernel_determistic, OP)
-
-/-- Deconstruct the braiding morphism to get the underlying swapped objects -/
-def deconstructBraiding (iso : Expr) : MetaM (Expr × Expr × Expr × Expr) := do
-  let args := iso.getAppArgs
-  let (X, xLvl) ← getTypeFromSFinKer args[args.size - 2]!
-  let (Y, yLvl) ← getTypeFromSFinKer args[args.size - 1]!
-  let ex ← constructMeasurableEquiv X xLvl xLvl
-  let ey ← constructMeasurableEquiv Y yLvl yLvl
-  return (X, Y, ex, ey)
 
 /-- Recursive transformation from morphism expression in `SFinKer` to kernel expression. -/
 partial def transformHomToKernel (eLevel : Level) (e : Expr) (op_data : List CategoryOP) :
@@ -169,7 +180,7 @@ partial def transformHomToKernel (eLevel : Level) (e : Expr) (op_data : List Cat
     let (X', xLvl) ← getTypeFromSFinKer X
     let ex ← constructMeasurableEquiv X' xLvl eLevel
     let mX' ← synthInstance (mkApp (Expr.const ``MeasurableSpace [xLvl]) X')
-    return (← mkAppOptM ``Kernel.id #[X', mX'], .id ex :: op_data)
+    return (← mkAppOptM ``Kernel.id #[X', mX'], .id X ex :: op_data)
   | Expr.const ``CategoryStruct.comp _ =>
     let args := e.getAppArgs
     let κ := args[args.size - 2]!
@@ -199,9 +210,9 @@ partial def transformHomToKernel (eLevel : Level) (e : Expr) (op_data : List Cat
       let (res, associatorHomOP) ← deconstructAssociatorHom iso eLevel
       return (res, associatorHomOP :: op_data)
     | Expr.const ``BraidedCategory.braiding _ =>
-      let (X, Y, ex, ey) ← deconstructBraiding iso
+      let (X, Y, sfinkerOfX, ex, sfinkerOfY, ey) ← deconstructBraiding iso eLevel
       let e ← mkAppOptM ``Kernel.swap #[X, Y, none, none]
-      return (e, .Braiding_hom ex ey :: op_data)
+      return (e, .Braiding_hom sfinkerOfX ex sfinkerOfY ey :: op_data)
     | _ => throwError "Unexpected isomorphism {iso}"
   | Expr.const ``Iso.inv _ =>
     let args := e.getAppArgs
@@ -217,9 +228,9 @@ partial def transformHomToKernel (eLevel : Level) (e : Expr) (op_data : List Cat
       let (res, associatorInvOP) ← deconstructAssociatorInv iso eLevel
       return (res, associatorInvOP :: op_data)
     | Expr.const ``BraidedCategory.braiding _ =>
-      let (X, Y, ex, ey) ← deconstructBraiding iso
+      let (X, Y, sfinkerOfX, ex, sfinkerOfY, ey) ← deconstructBraiding iso eLevel
       let e ← mkAppOptM ``Kernel.swap #[Y, X, none, none]
-      return (e, .Braiding_hom ex ey :: op_data)
+      return (e, .Braiding_hom sfinkerOfX ex sfinkerOfY ey :: op_data)
     | _ => throwError "Unexpected isomorphism {iso}"
   | Expr.const ``whiskerLeft _ =>
     let (κ, kernel_id, whiskerLeftOP) ← deconstructWhiskersHomArgs e eLevel true
@@ -239,15 +250,17 @@ partial def transformHomToKernel (eLevel : Level) (e : Expr) (op_data : List Cat
     return (← mkAppM ``Kernel.parallelComp #[κ', η'], lη)
   | Expr.const ``ComonObj.counit _ =>
     let args := e.getAppArgs
-    let (X, xLvl) ← getTypeFromSFinKer args[args.size - 2]!
+    let SX := args[args.size - 2]!
+    let (X, xLvl) ← getTypeFromSFinKer SX
     let ex ← constructMeasurableEquiv X xLvl eLevel
     let discard_kernel_const := Expr.const ``Kernel.discard [xLvl, Level.zero]
-    return (← mkAppOptM' discard_kernel_const #[X, none], .Counit ex :: op_data)
+    return (← mkAppOptM' discard_kernel_const #[X, none], .Counit SX ex :: op_data)
   | Expr.const ``ComonObj.comul _ =>
     let args := e.getAppArgs
-    let (X, xLvl) ← getTypeFromSFinKer args[args.size - 2]!
+    let SX := args[args.size - 2]!
+    let (X, xLvl) ← getTypeFromSFinKer SX
     let ex ← constructMeasurableEquiv X xLvl eLevel
-    return (← mkAppOptM ``Kernel.copy #[X, none], .Comul ex :: op_data)
+    return (← mkAppOptM ``Kernel.copy #[X, none], .Comul SX ex :: op_data)
   | Expr.const ``Kernel.hom _ =>
     let args := e.getAppArgs
     let κ := args[args.size - 2]!
@@ -270,46 +283,76 @@ def mkHomKernelEqProof (eqProofType : Expr) (eLevel : Level)
   | [forwardGoal, backwardGoal] =>
     setGoals [forwardGoal]
     evalTactic (← `(tactic| intro h))
-    evalTactic (← `(tactic| try dsimp only [tensorUnit, tensorObj] at h))
     for e in op_data do
       match e with
-      | .leftUnitor_hom _ expr =>
-        let eStx ← Term.exprToSyntax expr
-        evalTactic (← `(tactic| nth_rw 1 [Kernel.leftUnitor_hom.{_, _, 0} (ex := $eStx)] at h))
-      | .leftUnitor_inv _ expr =>
-        let eStx ← Term.exprToSyntax expr
-        evalTactic (← `(tactic| nth_rw 1 [Kernel.leftUnitor_inv.{_, _, 0} (ex := $eStx)] at h))
-      | .rightUnitor_hom _ expr =>
-        let eStx ← Term.exprToSyntax expr
-        evalTactic (← `(tactic| nth_rw 1 [Kernel.rightUnitor_hom.{_, _, 0} (ex := $eStx)] at h))
-      | .rightUnitor_inv _ expr =>
-        let eStx ← Term.exprToSyntax expr
-        evalTactic (← `(tactic| nth_rw 1 [Kernel.rightUnitor_inv.{_, _, 0} (ex := $eStx)] at h))
-      | .id equiv =>
+      | .leftUnitor_hom _ sfinker equiv =>
+        let sfinkerStx ← Term.exprToSyntax sfinker
+        let equivStx ← Term.exprToSyntax equiv
+        evalTactic (← `(tactic| nth_rw 1 [
+          Kernel.leftUnitor_hom.{_, _, 0} (X' := $sfinkerStx) (ex := $equivStx)] at h))
+      | .leftUnitor_inv _ sfinker equiv =>
+        let sfinkerStx ← Term.exprToSyntax sfinker
+        let equivStx ← Term.exprToSyntax equiv
+        evalTactic (← `(tactic| nth_rw 1 [
+          Kernel.leftUnitor_inv.{_, _, 0} (X' := $sfinkerStx) (ex := $equivStx)] at h))
+      | .rightUnitor_hom _ sfinker equiv =>
+        let sfinkerStx ← Term.exprToSyntax sfinker
+        let equivStx ← Term.exprToSyntax equiv
+        evalTactic (← `(tactic| nth_rw 1 [
+          Kernel.rightUnitor_hom.{_, _, 0} (X' := $sfinkerStx) (ex := $equivStx)] at h))
+      | .rightUnitor_inv _ sfinker equiv =>
+        let sfinkerStx ← Term.exprToSyntax sfinker
+        let equivStx ← Term.exprToSyntax equiv
+        evalTactic (← `(tactic| nth_rw 1 [
+          Kernel.rightUnitor_inv.{_, _, 0} (X' := $sfinkerStx) (ex := $equivStx)] at h))
+      | .id sfinker equiv =>
+        let sfinkerStx ← Term.exprToSyntax sfinker
+        let equivStx ← Term.exprToSyntax equiv
+        evalTactic (← `(tactic| nth_rw 1 [
+          Kernel.hom_id (X' := $sfinkerStx) (ex := $equivStx)] at h))
+      | .Associator_hom sfinkerX equivX sfinkerY equivY sfinkerZ equivZ =>
+        let sfinkerXStx ← Term.exprToSyntax sfinkerX
+        let equivXStx ← Term.exprToSyntax equivX
+        let sfinkerYStx ← Term.exprToSyntax sfinkerY
+        let equivYStx ← Term.exprToSyntax equivY
+        let sfinkerZStx ← Term.exprToSyntax sfinkerZ
+        let equivZStx ← Term.exprToSyntax equivZ
+        evalTactic (← `(tactic| nth_rw 1 [
+          Kernel.associator_hom
+          (X' := $sfinkerXStx) (ex := $equivXStx)
+          (Y' := $sfinkerYStx) (ey := $equivYStx)
+          (Z' := $sfinkerZStx) (ez := $equivZStx)
+        ] at h))
+      | .Associator_inv sfinkerX equivX sfinkerY equivY sfinkerZ equivZ =>
+        let sfinkerXStx ← Term.exprToSyntax sfinkerX
+        let equivXStx ← Term.exprToSyntax equivX
+        let sfinkerYStx ← Term.exprToSyntax sfinkerY
+        let equivYStx ← Term.exprToSyntax equivY
+        let sfinkerZStx ← Term.exprToSyntax sfinkerZ
+        let equivZStx ← Term.exprToSyntax equivZ
+        evalTactic (← `(tactic| nth_rw 1 [
+          Kernel.associator_inv
+          (X' := $sfinkerXStx) (ex := $equivXStx)
+          (Y' := $sfinkerYStx) (ey := $equivYStx)
+          (Z' := $sfinkerZStx) (ez := $equivZStx)
+        ] at h))
+      | .Braiding_hom sfinkerX equivX sfinkerY equivY =>
+        let sfinkerXStx ← Term.exprToSyntax sfinkerX
+        let equivXStx ← Term.exprToSyntax equivX
+        let sfinkerYStx ← Term.exprToSyntax sfinkerY
+        let equivYStx ← Term.exprToSyntax equivY
+        evalTactic (← `(tactic| nth_rw 1 [
+          Kernel.braiding_hom (X' := $sfinkerXStx) (ex := $equivXStx)
+          (Y' := $sfinkerYStx) (ey := $equivYStx)] at h))
+      | .Counit sfinker equiv =>
+        let sfinkerStx ← Term.exprToSyntax sfinker
+        let equivStx ← Term.exprToSyntax equiv
+        evalTactic (← `(tactic| nth_rw 1 [
+          Kernel.counit (X' := $sfinkerStx) (ex := $equivStx)] at h))
+      | .Comul sfinker equiv =>
+        let sfinkerStx ← Term.exprToSyntax sfinker
         let eStx ← Term.exprToSyntax equiv
-        evalTactic (← `(tactic| nth_rw 1 [Kernel.hom_id (ex := $eStx)] at h))
-      | .Associator_hom ex ey ez =>
-        let exStx ← Term.exprToSyntax ex
-        let eyStx ← Term.exprToSyntax ey
-        let ezStx ← Term.exprToSyntax ez
-        evalTactic (← `(tactic| nth_rw 1 [Kernel.associator_hom (ex := $exStx) (ey := $eyStx)
-          (ez := $ezStx)] at h))
-      | .Associator_inv ex ey ez =>
-        let exStx ← Term.exprToSyntax ex
-        let eyStx ← Term.exprToSyntax ey
-        let ezStx ← Term.exprToSyntax ez
-        evalTactic (← `(tactic| nth_rw 1 [Kernel.associator_inv (ex := $exStx) (ey := $eyStx)
-          (ez := $ezStx)] at h))
-      | .Braiding_hom ex ey =>
-        let exStx ← Term.exprToSyntax ex
-        let eyStx ← Term.exprToSyntax ey
-        evalTactic (← `(tactic| nth_rw 1 [Kernel.braiding_hom (ex := $exStx) (ey := $eyStx)] at h))
-      | .Counit equiv =>
-        let eStx ← Term.exprToSyntax equiv
-        evalTactic (← `(tactic| nth_rw 1 [Kernel.counit (ex := $eStx)] at h))
-      | .Comul equiv =>
-        let eStx ← Term.exprToSyntax equiv
-        evalTactic (← `(tactic| nth_rw 1 [Kernel.comul (ex := $eStx)] at h))
+        evalTactic (← `(tactic| nth_rw 1 [Kernel.comul (X' := $sfinkerStx) (ex := $eStx)] at h))
       | _ => pure ()
     if !(← getGoals).isEmpty then
       let congr_tac ← `(tactic| simp only [
@@ -324,65 +367,99 @@ def mkHomKernelEqProof (eqProofType : Expr) (eLevel : Level)
         pure ()
       for e in op_data do
         match e with
-        | .WhiskerLeft equiv =>
-          let eStx ← Term.exprToSyntax equiv
-          evalTactic (← `(tactic| nth_rw 1 [Kernel.WhiskerLeft.{$eLevelStx} (ez := $eStx)] at h))
+        | .WhiskerLeft sfinker equiv =>
+          let sfinkerStx ← Term.exprToSyntax sfinker
+          let equivStx ← Term.exprToSyntax equiv
+          evalTactic (← `(tactic| nth_rw 1 [
+            Kernel.WhiskerLeft.{$eLevelStx} (Z' := $sfinkerStx) (ez := $equivStx)] at h))
           try
             evalTactic congr_tac
           catch _ =>
             pure ()
-        | .WhiskerRight equiv =>
-          let eStx ← Term.exprToSyntax equiv
-          evalTactic (← `(tactic| nth_rw 1 [Kernel.WhiskerRight.{$eLevelStx} (ez := $eStx)] at h))
+        | .WhiskerRight sfinker equiv =>
+          let sfinkerStx ← Term.exprToSyntax sfinker
+          let equivStx ← Term.exprToSyntax equiv
+          evalTactic (← `(tactic| nth_rw 1 [
+            Kernel.WhiskerRight.{$eLevelStx} (Z' := $sfinkerStx) (ez := $equivStx)] at h))
           try
             evalTactic congr_tac
           catch _ =>
             pure ()
         | _ => pure ()
-      evalTactic (← `(tactic| rwa [Kernel.quiver_congr.{$eLevelStx}] at h))
+      evalTactic (← `(tactic| rwa [Kernel.hom_congr.{$eLevelStx}] at h))
 
     setGoals [backwardGoal]
     evalTactic (← `(tactic| intro h))
-    evalTactic (← `(tactic| try dsimp only [tensorUnit, tensorObj]))
     for e in op_data do
       match e with
-      | .leftUnitor_hom _ expr =>
-        let eStx ← Term.exprToSyntax expr
-        evalTactic (← `(tactic| nth_rw 1 [Kernel.leftUnitor_hom.{_, _, 0} (ex := $eStx)]))
-      | .leftUnitor_inv _ expr =>
-        let eStx ← Term.exprToSyntax expr
-        evalTactic (← `(tactic| nth_rw 1 [Kernel.leftUnitor_inv.{_, _, 0} (ex := $eStx)]))
-      | .rightUnitor_hom _ expr =>
-        let eStx ← Term.exprToSyntax expr
-        evalTactic (← `(tactic| nth_rw 1 [Kernel.rightUnitor_hom.{_, _, 0} (ex := $eStx)]))
-      | .rightUnitor_inv _ expr =>
-        let eStx ← Term.exprToSyntax expr
-        evalTactic (← `(tactic| nth_rw 1 [Kernel.rightUnitor_inv.{_, _, 0} (ex := $eStx)]))
-      | .id equiv =>
+      | .leftUnitor_hom _ sfinker equiv =>
+        let sfinkerStx ← Term.exprToSyntax sfinker
+        let equivStx ← Term.exprToSyntax equiv
+        evalTactic (← `(tactic| nth_rw 1 [
+          Kernel.leftUnitor_hom.{_, _, 0} (X' := $sfinkerStx) (ex := $equivStx)]))
+      | .leftUnitor_inv _ sfinker equiv =>
+        let sfinkerStx ← Term.exprToSyntax sfinker
+        let equivStx ← Term.exprToSyntax equiv
+        evalTactic (← `(tactic| nth_rw 1 [
+          Kernel.leftUnitor_inv.{_, _, 0} (X' := $sfinkerStx) (ex := $equivStx)]))
+      | .rightUnitor_hom _ sfinker equiv =>
+        let sfinkerStx ← Term.exprToSyntax sfinker
+        let equivStx ← Term.exprToSyntax equiv
+        evalTactic (← `(tactic| nth_rw 1 [
+          Kernel.rightUnitor_hom.{_, _, 0} (X' := $sfinkerStx) (ex := $equivStx)]))
+      | .rightUnitor_inv _ sfinker equiv =>
+        let sfinkerStx ← Term.exprToSyntax sfinker
+        let equivStx ← Term.exprToSyntax equiv
+        evalTactic (← `(tactic| nth_rw 1 [
+          Kernel.rightUnitor_inv.{_, _, 0} (X' := $sfinkerStx) (ex := $equivStx)]))
+      | .id sfinker equiv =>
+        let sfinkerStx ← Term.exprToSyntax sfinker
+        let equivStx ← Term.exprToSyntax equiv
+        evalTactic (← `(tactic| nth_rw 1 [
+          Kernel.hom_id (X' := $sfinkerStx) (ex := $equivStx)]))
+      | .Associator_hom sfinkerX equivX sfinkerY equivY sfinkerZ equivZ =>
+        let sfinkerXStx ← Term.exprToSyntax sfinkerX
+        let equivXStx ← Term.exprToSyntax equivX
+        let sfinkerYStx ← Term.exprToSyntax sfinkerY
+        let equivYStx ← Term.exprToSyntax equivY
+        let sfinkerZStx ← Term.exprToSyntax sfinkerZ
+        let equivZStx ← Term.exprToSyntax equivZ
+        evalTactic (← `(tactic| nth_rw 1 [
+          Kernel.associator_hom
+          (X' := $sfinkerXStx) (ex := $equivXStx)
+          (Y' := $sfinkerYStx) (ey := $equivYStx)
+          (Z' := $sfinkerZStx) (ez := $equivZStx)
+        ]))
+      | .Associator_inv sfinkerX equivX sfinkerY equivY sfinkerZ equivZ =>
+        let sfinkerXStx ← Term.exprToSyntax sfinkerX
+        let equivXStx ← Term.exprToSyntax equivX
+        let sfinkerYStx ← Term.exprToSyntax sfinkerY
+        let equivYStx ← Term.exprToSyntax equivY
+        let sfinkerZStx ← Term.exprToSyntax sfinkerZ
+        let equivZStx ← Term.exprToSyntax equivZ
+        evalTactic (← `(tactic| nth_rw 1 [
+          Kernel.associator_inv
+          (X' := $sfinkerXStx) (ex := $equivXStx)
+          (Y' := $sfinkerYStx) (ey := $equivYStx)
+          (Z' := $sfinkerZStx) (ez := $equivZStx)
+        ]))
+      | .Braiding_hom sfinkerX equivX sfinkerY equivY =>
+        let sfinkerXStx ← Term.exprToSyntax sfinkerX
+        let equivXStx ← Term.exprToSyntax equivX
+        let sfinkerYStx ← Term.exprToSyntax sfinkerY
+        let equivYStx ← Term.exprToSyntax equivY
+        evalTactic (← `(tactic| nth_rw 1 [
+          Kernel.braiding_hom (X' := $sfinkerXStx) (ex := $equivXStx)
+          (Y' := $sfinkerYStx) (ey := $equivYStx)]))
+      | .Counit sfinker equiv =>
+        let sfinkerStx ← Term.exprToSyntax sfinker
+        let equivStx ← Term.exprToSyntax equiv
+        evalTactic (← `(tactic| nth_rw 1 [
+          Kernel.counit (X' := $sfinkerStx) (ex := $equivStx)]))
+      | .Comul sfinker equiv =>
+        let sfinkerStx ← Term.exprToSyntax sfinker
         let eStx ← Term.exprToSyntax equiv
-        evalTactic (← `(tactic| nth_rw 1 [Kernel.hom_id (ex := $eStx)]))
-      | .Associator_hom ex ey ez =>
-        let exStx ← Term.exprToSyntax ex
-        let eyStx ← Term.exprToSyntax ey
-        let ezStx ← Term.exprToSyntax ez
-        evalTactic (← `(tactic| nth_rw 1 [Kernel.associator_hom (ex := $exStx) (ey := $eyStx)
-          (ez := $ezStx)]))
-      | .Associator_inv ex ey ez =>
-        let exStx ← Term.exprToSyntax ex
-        let eyStx ← Term.exprToSyntax ey
-        let ezStx ← Term.exprToSyntax ez
-        evalTactic (← `(tactic| nth_rw 1 [Kernel.associator_inv (ex := $exStx) (ey := $eyStx)
-          (ez := $ezStx)]))
-      | .Braiding_hom ex ey =>
-        let exStx ← Term.exprToSyntax ex
-        let eyStx ← Term.exprToSyntax ey
-        evalTactic (← `(tactic| nth_rw 1 [Kernel.braiding_hom (ex := $exStx) (ey := $eyStx)]))
-      | .Counit equiv =>
-        let eStx ← Term.exprToSyntax equiv
-        evalTactic (← `(tactic| nth_rw 1 [Kernel.counit (ex := $eStx)]))
-      | .Comul equiv =>
-        let eStx ← Term.exprToSyntax equiv
-        evalTactic (← `(tactic| nth_rw 1 [Kernel.comul (ex := $eStx)]))
+        evalTactic (← `(tactic| nth_rw 1 [Kernel.comul (X' := $sfinkerStx) (ex := $eStx)]))
       | _ => pure ()
 
     if !(← getGoals).isEmpty then
@@ -398,22 +475,26 @@ def mkHomKernelEqProof (eqProofType : Expr) (eLevel : Level)
         pure ()
       for e in op_data do
         match e with
-        | .WhiskerLeft equiv =>
-          let eStx ← Term.exprToSyntax equiv
-          evalTactic (← `(tactic| nth_rw 1 [Kernel.WhiskerLeft.{$eLevelStx} (ez := $eStx)]))
+        | .WhiskerLeft sfinker equiv =>
+          let sfinkerStx ← Term.exprToSyntax sfinker
+          let equivStx ← Term.exprToSyntax equiv
+          evalTactic (← `(tactic| nth_rw 1 [
+            Kernel.WhiskerLeft.{$eLevelStx} (Z' := $sfinkerStx) (ez := $equivStx)]))
           try
             evalTactic congr_tac
           catch _ =>
             pure ()
-        | .WhiskerRight equiv =>
-          let eStx ← Term.exprToSyntax equiv
-          evalTactic (← `(tactic| nth_rw 1 [Kernel.WhiskerRight.{$eLevelStx} (ez := $eStx)]))
+        | .WhiskerRight sfinker equiv =>
+          let sfinkerStx ← Term.exprToSyntax sfinker
+          let equivStx ← Term.exprToSyntax equiv
+          evalTactic (← `(tactic| nth_rw 1 [
+            Kernel.WhiskerRight.{$eLevelStx} (Z' := $sfinkerStx) (ez := $equivStx)]))
           try
             evalTactic congr_tac
           catch _ =>
             pure ()
         | _ => pure ()
-      evalTactic (← `(tactic| rwa [Kernel.quiver_congr.{$eLevelStx}]))
+      evalTactic (← `(tactic| rwa [Kernel.hom_congr.{$eLevelStx}]))
   | _ =>
     setGoals savedGoals
     throwError "Expected exactly two goals after `constructor`"
@@ -443,6 +524,7 @@ def ApplyHomKernel (goal : MVarId) (fvarId : Option FVarId) : TacticM MVarId := 
           let decl ← fid.getDecl
           pure decl.type
         | none => goal.getType
+    let expr ← whnfR <| ← instantiateMVars expr
     let eLevel ← getUniverseFromEq expr
     let (kernelExpr, op_data, _, _) ← transformEquality eLevel expr transformHomToKernel
     let eqProofType ← mkEq expr kernelExpr

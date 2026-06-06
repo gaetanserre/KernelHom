@@ -44,8 +44,8 @@ instance : MeasurableCoherence X X where
 
 /-- `MeasurableCoherence` gives an instance of `MonoidalCoherence` in the `SFinKer` category. -/
 @[reducible]
-noncomputable def monoidalCoherence {X' Y' : Type w} [MeasurableSpace X'] [MeasurableSpace Y']
-    (ex : X' ≃ᵐ X) (ey : Y' ≃ᵐ Y) : MonoidalCoherence (SFinKer.of X') (SFinKer.of Y') where
+noncomputable def monoidalCoherence {X' Y' : SFinKer.{w}} (ex : X'.carrier ≃ᵐ X)
+    (ey : Y'.carrier ≃ᵐ Y) : MonoidalCoherence (SFinKer.of X') (SFinKer.of Y') where
   iso := by
     let e := ex.trans <| mXY.miso.trans ey.symm
     refine ⟨⟨Kernel.id.map e, inferInstance⟩,
@@ -73,9 +73,8 @@ variable {W : Type w} {X : Type x} {Y : Type y} {Z : Type z}
   [MeasurableCoherence X Y] (κ : Kernel W X) [IsSFiniteKernel κ] (η : Kernel Y Z)
   [IsSFiniteKernel η]
 
-variable {W' : Type max w x y z} {X' : Type max w x y z} {Y' : Type max w x y z}
-  {Z' : Type max w x y z} [MeasurableSpace W'] [MeasurableSpace X'] [MeasurableSpace Y']
-  [MeasurableSpace Z'] (ew : W' ≃ᵐ W) (ex : X' ≃ᵐ X) (ey : Y' ≃ᵐ Y) (ez : Z' ≃ᵐ Z)
+variable {W' X' Y' Z' : SFinKer.{max w x y z}} (ew : W'.carrier ≃ᵐ W) (ex : X'.carrier ≃ᵐ X)
+  (ey : Y'.carrier ≃ᵐ Y) (ez : Z'.carrier ≃ᵐ Z)
 
 /-- The kernelized version of the monoidal composition of kernels using the `SFinKer` category.
 It uses arbitrary measurable equivalences to transport the kernels to the `SFinKer` category. -/
@@ -90,8 +89,16 @@ instance monoComp'_sfinite : IsSFiniteKernel (monoComp₀ κ η ew ex ey ez ) :=
 
 /-- The kernelized version of the monoidal composition of kernels using the `SFinKer` category. -/
 noncomputable abbrev monoComp : Kernel W Z :=
-  monoComp₀ κ η (ulift.{_, max w x y z}) (ulift.{_, max w x y z})
-    (ulift.{_, max w x y z}) (ulift.{_, max w x y z})
+  monoComp₀
+    (W' := SFinKer.of <| ULift W)
+    (X' := SFinKer.of <| ULift X)
+    (Y' := SFinKer.of <| ULift Y)
+    (Z' := SFinKer.of <| ULift Z)
+    κ η
+    (ulift.{_, max w x y z})
+    (ulift.{_, max w x y z})
+    (ulift.{_, max w x y z})
+    (ulift.{_, max w x y z})
 
 @[inherit_doc Kernel.monoComp]
 scoped[ProbabilityTheory] infixr:80 " ⊗≫ₖ " => Kernel.monoComp
@@ -99,9 +106,8 @@ scoped[ProbabilityTheory] infixr:80 " ⊗≫ₖ " => Kernel.monoComp
 instance monoComp_sfinite : IsSFiniteKernel (κ ⊗≫ₖ η) := by
   infer_instance
 
-variable {W'' : Type max v w x y z} {X'' : Type max v w x y z} {Y'' : Type max v w x y z}
-  {Z'' : Type max v w x y z} [MeasurableSpace W''] [MeasurableSpace X''] [MeasurableSpace Y'']
-  [MeasurableSpace Z''] (ew' : W'' ≃ᵐ W) (ex' : X'' ≃ᵐ X) (ey' : Y'' ≃ᵐ Y) (ez' : Z'' ≃ᵐ Z)
+variable {W'' X'' Y'' Z'' : SFinKer.{max v w x y z}} (ew' : W''.carrier ≃ᵐ W)
+  (ex' : X''.carrier ≃ᵐ X) (ey' : Y''.carrier ≃ᵐ Y) (ez' : Z''.carrier ≃ᵐ Z)
 
 lemma hom_monoComp : @monoidalComp _ _ _ _ _ _ (monoidalCoherence ex' ey')
     (hom (ex := ew') (ey := ex') κ) (hom (ex := ey') (ey := ez') η)
