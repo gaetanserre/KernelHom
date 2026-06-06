@@ -106,12 +106,12 @@ scoped[ProbabilityTheory] infixr:80 " ⊗≫ₖ " => Kernel.monoComp
 instance monoComp_sfinite : IsSFiniteKernel (κ ⊗≫ₖ η) := by
   infer_instance
 
-variable {W'' X'' Y'' Z'' : SFinKer.{max v w x y z}} (ew' : W''.carrier ≃ᵐ W)
-  (ex' : X''.carrier ≃ᵐ X) (ey' : Y''.carrier ≃ᵐ Y) (ez' : Z''.carrier ≃ᵐ Z)
+variable {W' X' Y' Z' : SFinKer.{max v w x y z}} (ew : W'.carrier ≃ᵐ W)
+  (ex : X'.carrier ≃ᵐ X) (ey : Y'.carrier ≃ᵐ Y) (ez : Z'.carrier ≃ᵐ Z)
 
-lemma hom_monoComp : @monoidalComp _ _ _ _ _ _ (monoidalCoherence ex' ey')
-    (hom (ex := ew') (ey := ex') κ) (hom (ex := ey') (ey := ez') η)
-    = hom (ex := ew') (ey := ez') (monoComp κ η):= by
+lemma hom_monoComp : @monoidalComp _ _ _ _ _ _ (monoidalCoherence ex ey)
+    (hom (ex := ew) (ey := ex) κ) (hom (ex := ey) (ey := ez) η)
+    = hom (ex := ew) (ey := ez) (monoComp κ η):= by
   simp only [monoComp₀, fromHom, hom, monoidalComp]
   ext _ s hs; dsimp
   unfold monoidalCoherence

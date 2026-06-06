@@ -233,6 +233,26 @@ partial def transformKernelToHom (maxLvl : Level) (e : Expr) (op_data : List Cat
     let (η', lη) ← transformKernelToHom maxLvl η op_data
     let (κ', lκ) ← transformKernelToHom maxLvl κ lη
     return (← mkAppM ``CategoryStruct.comp #[η', κ'], lκ)
+  | Expr.const ``Kernel.monoComp _ =>
+    let args := e.getAppArgs
+    let κ := args[args.size - 4]!
+    let η := args[args.size - 2]!
+    let (W, X, wLvl, xLvl) ← getTypesFromKernel κ
+    let (Y, Z, yLvl, zLvl) ← getTypesFromKernel η
+    let (κ', lκ) ← transformKernelToHom maxLvl κ op_data
+    let (η', lη) ← transformKernelToHom maxLvl η lκ
+    let (sfinkerOfX, ex) ← computeEquivAndSFinKerOf X xLvl maxLvl
+    let (sfinkerOfY, ey) ← computeEquivAndSFinKerOf Y yLvl maxLvl
+    let monoComp := Expr.const ``monoidalComp [maxLvl, maxLvl.succ]
+    let monoCoherenceConst := Expr.const `MeasurableCoherence.monoidalCoherence
+      [maxLvl, xLvl, yLvl]
+    let monoCoherence ← mkAppOptM' monoCoherenceConst
+      #[none, none, none, none, none, sfinkerOfX, sfinkerOfY, ex, ey]
+    let (sfinkerOfW, ew) ← computeEquivAndSFinKerOf W wLvl maxLvl
+    let (sfinkerOfZ, ez) ← computeEquivAndSFinKerOf Z zLvl maxLvl
+    let MonoOP := .MonoidalComp sfinkerOfW ew sfinkerOfX ex sfinkerOfY ey sfinkerOfZ ez
+    return (← mkAppOptM' monoComp
+      #[none, none, none, none, none, none, monoCoherence, κ', η'], MonoOP :: lη)
   | Expr.const ``Kernel.parallelComp _ =>
     let (X, _, _, _) ← getTypesFromKernel e
     if ← checkWhiskerLeft e then
@@ -383,7 +403,6 @@ def mkKernelHomEqProof (eqProofType rhs lhs : Expr) (maxLvl : Level)
         evalTactic (← `(tactic| nth_rw 1 [Kernel.comul (X' := $sfinkerStx) (ex := $equivStx)]))
       | _ => pure ()
     let congr_tac ← `(tactic| simp only [
-        Kernel.hom_monoComp.{$maxLvlStx},
         Kernel.hom_comp.{$maxLvlStx},
         Kernel.tensorHom.{$maxLvlStx},
       ]
@@ -396,6 +415,7 @@ def mkKernelHomEqProof (eqProofType rhs lhs : Expr) (maxLvl : Level)
       for e in op_data do
         match e with
         | .WhiskerLeft sfinker equiv =>
+          logInfo m! "WhiskerLeft: {sfinker}, {equiv}"
           let sfinkerStx ← Term.exprToSyntax sfinker
           let equivStx ← Term.exprToSyntax equiv
           evalTactic (← `(tactic| nth_rw 1 [
@@ -405,10 +425,30 @@ def mkKernelHomEqProof (eqProofType rhs lhs : Expr) (maxLvl : Level)
           catch _ =>
             pure ()
         | .WhiskerRight sfinker equiv =>
+          logInfo m! "WhiskerRight: {sfinker}, {equiv}"
           let sfinkerStx ← Term.exprToSyntax sfinker
           let equivStx ← Term.exprToSyntax equiv
           evalTactic (← `(tactic| nth_rw 1 [
             Kernel.WhiskerRight (Z' := $sfinkerStx) (ez := $equivStx)]))
+          try
+            evalTactic congr_tac
+          catch _ =>
+            pure ()
+        | .MonoidalComp sfinkerW ew sfinkerX ex sfinkerY ey sfinkerZ ez =>
+          logInfo m! "MonoidalComp: {sfinkerW}, {ew}, {sfinkerX}, {ex}, {sfinkerY}, {ey}, {sfinkerZ}, {ez}"
+          let sfinkerWStx ← Term.exprToSyntax sfinkerW
+          let ewStx ← Term.exprToSyntax ew
+          let sfinkerXStx ← Term.exprToSyntax sfinkerX
+          let exStx ← Term.exprToSyntax ex
+          let sfinkerYStx ← Term.exprToSyntax sfinkerY
+          let eyStx ← Term.exprToSyntax ey
+          let sfinkerZStx ← Term.exprToSyntax sfinkerZ
+          let ezStx ← Term.exprToSyntax ez
+          evalTactic (← `(tactic| nth_rw 1 [
+            Kernel.hom_monoComp.{$maxLvlStx} (W' := $sfinkerWStx) (X' := $sfinkerXStx)
+            (Y' := $sfinkerYStx) (Z' := $sfinkerZStx)
+            _ _ $ewStx $exStx $eyStx $ezStx
+          ]))
           try
             evalTactic congr_tac
           catch _ =>
@@ -483,7 +523,6 @@ def mkKernelHomEqProof (eqProofType rhs lhs : Expr) (maxLvl : Level)
       | _ => pure ()
     if !(← getGoals).isEmpty then
       let congr_tac ← `(tactic| simp only [
-          Kernel.hom_monoComp.{$maxLvlStx},
           Kernel.hom_comp.{$maxLvlStx},
           Kernel.tensorHom.{$maxLvlStx},
         ] at h
@@ -512,17 +551,60 @@ def mkKernelHomEqProof (eqProofType rhs lhs : Expr) (maxLvl : Level)
             evalTactic congr_tac
           catch _ =>
             pure ()
+        | .MonoidalComp sfinkerW ew sfinkerX ex sfinkerY ey sfinkerZ ez =>
+          let sfinkerWStx ← Term.exprToSyntax sfinkerW
+          let ewStx ← Term.exprToSyntax ew
+          let sfinkerXStx ← Term.exprToSyntax sfinkerX
+          let exStx ← Term.exprToSyntax ex
+          let sfinkerYStx ← Term.exprToSyntax sfinkerY
+          let eyStx ← Term.exprToSyntax ey
+          let sfinkerZStx ← Term.exprToSyntax sfinkerZ
+          let ezStx ← Term.exprToSyntax ez
+          evalTactic (← `(tactic| nth_rw 1 [
+            Kernel.hom_monoComp.{$maxLvlStx} (W' := $sfinkerWStx) (X' := $sfinkerXStx)
+            (Y' := $sfinkerYStx) (Z' := $sfinkerZStx)
+            _ _ $ewStx $exStx $eyStx $ezStx
+          ] at h))
+          try
+            evalTactic congr_tac
+          catch _ =>
+            pure ()
         | _ => pure ()
       evalTactic (← `(tactic| rwa [Kernel.hom_congr.{$maxLvlStx} (κ₁ := $rhsStx)
         (κ₂ := $lhsStx)] at h))
   | _ =>
     setGoals savedGoals
     throwError "Expected exactly two goals after `constructor`"
-
   if !(← getGoals).isEmpty then
     setGoals savedGoals
     throwError "Failed to solve all goals while building kernel_hom equivalence proof"
+  setGoals savedGoals
+  instantiateMVars mvar
 
+/-- Construct the proof of equivalence between the original equality and the transformed one. -/
+def mkKernelHomEqProofSorry (eqProofType rhs lhs : Expr) (maxLvl : Level)
+    (op_data : List CategoryOP) : TacticM Expr := do
+  let maxLvlStx ← liftMacroM <| levelToSyntax maxLvl
+  let rhsStx ← Term.exprToSyntax rhs
+  let lhsStx ← Term.exprToSyntax lhs
+  let op_data := op_data.reverse
+  let savedGoals ← getGoals
+  let mvar ← mkFreshExprSyntheticOpaqueMVar eqProofType
+  let mvarId := mvar.mvarId!
+  setGoals [mvarId]
+  evalTactic (← `(tactic| apply propext))
+  evalTactic (← `(tactic| constructor))
+  let goalsAfterConstructor ← getGoals
+  match goalsAfterConstructor with
+  | [forwardGoal, backwardGoal] =>
+    setGoals [forwardGoal]
+    evalTactic (← `(tactic| sorry))
+
+    setGoals [backwardGoal]
+    evalTactic (← `(tactic| sorry))
+  | _ =>
+    setGoals savedGoals
+    throwError "Expected exactly two goals after `constructor`"
   setGoals savedGoals
   instantiateMVars mvar
 
@@ -576,12 +658,3 @@ syntax (name := kernelHom) "kernel_hom" (ppSpace location)? : tactic
 elab_rules : tactic
   | `(tactic| kernel_hom $[$loc]?) =>
     expandOptLocation (Lean.mkOptionalNode loc) |> applyLocTactic <| ApplyKernelHom
-
-variable {X Y : Type*} [MeasurableSpace X] [MeasurableSpace Y]
-
-open Kernel
-
-lemma discard_comp_deterministic {f : X → Y} (hf : Measurable f) :
-    discard Y ∘ₖ (deterministic f hf) = discard X := by
-  kernel_hom
-  simp only [IsComonHom.hom_counit]
