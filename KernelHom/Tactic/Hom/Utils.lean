@@ -76,6 +76,7 @@ inductive CategoryOP
   | Braiding_hom (sfinker₁ equiv₁ sfinker₂ equiv₂ : Expr)
   | Counit (sfinker equiv : Expr)
   | Comul (sfinker equiv : Expr)
+  | MonoidalComp (sfinker₁ equiv₁ sfinker₂ equiv₂ sfinker₃ equiv₃ sfinker₄ equiv₄ : Expr)
 
 /-- Transform both sides of an equality and return the new equality plus metadata. -/
 def transformEquality (maxLvl : Level) (e : Expr)

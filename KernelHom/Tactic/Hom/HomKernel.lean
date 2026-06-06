@@ -194,8 +194,15 @@ partial def transformHomToKernel (eLevel : Level) (e : Expr) (op_data : List Cat
     let η := args[args.size - 1]!
     let (κ', lκ) ← transformHomToKernel eLevel κ op_data
     let (η', lη) ← transformHomToKernel eLevel η lκ
+    let (W, X, wLvl, xLvl) ← getTypesFromKernel κ'
+    let (Y, Z, yLvl, zLvl) ← getTypesFromKernel η'
+    let (sfinkerOfW, ew) ← computeEquivAndSFinKerOf W wLvl eLevel
+    let (sfinkerOfX, ex) ← computeEquivAndSFinKerOf X xLvl eLevel
+    let (sfinkerOfY, ey) ← computeEquivAndSFinKerOf Y yLvl eLevel
+    let (sfinkerOfZ, ez) ← computeEquivAndSFinKerOf Z zLvl eLevel
+    let MonoOP := .MonoidalComp sfinkerOfW ew sfinkerOfX ex sfinkerOfY ey sfinkerOfZ ez
     return (← mkAppOptM ``Kernel.monoComp
-      #[none, none, none, none, none, none, none, none, none, κ', none, η', none], lη)
+      #[none, none, none, none, none, none, none, none, none, κ', none, η', none], MonoOP::lη)
   | Expr.const ``Iso.hom _ =>
     let args := e.getAppArgs
     let iso := args[args.size - 1]!
@@ -385,6 +392,24 @@ def mkHomKernelEqProof (eqProofType : Expr) (eLevel : Level)
             evalTactic congr_tac
           catch _ =>
             pure ()
+        | .MonoidalComp sfinkerW ew sfinkerX ex sfinkerY ey sfinkerZ ez =>
+          let sfinkerWStx ← Term.exprToSyntax sfinkerW
+          let ewStx ← Term.exprToSyntax ew
+          let sfinkerXStx ← Term.exprToSyntax sfinkerX
+          let exStx ← Term.exprToSyntax ex
+          let sfinkerYStx ← Term.exprToSyntax sfinkerY
+          let eyStx ← Term.exprToSyntax ey
+          let sfinkerZStx ← Term.exprToSyntax sfinkerZ
+          let ezStx ← Term.exprToSyntax ez
+          evalTactic (← `(tactic| nth_rw 1 [
+            Kernel.hom_monoComp.{$eLevelStx} (W' := $sfinkerWStx) (X' := $sfinkerXStx)
+            (Y' := $sfinkerYStx) (Z' := $sfinkerZStx)
+            _ _ $ewStx $exStx $eyStx $ezStx
+          ] at h))
+          try
+            evalTactic congr_tac
+          catch _ =>
+            pure ()
         | _ => pure ()
       evalTactic (← `(tactic| rwa [Kernel.hom_congr.{$eLevelStx}] at h))
 
@@ -461,7 +486,6 @@ def mkHomKernelEqProof (eqProofType : Expr) (eLevel : Level)
         let eStx ← Term.exprToSyntax equiv
         evalTactic (← `(tactic| nth_rw 1 [Kernel.comul (X' := $sfinkerStx) (ex := $eStx)]))
       | _ => pure ()
-
     if !(← getGoals).isEmpty then
       let congr_tac ← `(tactic| simp only [
           Kernel.hom_monoComp.{$eLevelStx},
@@ -493,6 +517,24 @@ def mkHomKernelEqProof (eqProofType : Expr) (eLevel : Level)
             evalTactic congr_tac
           catch _ =>
             pure ()
+        | .MonoidalComp sfinkerW ew sfinkerX ex sfinkerY ey sfinkerZ ez =>
+          let sfinkerWStx ← Term.exprToSyntax sfinkerW
+          let ewStx ← Term.exprToSyntax ew
+          let sfinkerXStx ← Term.exprToSyntax sfinkerX
+          let exStx ← Term.exprToSyntax ex
+          let sfinkerYStx ← Term.exprToSyntax sfinkerY
+          let eyStx ← Term.exprToSyntax ey
+          let sfinkerZStx ← Term.exprToSyntax sfinkerZ
+          let ezStx ← Term.exprToSyntax ez
+          evalTactic (← `(tactic| nth_rw 1 [
+            Kernel.hom_monoComp.{$eLevelStx} (W' := $sfinkerWStx) (X' := $sfinkerXStx)
+            (Y' := $sfinkerYStx) (Z' := $sfinkerZStx)
+            _ _ $ewStx $exStx $eyStx $ezStx
+          ]))
+          try
+            evalTactic congr_tac
+          catch _ =>
+            pure ()
         | _ => pure ()
       evalTactic (← `(tactic| rwa [Kernel.hom_congr.{$eLevelStx}]))
   | _ =>
@@ -501,7 +543,6 @@ def mkHomKernelEqProof (eqProofType : Expr) (eLevel : Level)
   if !(← getGoals).isEmpty then
     setGoals savedGoals
     throwError "Failed to solve all goals while building kernel_hom equivalence proof"
-
   setGoals savedGoals
   instantiateMVars mvar
 
