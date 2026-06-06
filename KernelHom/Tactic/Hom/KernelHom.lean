@@ -407,7 +407,7 @@ def mkKernelHomEqProof (eqProofType rhs lhs : Expr) (maxLvl : Level)
           catch _ =>
             pure ()
         | _ => pure ()
-      evalTactic (← `(tactic| rwa [Kernel.quiver_congr.{$maxLvlStx}
+      evalTactic (← `(tactic| rwa [Kernel.hom_congr.{$maxLvlStx}
         (κ₁ := $rhsStx) (κ₂ := $lhsStx)]))
 
     setGoals [backwardGoal]
@@ -480,7 +480,7 @@ def mkKernelHomEqProof (eqProofType rhs lhs : Expr) (maxLvl : Level)
           catch _ =>
             pure ()
         | _ => pure ()
-      evalTactic (← `(tactic| rwa [Kernel.quiver_congr.{$maxLvlStx} (κ₁ := $rhsStx)
+      evalTactic (← `(tactic| rwa [Kernel.hom_congr.{$maxLvlStx} (κ₁ := $rhsStx)
         (κ₂ := $lhsStx)] at h))
   | _ =>
     setGoals savedGoals

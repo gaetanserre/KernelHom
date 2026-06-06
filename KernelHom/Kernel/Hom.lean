@@ -53,7 +53,7 @@ noncomputable def hom (κ : Kernel X Y) [IsSFiniteKernel κ] : SFinKer.of X' ⟶
   have := κ.2
   infer_instance
 
-lemma quiver_congr {κ₁ κ₂ : Kernel X Y} [IsSFiniteKernel κ₁] [IsSFiniteKernel κ₂] :
+lemma hom_congr {κ₁ κ₂ : Kernel X Y} [IsSFiniteKernel κ₁] [IsSFiniteKernel κ₂] :
     hom (ex := ex) (ey := ey) κ₁ = hom (ex := ex) (ey := ey) κ₂ ↔ κ₁ = κ₂ := by
   constructor
   · intro h
@@ -67,8 +67,7 @@ lemma quiver_congr {κ₁ κ₂ : Kernel X Y} [IsSFiniteKernel κ₁] [IsSFinite
       all_goals try fun_prop
       all_goals measurability
     all_goals fun_prop
-  · rintro rfl
-    rfl
+  · grind
 
 section Comp
 

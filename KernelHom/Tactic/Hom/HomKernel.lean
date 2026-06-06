@@ -339,7 +339,7 @@ def mkHomKernelEqProof (eqProofType : Expr) (eLevel : Level)
           catch _ =>
             pure ()
         | _ => pure ()
-      evalTactic (← `(tactic| rwa [Kernel.quiver_congr.{$eLevelStx}] at h))
+      evalTactic (← `(tactic| rwa [Kernel.hom_congr.{$eLevelStx}] at h))
 
     setGoals [backwardGoal]
     evalTactic (← `(tactic| intro h))
@@ -413,7 +413,7 @@ def mkHomKernelEqProof (eqProofType : Expr) (eLevel : Level)
           catch _ =>
             pure ()
         | _ => pure ()
-      evalTactic (← `(tactic| rwa [Kernel.quiver_congr.{$eLevelStx}]))
+      evalTactic (← `(tactic| rwa [Kernel.hom_congr.{$eLevelStx}]))
   | _ =>
     setGoals savedGoals
     throwError "Expected exactly two goals after `constructor`"
