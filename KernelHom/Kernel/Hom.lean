@@ -247,7 +247,7 @@ lemma tensorHom {κ : Kernel X Y} [IsSFiniteKernel κ] {η : Kernel V Z} [IsSFin
   ext : 1; dsimp
   simp only [hom]
   rw [id_parallelComp_comp_parallelComp_id, comap_parallelComp_comap, map_parallelComp_map]
-  · congr
+  · rfl
   all_goals fun_prop
 
 end tensorHom
