@@ -68,7 +68,7 @@ def computeMaxUniverse (levels : List Level) : MetaM Level :=
     | [] => throwError "Expected at least one universe level, got an empty list"
     | head :: tail => pure (tail.foldl Level.max head)
 
-/-- Get the category universe level from the left side of an equality expression. -/
+/-- Get the universe level from the left side of an equality expression. -/
 def getUniverseFromEq (eq : Expr) : MetaM Level := do
   let eq ← instantiateMVars eq
   let eq ← zetaReduce eq

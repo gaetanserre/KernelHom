@@ -5,6 +5,7 @@ Authors: Gaëtan Serré
 -/
 module
 
+public import KernelHom.Mathlib.MeasurableEquiv
 public import Lean
 public import Mathlib.Probability.Kernel.Composition.Prod
 public import Mathlib.Probability.Kernel.Composition.CompProd
@@ -57,10 +58,10 @@ partial def constructMeasurableEquiv (e : Expr) (eLevel maxLvl : Level) : MetaM 
     let yLevel := univs[1]!
     let ex ← constructMeasurableEquiv X xLevel maxLvl
     let ey ← constructMeasurableEquiv Y yLevel maxLvl
-    let res ← mkAppOptM' (Expr.const `MeasurableEquiv.prod [maxLvl, xLevel, yLevel])
+    let res ← mkAppOptM' (Expr.const ``MeasurableEquiv.prod [maxLvl, xLevel, yLevel])
       #[none, none, none, none, none, none, none, none, ex, ey]
     return res
-  | _ => mkAppOptM' (Expr.const `MeasurableEquiv.ulift [eLevel, maxLvl]) #[e, none]
+  | _ => mkAppOptM' (Expr.const ``MeasurableEquiv.ulift [eLevel, maxLvl]) #[e, none]
 
 /-- Categorical operations recorded during transformation for later rewriting. -/
 inductive CategoryOP

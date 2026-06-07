@@ -290,8 +290,8 @@ def mkHomKernelEqProof (eqProofType : Expr) (eLevel : Level)
   | [forwardGoal, backwardGoal] =>
     setGoals [forwardGoal]
     evalTactic (← `(tactic| intro h))
-    for e in op_data do
-      match e with
+    for op in op_data do
+      match op with
       | .leftUnitor_hom _ sfinker equiv =>
         let sfinkerStx ← Term.exprToSyntax sfinker
         let equivStx ← Term.exprToSyntax equiv
@@ -372,8 +372,8 @@ def mkHomKernelEqProof (eqProofType : Expr) (eLevel : Level)
         evalTactic congr_tac
       catch _ =>
         pure ()
-      for e in op_data do
-        match e with
+      for op in op_data do
+        match op with
         | .WhiskerLeft sfinker equiv =>
           let sfinkerStx ← Term.exprToSyntax sfinker
           let equivStx ← Term.exprToSyntax equiv
@@ -415,8 +415,8 @@ def mkHomKernelEqProof (eqProofType : Expr) (eLevel : Level)
 
     setGoals [backwardGoal]
     evalTactic (← `(tactic| intro h))
-    for e in op_data do
-      match e with
+    for op in op_data do
+      match op with
       | .leftUnitor_hom _ sfinker equiv =>
         let sfinkerStx ← Term.exprToSyntax sfinker
         let equivStx ← Term.exprToSyntax equiv
@@ -497,8 +497,8 @@ def mkHomKernelEqProof (eqProofType : Expr) (eLevel : Level)
         evalTactic congr_tac
       catch _ =>
         pure ()
-      for e in op_data do
-        match e with
+      for op in op_data do
+        match op with
         | .WhiskerLeft sfinker equiv =>
           let sfinkerStx ← Term.exprToSyntax sfinker
           let equivStx ← Term.exprToSyntax equiv
@@ -542,7 +542,7 @@ def mkHomKernelEqProof (eqProofType : Expr) (eLevel : Level)
     throwError "Expected exactly two goals after `constructor`"
   if !(← getGoals).isEmpty then
     setGoals savedGoals
-    throwError "Failed to solve all goals while building kernel_hom equivalence proof"
+    throwError "Failed to solve all goals while building hom_kernel equivalence proof"
   setGoals savedGoals
   instantiateMVars mvar
 

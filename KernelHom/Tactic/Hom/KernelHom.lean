@@ -7,7 +7,6 @@ module
 
 public import Lean.Elab.Tactic.Location
 public import KernelHom.Kernel.MonoidalComp
-public import KernelHom.Mathlib.MeasurableEquiv
 public import KernelHom.Tactic.LocTactic
 public import KernelHom.Tactic.Hom.Universe
 public import KernelHom.Tactic.Hom.Utils
@@ -24,7 +23,7 @@ kernels into equivalent equalities in the monoidal category.
   categorical morphism expressions.
 * `mkKernelHomEqProof`: construction of the equivalence proof used by the
   tactic.
-* `applyKernelHom`: core implementation on goals and hypotheses.
+* `applyKernelHom`: core implementation of `kernel_hom` on goals and hypotheses.
 * `kernel_hom`: user-facing tactic (with location support).
 -/
 
@@ -342,8 +341,8 @@ def mkKernelHomEqProof (eqProofType rhs lhs : Expr) (maxLvl : Level)
   | [forwardGoal, backwardGoal] =>
     setGoals [forwardGoal]
     evalTactic (← `(tactic| intro h))
-    for e in op_data do
-      match e with
+    for op in op_data do
+      match op with
       | .leftUnitor_hom lvl sfinker equiv =>
         let punitLevelStx ← liftMacroM <| levelToSyntax lvl
         let sfinkerStx ← Term.exprToSyntax sfinker
@@ -412,10 +411,9 @@ def mkKernelHomEqProof (eqProofType rhs lhs : Expr) (maxLvl : Level)
         evalTactic congr_tac
       catch _ =>
         pure ()
-      for e in op_data do
-        match e with
+      for op in op_data do
+        match op with
         | .WhiskerLeft sfinker equiv =>
-          logInfo m! "WhiskerLeft: {sfinker}, {equiv}"
           let sfinkerStx ← Term.exprToSyntax sfinker
           let equivStx ← Term.exprToSyntax equiv
           evalTactic (← `(tactic| nth_rw 1 [
@@ -425,7 +423,6 @@ def mkKernelHomEqProof (eqProofType rhs lhs : Expr) (maxLvl : Level)
           catch _ =>
             pure ()
         | .WhiskerRight sfinker equiv =>
-          logInfo m! "WhiskerRight: {sfinker}, {equiv}"
           let sfinkerStx ← Term.exprToSyntax sfinker
           let equivStx ← Term.exprToSyntax equiv
           evalTactic (← `(tactic| nth_rw 1 [
@@ -435,7 +432,6 @@ def mkKernelHomEqProof (eqProofType rhs lhs : Expr) (maxLvl : Level)
           catch _ =>
             pure ()
         | .MonoidalComp sfinkerW ew sfinkerX ex sfinkerY ey sfinkerZ ez =>
-          logInfo m! "MonoidalComp: {sfinkerW}, {ew}, {sfinkerX}, {ex}, {sfinkerY}, {ey}, {sfinkerZ}, {ez}"
           let sfinkerWStx ← Term.exprToSyntax sfinkerW
           let ewStx ← Term.exprToSyntax ew
           let sfinkerXStx ← Term.exprToSyntax sfinkerX
@@ -459,8 +455,8 @@ def mkKernelHomEqProof (eqProofType rhs lhs : Expr) (maxLvl : Level)
 
     setGoals [backwardGoal]
     evalTactic (← `(tactic| intro h))
-    for e in op_data do
-      match e with
+    for op in op_data do
+      match op with
       | .leftUnitor_hom lvl sfinker equiv =>
         let punitLevelStx ← liftMacroM <| levelToSyntax lvl
         let sfinkerStx ← Term.exprToSyntax sfinker
@@ -531,8 +527,8 @@ def mkKernelHomEqProof (eqProofType rhs lhs : Expr) (maxLvl : Level)
         evalTactic congr_tac
       catch _ =>
         pure ()
-      for e in op_data do
-        match e with
+      for op in op_data do
+        match op with
         | .WhiskerLeft sfinker equiv =>
           let sfinkerStx ← Term.exprToSyntax sfinker
           let equivStx ← Term.exprToSyntax equiv
@@ -578,33 +574,6 @@ def mkKernelHomEqProof (eqProofType rhs lhs : Expr) (maxLvl : Level)
   if !(← getGoals).isEmpty then
     setGoals savedGoals
     throwError "Failed to solve all goals while building kernel_hom equivalence proof"
-  setGoals savedGoals
-  instantiateMVars mvar
-
-/-- Construct the proof of equivalence between the original equality and the transformed one. -/
-def mkKernelHomEqProofSorry (eqProofType rhs lhs : Expr) (maxLvl : Level)
-    (op_data : List CategoryOP) : TacticM Expr := do
-  let maxLvlStx ← liftMacroM <| levelToSyntax maxLvl
-  let rhsStx ← Term.exprToSyntax rhs
-  let lhsStx ← Term.exprToSyntax lhs
-  let op_data := op_data.reverse
-  let savedGoals ← getGoals
-  let mvar ← mkFreshExprSyntheticOpaqueMVar eqProofType
-  let mvarId := mvar.mvarId!
-  setGoals [mvarId]
-  evalTactic (← `(tactic| apply propext))
-  evalTactic (← `(tactic| constructor))
-  let goalsAfterConstructor ← getGoals
-  match goalsAfterConstructor with
-  | [forwardGoal, backwardGoal] =>
-    setGoals [forwardGoal]
-    evalTactic (← `(tactic| sorry))
-
-    setGoals [backwardGoal]
-    evalTactic (← `(tactic| sorry))
-  | _ =>
-    setGoals savedGoals
-    throwError "Expected exactly two goals after `constructor`"
   setGoals savedGoals
   instantiateMVars mvar
 
