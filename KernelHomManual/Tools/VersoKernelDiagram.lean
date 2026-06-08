@@ -111,7 +111,7 @@ block_extension Block.stringDiagramWidget (payload : StringDiagramPayload) where
         match FromJson.fromJson? (α := StringDiagramPayload) data with
         | .ok payload => pure payload
         | .error err =>
-          Verso.Doc.Html.HtmlT.logError s!"Could not deserialize string diagram payload: {err}"
+          Verso.reportError s!"Could not deserialize string diagram payload: {err}"
           pure {
             html := Json.null,
             diagramHash := 0,

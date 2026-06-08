@@ -1,9 +1,9 @@
 set -x -e
 
-rm -rf _out html
+rm -rf _out html KernelHomManual.lean
 lake exe manual
 mkdir html
 mv _out/html-multi/* html/
 rm -rf _out
 mkdir -p html/static
-cp Verso/static_files/* html/static
+cp verso_static_files/* html/static

@@ -2,3 +2,4 @@
 docbuild/lake-manifest.json
 docbuild/lean-toolchain
 html/
+/KernelHomManual.lean
