@@ -27,9 +27,10 @@ globs = ["KernelHomTests.+"]
 
 [[lean_lib]]
 name = "KernelHomManual"
-globs = ["KernelHomManual.+"]
+srcDir = "Verso/"
+root = "KernelHomManual"
 
 [[lean_exe]]
 name = "manual"
-srcDir = "KernelHomManual/"
-root = "Manual"
+srcDir = "Verso/"
+root = "KernelHomManual"
