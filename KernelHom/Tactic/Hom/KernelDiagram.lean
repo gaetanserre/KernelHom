@@ -60,10 +60,6 @@ def Node.toPenroseVar_kernel (n : Node) : MetaM PenroseVar := do
       pure n.e
   return ⟨"E", [n.vPos, n.hPosSrc, n.hPosTar], expr⟩
 
-def Strand.toPenroseVar_kernel (s : Strand) : MetaM PenroseVar := do
-  let expr := Expr.const ``True []
-  return ⟨"f", [s.vPos, s.hPos], expr ⟩
-
 open scoped Jsx in
 /-- Construct a kernelized string diagram from a Penrose `sub`stance program and
 expressions `embeds` to display as labels in the diagram. -/
@@ -88,7 +84,7 @@ def mkKernelDiagram (nodes : List (List Node)) (strands : List (List Strand)) :
   /- Add 1-morphisms as strings. -/
   for l in strands do
     for s in l do
-      StringDiagram.addConstructor "Mor1" (← s.toPenroseVar_kernel)
+      StringDiagram.addConstructor "Mor1" s.toPenroseVar
         "MakeString" [← s.startPoint.toPenroseVar_kernel, ← s.endPoint.toPenroseVar_kernel]
 
 end Mathlib.Tactic.Widget.StringDiagram
