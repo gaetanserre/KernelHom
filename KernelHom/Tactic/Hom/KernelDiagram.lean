@@ -53,12 +53,16 @@ def Node.toPenroseVar_kernel (n : Node) : MetaM PenroseVar := do
         let (res, _) ← getTypeFromSFinKer n.e
         pure res
       | _ => do
-        let (expr, _) ← transformHomToKernel Level.zero n.e []
+        let eLvl ← getDecLevel (← inferType n.e)
+        let (expr, _) ← transformHomToKernel eLvl n.e []
         pure expr
     catch _ =>
       pure n.e
-  return (⟨"E", [n.vPos, n.hPosSrc, n.hPosTar], expr⟩)
+  return ⟨"E", [n.vPos, n.hPosSrc, n.hPosTar], expr⟩
 
+def Strand.toPenroseVar_kernel (s : Strand) : MetaM PenroseVar := do
+  let expr := Expr.const ``True []
+  return ⟨"f", [s.vPos, s.hPos], expr ⟩
 
 open scoped Jsx in
 /-- Construct a kernelized string diagram from a Penrose `sub`stance program and
@@ -84,7 +88,7 @@ def mkKernelDiagram (nodes : List (List Node)) (strands : List (List Strand)) :
   /- Add 1-morphisms as strings. -/
   for l in strands do
     for s in l do
-      StringDiagram.addConstructor "Mor1" s.toPenroseVar
+      StringDiagram.addConstructor "Mor1" (← s.toPenroseVar_kernel)
         "MakeString" [← s.startPoint.toPenroseVar_kernel, ← s.endPoint.toPenroseVar_kernel]
 
 end Mathlib.Tactic.Widget.StringDiagram
