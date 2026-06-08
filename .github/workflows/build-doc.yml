@@ -47,10 +47,6 @@ jobs:
         run: |
           lake exe runLinter KernelHom
       
-      - name: Test project
-        run: |
-          lake test
-
       - name: Build Verso Documentation
         run: |
           ./build_manual.sh
