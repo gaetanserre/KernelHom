@@ -6,7 +6,6 @@ Authors: Gaëtan Serré
 module
 
 public import KernelLift.ForMathlib.MeasurableEquiv
-public import Lean
 public import Mathlib.Probability.Kernel.Composition.Prod
 public import Mathlib.Probability.Kernel.Composition.CompProd
 
@@ -19,11 +18,18 @@ public meta section
 open Lean Meta ProbabilityTheory
 
 inductive CategoryOP
-  | Comp (ex ey et : Expr)
+  | Comp (ex SX ey SY ez SZ : Expr)
+  | ParallelComp (ex SX ey SY ez SZ et ST : Expr)
+  | Id (ex SX : Expr)
 
 instance : ToMessageData CategoryOP where
   toMessageData
-    | .Comp ex ey et => m!"Composition with {ex}, {ey}, {et}"
+    | .Comp ex SX ey SY ez SZ =>
+      m!"Composition with ex: {ex}, SX: {SX}, ey: {ey}, SY: {SY}, ez: {ez}, SZ: {SZ}"
+    | .ParallelComp ex SX ey SY ez SZ et ST =>
+      m!"Parallel composition with ex: {ex}, SX: {SX}, ey: {ey}, SY: {SY}, ez: {ez},
+      SZ: {SZ}, et: {et}, ST: {ST}"
+    | .Id ex SX => m!"Identity with ex: {ex}, SX: {SX}"
 
 /-- Unfold kernel operations in an expression. -/
 def unfoldKernelOp (e : Expr) : MetaM Expr := do

@@ -13,7 +13,6 @@ maxSynthPendingDepth = 3
 [[require]]
 name = "verso"
 git = "https://github.com/leanprover/verso"
-rev = "8e3468a2724c5118308092a946ec90b0b748acf8"
 
 [[require]]
 name = "kernellift"

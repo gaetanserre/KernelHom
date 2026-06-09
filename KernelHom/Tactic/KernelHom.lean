@@ -32,19 +32,86 @@ public meta section
 open Lean Elab Tactic Meta CategoryTheory Parser.Tactic ProbabilityTheory MonoidalCategory
 open ProbabilityTheory.Kernel
 
+/-- Recursively decompose a product type into `SFinKer` objects with monoidal tensor structure. -/
+partial def decomposeProductToSFinker (X : Expr) (xLvl : Level) : MetaM Expr := do
+  let whnfX ← whnf X
+  match whnfX.getAppFn with
+  | Expr.const ``Prod _ =>
+    let args := whnfX.getAppArgs
+    let a1 := args[0]!
+    let t1 ← mkAppOptM ``SFinKer.of #[a1, none]
+    let t2 ← decomposeProductToSFinker args[1]! xLvl
+    mkAppM ``tensorObj #[t1, t2]
+  | _ =>
+    mkAppOptM ``SFinKer.of #[X, none]
+
+/-- Compute the `SFinKer` object corresponding to a measurable space. -/
+def computeSFinkerOf (X : Expr) (xLvl : Level) : MetaM Expr := do
+  match ← whnf X with
+  | Expr.const ``PUnit _ | Expr.const ``Unit _ =>
+    let tensorunit :=
+      Expr.const ``tensorUnit [xLvl, xLvl.succ]
+    let sfinker := Expr.const ``SFinKer [xLvl]
+    mkAppOptM' tensorunit #[sfinker, none, none]
+  | _ =>
+    decomposeProductToSFinker X xLvl
+
+partial def idME (X : Expr) : MetaM Expr := do
+  let whnfX ← whnf X
+  match whnfX.getAppFn with
+  | Expr.const ``Prod _ =>
+    let args := whnfX.getAppArgs
+    let id1 ← idME args[0]!
+    let id2 ← idME args[1]!
+    mkAppM ``MeasurableEquiv.prod #[id1, id2]
+  | _ =>
+    mkAppOptM ``MeasurableEquiv.id #[X, none]
+
 /-- Recursive transformation from kernel expressions to morphism expressions in the `SFinKer`
 category. -/
 partial def transformKernelToHom (e : Expr) (op_data : List CategoryOP) :
     MetaM (Expr × List CategoryOP) := do
   match e.getAppFn with
+  | Expr.const ``Kernel.comp _ =>
+    let args := e.getAppArgs
+    let η := args[args.size - 2]!
+    let κ := args[args.size - 1]!
+    let (X, Y, xLvl, yLvl) ← getTypesFromKernel η
+    let (Z, _, tLvl, _) ← getTypesFromKernel κ
+    let SX ← computeSFinkerOf X xLvl
+    let SY ← computeSFinkerOf Y yLvl
+    let SZ ← computeSFinkerOf Z tLvl
+    let OPComp := .Comp (← idME X) SX (← idME Y) SY (← idME Z) SZ
+    let (κ', lκ') ← transformKernelToHom κ op_data
+    let (η', lη') ← transformKernelToHom η lκ'
+    return (← mkAppM ``CategoryStruct.comp #[κ', η'], OPComp :: lη')
+  | Expr.const ``Kernel.parallelComp _ =>
+    let args := e.getAppArgs
+    let κ := args[args.size - 2]!
+    let η := args[args.size - 1]!
+    let (X, Y, xLvl, yLvl) ← getTypesFromKernel κ
+    let (Z, T, zLvl, tLvl) ← getTypesFromKernel η
+    let SX ← computeSFinkerOf X xLvl
+    let SY ← computeSFinkerOf Y yLvl
+    let SZ ← computeSFinkerOf Z zLvl
+    let ST ← computeSFinkerOf T tLvl
+    let OPParallelComp :=
+      .ParallelComp (← idME X) SX (← idME Y) SY (← idME Z) SZ (← idME T) ST
+    let (κ', lκ') ← transformKernelToHom κ op_data
+    let (η', lη') ← transformKernelToHom η lκ'
+    return (← mkAppM ``tensorHom #[κ', η'], OPParallelComp :: lη')
+  | Expr.const ``Kernel.id [xLvl] =>
+    let X := e.getAppArgs[0]!
+    let SX ← computeSFinkerOf X xLvl
+    let OPId := .Id (← idME X) SX
+    logInfo m!"{OPId}"
+    return (← mkAppM ``CategoryStruct.id #[SX], OPId :: op_data)
   | _ =>
-    let (X, Y, _, _) ← getTypesFromKernel e
-    let ex ← mkAppOptM ``MeasurableEquiv.id #[X, none]
-    let ey ← mkAppOptM ``MeasurableEquiv.id #[Y, none]
-    let SX ← mkAppOptM ``SFinKer.of #[X, none]
-    let SY ← mkAppOptM ``SFinKer.of #[Y, none]
+    let (X, Y, xLvl, yLvl) ← getTypesFromKernel e
+    let SX ← computeSFinkerOf X xLvl
+    let SY ← computeSFinkerOf Y yLvl
     let homExpr ← mkAppOptM ``ProbabilityTheory.Kernel.hom
-      #[X, Y, none, none, SX, SY, ex, ey, e, none]
+      #[X, Y, none, none, SX, SY, (← idME X), (← idME Y), e, none]
     pure (homExpr, op_data)
 
 /-- Construct the proof of equivalence between the original equality and the transformed one. -/
@@ -55,8 +122,41 @@ def mkKernelHomEqProof (eqProofType : Expr) (op_data : List CategoryOP) : Tactic
   setGoals [mvarId]
   let op_data := op_data.reverse
   evalTactic (← `(tactic| apply propext))
+  for op in op_data do
+    match op with
+    | .Comp ex SX ey SY ez SZ =>
+      let terms ← exprsToSyntax #[ex, SX, ey, SY, ez, SZ]
+      evalTactic (← `(tactic| nth_rw 1 [
+        comp_hom
+        (ex := $(terms[0]!))
+        (SX := $(terms[1]!))
+        (ey := $(terms[2]!))
+        (SY := $(terms[3]!))
+        (ez := $(terms[4]!))
+        (SZ := $(terms[05]!))
+      ]))
+    | .ParallelComp ex SX ey SY ez SZ et ST =>
+      let terms ← exprsToSyntax #[ex, SX, ey, SY, ez, SZ, et, ST]
+      evalTactic (← `(tactic| nth_rw 1 [
+        parallelComp_hom
+        (ex := $(terms[0]!))
+        (SX := $(terms[1]!))
+        (ey := $(terms[2]!))
+        (SY := $(terms[3]!))
+        (ez := $(terms[4]!))
+        (SZ := $(terms[5]!))
+        (et := $(terms[6]!))
+        (ST := $(terms[7]!))
+      ]))
+    | .Id ex SX =>
+      let terms ← exprsToSyntax #[ex, SX]
+      evalTactic (← `(tactic| nth_rw 1 [
+        id_hom
+        (ex := $(terms[0]!))
+        (SX := $(terms[1]!))
+      ]))
   evalTactic (← `(tactic| rw [hom_congr]))
-  evalTactic (← `(tactic| constructor))
+  /- evalTactic (← `(tactic| constructor))
   let goalsAfterConstructor ← getGoals
   match goalsAfterConstructor with
   | [forwardGoal, backwardGoal] =>
@@ -71,7 +171,7 @@ def mkKernelHomEqProof (eqProofType : Expr) (op_data : List CategoryOP) : Tactic
     evalTactic (← `(tactic| exact h))
   | _ =>
     setGoals savedGoals
-    throwError "Expected exactly two goals after `constructor`"
+    throwError "Expected exactly two goals after `constructor`" -/
   if !(← getGoals).isEmpty then
     setGoals savedGoals
     throwError "Failed to solve all goals while building kernel_hom equivalence proof"
@@ -105,18 +205,35 @@ def ApplyKernelHom (goal : MVarId) (fvarId : Option FVarId) : TacticM MVarId := 
           pure decl.type
         | none => goal.getType
     let expr ← whnfR <| ← unfoldKernelOp <| ← instantiateMVars expr
-    let (lifted_expr, _, _) ← LiftEquality expr
+
+    /- Decide wether we need to lift the kernel expression to a homogeneous universe level first.
+    If this is necessary, we also need to construct the proof of equivalence between the original
+    expression and the lifted one, which will be used later to construct the final equivalence
+    proof. -/
+    let (lifted_expr, constructLiftedProof) ← do
+      let result ← (LiftEquality expr).run
+      match result with
+      | Except.error .AlreadyHomogeneous =>
+        pure (expr, (fun e ↦ pure e))
+      | Except.ok (lifted_expr, kernel_op_data, maxLvl) =>
+        let liftedProofType ← mkEq expr lifted_expr
+        let liftedEqProof ← mkKernelLiftEqProof liftedProofType maxLvl kernel_op_data
+        pure (lifted_expr, (fun e ↦ mkEqTrans liftedEqProof e))
+
+    let (homExpr, op_data, _, _) ← transformEquality lifted_expr CategoryOP transformKernelToHom
     logInfo m!"Original expression: {expr}"
     logInfo m!"Lifted expression: {lifted_expr}"
-    let (homExpr, op_data, rhs, lhs) ← transformEquality lifted_expr CategoryOP transformKernelToHom
-    logInfo m!"Transformed expression: {homExpr}"
-    let eqProofType ← mkEq expr homExpr
-    logInfo m!"Equivalence proof type: {eqProofType}"
-    let eqProof ← mkKernelHomEqProof eqProofType op_data
+    logInfo m!"Hom expression: {homExpr}"
+
+    let homEqProofType ← mkEq lifted_expr homExpr
+    logInfo m!"Equivalence proof type: {homEqProofType}"
+    let homEqProof ← mkKernelHomEqProof homEqProofType op_data
+
+    let EqProof ← constructLiftedProof homEqProof
     match fvarId with
     | some fid => do
       let mvarId ← getMainGoal
-      let hProof ← mkEqMP eqProof (mkFVar fid)
+      let hProof ← mkEqMP EqProof (mkFVar fid)
       let userName := (← fid.getDecl).userName
       let mvarId ← mvarId.assert userName homExpr hProof
       let mvarId ← mvarId.tryClear fid
@@ -124,23 +241,7 @@ def ApplyKernelHom (goal : MVarId) (fvarId : Option FVarId) : TacticM MVarId := 
       pure mvarId
     | none => do
       let mvarId ← getMainGoal
-      mvarId.replaceTargetEq homExpr eqProof
-    /- let maxLvl ← computeMaxUniverse (← collectExprUniverses expr)
-    let (homExpr, op_data, rhs, lhs) ← transformEquality maxLvl expr transformKernelToHom
-    let eqProofType ← mkEq expr homExpr
-    let eqProof ← mkKernelHomEqProof eqProofType rhs lhs maxLvl op_data
-    match fvarId with
-    | some fid => do
-      let mvarId ← getMainGoal
-      let hProof ← mkEqMP eqProof (mkFVar fid)
-      let userName := (← fid.getDecl).userName
-      let mvarId ← mvarId.assert userName homExpr hProof
-      let mvarId ← mvarId.tryClear fid
-      let (_, mvarId) ← mvarId.intro1P
-      pure mvarId
-    | none => do
-      let mvarId ← getMainGoal
-      mvarId.replaceTargetEq homExpr eqProof -/
+      mvarId.replaceTargetEq homExpr EqProof
 
 @[inherit_doc ApplyKernelHom]
 syntax (name := kernelHom) "kernel_hom" (ppSpace location)? : tactic
@@ -149,8 +250,11 @@ elab_rules : tactic
   | `(tactic| kernel_hom $[$loc]?) =>
     expandOptLocation (Lean.mkOptionalNode loc) |> applyLocTactic <| ApplyKernelHom
 
-variable {X Y : Type*} [MeasurableSpace X] [MeasurableSpace Y] (κ : Kernel X Y) [IsSFiniteKernel κ]
+variable {X Y Z T : Type*} [MeasurableSpace X] [MeasurableSpace Y] [MeasurableSpace Z]
+  [MeasurableSpace T]
 
-example : κ = κ := by
+variable (κ : Kernel X Y) [IsSFiniteKernel κ] (η : Kernel Y Z) [IsSFiniteKernel η]
+
+example : Kernel.id (α := (X × Y)) = (0 : Kernel (X × Y) (X × Y)) := by
   kernel_hom
-  rfl
+  sorry
