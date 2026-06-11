@@ -22,7 +22,7 @@ code.block {
   border: 1px solid #d0d7de;
   position: relative;
   line-height: 1.45;
-  font-size: 0.95em;
+  font-size: 0.95em !important;
   margin: 1.5em 0;
   color: var(--verso-code-color);
   font-style: italic;
@@ -151,4 +151,13 @@ p a:link,
 p a:hover,
 :is(h1, h2, h3, h4, h5, h6) a:hover {
   text-decoration: underline;
+}
+
+.verso-string-diagram {
+  display: flex;
+  justify-content: center;
+}
+
+.verso-string-diagram .flex {
+  gap: 10rem;
 }
