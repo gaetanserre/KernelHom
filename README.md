@@ -70,6 +70,9 @@ See [Examples](https://gaetanserre.fr/KernelHom/Usage-and-examples/#Kernel-Hom__
 
 - Tobias Fritz. *A synthetic approach to Markov kernels, conditional independence and theorems on sufficient statistics*. Adv. Math. 370 (2020), 107239. [arXiv:1908.07021](https://arxiv.org/abs/1908.07021).
 
+## Acknowledgements
+Some code for the documentation of this project comes from [Yuma Mizuno](https://github.com/yuma-mizuno)'s [documentation on the coherence tactics](https://yuma-mizuno.github.io/coherence-tactics/) (see [LeanDecl.lean](KernelHomManual/Tools/LeanDecl.lean) and [VersoKernelDiagram.lean](KernelHomManual/Tools/VersoKernelDiagram.lean)).
+
 ## License
 
 Apache 2.0. See [LICENSE](LICENSE).
