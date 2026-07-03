@@ -15,7 +15,7 @@
    "type": "git",
    "subDir": null,
    "scope": "",
-   "rev": "e136782eeb155573303b146a9bf30e234237befe",
+   "rev": "b62424fcdd5389c321ee9bb67d15f93c8753787f",
    "name": "kernellift",
    "manifestFile": "lake-manifest.json",
    "inputRev": null,
