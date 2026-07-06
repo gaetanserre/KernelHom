@@ -75,7 +75,7 @@ lemma comp_hom (η : Kernel X Y) (κ : Kernel Z X) [IsSFiniteKernel η] [IsSFini
   · exact Kernel.measurable_coe η.hom.hom hs
 
 lemma parallelComp_hom (κ : Kernel X Y) (η : Kernel Z T) [IsSFiniteKernel η] [IsSFiniteKernel κ] :
-    (hom (ex := ex) (ey := ey) κ) ⊗ₘ (hom (ex := ez) (ey := et) η) =
+    κ.hom (ex := ex) (ey := ey) ⊗ₘ η.hom (ex := ez) (ey := et) =
       hom (ex := ex.prod ez) (ey := ey.prod et) (κ ∥ₖ η) := by
   ext : 1; dsimp
   simp only [hom]
@@ -88,5 +88,65 @@ lemma id_hom : 𝟙 SX = Kernel.id.hom (ex := ex) (ey := ex) := by
   rw [hom_apply', id_apply, id_apply, Measure.dirac_apply', Measure.dirac_apply']
   · exact Set.indicator_eq_indicator (by simp) rfl
   all_goals measurability
+
+lemma leftUnitor_hom : (λ_ SX).hom = hom (ex := punit.prod ex) (ey := ex)
+    (Kernel.id.map (Prod.snd : PUnit × X → X)) := by
+  ext; dsimp
+  rw [hom_apply', id_map (by fun_prop), id_map (by fun_prop), deterministic_apply',
+    deterministic_apply']
+  · refine Set.indicator_eq_indicator ?_ rfl
+    simp [MeasurableEquiv.prod]
+  all_goals measurability
+
+lemma leftUnitor_inv : (λ_ SX).inv = hom (ex := ex) (ey := punit.prod ex)
+    (Kernel.id.map (fun x ↦ (PUnit.unit, x))) := by
+  ext; dsimp
+  rw [hom_apply', id_map (by fun_prop), id_map (by fun_prop), deterministic_apply',
+    deterministic_apply', Set.image]
+  · refine Set.indicator_eq_indicator ?_ rfl
+    simp only [SFinKer.tensorObj_carrier, SFinKer.tensorUnit_carrier, MeasurableEquiv.prod,
+      MeasurableEquiv.coe_mk, Equiv.coe_fn_mk, Prod.exists, Set.mem_setOf_eq, Prod.mk.injEq,
+      EmbeddingLike.apply_eq_iff_eq, true_and, exists_eq_right]
+    exact ⟨fun ha => ⟨_, ha⟩, fun ⟨a, ha⟩ => by simp_all⟩
+  all_goals measurability
+
+lemma rightUnitor_hom : (ρ_ SX).hom = hom (ex := ex.prod punit) (ey := ex)
+    (Kernel.id.map (Prod.fst : X × PUnit → X)) := by
+  ext; dsimp
+  rw [hom_apply', id_map (by fun_prop), id_map (by fun_prop), deterministic_apply',
+    deterministic_apply']
+  · refine Set.indicator_eq_indicator ?_ rfl
+    simp [MeasurableEquiv.prod]
+  all_goals measurability
+
+lemma rightUnitor_inv : (ρ_ SX).inv = hom (ex := ex) (ey := ex.prod punit)
+    (Kernel.id.map (fun x ↦ (x, PUnit.unit))) := by
+  ext; dsimp
+  rw [hom_apply', id_map (by fun_prop), id_map (by fun_prop), deterministic_apply',
+    deterministic_apply']
+  · refine Set.indicator_eq_indicator ?_ rfl
+    simp only [SFinKer.tensorObj_carrier, SFinKer.tensorUnit_carrier, MeasurableEquiv.prod,
+      MeasurableEquiv.coe_mk, Equiv.coe_fn_mk, Set.mem_image, Prod.mk.injEq,
+      EmbeddingLike.apply_eq_iff_eq, and_true, Prod.exists, exists_and_right, exists_eq_right]
+    exact ⟨fun ha => ⟨_, ha⟩, fun ⟨a, ha⟩ => by simp_all⟩
+  all_goals measurability
+
+lemma associator_hom : (α_ SX SY SZ).hom =
+    hom (ex := (ex.prod ey).prod ez) (ey := ex.prod (ey.prod ez))
+      (Kernel.deterministic prodAssoc (by fun_prop)) := by
+  ext : 1; dsimp
+  simp only [hom]
+  rw [deterministic_map (by fun_prop) (by fun_prop)]
+  congr with x
+  all_goals simp [MeasurableEquiv.prod, prodAssoc]
+
+lemma associator_inv : (α_ SX SY SZ).inv =
+    hom (ex := ex.prod (ey.prod ez)) (ey := (ex.prod ey).prod ez)
+      (Kernel.deterministic prodAssoc.symm (by fun_prop)) := by
+  ext : 1; dsimp
+  simp only [hom]
+  rw [deterministic_map (by fun_prop) (by fun_prop)]
+  congr with x
+  all_goals simp [MeasurableEquiv.prod, prodAssoc]
 
 end ProbabilityTheory.Kernel
