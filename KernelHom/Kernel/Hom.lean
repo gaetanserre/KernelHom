@@ -22,7 +22,7 @@ This file defines the transformation between categorical morphisms in `SFinKer` 
 
 @[expose] public section
 
-open MeasureTheory ProbabilityTheory MeasurableEquiv
+open MeasureTheory ProbabilityTheory MeasurableEquiv CategoryTheory
 open scoped SFinKer CategoryTheory CategoryTheory.MonoidalCategory
 
 namespace ProbabilityTheory.Kernel
@@ -89,6 +89,38 @@ lemma id_hom : 𝟙 SX = Kernel.id.hom (ex := ex) (ey := ex) := by
   · exact Set.indicator_eq_indicator (by simp) rfl
   all_goals measurability
 
+lemma whiskerLeft (κ : Kernel X Y) [IsSFiniteKernel κ] :
+    SZ ◁ κ.hom (ex := ex) (ey := ey) =
+      (Kernel.id (α := Z) ∥ₖ κ).hom (ex := ez.prod ex) (ey := ez.prod ey) := by
+  ext _ _ hs; dsimp
+  simp only [hom]
+  rw [parallelComp_apply, comap_apply, map_apply, id_apply,
+    comap_apply, map_apply, parallelComp_apply, id_apply]
+  · simp only [Measure.dirac_prod, MeasurableEquiv.prod]
+    rw [Measure.map_map, Measure.map_map, Measure.map_apply, Measure.map_apply]
+    · congr with y
+      · simp
+      · simp
+    all_goals try fun_prop
+    all_goals exact hs
+  all_goals fun_prop
+
+lemma whiskerRight (κ : Kernel X Y) [IsSFiniteKernel κ] :
+    κ.hom (ex := ex) (ey := ey) ▷ SZ =
+      (κ ∥ₖ Kernel.id (α := Z)).hom (ex := ex.prod ez) (ey := ey.prod ez) := by
+  ext _ _ hs; dsimp
+  simp only [hom]
+  rw [parallelComp_apply, comap_apply, map_apply, id_apply, comap_apply, map_apply,
+    parallelComp_apply, id_apply]
+  · simp only [Measure.prod_dirac, MeasurableEquiv.prod]
+    rw [Measure.map_map, Measure.map_map, Measure.map_apply, Measure.map_apply]
+    · congr with y
+      · simp
+      · simp
+    all_goals try fun_prop
+    all_goals exact hs
+  all_goals fun_prop
+
 lemma leftUnitor_hom : (λ_ SX).hom = hom (ex := punit.prod ex) (ey := ex)
     (Kernel.id.map (Prod.snd : PUnit × X → X)) := by
   ext; dsimp
@@ -148,5 +180,28 @@ lemma associator_inv : (α_ SX SY SZ).inv =
   rw [deterministic_map (by fun_prop) (by fun_prop)]
   congr with x
   all_goals simp [MeasurableEquiv.prod, prodAssoc]
+
+lemma braiding_hom : (β_ SX SY).hom =
+    (Kernel.swap X Y).hom (ex := ex.prod ey) (ey := ey.prod ex) := by
+  ext : 1; dsimp
+  simp only [hom, swap]
+  rw [deterministic_map (by fun_prop) (by fun_prop)]
+  congr with x
+  all_goals simp [MeasurableEquiv.prod]
+
+open scoped ComonObj
+
+lemma counit : ε[SX] = (Kernel.discard X).hom (ex := ex) (ey := punit) := by
+  ext : 1; dsimp
+  simp only [hom, discard]
+  rw [deterministic_map (by fun_prop) (by fun_prop)]
+  rfl
+
+lemma comul : Δ[SX] = (Kernel.copy X).hom (ex := ex) (ey := ex.prod ex) := by
+  ext : 1; dsimp
+  simp only [hom, copy]
+  rw [deterministic_map (by fun_prop) (by fun_prop)]
+  congr with x
+  all_goals simp [MeasurableEquiv.prod]
 
 end ProbabilityTheory.Kernel
