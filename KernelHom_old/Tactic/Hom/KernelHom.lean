@@ -138,7 +138,7 @@ def checkRightUnitor (κ : Expr) : MetaM Bool := checkUnitors κ 1 ``Prod.fst
 
 /-- Construct the left or right unitor morphism. -/
 def constructUnitors (X Y : Expr) (yLvl maxLvl : Level) (offset : Nat) :
-  MetaM (Expr × CategoryOP) := do
+    MetaM (Expr × CategoryOP) := do
   let left ← if offset == 0 then pure true
     else if offset == 1 then pure false
     else throwError "Invalid offset for unitors"
@@ -264,10 +264,10 @@ partial def transformKernelToHom (maxLvl : Level) (e : Expr) (op_data : List Cat
     else if ← checkWhiskerRight e then
       let (sfinkerOfZ, κ, Z, zLvl) ← constructWhiskersArgs e X maxLvl true
       let (κ', lκ) ← transformKernelToHom maxLvl κ op_data
-      let whiskerleft ← mkAppM ``whiskerRight #[κ', sfinkerOfZ]
+      let whiskerright ← mkAppM ``whiskerRight #[κ', sfinkerOfZ]
       let ez ← constructMeasurableEquiv Z zLvl maxLvl
       let rightWhiskerOP := .WhiskerRight sfinkerOfZ ez
-      return (whiskerleft, rightWhiskerOP :: lκ)
+      return (whiskerright, rightWhiskerOP :: lκ)
     else
       let args := e.getAppArgs
       let κ := args[args.size - 2]!

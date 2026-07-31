@@ -7,6 +7,7 @@ module
 
 public import KernelLift.ForMathlib.MeasurableEquiv
 public import KernelLift.ForMathlib.Kernel
+public import KernelLift.Lift
 public import Mathlib
 
 /-!
@@ -121,11 +122,15 @@ lemma whiskerRight (κ : Kernel X Y) [IsSFiniteKernel κ] :
     all_goals exact hs
   all_goals fun_prop
 
+section unitors
+
+variable {X₀ : Type*} [MeasurableSpace X₀] {ex₀ : X ≃ᵐ X₀}
+
 lemma leftUnitor_hom : (λ_ SX).hom = hom (ex := punit.prod ex) (ey := ex)
-    (Kernel.id.map (Prod.snd : PUnit × X → X)) := by
+      (lift (Kernel.id.map (Prod.snd : PUnit × X₀ → X₀)) (ex := punit.prod ex₀) (ey := ex₀)) := by
   ext; dsimp
-  rw [hom_apply', id_map (by fun_prop), id_map (by fun_prop), deterministic_apply',
-    deterministic_apply']
+  rw [hom_apply', lift_apply', id_map (by fun_prop), id_map (by fun_prop), deterministic_apply',
+    deterministic_apply', Set.image]
   · refine Set.indicator_eq_indicator ?_ rfl
     simp [MeasurableEquiv.prod]
   all_goals measurability
@@ -143,13 +148,15 @@ lemma leftUnitor_inv : (λ_ SX).inv = hom (ex := ex) (ey := punit.prod ex)
   all_goals measurability
 
 lemma rightUnitor_hom : (ρ_ SX).hom = hom (ex := ex.prod punit) (ey := ex)
-    (Kernel.id.map (Prod.fst : X × PUnit → X)) := by
+      (lift (Kernel.id.map (Prod.fst : X₀ × PUnit → X₀)) (ex := ex₀.prod punit) (ey := ex₀)) := by
   ext; dsimp
-  rw [hom_apply', id_map (by fun_prop), id_map (by fun_prop), deterministic_apply',
+  rw [hom_apply', lift_apply', id_map (by fun_prop), id_map (by fun_prop), deterministic_apply',
     deterministic_apply']
   · refine Set.indicator_eq_indicator ?_ rfl
     simp [MeasurableEquiv.prod]
   all_goals measurability
+
+end unitors
 
 lemma rightUnitor_inv : (ρ_ SX).inv = hom (ex := ex) (ey := ex.prod punit)
     (Kernel.id.map (fun x ↦ (x, PUnit.unit))) := by
