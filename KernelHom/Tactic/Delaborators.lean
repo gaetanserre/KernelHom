@@ -6,7 +6,6 @@ Authors: Gaëtan Serré
 module
 
 public import KernelHom.Kernel.Hom
-public import Lean
 
 /-!
 # Delaborators for simplified kernel presentations
