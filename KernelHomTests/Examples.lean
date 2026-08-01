@@ -5,7 +5,7 @@ Authors: Gaëtan Serré
 -/
 module
 
-public import KernelHom.Tactic.Tactics
+public import KernelHom
 
 /-!
 # Examples for Kernel-Hom
@@ -83,6 +83,7 @@ variable {κ : Kernel (X × Y) Z}
 
 lemma parallelComp_self_comp_copy₀ [IsMarkovKernel κ] [IsDeterministic κ] :
     (κ ∥ₖ κ) ∘ₖ copy (X × Y) = copy Z ∘ₖ κ := by
+  kernel_hom
   kernel_disch
 
 

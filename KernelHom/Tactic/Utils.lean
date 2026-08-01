@@ -27,6 +27,9 @@ inductive CategoryOP
   | WhiskerRight (ex SX : Expr)
   | LeftUnitor (ex SX ex₀ : Expr) (UnitLvl : Level)
   | RightUnitor (ex SX ex₀ : Expr) (UnitLvl : Level)
+  | AssociatorHom (ex SX ey SY ez SZ ex₀ ey₀ ez₀ : Expr)
+  | AssociatorInv (ex SX ey SY ez SZ ex₀ ey₀ ez₀ : Expr)
+  | BraidingHom (ex SX ey SY : Expr)
 
 instance : ToMessageData CategoryOP where
   toMessageData
@@ -44,6 +47,14 @@ instance : ToMessageData CategoryOP where
       UnitLvl: {UnitLvl}"
     | .RightUnitor ex SX ex₀ UnitLvl => m!"Right unitor with ex: {ex}, SX: {SX}, ex₀: {ex₀},
       UnitLvl: {UnitLvl}"
+    | .AssociatorHom ex SX ey SY ez SZ ex₀ ey₀ ez₀ =>
+      m!"Associator hom with ex: {ex}, SX: {SX}, ey: {ey}, SY: {SY}, ez: {ez}, SZ: {SZ},
+      ex₀: {ex₀}, ey₀: {ey₀}, ez₀: {ez₀}"
+    | .AssociatorInv ex SX ey SY ez SZ ex₀ ey₀ ez₀ =>
+      m!"Associator inv with ex: {ex}, SX: {SX}, ey: {ey}, SY: {SY}, ez: {ez}, SZ: {SZ},
+      ex₀: {ex₀}, ey₀: {ey₀}, ez₀: {ez₀}"
+    | .BraidingHom ex SX ey SY =>
+      m!"Braiding hom with ex: {ex}, SX: {SX}, ey: {ey}, SY: {SY}"
 
 /-- Unfold kernel operations in an expression. -/
 def unfoldKernelOp (e : Expr) : MetaM Expr := do

@@ -34,10 +34,9 @@ open ProbabilityTheory.Kernel
 
 /-- Recursively decompose a product type into `SFinKer` objects with monoidal tensor structure. -/
 partial def decomposeProductToSFinker (X : Expr) (xLvl : Level) : MetaM Expr := do
-  let whnfX ← whnf X
-  match whnfX.getAppFn with
+  match X.getAppFn with
   | Expr.const ``Prod _ =>
-    let args := whnfX.getAppArgs
+    let args := X.getAppArgs
     let t1 ← decomposeProductToSFinker args[0]! xLvl
     let t2 ← decomposeProductToSFinker args[1]! xLvl
     mkAppM ``tensorObj #[t1, t2]
@@ -46,7 +45,7 @@ partial def decomposeProductToSFinker (X : Expr) (xLvl : Level) : MetaM Expr := 
 
 /-- Compute the `SFinKer` object corresponding to a measurable space. -/
 def computeSFinkerOf (X : Expr) (xLvl : Level) : MetaM Expr := do
-  match ← whnf X with
+  match X with
   | Expr.const ``PUnit _ | Expr.const ``Unit _ =>
     let tensorunit :=
       Expr.const ``tensorUnit [xLvl, xLvl.succ]
@@ -56,10 +55,9 @@ def computeSFinkerOf (X : Expr) (xLvl : Level) : MetaM Expr := do
     decomposeProductToSFinker X xLvl
 
 partial def idME (X : Expr) : MetaM Expr := do
-  let whnfX ← whnf X
-  match whnfX.getAppFn with
+  match X.getAppFn with
   | Expr.const ``Prod _ =>
-    let args := whnfX.getAppArgs
+    let args := X.getAppArgs
     let id1 ← idME args[0]!
     let id2 ← idME args[1]!
     mkAppM ``MeasurableEquiv.prod #[id1, id2]
@@ -91,10 +89,9 @@ def checkWhiskerRight (κ : Expr) : MetaM Bool := checkWhiskers κ 1
 representation. -/
 def constructWhiskersArgs (e X : Expr) (left : Bool) :
     MetaM (Expr × Expr × Expr) := do
-  let whnfX ← whnf X
-  let (Z, zLvl) ← match whnfX.getAppFn with
+  let (Z, zLvl) ← match X.getAppFn with
   | Expr.const ``Prod univs =>
-    let args := whnfX.getAppArgs
+    let args := X.getAppArgs
     pure (args[left.toNat]!, univs[left.toNat]!)
   | _ =>
     if left then throwError "Expected left whisker with source Z × X, got: {X}"
@@ -122,10 +119,9 @@ def checkUnitors (κ : Expr) (offset : Nat) (prod : Name) : MetaM Bool := do
   if !idKernel.getAppFn.isConstOf ``Kernel.id then
     return false
   let (src, _, _) ← getTypesFromKernel κ
-  let srcWhnf ← whnf src
-  match srcWhnf.getAppFn with
+  match src.getAppFn with
   | Expr.const ``Prod _ =>
-    let args := srcWhnf.getAppArgs
+    let args := src.getAppArgs
     if args.size < 2 then
       return false
     let punit? := args[offset]!
@@ -146,7 +142,7 @@ def constructUnitors (ProdXU X ex₀ : Expr) (xLvl : Level) (offset : Nat) :
   let left ← if offset == 0 then pure true
     else if offset == 1 then pure false
     else throwError "Invalid offset for unitors"
-  let punit_level ← match (← whnf ProdXU).getAppFn with
+  let punit_level ← match ProdXU.getAppFn with
   | Expr.const ``Prod univs => pure univs[offset]!
   | _ =>
     if left then throwError "Expected left unitor with source PUnit × X, got: {ProdXU}"
@@ -157,6 +153,87 @@ def constructUnitors (ProdXU X ex₀ : Expr) (xLvl : Level) (offset : Nat) :
   let unitorOP ← if left then pure <| .LeftUnitor (← idME X) SX ex₀ punit_level
     else pure <|.RightUnitor (← idME X) SX ex₀ punit_level
   return (← mkAppM ``Iso.hom #[unitor], unitorOP)
+
+/-- Check if a kernel expression corresponds to an associator morphism or its inverse. -/
+def checkAssociator (κ : Expr) (hom : Bool) : MetaM Bool := do
+  let κ := κ.consumeMData
+  if !κ.getAppFn.isConstOf ``Kernel.deterministic then
+    return false
+  let args := κ.getAppArgs
+  let fn := args[args.size - 2]!
+  if !fn.getAppFn.isConstOf ``DFunLike.coe then
+    return false
+  let fn := fn.getAppArgs[fn.getAppApps.size - 1]!
+  if hom then
+    if !fn.getAppFn.isConstOf ``MeasurableEquiv.prodAssoc then
+      return false
+  else
+    if !fn.getAppFn.isConstOf ``MeasurableEquiv.symm then
+      return false
+    let innerFn := fn.getAppArgs[fn.getAppArgs.size - 1]!
+    if !innerFn.getAppFn.isConstOf ``MeasurableEquiv.prodAssoc then
+      return false
+  return true
+
+/-- Check if a kernel expression corresponds to an associator morphism. -/
+def checkAssociatorHom (κ : Expr) : MetaM Bool := checkAssociator κ true
+
+/-- Check if a kernel expression corresponds to an inverse associator morphism. -/
+def checkAssociatorInv (κ : Expr) : MetaM Bool := checkAssociator κ false
+
+/-- Get the types and universe levels from a expression of the form `X × Y × Z`. -/
+def getTypesFromThreeProds (prod : Expr) :
+    MetaM (Expr × Expr × Expr × Level × Level × Level) := do
+  match prod.getAppFn with
+  | Expr.const ``Prod univs =>
+    let X := prod.getAppArgs[0]!
+    match prod.getAppArgs[1]!.getAppFn with
+    | Expr.const ``Prod univs_right =>
+      let Y := prod.getAppArgs[1]!.getAppArgs[0]!
+      let Z := prod.getAppArgs[1]!.getAppArgs[1]!
+      return (X, Y, Z, univs[0]!, univs_right[0]!, univs_right[1]!)
+    | _ => throwError "Expected a product of two types, got: {prod.getAppArgs[1]!}"
+  | _ => throwError "Expected a product of three types, got: {prod}"
+
+def getMEFromThreeProds (prod : Expr) :
+    MetaM (Expr × Expr × Expr) := do
+  logInfo m!"prod.getAppFn: {prod.getAppFn}"
+  match prod.getAppFn with
+  | Expr.const ``MeasurableEquiv.prod _ =>
+    let args := prod.getAppArgs
+    let ex := args[args.size - 2]!
+    let right := args[args.size - 1]!
+    match right.getAppFn with
+    | Expr.const ``MeasurableEquiv.prod _ =>
+      let rightArgs := right.getAppArgs
+      let ey := rightArgs[rightArgs.size - 2]!
+      let ez := rightArgs[rightArgs.size - 1]!
+      return (ex, ey, ez)
+    | _ => throwError "Expected a product of two measurable equivalences, got: {right}"
+  | _ => throwError "Expected a product of three measurable equivalences, got: {prod}"
+
+/-- Construct the associator morphism or its inverse. -/
+def constructAssociator (left right ex₀ ey₀ ez₀ : Expr) (hom : Bool) :
+    MetaM (Expr × CategoryOP) := do
+  let (X, Y, Z, xLvl, yLvl, zLvl) ← if hom then getTypesFromThreeProds right
+    else getTypesFromThreeProds left
+  let SX ← computeSFinkerOf X xLvl
+  let SY ← computeSFinkerOf Y yLvl
+  let SZ ← computeSFinkerOf Z zLvl
+  let associator ← mkAppM ``MonoidalCategory.associator #[SX, SY, SZ]
+  let associatorOP : CategoryOP ← if hom then
+      pure <| .AssociatorHom SX (← idME X) SY (← idME Y) SZ (← idME Z) ex₀ ey₀ ez₀
+    else
+      pure <| .AssociatorInv SX (← idME X) SY (← idME Y) SZ (← idME Z) ex₀ ey₀ ez₀
+  return (← mkAppM (if hom then ``Iso.hom else ``Iso.inv) #[associator], associatorOP)
+
+/-- Construct the associator morphism. -/
+def constructAssociatorHom (left right ex₀ ey₀ ez₀ : Expr) :=
+  constructAssociator left right ex₀ ey₀ ez₀ true
+
+/-- Construct the inverse associator morphism. -/
+def constructAssociatorInv (left right ex₀ ey₀ ez₀ : Expr) :=
+  constructAssociator left right ex₀ ey₀ ez₀ false
 
 /-- Recursive transformation from kernel expressions to morphism expressions in the `SFinKer`
 category. -/
@@ -223,6 +300,13 @@ partial def transformKernelToHom (e : Expr) (op_data : List CategoryOP) :
     let OPCopy := .Copy (← idME X) SX
     return (← mkAppOptM ``ComonObj.comul #[none, none, none, SX, none],
       OPCopy :: op_data)
+  | Expr.const ``Kernel.swap [xLvl, yLvl] =>
+    let X := e.getAppArgs[0]!
+    let Y := e.getAppArgs[1]!
+    let SX ← computeSFinkerOf X xLvl
+    let SY ← computeSFinkerOf Y yLvl
+    let braiding ← mkAppM ``Iso.hom #[← mkAppM ``BraidedCategory.braiding #[SX, SY]]
+    return (braiding, .BraidingHom (← idME X) SX (← idME Y) SY :: op_data)
   | Expr.const ``Kernel.lift _ =>
     let args := e.getAppArgs
     let κ := args[args.size - 1]!
@@ -235,6 +319,16 @@ partial def transformKernelToHom (e : Expr) (op_data : List CategoryOP) :
       let ey₀ := args[args.size - 2]!
       let (rightUnitorExpr, rightUnitorOP) ← constructUnitors X Y ey₀ yLvl 1
       return (rightUnitorExpr, rightUnitorOP :: op_data)
+    else if ← checkAssociatorHom κ then
+      let (ex₀, ey₀, ez₀) ← getMEFromThreeProds args[args.size - 2]!
+      logInfo m!"Constructing associator hom with ex₀: {ex₀}, ey₀: {ey₀}, ez₀: {ez₀}"
+      let (associatorExpr, associatorOP) ← constructAssociatorHom X Y ex₀ ey₀ ez₀
+      return (associatorExpr, associatorOP :: op_data)
+    else if ← checkAssociatorInv κ then
+      let (ex₀, ey₀, ez₀) ← getMEFromThreeProds args[args.size - 3]!
+      logInfo m!"Constructing associator inv with ex₀: {ex₀}, ey₀: {ey₀}, ez₀: {ez₀}"
+      let (associatorInvExpr, associatorInvOP) ← constructAssociatorInv X Y ex₀ ey₀ ez₀
+      return (associatorInvExpr, associatorInvOP :: op_data)
     else
       let SX ← computeSFinkerOf X xLvl
       let SY ← computeSFinkerOf Y yLvl
@@ -288,7 +382,7 @@ def mkKernelHomEqProof (eqProofType : Expr) (op_data : List CategoryOP) : Tactic
     | .Discard ex SX =>
       logInfo m!"Applying counit with ex: {ex}, SX: {SX}"
       let terms ← exprsToSyntax #[ex, SX]
-      evalTactic (← `(tactic| rw [
+      evalTactic (← `(tactic| nth_rw 1 [
         counit
         (ex := $(terms[0]!))
         (SX := $(terms[1]!))
@@ -296,7 +390,7 @@ def mkKernelHomEqProof (eqProofType : Expr) (op_data : List CategoryOP) : Tactic
     | .Copy ex SX =>
       logInfo m!"Applying comul with ex: {ex}, SX: {SX}"
       let terms ← exprsToSyntax #[ex, SX]
-      evalTactic (← `(tactic| rw [
+      evalTactic (← `(tactic| nth_rw 1 [
         comul
         (ex := $(terms[0]!))
         (SX := $(terms[1]!))
@@ -333,23 +427,44 @@ def mkKernelHomEqProof (eqProofType : Expr) (op_data : List CategoryOP) : Tactic
         (SX := $(terms[1]!))
         (ex₀ := $(terms[2]!))
       ]))
+    | .AssociatorHom SX ex SY ey SZ ez ex₀ ey₀ ez₀ =>
+      let terms ← exprsToSyntax #[SX, ex, SY, ey, SZ, ez, ex₀, ey₀, ez₀]
+      evalTactic (← `(tactic| nth_rw 1 [
+        Kernel.associator_hom
+        (SX := $(terms[0]!))
+        (ex := $(terms[1]!))
+        (SY := $(terms[2]!))
+        (ey := $(terms[3]!))
+        (SZ := $(terms[4]!))
+        (ez := $(terms[5]!))
+        (ex₀ := $(terms[6]!))
+        (ey₀ := $(terms[7]!))
+        (ez₀ := $(terms[8]!))
+      ]))
+    | .AssociatorInv SX ex SY ey SZ ez ex₀ ey₀ ez₀ =>
+      let terms ← exprsToSyntax #[SX, ex, SY, ey, SZ, ez, ex₀, ey₀, ez₀]
+      evalTactic (← `(tactic| nth_rw 1 [
+        associator_inv
+        (SX := $(terms[0]!))
+        (ex := $(terms[1]!))
+        (SY := $(terms[2]!))
+        (ey := $(terms[3]!))
+        (SZ := $(terms[4]!))
+        (ez := $(terms[5]!))
+        (ex₀ := $(terms[6]!))
+        (ey₀ := $(terms[7]!))
+        (ez₀ := $(terms[8]!))
+      ]))
+    | .BraidingHom ex SX ey SY =>
+      let terms ← exprsToSyntax #[ex, SX, ey, SY]
+      evalTactic (← `(tactic| nth_rw 1 [
+        braiding_hom
+        (ex := $(terms[0]!))
+        (SX := $(terms[1]!))
+        (ey := $(terms[2]!))
+        (SY := $(terms[3]!))
+      ]))
   evalTactic (← `(tactic| rw [hom_congr]))
-  /- evalTactic (← `(tactic| constructor))
-  let goalsAfterConstructor ← getGoals
-  match goalsAfterConstructor with
-  | [forwardGoal, backwardGoal] =>
-    setGoals [forwardGoal]
-    evalTactic (← `(tactic| intro h))
-    evalTactic (← `(tactic| kernel_lift at h))
-    evalTactic (← `(tactic| exact h))
-
-    setGoals [backwardGoal]
-    evalTactic (← `(tactic| intro h))
-    evalTactic (← `(tactic| kernel_lift))
-    evalTactic (← `(tactic| exact h))
-  | _ =>
-    setGoals savedGoals
-    throwError "Expected exactly two goals after `constructor`" -/
   if !(← getGoals).isEmpty then
     setGoals savedGoals
     throwError "Failed to solve all goals while building kernel_hom equivalence proof"
@@ -458,5 +573,21 @@ example : Kernel.id.map (Prod.snd : PUnit × X → X) = (0 : Kernel (PUnit × X)
   sorry
 
 example : Kernel.id.map (Prod.fst : X × PUnit → X) = (0 : Kernel (X × PUnit) X) := by
+  kernel_hom
+  sorry
+
+open MeasurableEquiv in
+example : Kernel.deterministic prodAssoc (by fun_prop) =
+    (0 : Kernel (((X × Z) × Y) × Z) ((X × Z) × Y × Z)) := by
+  kernel_hom
+  sorry
+
+open MeasurableEquiv in
+example : Kernel.deterministic prodAssoc.symm (by fun_prop) =
+    (0 : Kernel ((X × Z) × Y × Z) (((X × Z) × Y) × Z)) := by
+  kernel_hom
+  sorry
+
+example : Kernel.swap (X × Z) Y = 0 := by
   kernel_hom
   sorry
