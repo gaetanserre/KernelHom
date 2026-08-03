@@ -50,7 +50,7 @@ def Node.toPenroseVar_kernel (n : Node) : MetaM PenroseVar := do
     try
       match n.e.getAppFn with
       | Expr.const ``SFinKer.of _ => do
-        let (res, _) ← getTypeFromSFinKer n.e
+        let res ← getTypeFromSFinKer n.e
         pure res
       | _ => do
         let eLvl ← getDecLevel (← inferType n.e)

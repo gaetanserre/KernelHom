@@ -25,8 +25,8 @@ inductive CategoryOP
   | Copy (ex SX : Expr)
   | WhiskerLeft (ex SX : Expr)
   | WhiskerRight (ex SX : Expr)
-  | LeftUnitor (ex SX ex₀ : Expr) (UnitLvl : Level)
-  | RightUnitor (ex SX ex₀ : Expr) (UnitLvl : Level)
+  | LeftUnitor (ex SX ex₀ : Expr)
+  | RightUnitor (ex SX ex₀ : Expr)
   | AssociatorHom (ex SX ey SY ez SZ ex₀ ey₀ ez₀ : Expr)
   | AssociatorInv (ex SX ey SY ez SZ ex₀ ey₀ ez₀ : Expr)
   | BraidingHom (ex SX ey SY : Expr)
@@ -43,10 +43,8 @@ instance : ToMessageData CategoryOP where
     | .Copy ex SX => m!"Copy with ex: {ex}, SX: {SX}"
     | .WhiskerLeft ex SX => m!"Whisker left with ex: {ex}, SX: {SX}"
     | .WhiskerRight ex SX => m!"Whisker right with ex: {ex}, SX: {SX}"
-    | .LeftUnitor ex SX UnitLvl ex₀ => m!"Left unitor with ex: {ex}, SX: {SX}, ex₀: {ex₀},
-      UnitLvl: {UnitLvl}"
-    | .RightUnitor ex SX ex₀ UnitLvl => m!"Right unitor with ex: {ex}, SX: {SX}, ex₀: {ex₀},
-      UnitLvl: {UnitLvl}"
+    | .LeftUnitor ex SX ex₀ => m!"Left unitor with ex: {ex}, SX: {SX}, ex₀: {ex₀}"
+    | .RightUnitor ex SX ex₀ => m!"Right unitor with ex: {ex}, SX: {SX}, ex₀: {ex₀}"
     | .AssociatorHom ex SX ey SY ez SZ ex₀ ey₀ ez₀ =>
       m!"Associator hom with ex: {ex}, SX: {SX}, ey: {ey}, SY: {SY}, ez: {ez}, SZ: {SZ},
       ex₀: {ex₀}, ey₀: {ey₀}, ez₀: {ez₀}"
