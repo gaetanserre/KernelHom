@@ -54,6 +54,8 @@ def computeSFinkerOf (X : Expr) (xLvl : Level) : MetaM Expr := do
   | _ =>
     decomposeProductToSFinker X xLvl
 
+/-- Compute a measurable equivalence between a type and itself by recursively decomposing
+products. -/
 partial def idME (X : Expr) : MetaM Expr := do
   match X.getAppFn with
   | Expr.const ``Prod _ =>
@@ -145,8 +147,8 @@ def constructUnitors (X ex₀ : Expr) (xLvl : Level) (offset : Nat) :
   let SX ← computeSFinkerOf X xLvl
   let unitor ← if left then mkAppM ``leftUnitor #[SX]
     else mkAppM ``rightUnitor #[SX]
-  let unitorOP ← if left then pure <| .LeftUnitor (← idME X) SX ex₀
-    else pure <|.RightUnitor (← idME X) SX ex₀
+  let unitorOP ← if left then pure <| .LeftUnitorHom (← idME X) SX ex₀
+    else pure <|.RightUnitorHom (← idME X) SX ex₀
   return (← mkAppM ``Iso.hom #[unitor], unitorOP)
 
 /-- Check if a kernel expression corresponds to an associator morphism or its inverse. -/
@@ -190,6 +192,7 @@ def getTypesFromThreeProds (prod : Expr) :
     | _ => throwError "Expected a product of two types, got: {prod.getAppArgs[1]!}"
   | _ => throwError "Expected a product of three types, got: {prod}"
 
+/-- Get the measurable equivalences from a product of three measurable equivalences. -/
 def getMEFromThreeProds (me_prod : Expr) :
     MetaM (Expr × Expr × Expr) := do
   match me_prod.getAppFn with
@@ -215,11 +218,10 @@ def constructAssociator (left right ex₀ ey₀ ez₀ : Expr) (hom : Bool) :
   let SY ← computeSFinkerOf Y yLvl
   let SZ ← computeSFinkerOf Z zLvl
   let associator ← mkAppM ``MonoidalCategory.associator #[SX, SY, SZ]
-  let associatorOP : CategoryOP ← if hom then
-      pure <| .AssociatorHom SX (← idME X) SY (← idME Y) SZ (← idME Z) ex₀ ey₀ ez₀
-    else
-      pure <| .AssociatorInv SX (← idME X) SY (← idME Y) SZ (← idME Z) ex₀ ey₀ ez₀
-  return (← mkAppM (if hom then ``Iso.hom else ``Iso.inv) #[associator], associatorOP)
+  let OPAssociator ←
+    pure <| (if hom then CategoryOP.AssociatorHom else .AssociatorInv)
+    (← idME X) SX (← idME Y) SY (← idME Z) SZ ex₀ ey₀ ez₀
+  return (← mkAppM (if hom then ``Iso.hom else ``Iso.inv) #[associator], OPAssociator)
 
 /-- Construct the associator morphism. -/
 def constructAssociatorHom (left right ex₀ ey₀ ez₀ : Expr) :=
@@ -404,16 +406,23 @@ def mkKernelHomEqProof (eqProofType : Expr) (op_data : List CategoryOP) : Tactic
         (ez := $(terms[0]!))
         (SZ := $(terms[1]!))
       ]))
-    | .LeftUnitor ex SX ex₀ =>
+    | .LeftUnitorHom ex SX ex₀ =>
       let terms ← exprsToSyntax #[ex, SX, ex₀]
-      logInfo m!"TEst"
       evalTactic (← `(tactic| nth_rw 1 [
         leftUnitor_hom
         (ex := $(terms[0]!))
         (SX := $(terms[1]!))
         (ex₀ := $(terms[2]!))
       ]))
-    | .RightUnitor ex SX ex₀ =>
+    | .LeftUnitorInv ex SX ex₀ =>
+      let terms ← exprsToSyntax #[ex, SX, ex₀]
+      evalTactic (← `(tactic| nth_rw 1 [
+        leftUnitor_inv
+        (ex := $(terms[0]!))
+        (SX := $(terms[1]!))
+        (ex₀ := $(terms[2]!))
+      ]))
+    | .RightUnitorHom ex SX ex₀ =>
       let terms ← exprsToSyntax #[ex, SX, ex₀]
       evalTactic (← `(tactic| nth_rw 1 [
         rightUnitor_hom
@@ -421,7 +430,15 @@ def mkKernelHomEqProof (eqProofType : Expr) (op_data : List CategoryOP) : Tactic
         (SX := $(terms[1]!))
         (ex₀ := $(terms[2]!))
       ]))
-    | .AssociatorHom SX ex SY ey SZ ez ex₀ ey₀ ez₀ =>
+    | .RightUnitorInv ex SX ex₀ =>
+      let terms ← exprsToSyntax #[ex, SX, ex₀]
+      evalTactic (← `(tactic| nth_rw 1 [
+        rightUnitor_inv
+        (ex := $(terms[0]!))
+        (SX := $(terms[1]!))
+        (ex₀ := $(terms[2]!))
+      ]))
+    | .AssociatorHom ex SX ey SY ez SZ ex₀ ey₀ ez₀ =>
       let terms ← exprsToSyntax #[SX, ex, SY, ey, SZ, ez, ex₀, ey₀, ez₀]
       evalTactic (← `(tactic| nth_rw 1 [
         Kernel.associator_hom
@@ -435,7 +452,7 @@ def mkKernelHomEqProof (eqProofType : Expr) (op_data : List CategoryOP) : Tactic
         (ey₀ := $(terms[7]!))
         (ez₀ := $(terms[8]!))
       ]))
-    | .AssociatorInv SX ex SY ey SZ ez ex₀ ey₀ ez₀ =>
+    | .AssociatorInv ex SX ey SY ez SZ ex₀ ey₀ ez₀ =>
       let terms ← exprsToSyntax #[SX, ex, SY, ey, SZ, ez, ex₀, ey₀, ez₀]
       evalTactic (← `(tactic| nth_rw 1 [
         associator_inv
@@ -529,52 +546,3 @@ syntax (name := kernelHom) "kernel_hom" (ppSpace location)? : tactic
 elab_rules : tactic
   | `(tactic| kernel_hom $[$loc]?) =>
     expandOptLocation (Lean.mkOptionalNode loc) |> applyLocTactic <| ApplyKernelHom
-
-variable {X Y Z T : Type*} [MeasurableSpace X] [MeasurableSpace Y] [MeasurableSpace Z]
-  [MeasurableSpace T]
-
-variable (κ : Kernel X Y) [IsSFiniteKernel κ] (η : Kernel Y Z) [IsSFiniteKernel η]
-
-example : Kernel.id (α := (X × Y)) = (0 : Kernel (X × Y) (X × Y)) := by
-  kernel_hom
-  sorry
-
-example : Kernel.discard (X × Y) = (0 : Kernel (X × Y) PUnit) := by
-  kernel_hom
-  sorry
-
-example : Kernel.copy (X × Y) = (0) := by
-  kernel_hom
-  sorry
-
-example : (Kernel.id (α := Z) ∥ₖ κ) = (0 : Kernel (Z × X) (Z × Y)) := by
-  kernel_hom
-  sorry
-
-example : (κ ∥ₖ Kernel.id (α := Z)) = (0 : Kernel (X × Z) (Y × Z)) := by
-  kernel_hom
-  sorry
-
-example : Kernel.id.map (Prod.snd : PUnit × X → X) = (0 : Kernel (PUnit × X) X) := by
-  kernel_hom
-  sorry
-
-example : Kernel.id.map (Prod.fst : X × PUnit → X) = (0 : Kernel (X × PUnit) X) := by
-  kernel_hom
-  sorry
-
-open MeasurableEquiv in
-example : Kernel.deterministic prodAssoc (by fun_prop) =
-    (0 : Kernel (((X × Z) × Y) × Z) ((X × Z) × Y × Z)) := by
-  kernel_hom
-  sorry
-
-open MeasurableEquiv in
-example : Kernel.deterministic prodAssoc.symm (by fun_prop) =
-    (0 : Kernel ((X × Z) × Y × Z) (((X × Z) × Y) × Z)) := by
-  kernel_hom
-  sorry
-
-example : Kernel.swap (X × Z) Y = 0 := by
-  kernel_hom
-  sorry

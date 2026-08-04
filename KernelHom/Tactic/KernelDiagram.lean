@@ -53,10 +53,8 @@ def Node.toPenroseVar_kernel (n : Node) : MetaM PenroseVar := do
         let res ← getTypeFromSFinKer n.e
         pure res
       | _ => do
-        let eLvl ← getDecLevel (← inferType n.e)
-        pure n.e
-        /- let (expr, _) ← transformHomToKernel eLvl n.e []
-        pure expr -/
+        let (expr, _) ← transformHomToKernel n.e []
+        pure expr
     catch _ =>
       pure n.e
   return ⟨"E", [n.vPos, n.hPosSrc, n.hPosTar], expr⟩

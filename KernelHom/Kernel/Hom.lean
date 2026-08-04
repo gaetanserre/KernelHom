@@ -5,11 +5,9 @@ Authors: Gaëtan Serré
 -/
 module
 
-public import KernelLift.ForMathlib.MeasurableEquiv
-public import KernelLift.ForMathlib.Kernel
-public import KernelHom.ForMathlib.Kernel
 public import KernelLift.Lift
-public import Mathlib
+public import Mathlib.Combinatorics.Quiver.ReflQuiver
+public import Mathlib.Probability.Kernel.Category.SFinKer
 
 /-!
 # Kernel morphisms
@@ -137,15 +135,14 @@ lemma leftUnitor_hom : (λ_ SX).hom = hom (ex := punit.prod ex) (ey := ex)
   all_goals measurability
 
 lemma leftUnitor_inv : (λ_ SX).inv = hom (ex := ex) (ey := punit.prod ex)
-    (Kernel.id.map (fun x ↦ (PUnit.unit, x))) := by
+    (lift (Kernel.id.map (fun x ↦ (PUnit.unit, x))) (ex := ex₀) (ey := punit.prod ex₀)) := by
   ext; dsimp
-  rw [hom_apply', id_map (by fun_prop), id_map (by fun_prop), deterministic_apply',
-    deterministic_apply', Set.image]
+  rw [hom_apply', lift_apply', id_map (by fun_prop), id_map (by fun_prop), deterministic_apply',
+    deterministic_apply']
   · refine Set.indicator_eq_indicator ?_ rfl
-    simp only [SFinKer.tensorObj_carrier, SFinKer.tensorUnit_carrier, MeasurableEquiv.prod,
-      MeasurableEquiv.coe_mk, Equiv.coe_fn_mk, Prod.exists, Set.mem_ofPred_eq, Prod.mk.injEq,
-      EmbeddingLike.apply_eq_iff_eq, true_and, exists_eq_right]
-    exact ⟨fun ha => ⟨_, ha⟩, fun ⟨a, ha⟩ => by simp_all⟩
+    simp [Set.image, MeasurableEquiv.prod]
+    constructor
+    all_goals simp_all
   all_goals measurability
 
 lemma rightUnitor_hom : (ρ_ SX).hom = hom (ex := ex.prod punit) (ey := ex)
@@ -157,19 +154,18 @@ lemma rightUnitor_hom : (ρ_ SX).hom = hom (ex := ex.prod punit) (ey := ex)
     simp [MeasurableEquiv.prod]
   all_goals measurability
 
-end unitors
-
 lemma rightUnitor_inv : (ρ_ SX).inv = hom (ex := ex) (ey := ex.prod punit)
-    (Kernel.id.map (fun x ↦ (x, PUnit.unit))) := by
+    (lift (Kernel.id.map (fun x ↦ (x, PUnit.unit))) (ex := ex₀) (ey := ex₀.prod punit)) := by
   ext; dsimp
-  rw [hom_apply', id_map (by fun_prop), id_map (by fun_prop), deterministic_apply',
+  rw [hom_apply', lift_apply', id_map (by fun_prop), id_map (by fun_prop), deterministic_apply',
     deterministic_apply']
   · refine Set.indicator_eq_indicator ?_ rfl
-    simp only [SFinKer.tensorObj_carrier, SFinKer.tensorUnit_carrier, MeasurableEquiv.prod,
-      MeasurableEquiv.coe_mk, Equiv.coe_fn_mk, Set.mem_image, Prod.mk.injEq,
-      EmbeddingLike.apply_eq_iff_eq, and_true, Prod.exists, exists_and_right, exists_eq_right]
-    exact ⟨fun ha => ⟨_, ha⟩, fun ⟨a, ha⟩ => by simp_all⟩
+    simp [Set.image, MeasurableEquiv.prod]
+    constructor
+    all_goals simp_all
   all_goals measurability
+
+end unitors
 
 section associators
 
