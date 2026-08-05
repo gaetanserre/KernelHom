@@ -39,8 +39,10 @@ variable {X Y : Type*} [MeasurableSpace X] [MeasurableSpace Y] [mXY : Measurable
 instance : MeasurableCoherence X X where
   miso := MeasurableEquiv.refl X
 
+/-- Given measurable equivalences `ex : X ≃ᵐ X'` and `ey : Y ≃ᵐ Y'`, we can transport the
+`MeasurableCoherence` instance from `X` and `Y` to `X'` and `Y'`. -/
 @[reducible]
-def equiv_trans {X' Y' : Type*} [MeasurableSpace X'] [MeasurableSpace Y']
+def TransEquiv {X' Y' : Type*} [MeasurableSpace X'] [MeasurableSpace Y']
     (ex : X' ≃ᵐ X) (ey : Y' ≃ᵐ Y) : MeasurableCoherence X' Y' where
   miso := ex.trans <| mXY.miso.trans ey.symm
 
@@ -99,20 +101,5 @@ noncomputable abbrev monoComp : Kernel W Z :=
 
 @[inherit_doc Kernel.monoComp]
 scoped[ProbabilityTheory] infixr:80 " ⊗≫ₖ " => Kernel.monoComp
-
-variable {W X Y Z : Type u} [MeasurableSpace W] [MeasurableSpace X] [MeasurableSpace Y]
-  [MeasurableSpace Z] {SW SX SY SZ : SFinKer} (ew : SW ≃ᵐ W) (ex : SX ≃ᵐ X)
-  (ey : SY ≃ᵐ Y) (ez : SZ ≃ᵐ Z) [mXY : MeasurableCoherence X Y]
-
-variable {W₀ X₀ Y₀ Z₀ : Type*} [MeasurableSpace W₀] [MeasurableSpace X₀] [MeasurableSpace Y₀]
-  [MeasurableSpace Z₀] {ew₀ : W ≃ᵐ W₀} {ex₀ : X ≃ᵐ X₀} {ey₀ : Y ≃ᵐ Y₀}
-  {ez₀ : Z ≃ᵐ Z₀} {κ : Kernel W₀ X₀} [IsSFiniteKernel κ] {η : Kernel Y₀ Z₀} [IsSFiniteKernel η]
-  [MeasurableCoherence X₀ Y₀]
-
-lemma hom_monoComp' : @monoidalComp _ _ _ _ _ _ (monoidalCoherence ex ey)
-    (hom (ex := ew) (ey := ex) (lift κ (ex := ew₀) (ey := ex₀)))
-    (hom (ex := ey) (ey := ez) (lift η (ex := ey₀) (ey := ez₀)))
-    = hom (ex := ew) (ey := ez) (lift (monoComp κ η) (ex := ew₀) (ey := ez₀)) := by
-  sorry
 
 end ProbabilityTheory.Kernel
