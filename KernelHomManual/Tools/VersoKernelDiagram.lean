@@ -1,4 +1,4 @@
-import KernelHom.Tactic.Hom.KernelDiagram
+import KernelHom.Tactic.KernelDiagram
 import Lean.PrettyPrinter.Delaborator.SubExpr
 import VersoManual
 
