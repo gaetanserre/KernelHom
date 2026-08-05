@@ -5,7 +5,7 @@ Authors: Gaëtan Serré
 -/
 module
 
-public import KernelHom.Mathlib.LIntegral
+public import KernelHom.ForMathlib.LIntegral
 public import KernelHom.Kernel.Hom
 
 /-!
@@ -34,18 +34,22 @@ class MeasurableCoherence (X Y : Type*) [MeasurableSpace X] [MeasurableSpace Y] 
 
 namespace MeasurableCoherence
 
-universe w x y
-
-variable {X : Type x} {Y : Type y} [MeasurableSpace X] [MeasurableSpace Y]
-  [mXY : MeasurableCoherence X Y]
+variable {X Y : Type*} [MeasurableSpace X] [MeasurableSpace Y] [mXY : MeasurableCoherence X Y]
 
 instance : MeasurableCoherence X X where
   miso := MeasurableEquiv.refl X
 
+/-- Given measurable equivalences `ex : X ≃ᵐ X'` and `ey : Y ≃ᵐ Y'`, we can transport the
+`MeasurableCoherence` instance from `X` and `Y` to `X'` and `Y'`. -/
+@[reducible]
+def TransEquiv {X' Y' : Type*} [MeasurableSpace X'] [MeasurableSpace Y']
+    (ex : X' ≃ᵐ X) (ey : Y' ≃ᵐ Y) : MeasurableCoherence X' Y' where
+  miso := ex.trans <| mXY.miso.trans ey.symm
+
 /-- `MeasurableCoherence` gives an instance of `MonoidalCoherence` in the `SFinKer` category. -/
 @[reducible]
-noncomputable def monoidalCoherence {X' Y' : SFinKer.{w}} (ex : X'.carrier ≃ᵐ X)
-    (ey : Y'.carrier ≃ᵐ Y) : MonoidalCoherence (SFinKer.of X') (SFinKer.of Y') where
+noncomputable def monoidalCoherence {SX SY : SFinKer} (ex : SX.carrier ≃ᵐ X)
+    (ey : SY.carrier ≃ᵐ Y) : MonoidalCoherence SX SY where
   iso := by
     let e := ex.trans <| mXY.miso.trans ey.symm
     refine ⟨⟨Kernel.id.map e, inferInstance⟩,
@@ -66,15 +70,10 @@ namespace ProbabilityTheory.Kernel
 
 open MeasurableCoherence
 
-universe v w x y z
-
-variable {W : Type w} {X : Type x} {Y : Type y} {Z : Type z}
-  [MeasurableSpace W] [MeasurableSpace X] [MeasurableSpace Y] [MeasurableSpace Z]
-  [MeasurableCoherence X Y] (κ : Kernel W X) [IsSFiniteKernel κ] (η : Kernel Y Z)
-  [IsSFiniteKernel η]
-
-variable {W' X' Y' Z' : SFinKer.{max w x y z}} (ew : W'.carrier ≃ᵐ W) (ex : X'.carrier ≃ᵐ X)
-  (ey : Y'.carrier ≃ᵐ Y) (ez : Z'.carrier ≃ᵐ Z)
+variable {W X Y Z : Type*} [MeasurableSpace W] [MeasurableSpace X] [MeasurableSpace Y]
+  [MeasurableSpace Z] {SW SX SY SZ : SFinKer} (ew : SW ≃ᵐ W) (ex : SX ≃ᵐ X)
+  (ey : SY ≃ᵐ Y) (ez : SZ ≃ᵐ Z) [MeasurableCoherence X Y] (κ : Kernel W X) [IsSFiniteKernel κ]
+  (η : Kernel Y Z) [IsSFiniteKernel η]
 
 /-- The kernelized version of the monoidal composition of kernels using the `SFinKer` category.
 It uses arbitrary measurable equivalences to transport the kernels to the `SFinKer` category. -/
@@ -83,67 +82,24 @@ noncomputable def monoComp₀ : Kernel W Z :=
   fromHom (ex := ew) (ey := ez) <| hom (ex := ew) (ey := ex) κ ⊗≫
     hom (ex := ey) (ey := ez) η
 
-instance monoComp'_sfinite : IsSFiniteKernel (monoComp₀ κ η ew ex ey ez ) := by
+instance monoComp'_sfinite : IsSFiniteKernel (monoComp₀ ew ex ey ez κ η) := by
   simp only [monoComp₀]
   infer_instance
 
 /-- The kernelized version of the monoidal composition of kernels using the `SFinKer` category. -/
 noncomputable abbrev monoComp : Kernel W Z :=
   monoComp₀
-    (W' := SFinKer.of <| ULift W)
-    (X' := SFinKer.of <| ULift X)
-    (Y' := SFinKer.of <| ULift Y)
-    (Z' := SFinKer.of <| ULift Z)
+    (SW := SFinKer.of <| ULift W)
+    (SX := SFinKer.of <| ULift X)
+    (SY := SFinKer.of <| ULift Y)
+    (SZ := SFinKer.of <| ULift Z)
+    ulift.{_, max u_1 u_2 u_3 u_4}
+    ulift.{_, max u_1 u_2 u_3 u_4}
+    ulift.{_, max u_1 u_2 u_3 u_4}
+    ulift.{_, max u_1 u_2 u_3 u_4}
     κ η
-    (ulift.{_, max w x y z})
-    (ulift.{_, max w x y z})
-    (ulift.{_, max w x y z})
-    (ulift.{_, max w x y z})
 
 @[inherit_doc Kernel.monoComp]
 scoped[ProbabilityTheory] infixr:80 " ⊗≫ₖ " => Kernel.monoComp
-
-instance monoComp_sfinite : IsSFiniteKernel (κ ⊗≫ₖ η) := by
-  infer_instance
-
-variable {W' X' Y' Z' : SFinKer.{max v w x y z}} (ew : W'.carrier ≃ᵐ W)
-  (ex : X'.carrier ≃ᵐ X) (ey : Y'.carrier ≃ᵐ Y) (ez : Z'.carrier ≃ᵐ Z)
-
-lemma hom_monoComp : @monoidalComp _ _ _ _ _ _ (monoidalCoherence ex ey)
-    (hom (ex := ew) (ey := ex) κ) (hom (ex := ey) (ey := ez) η)
-    = hom (ex := ew) (ey := ez) (monoComp κ η):= by
-  simp only [monoComp₀, fromHom, hom, monoidalComp]
-  ext _ s hs; dsimp
-  unfold monoidalCoherence
-  simp_all only [coe_comap, Function.comp_apply, comp_apply']
-  rw [Kernel.map_apply', Kernel.map_apply']
-  · simp_all only [coe_comap, Function.comp_apply, MeasurableEquiv.measurableSet_preimage,
-    comp_apply', MeasurableEquiv.apply_symm_apply]
-    rw [Kernel.map_apply, Kernel.map_apply, Kernel.id_map (by fun_prop),
-      Kernel.id_map (by fun_prop)]
-    · simp_rw [Kernel.deterministic_apply]
-      rw [lintegral_lintegral_dirac, lintegral_lintegral_dirac]
-      · rw [MeasureTheory.lintegral_map, MeasureTheory.lintegral_map]
-        · simp_all only [MeasurableEquiv.trans_apply, MeasurableEquiv.apply_symm_apply]
-          congr with _
-          rw [Kernel.map_apply', Kernel.map_apply']
-          · simp
-          all_goals try fun_prop
-          all_goals try measurability
-        · refine (Kernel.measurable_coe _ ?_).comp ?_
-          · measurability
-          · fun_prop
-        · fun_prop
-        · refine (Kernel.measurable_coe _ hs).comp ?_
-          fun_prop
-        · fun_prop
-      · refine (Kernel.measurable_coe _ ?_).comp ?_
-        · measurability
-        · fun_prop
-      · refine (Kernel.measurable_coe _ hs).comp ?_
-        fun_prop
-    all_goals try fun_prop
-  all_goals try fun_prop
-  all_goals try measurability
 
 end ProbabilityTheory.Kernel

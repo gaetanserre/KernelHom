@@ -5,7 +5,7 @@ Authors: Gaëtan Serré
 -/
 module
 
-public import KernelHom.Tactic.Hom.KernelHom
+public import KernelHom.Tactic.KernelHom
 public import Mathlib.Tactic.CategoryTheory.Coherence
 
 /-!

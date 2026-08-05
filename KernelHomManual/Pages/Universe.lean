@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gaëtan Serré
 -/
 
-import KernelHom.Tactic.Hom.Universe
+import KernelLift.Tactic.KernelUnlift
 import Mathlib.Probability.Kernel.Category.SFinKer
 import VersoManual
 
@@ -23,7 +23,9 @@ set_option verso.code.warnLineLength 100
 htmlSplit := .never
 %%%
 
-To translate kernel equalities into categorical equalities, one needs to handle universe levels carefully as categorical expressions occur in a common universe level:
+The first step in the translation of kernel equalities into categorical equalities is to handle universe levels carefully as categorical expressions occur in a common universe level, while kernels may have carrier spaces in different universe levels.
+
+For instance, consider a category `C` with objects in universe `u` and morphisms in universe `v`:
 
 ```lean (name := checkCategory)
 variable {C : Type u} [Category.{v, u} C] (c c' : C)
@@ -74,7 +76,7 @@ To solve this issue, one can manually lift the carrier spaces to a common univer
 
 In this setting, both `ULift X` and `ULift Y` have the same universe level, allowing the expression to typecheck correctly, as a morphism in {name SFinKer}`SFinKer.{max x y}`.
 
-To translate an equality of kernels into an equality of morphisms in {name SFinKer}`SFinKer`, all kernels must be translated to morphisms in {name SFinKer}`SFinKer` by lifting their carrier spaces to a common universe level, using the {name MeasurableEquiv.ulift}`ulift` measurable equivalence. However, determining this common universe level requires care.
+To translate an equality of kernels into an equality of morphisms in {name SFinKer}`SFinKer`, the first step is to lift all kernels' carrier spaces to a common universe level, using the {name MeasurableEquiv.ulift}`ulift` measurable equivalence. However, determining this common universe level requires care.
 
 One might naively take the universe level of the equality's result (left or right-hand side), but this can fail. Consider the following example:
 
@@ -94,6 +96,14 @@ The type of the composition `κ ∘ₖ η` has universe level {name Level.max}`m
 
 The correct approach is to *lift all carrier spaces to the maximum universe level of every space in the entire expression*, which is {name Level.max}`max` `x y z` in this example. This includes spaces that may "disappear" in the type of the final expression but still need consistent lifting.
 
-To automate this, the {name collectExprUniverses}`collectExprUniverses` function recursively collects all universe levels found in an expression. This allows us to determine the appropriate common universe level and uniformly lift all carrier spaces to it.
+To automate this, the {name kernelLift}`kernel_lift` tactic computes the maximum universe level of all carrier spaces in the kernel expression through the {name collectExprUniverses}`collectExprUniverses` function, and lifts all carrier spaces to this level using {name MeasurableEquiv.ulift}`ulift`. One can then translate the lifted kernel expression into a categorical expression in {name SFinKer}`SFinKer` without worrying about universe inconsistencies.
+
+The {name collectExprUniverses}`collectExprUniverses` function has the following type signature:
 
 {docstring collectExprUniverses}
+
+As the {name kernelLift}`kernel_lift` tactic could be used to translate kernel expressions into any equivalent expression that would require a common universe level, it is an independent project available on [GitHub](https://github.com/gaetanserre/KernelLift). We also provide the {name kernelUnlift}`kernel_unlift` tactic, which performs the inverse operation of {name kernelLift}`kernel_lift`, bringing a lifted kernel expression back to its original universe levels.
+
+{docstring kernelLift}
+
+{docstring kernelUnlift}

@@ -22,7 +22,7 @@ Very briefly, the tactics:
 - let you run category-theory tactics such as `coherence` or `monoidal`,
 - translate the result back to a kernel equality.
 
-Universe handling is part of this translation: expressions are lifted to a common universe level, so rewrites stay well-typed across universe levels.
+Universe handling is part of this translation: expressions are lifted to a common universe level, so rewrites stay well-typed across universe levels. This part is handled by the `kernel_lift` tactic, which can also be used independently (see [the GitHub repository](https://github.com/gaetanserre/KernelLift)).
 
 In addition, `SFinKer` also gives a direct route to `Stoch`, the Markov category of measurable spaces and Markov kernels, defined as the wide subcategory of `SFinKer` with Markov kernels as morphisms. The definitions/results for `SFinKer` and `Stoch` are now in Mathlib (PR [#36779](https://github.com/leanprover-community/mathlib4/pull/36779)).
 

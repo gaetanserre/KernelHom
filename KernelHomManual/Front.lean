@@ -12,7 +12,7 @@ import KernelHomManual.Pages.KernelHom
 import KernelHomManual.Pages.HomKernel
 import KernelHomManual.Pages.CatTactics
 import KernelHomManual.Pages.MonoidalComp
-import KernelHom.Tactic.Hom.KernelDiagram
+import KernelHom.Tactic.KernelDiagram
 import Mathlib.Probability.Kernel.Category.Stoch
 
 open Verso.Genre Manual Verso.Genre.Manual.InlineLean Mathlib.Tactic
@@ -50,7 +50,7 @@ The library rests on {name SFinKer}`SFinKer`, the category of measurable spaces 
 
 *Universe handling*
 
-A key aspect of the library is automatic universe management: expressions are lifted to a common universe level during translation, ensuring categorical expressions are well-typed. This allows users to work with kernels of varying universe levels without needing to manually manage universe annotations.
+A key aspect of the library is automatic universe management: expressions are lifted to a common universe level during translation, ensuring categorical expressions are well-typed. This allows users to work with kernels of varying universe levels without needing to manually manage universe annotations. This part is handled by the {name kernelLift}`kernel_lift` tactic, which can also be used independently (see [the GitHub repository](https://github.com/gaetanserre/KernelLift)).
 
 *Kernel diagrams*
 

@@ -6,7 +6,7 @@ Authors: Gaëtan Serré
 module
 
 public import Lean.Elab.Tactic.Location
-public import KernelHom.Tactic.Hom.HomKernel
+public import KernelHom.Tactic.HomKernel
 public import Mathlib.Tactic.Widget.StringDiagram
 
 /-!
@@ -50,11 +50,10 @@ def Node.toPenroseVar_kernel (n : Node) : MetaM PenroseVar := do
     try
       match n.e.getAppFn with
       | Expr.const ``SFinKer.of _ => do
-        let (res, _) ← getTypeFromSFinKer n.e
+        let res ← getTypeFromSFinKer n.e
         pure res
       | _ => do
-        let eLvl ← getDecLevel (← inferType n.e)
-        let (expr, _) ← transformHomToKernel eLvl n.e []
+        let (expr, _) ← transformHomToKernel n.e []
         pure expr
     catch _ =>
       pure n.e
@@ -93,10 +92,10 @@ namespace KernelDiagram
 
 open scoped Jsx in
 /-- Given a kernel expression, return a string diagram. Otherwise `none`. -/
-def KernelM? (e : Expr) (maxLvl : Level) : MetaM (Option Html) := do
+def KernelM? (e : Expr) : MetaM (Option Html) := do
   let e ← instantiateMVars e
   try
-    let (e, _) ← transformKernelToHom maxLvl e []
+    let (e, _) ← transformKernelToHom e []
     let k ← StringDiagram.mkKind e
     let x : Option (List (List StringDiagram.Node) × List (List StringDiagram.Strand))
     ← (match k with
@@ -141,12 +140,14 @@ def mkEqHtml (lhs rhs : Html) : Html :=
 /-- Given an equality between kernels, return a string diagram of the LHS and RHS.
 Otherwise `none`. -/
 def kernelEqM? (e : Expr) : MetaM (Option Html) := do
-  let e ← unfoldKernelOp <| ← instantiateMVars e
-  let maxLvl ← computeMaxUniverse (← collectExprUniverses e)
-  let some (_, lhs, rhs) := e.eq? | return none
-  let some lhs ← KernelM? lhs maxLvl | return none
-  let some rhs ← KernelM? rhs maxLvl | return none
-  return some <| mkEqHtml lhs rhs
+  try
+    let e ← unfoldKernelOp <| ← instantiateMVars e
+    let (lifted_e, _, _) ← LiftEquality e
+    let some (_, lhs, rhs) := lifted_e.eq? | return none
+    let some lhs ← KernelM? lhs | return none
+    let some rhs ← KernelM? rhs | return none
+    return some <| mkEqHtml lhs rhs
+  catch _ => return none
 
 /-- Reduce a forall expression and try to display a kernel diagram
 if it is an equality of kernels. -/

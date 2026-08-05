@@ -5,7 +5,7 @@ Authors: Gaëtan Serré
 -/
 module
 
-public import KernelHom.Tactic.Tactics
+public import KernelHom
 
 /-!
 # Tests for Kernel-Hom

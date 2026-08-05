@@ -6,7 +6,6 @@ Authors: Gaëtan Serré
 module
 
 public import KernelHom.Kernel.Hom
-public import Lean
 
 /-!
 # Delaborators for simplified kernel presentations
@@ -40,6 +39,12 @@ meta def delabSFinKerOf : Delab := do
 @[scoped app_delab ProbabilityTheory.Kernel.hom]
 meta def delabKernelHom : Delab := do
   let x ← withNaryArg 8 delab
+  `($x)
+
+/-- Only display the underlying kernel of `Kernel.lift` for readability. -/
+@[scoped app_delab ProbabilityTheory.Kernel.lift]
+meta def delabKernelLift : Delab := do
+  let x ← withNaryArg 10 delab
   `($x)
 
 end KernelHom
