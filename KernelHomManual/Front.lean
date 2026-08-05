@@ -36,7 +36,7 @@ shortTitle := "Kernel Categorical Reasoning"
 
 *Documentation*
 
-The complete documentation for the library is available in the [API reference](doc/).
+The complete documentation for the library is available in the [API reference](docs/).
 
 *Core of the project*
 

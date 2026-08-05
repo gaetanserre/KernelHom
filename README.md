@@ -8,7 +8,7 @@ Lean 4 project focused on tactics that translate kernel equalities into categori
   <img src="diagram/diagram.svg" width="500">
 </p>
 
-For more information, see [the project homepage](https://gaetanserre.fr/KernelHom) and the [full documentation](https://gaetanserre.fr/KernelHom/doc).
+For more information, see [the project homepage](https://gaetanserre.fr/KernelHom) and the [full documentation](https://gaetanserre.fr/KernelHom/docs).
 
 ## Status
 
