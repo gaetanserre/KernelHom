@@ -477,6 +477,14 @@ def mkKernelHomEqProof (eqProofType : Expr) (op_data : List CategoryOP) : Tactic
   setGoals savedGoals
   instantiateMVars mvar
 
+def HomEquality (eq : Expr) : TacticM (Expr × Expr) := do
+  let eq ← whnfR <| ← unfoldKernelOp <| ← instantiateMVars eq
+  let (lifted_expr, lifted_proof) ← LiftEquality eq
+  let (hom_expr, op_data) ← transformEquality lifted_expr CategoryOP transformKernelToHom
+  let hom_eq_proof_type ← mkEq lifted_expr hom_expr
+  let hom_eq_proof ← mkKernelHomEqProof hom_eq_proof_type op_data
+  return (hom_expr, ← mkEqTrans lifted_proof hom_eq_proof)
+
 /-- The `kernel_hom` tactic transforms a kernel equality to an equivalent equality in
 the category of measurable spaces and s-finite kernels.
 
@@ -496,39 +504,8 @@ example {W X Y Z : Type*} [MeasurableSpace X] [MeasurableSpace Y] [MeasurableSpa
   kernel_hom
   exact Category.assoc _ _ _
 ``` -/
-def ApplyKernelHom (goal : MVarId) (fvarId : Option FVarId) : TacticM MVarId := do
-  goal.withContext do
-    let expr ← match fvarId with
-        | some fid => do
-          let decl ← fid.getDecl
-          pure decl.type
-        | none => goal.getType
-    let expr ← whnfR <| ← unfoldKernelOp <| ← instantiateMVars expr
-    let (lifted_expr, construct_lifted_proof) ← do
-      let (lifted_expr, kernel_op_data, maxLvl) ← LiftEquality expr
-        let lifted_proof_type ← mkEq expr lifted_expr
-        let lifted_eq_proof ← mkKernelLiftEqProof lifted_proof_type maxLvl kernel_op_data
-        pure (lifted_expr, (fun e ↦ mkEqTrans lifted_eq_proof e))
-    let (hom_expr, op_data, _, _) ← transformEquality lifted_expr CategoryOP transformKernelToHom
-    let hom_eq_proof_type ← mkEq lifted_expr hom_expr
-    let hom_eq_proof ← mkKernelHomEqProof hom_eq_proof_type op_data
-    let eq_proof ← construct_lifted_proof hom_eq_proof
-    match fvarId with
-    | some fid => do
-      let mvarId ← getMainGoal
-      let h_proof ← mkEqMP eq_proof (mkFVar fid)
-      let userName := (← fid.getDecl).userName
-      let mvarId ← mvarId.assert userName hom_expr h_proof
-      let mvarId ← mvarId.tryClear fid
-      let (_, mvarId) ← mvarId.intro1P
-      pure mvarId
-    | none => do
-      let mvarId ← getMainGoal
-      mvarId.replaceTargetEq hom_expr eq_proof
-
-@[inherit_doc ApplyKernelHom]
 syntax (name := kernelHom) "kernel_hom" (ppSpace location)? : tactic
 
 elab_rules : tactic
   | `(tactic| kernel_hom $[$loc]?) =>
-    expandOptLocation (Lean.mkOptionalNode loc) |> applyLocTactic <| ApplyKernelHom
+    expandOptLocation (Lean.mkOptionalNode loc) |> applyLocTactic <| HomEquality

@@ -10,4 +10,6 @@ public import KernelHom.Tactic.HomKernel
 public import KernelHom.Tactic.KernelCat
 public import KernelHom.Tactic.KernelDiagram
 public import KernelHom.Tactic.KernelHom
+public import KernelHom.Tactic.Reassoc
+public import KernelHom.Tactic.Test
 public import KernelHom.Tactic.Utils

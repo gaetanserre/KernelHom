@@ -247,19 +247,16 @@ def getUniverseFromEq (eq : Expr) : MetaM Level := do
   | Level.succ l' => return l'
   | _ => throwError "Expected a universe level ≥ 1, got: {l}"
 
-/-- The `hom_kernel` tactic is the inverse of `kernel_hom`: it transforms an
-equality written in the monoidal category back to an equivalent equality of
-s-finite kernels.
+def KernelEquality (eq : Expr) : TacticM (Expr × Expr) := do
+  let eq ← whnfR <| ← instantiateMVars eq
+  let (kernel_expr, op_data) ← transformEquality eq CategoryOP transformHomToKernel
+  let (unlifted_expr, unlifted_proof) ← UnliftEquality kernel_expr
+  let kernel_eq_proof_type ← mkEq eq kernel_expr
+  let kernel_eq_proof ← mkKernelHomEqProof kernel_eq_proof_type op_data
+  return (unlifted_expr, ← mkEqTrans kernel_eq_proof unlifted_proof)
 
-The tactic supports location specifiers like `rw` or `simp`:
-- `hom_kernel` — applies to the goal
-- `hom_kernel at h` — applies to hypothesis `h`
-- `hom_kernel at h₁ h₂` — applies to multiple hypotheses
-- `hom_kernel at h ⊢` — applies to hypothesis `h` and the goal
-- `hom_kernel at *` — applies to all hypotheses and the goal
 
-It is useful to switch back to kernel equations once categorical rewrites are done. -/
-def ApplyHomKernel (goal : MVarId) (fvarId : Option FVarId) : TacticM MVarId := do
+/- def ApplyHomKernel (goal : MVarId) (fvarId : Option FVarId) : TacticM MVarId := do
   goal.withContext do
     let expr ← match fvarId with
         | some fid => do
@@ -267,7 +264,7 @@ def ApplyHomKernel (goal : MVarId) (fvarId : Option FVarId) : TacticM MVarId := 
           pure decl.type
         | none => goal.getType
     let expr ← whnfR <| ← instantiateMVars expr
-    let (kernel_expr, op_data, _, _) ← transformEquality expr CategoryOP transformHomToKernel
+    let (kernel_expr, op_data) ← transformEquality expr CategoryOP transformHomToKernel
     let (unlifted_expr, construct_unlifted_proof) ← do
       let (unlifted_expr, op_data, eLvl) ← UnliftEquality kernel_expr
       if kernel_expr == unlifted_expr then
@@ -290,11 +287,22 @@ def ApplyHomKernel (goal : MVarId) (fvarId : Option FVarId) : TacticM MVarId := 
       pure mvarId
     | none => do
       let mvarId ← getMainGoal
-      mvarId.replaceTargetEq unlifted_expr eq_proof
+      mvarId.replaceTargetEq unlifted_expr eq_proof -/
 
-@[inherit_doc ApplyHomKernel]
+/-- The `hom_kernel` tactic is the inverse of `kernel_hom`: it transforms an
+equality written in the monoidal category back to an equivalent equality of
+s-finite kernels.
+
+The tactic supports location specifiers like `rw` or `simp`:
+- `hom_kernel` — applies to the goal
+- `hom_kernel at h` — applies to hypothesis `h`
+- `hom_kernel at h₁ h₂` — applies to multiple hypotheses
+- `hom_kernel at h ⊢` — applies to hypothesis `h` and the goal
+- `hom_kernel at *` — applies to all hypotheses and the goal
+
+It is useful to switch back to kernel equations once categorical rewrites are done. -/
 syntax (name := homKernel) "hom_kernel" (ppSpace location)? : tactic
 
 elab_rules : tactic
   | `(tactic| hom_kernel $[$loc]?) =>
-    expandOptLocation (Lean.mkOptionalNode loc) |> applyLocTactic <| ApplyHomKernel
+    expandOptLocation (Lean.mkOptionalNode loc) |> applyLocTactic <| KernelEquality
