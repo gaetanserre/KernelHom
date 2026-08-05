@@ -30,6 +30,14 @@ namespace ProbabilityTheory.Kernel
 variable {X Y : Type*} [MeasurableSpace X] [MeasurableSpace Y]
     {SX SY : SFinKer} {ex : SX ≃ᵐ X} {ey : SY ≃ᵐ Y}
 
+/-- Transform a morphism in `SFinKer` into a kernel. -/
+noncomputable def fromHom (κ : SX ⟶ SY) : Kernel X Y := (κ.1.comap ex.symm (by fun_prop)).map ey
+
+instance {κ : SX ⟶ SY} : IsSFiniteKernel (fromHom (ex := ex) (ey := ey) κ) := by
+  simp only [fromHom]
+  have := κ.2
+  infer_instance
+
 /-- Transform a kernel into a morphism in `SFinKer`. -/
 noncomputable def hom (κ : Kernel X Y) [IsSFiniteKernel κ] : SX ⟶ SY := by
   refine ⟨(κ.map ey.symm).comap ex (by fun_prop), ?_⟩

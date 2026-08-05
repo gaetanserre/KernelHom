@@ -33,6 +33,7 @@ inductive CategoryOP
   | AssociatorHom (ex SX ey SY ez SZ ex₀ ey₀ ez₀ : Expr)
   | AssociatorInv (ex SX ey SY ez SZ ex₀ ey₀ ez₀ : Expr)
   | BraidingHom (ex SX ey SY : Expr)
+  | MonoidalComp (ew SW ex SX ey SY ez SZ ew₀ ex₀ ey₀ ez₀ mc : Expr)
 
 instance : ToMessageData CategoryOP where
   toMessageData
@@ -58,6 +59,9 @@ instance : ToMessageData CategoryOP where
       ex₀: {ex₀}, ey₀: {ey₀}, ez₀: {ez₀}"
     | .BraidingHom ex SX ey SY =>
       m!"Braiding hom with ex: {ex}, SX: {SX}, ey: {ey}, SY: {SY}"
+    | .MonoidalComp ew SW ex SX ey SY ez SZ ew₀ ex₀ ey₀ ez₀ mc =>
+      m!"Monoidal composition with ew: {ew}, SW: {SW}, ex: {ex}, SX: {SX}, ey: {ey}, SY: {SY},
+      ez: {ez}, SZ: {SZ}"
 
 /-- Unfold kernel operations in an expression. -/
 def unfoldKernelOp (e : Expr) : MetaM Expr := do

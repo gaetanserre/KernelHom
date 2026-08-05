@@ -142,13 +142,7 @@ Otherwise `none`. -/
 def kernelEqM? (e : Expr) : MetaM (Option Html) := do
   try
     let e ← unfoldKernelOp <| ← instantiateMVars e
-    let lifted_e ← do
-      let result ← (LiftEquality e).run
-      match result with
-      | Except.error .AlreadyHomogeneous =>
-        pure e
-      | Except.ok (lifted_e, _, _) =>
-        pure lifted_e
+    let (lifted_e, _, _) ← LiftEquality e
     let some (_, lhs, rhs) := lifted_e.eq? | return none
     let some lhs ← KernelM? lhs | return none
     let some rhs ← KernelM? rhs | return none

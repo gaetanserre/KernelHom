@@ -5,7 +5,7 @@ Authors: Gaëtan Serré
 -/
 module
 
-public import KernelHom.Kernel.Hom
+public import KernelHom.Kernel.MonoidalComp
 public import KernelHom.Tactic.Utils
 public import KernelHom.ForMathlib.MeasurableEquiv
 public import Lean.Elab.Tactic.Location
@@ -231,6 +231,13 @@ def constructAssociatorHom (left right ex₀ ey₀ ez₀ : Expr) :=
 def constructAssociatorInv (left right ex₀ ey₀ ez₀ : Expr) :=
   constructAssociator left right ex₀ ey₀ ez₀ false
 
+/-- Given an equality between a categorical morphism (left) and a "morphized" kernel (right), get
+the morphism on the left side of the equality. -/
+def getKernelLHSEqProofType (e : Expr) : MetaM Expr := do
+  let some (_, morphism_expr, _) :=
+    (← inferType e).eq? | throwError "Expected an equality, got: {e}"
+  return morphism_expr
+
 /-- Recursive transformation from kernel expressions to morphism expressions in the `SFinKer`
 category. -/
 partial def transformKernelToHom (e : Expr) (op_data : List CategoryOP) :
@@ -324,18 +331,70 @@ partial def transformKernelToHom (e : Expr) (op_data : List CategoryOP) :
       let (associatorInvExpr, associatorInvOP) ← constructAssociatorInv X Y ex₀ ey₀ ez₀
       return (associatorInvExpr, associatorInvOP :: op_data)
     else
-      let SX ← computeSFinkerOf X xLvl
-      let SY ← computeSFinkerOf Y yLvl
-      let homExpr ← mkAppOptM ``ProbabilityTheory.Kernel.hom
-        #[X, Y, none, none, SX, SY, (← idME X), (← idME Y), e, none]
-      pure (homExpr, op_data)
+      match κ.getAppFn with
+      | Expr.const ``Kernel.monoComp _ =>
+        let monoArgs := κ.getAppArgs
+        let κ₀ := monoArgs[monoArgs.size - 4]!
+        let η₀ := monoArgs[monoArgs.size - 2]!
+        let (_, X₀, _, x₀Lvl) ← getTypesFromKernel κ₀
+        let (Y₀, __, y₀Lvl, _) ← getTypesFromKernel η₀
+        let (W, Z, wLvl, zLvl) ← getTypesFromKernel e
+        let ex₀ ← constructMeasurableEquiv X₀ x₀Lvl wLvl
+        let (X, _) ← getTypesFromMeasurableEquiv ex₀
+        let ey₀ ← constructMeasurableEquiv Y₀ y₀Lvl wLvl
+        let (Y, _) ← getTypesFromMeasurableEquiv ey₀
+        let ew₀ := args[args.size - 3]!
+        let ez₀ := args[args.size - 2]!
+        let SW ← computeSFinkerOf W wLvl
+        let SX ← computeSFinkerOf X xLvl
+        let SY ← computeSFinkerOf Y yLvl
+        let SZ ← computeSFinkerOf Z zLvl
+        let ew ← idME W
+        let ex ← idME X
+        let ey ← idME Y
+        let ez ← idME Z
+        let mc ← mkAppOptM ``MeasurableCoherence.equiv_trans
+          #[none, none, none, none, none, none, none, none, none, ex₀, ey₀]
+        let empty : Array (Option Expr) := #[none, none, none, none, none, none, none, none]
+        let homArgs :=
+          #[κ₀, none, η₀, none, none]
+            |> .append #[ew₀, ex₀, ey₀, ez₀]
+            |> .append empty
+            |> .append #[SW, SX, SY, SZ, ew, ex, ey, ez, mc]
+            |> .append empty
+        let lhs ← getKernelLHSEqProofType (← mkAppOptM ``hom_monoComp homArgs)
+        match lhs.getAppFn with
+        | Expr.const ``monoidalComp _ =>
+          let monoArgs := lhs.getAppArgs
+          let κ₁ := monoArgs[monoArgs.size - 2]!
+          let η₁ := monoArgs[monoArgs.size - 1]!
+          let unwrapHom := fun k => do
+            match k.getAppFn with
+            | Expr.const ``Kernel.hom _ =>
+              let args := k.getAppArgs
+              pure args[args.size - 2]!
+            | _ => throwError "Expected a Kernel.hom expression, got: {k}"
+          let κ ← unwrapHom κ₁
+          let η ← unwrapHom η₁
+          let (κ', lκ) ← transformKernelToHom κ op_data
+          let (η', lη) ← transformKernelToHom η lκ
+          let monoCoherence ← mkAppOptM' (Expr.const ``MeasurableCoherence.monoidalCoherence
+            [wLvl, xLvl, yLvl])
+            #[none, none, none, none, mc, SX, SY, ex, ey]
+          let OPMonoidalComp :=
+            .MonoidalComp ew SW ex SX ey SY ez SZ ew₀ ex₀ ey₀ ez₀ mc
+          let monoidal_expr ← mkAppOptM' (Expr.const ``monoidalComp [wLvl, wLvl.succ])
+            #[none, none, none, none, none, none, monoCoherence, κ', η']
+          return (monoidal_expr, OPMonoidalComp :: lη)
+        | _ => throwError "Expected a monoidalComp expression, got: {lhs}"
+      | _ =>
+        let SX ← computeSFinkerOf X xLvl
+        let SY ← computeSFinkerOf Y yLvl
+        let homExpr ← mkAppOptM ``ProbabilityTheory.Kernel.hom
+          #[X, Y, none, none, SX, SY, (← idME X), (← idME Y), e, none]
+        pure (homExpr, op_data)
   | _ =>
-    let (X, Y, xLvl, yLvl) ← getTypesFromKernel e
-    let SX ← computeSFinkerOf X xLvl
-    let SY ← computeSFinkerOf Y yLvl
-    let homExpr ← mkAppOptM ``ProbabilityTheory.Kernel.hom
-      #[X, Y, none, none, SX, SY, (← idME X), (← idME Y), e, none]
-    pure (homExpr, op_data)
+    throwError "Expected a lifted kernel expression, got: {e}"
 
 /-- Construct the proof of equivalence between the original equality and the transformed one. -/
 def mkKernelHomEqProof (eqProofType : Expr) (op_data : List CategoryOP) : TacticM Expr := do
@@ -475,6 +534,24 @@ def mkKernelHomEqProof (eqProofType : Expr) (op_data : List CategoryOP) : Tactic
         (ey := $(terms[2]!))
         (SY := $(terms[3]!))
       ]))
+    | .MonoidalComp ew SW ex SX ey SY ez SZ ew₀ ex₀ ey₀ ez₀ mc =>
+      let terms ← exprsToSyntax #[ew, SW, ex, SX, ey, SY, ez, SZ, ew₀, ex₀, ey₀, ez₀, mc]
+      evalTactic (← `(tactic| nth_rw 1 [
+        hom_monoComp
+        (ew := $(terms[0]!))
+        (SW := $(terms[1]!))
+        (ex := $(terms[2]!))
+        (SX := $(terms[3]!))
+        (ey := $(terms[4]!))
+        (SY := $(terms[5]!))
+        (ez := $(terms[6]!))
+        (SZ := $(terms[7]!))
+        (ew₀ := $(terms[8]!))
+        (ex₀ := $(terms[9]!))
+        (ey₀ := $(terms[10]!))
+        (ez₀ := $(terms[11]!))
+        (mXY := $(terms[12]!))
+      ]))
   evalTactic (← `(tactic| rw [hom_congr]))
   if !(← getGoals).isEmpty then
     setGoals savedGoals
@@ -509,21 +586,13 @@ def ApplyKernelHom (goal : MVarId) (fvarId : Option FVarId) : TacticM MVarId := 
           pure decl.type
         | none => goal.getType
     let expr ← whnfR <| ← unfoldKernelOp <| ← instantiateMVars expr
-
-    /- Decide wether we need to lift the kernel expression to a homogeneous universe level first.
-    If this is necessary, we also need to construct the proof of equivalence between the original
-    expression and the lifted one, which will be used later to construct the final equivalence
-    proof. -/
     let (lifted_expr, construct_lifted_proof) ← do
-      let result ← (LiftEquality expr).run
-      match result with
-      | Except.error .AlreadyHomogeneous =>
-        pure (expr, (fun e ↦ pure e))
-      | Except.ok (lifted_expr, kernel_op_data, maxLvl) =>
+      let (lifted_expr, kernel_op_data, maxLvl) ← LiftEquality expr
         let lifted_proof_type ← mkEq expr lifted_expr
         let lifted_eq_proof ← mkKernelLiftEqProof lifted_proof_type maxLvl kernel_op_data
         pure (lifted_expr, (fun e ↦ mkEqTrans lifted_eq_proof e))
     let (hom_expr, op_data, _, _) ← transformEquality lifted_expr CategoryOP transformKernelToHom
+    logInfo m!"Transformed kernel expression to morphism expression: {hom_expr}"
     let hom_eq_proof_type ← mkEq lifted_expr hom_expr
     let hom_eq_proof ← mkKernelHomEqProof hom_eq_proof_type op_data
     let eq_proof ← construct_lifted_proof hom_eq_proof
