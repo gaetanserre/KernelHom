@@ -274,10 +274,14 @@
    [{"id": "transformHomToKernel",
      "data": null,
      "address": "/hom_kernel-tactic/"}],
+   "kernelUnlift":
+   [{"id": "kernelUnlift", "data": null, "address": "/Universe-handling/"}],
    "kernelMonoidal":
    [{"id": "kernelMonoidal",
      "data": null,
      "address": "/Categorical-tactics-for-kernels/"}],
+   "kernelLift":
+   [{"id": "kernelLift", "data": null, "address": "/Universe-handling/"}],
    "kernelHom":
    [{"id": "kernelHom", "data": null, "address": "/kernel_hom-tactic/"}],
    "kernelDisch":
