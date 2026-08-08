@@ -55,8 +55,8 @@ def kernelReassocHandler (h_eq : Expr) : MetaM (Expr × Array MVarId) := do
             let (ξ_hom, _) ← transformKernelToHom ξ_lift []
             let reassoc_body ← mkAppM' hom_proof_reassoc #[ξ_hom]
             let (_, kernel_reassoc_proof) ← KernelEquality <| ← inferType reassoc_body
-            let test ← mkAppM ``Eq.mp #[kernel_reassoc_proof, reassoc_body]
-            mkLambdaFVars #[Z, _inst, ξ, _inst_1] test
+            let kernel_reassoc_proof ← mkAppM ``Eq.mp #[kernel_reassoc_proof, reassoc_body]
+            mkLambdaFVars #[Z, _inst, ξ, _inst_1] kernel_reassoc_proof
   return (proof, #[])
 
 initialize registerReassocExpr kernelReassocHandler
