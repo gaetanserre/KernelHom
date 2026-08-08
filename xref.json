@@ -274,14 +274,10 @@
    [{"id": "transformHomToKernel",
      "data": null,
      "address": "/hom_kernel-tactic/"}],
-   "kernelUnlift":
-   [{"id": "kernelUnlift", "data": null, "address": "/Universe-handling/"}],
    "kernelMonoidal":
    [{"id": "kernelMonoidal",
      "data": null,
      "address": "/Categorical-tactics-for-kernels/"}],
-   "kernelLift":
-   [{"id": "kernelLift", "data": null, "address": "/Universe-handling/"}],
    "kernelHom":
    [{"id": "kernelHom", "data": null, "address": "/kernel_hom-tactic/"}],
    "kernelDisch":
@@ -313,4 +309,8 @@
    "MeasurableCoherence":
    [{"id": "MeasurableCoherence___mk",
      "data": null,
-     "address": "/Kernelized-monoidal-composition/"}]}}}
+     "address": "/Kernelized-monoidal-composition/"}],
+   "EqUnlift":
+   [{"id": "EqUnlift", "data": null, "address": "/Universe-handling/"}],
+   "EqLift":
+   [{"id": "EqLift", "data": null, "address": "/Universe-handling/"}]}}}
