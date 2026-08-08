@@ -42,7 +42,15 @@ The library provides the `kernel_diagram` command that generates a string diagra
   <img src="diagram/kernel_diagram.svg" width="500">
 </p>
 
-## Kernelized monoidal composition
+### Kernel reassociation
+
+The library also provides the `@[kernel_reassoc]` attribute, which is a variant of `@[reassoc]` that, given a lemma named `F` of shape `∀ .., f = g`, where `f g : Kernel X Y` are s-finite kernels, will create a new lemma named `F_assoc` of shape
+```lean
+∀ .. {Z : Type u} [MeasurableSpace Z] (ξ : Kernel Y Z) [IsSFiniteKernel], ξ ∘ₖ f = ξ ∘ₖ g
+```
+It first transforms the kernel equality into a categorical equality in `SFinKer`, then applies the `@[reassoc]` pipeline to generate the reassociated equality, and finally transforms the result back into a kernel equality.
+
+### Kernelized monoidal composition
 
 An additional consequence of the translation to `SFinKer` is that one can adapt the categorical monoidal composition `⊗≫` to kernels, resulting in a kernelized monoidal composition `⊗≫ₖ`. This composition automatically handles measurable equivalences, allowing for seamless composition of kernels while maintaining s-finiteness.
 

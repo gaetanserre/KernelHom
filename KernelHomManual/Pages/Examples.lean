@@ -11,7 +11,7 @@ import VersoManual
 
 open Verso.Genre Manual Verso.Genre.Manual.InlineLean Verso.Code.External Mathlib.Tactic
 
-open ProbabilityTheory Kernel
+open ProbabilityTheory Kernel KernelHom
 
 open scoped CategoryTheory.ComonObj
 

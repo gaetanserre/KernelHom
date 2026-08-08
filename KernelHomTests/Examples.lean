@@ -79,11 +79,15 @@ lemma discard_comp_deterministic {f : X → Y} (hf : Measurable f) :
   kernel_hom
   simp only [IsComonHom.hom_counit]
 
-variable {κ : Kernel (X × Y) Z}
+variable (κ : Kernel (X × Y) Z)
 
 lemma parallelComp_self_comp_copy₀ [IsMarkovKernel κ] [IsDeterministic κ] :
     (κ ∥ₖ κ) ∘ₖ copy (X × Y) = copy Z ∘ₖ κ := by
   kernel_disch
 
+@[kernel_reassoc]
+lemma parallelComp_self_comp_copy' [IsMarkovKernel κ] [IsDeterministic κ] :
+    (κ ∥ₖ κ) ∘ₖ copy (X × Y) = copy Z ∘ₖ κ := by
+  kernel_disch
 
 end ProbabilityTheory.Kernel

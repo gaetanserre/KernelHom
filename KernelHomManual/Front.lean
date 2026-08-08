@@ -11,6 +11,7 @@ import KernelHomManual.Pages.Universe
 import KernelHomManual.Pages.KernelHom
 import KernelHomManual.Pages.HomKernel
 import KernelHomManual.Pages.CatTactics
+import KernelHomManual.Pages.Reassoc
 import KernelHomManual.Pages.MonoidalComp
 import KernelHom.Tactic.KernelDiagram
 import EqLift.Tactic.Lift
@@ -57,6 +58,10 @@ A key aspect of the library is automatic universe management: expressions are li
 
 The library provides the {name kernelDiagram}`kernel_diagram` command, which generates string diagrams for kernel expressions. This is an adaptation of the {name Widget.stringDiagram}`string_diagram` command, where s-finite kernels are represented as morphisms using {name kernelHom}`kernel_hom`. This provides a visual representation of kernel compositions and transformations, aiding intuition and understanding. The visualization of such diagrams in this documentation is made possible by the Verso code block expander made by [@Yuma Mizuno](https://github.com/yuma-mizuno/coherence-tactics/blob/master/CoherenceTactics/VersoStringDiagram.lean).
 
+*Kernel reassociation*
+
+The library also provides the `@[kernel_reassoc]` attribute, which is a variant of `@[reassoc]` that, given a lemma named `F` of shape `∀ .., f = g`, where `f g : Kernel X Y` are s-finite kernels, will create a new lemma named `F_assoc` of shape `∀ .. {Z : Type u} [MeasurableSpace Z] (ξ : Kernel Y Z) [IsSFiniteKernel], ξ ∘ₖ f = ξ ∘ₖ g`. It first transforms the kernel equality into a categorical equality in `SFinKer`, then applies the `@[reassoc]` pipeline to generate the reassociated equality, and finally transforms the result back into a kernel equality.
+
 *Kernelized monoidal composition*
 
 An additional consequence of the translation to {name SFinKer}`SFinKer` is that one can adapt the categorical monoidal composition “{name CategoryTheory.monoidalComp}`⊗≫`” to kernels, resulting in a kernelized monoidal composition “{name ProbabilityTheory.Kernel.monoComp}`⊗≫ₖ`”. This composition automatically handles measurable equivalences, allowing for seamless composition of kernels while maintaining s-finiteness.
@@ -74,5 +79,7 @@ This library is under active development and is under the [Apache 2.0 license](h
 {include 0 KernelHomManual.Pages.HomKernel}
 
 {include 0 KernelHomManual.Pages.CatTactics}
+
+{include 0 KernelHomManual.Pages.Reassoc}
 
 {include 0 KernelHomManual.Pages.MonoidalComp}
