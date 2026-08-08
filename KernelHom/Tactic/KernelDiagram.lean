@@ -142,7 +142,7 @@ Otherwise `none`. -/
 def kernelEqM? (e : Expr) : MetaM (Option Html) := do
   try
     let e ← unfoldKernelOp <| ← instantiateMVars e
-    let (lifted_e,_, _) ← LiftEquality.expr e
+    let (lifted_e, _) ← liftEquality e
     let some (_, lhs, rhs) := lifted_e.eq? | return none
     let some lhs ← KernelM? lhs | return none
     let some rhs ← KernelM? rhs | return none
@@ -198,7 +198,7 @@ def elabKernelDiagramCmd : CommandElab := fun
         catch _ => Term.levelMVarToParam (← instantiateMVars (← Term.elabTerm t none))
       match ← KernelDiagram.kernelEqMReduce? e with
       | some html => return html
-      | none => throwError "could not find an equality of kernels: {e}"
+      | none => throwError "could not find an equality of kernels: {e}."
     liftCoreM <| Widget.savePanelWidgetInfo
       (hash HtmlDisplay.javascript)
       (return json% { html: $(← Server.RpcEncodable.rpcEncode html) })

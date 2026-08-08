@@ -15,8 +15,8 @@ name = "verso"
 git = "https://github.com/leanprover/verso"
 
 [[require]]
-name = "kernellift"
-git = "https://github.com/gaetanserre/KernelLift"
+name = "eqlift"
+git = "https://github.com/gaetanserre/EqLift"
 
 [[require]]
 name = "mathlib"
