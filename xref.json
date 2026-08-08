@@ -94,7 +94,7 @@
      "data":
      {"title": "Monoidal Composition of Kernels",
       "shortTitle": null,
-      "sectionNum": "6.2.",
+      "sectionNum": "7.2.",
       "searchPriority": 50,
       "context":
       [{"title": "Kernel-Hom: Tactics for Kernel Categorical Reasoning",
@@ -102,7 +102,7 @@
         "number": null},
        {"title": "Kernelized monoidal composition",
         "shortTitle": "Monoidal composition",
-        "number": "6"},
+        "number": "7"},
        {"title": "Monoidal Composition of Kernels",
         "shortTitle": null,
         "number": "2"}]},
@@ -113,7 +113,7 @@
      "data":
      {"title": "Measurable Coherence",
       "shortTitle": null,
-      "sectionNum": "6.1.",
+      "sectionNum": "7.1.",
       "searchPriority": 50,
       "context":
       [{"title": "Kernel-Hom: Tactics for Kernel Categorical Reasoning",
@@ -121,7 +121,7 @@
         "number": null},
        {"title": "Kernelized monoidal composition",
         "shortTitle": "Monoidal composition",
-        "number": "6"},
+        "number": "7"},
        {"title": "Measurable Coherence", "shortTitle": null, "number": "1"}]},
      "address": "/Kernelized-monoidal-composition/"}],
    "Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Kernelized-monoidal-composition":
@@ -130,7 +130,7 @@
      "data":
      {"title": "Kernelized monoidal composition",
       "shortTitle": "Monoidal composition",
-      "sectionNum": "6.",
+      "sectionNum": "7.",
       "searchPriority": 50,
       "context":
       [{"title": "Kernel-Hom: Tactics for Kernel Categorical Reasoning",
@@ -138,8 +138,37 @@
         "number": null},
        {"title": "Kernelized monoidal composition",
         "shortTitle": "Monoidal composition",
-        "number": "6"}]},
+        "number": "7"}]},
      "address": "/Kernelized-monoidal-composition/"}],
+   "Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Kernel-reassociation--Example":
+   [{"id":
+     "Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Kernel-reassociation--Example",
+     "data":
+     {"title": "Example",
+      "shortTitle": null,
+      "sectionNum": "6.1.",
+      "searchPriority": 50,
+      "context":
+      [{"title": "Kernel-Hom: Tactics for Kernel Categorical Reasoning",
+        "shortTitle": "Kernel Categorical Reasoning",
+        "number": null},
+       {"title": "Kernel reassociation", "shortTitle": null, "number": "6"},
+       {"title": "Example", "shortTitle": null, "number": "1"}]},
+     "address": "/Kernel-reassociation/"}],
+   "Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Kernel-reassociation":
+   [{"id":
+     "Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Kernel-reassociation",
+     "data":
+     {"title": "Kernel reassociation",
+      "shortTitle": null,
+      "sectionNum": "6.",
+      "searchPriority": 50,
+      "context":
+      [{"title": "Kernel-Hom: Tactics for Kernel Categorical Reasoning",
+        "shortTitle": "Kernel Categorical Reasoning",
+        "number": null},
+       {"title": "Kernel reassociation", "shortTitle": null, "number": "6"}]},
+     "address": "/Kernel-reassociation/"}],
    "Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Categorical-tactics-for-kernels":
    [{"id":
      "Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Categorical-tactics-for-kernels",
@@ -192,6 +221,16 @@
         "Usage and examples",
         "Examples"]}},
      "address": "/Usage-and-examples/"}],
+   "ProbabilityTheory.Kernel.parallelComp_self_comp_copy'":
+   [{"id": "ProbabilityTheory___Kernel___parallelComp_self_comp_copy___-next",
+     "data":
+     {"/Kernel-reassociation/#ProbabilityTheory___Kernel___parallelComp_self_comp_copy___-next":
+      {"display": "parallelComp_self_comp_copy'",
+       "context":
+       ["Kernel-Hom: Tactics for Kernel Categorical Reasoning",
+        "Kernel reassociation",
+        "Example"]}},
+     "address": "/Kernel-reassociation/"}],
    "ProbabilityTheory.Kernel.parallelComp_id_right_comp_parallelComp₀":
    [{"id":
      "ProbabilityTheory___Kernel___parallelComp_id_right_comp_parallelComp___",
@@ -274,6 +313,10 @@
    [{"id": "transformHomToKernel",
      "data": null,
      "address": "/hom_kernel-tactic/"}],
+   "kernelReassocHandler":
+   [{"id": "kernelReassocHandler",
+     "data": null,
+     "address": "/Kernel-reassociation/"}],
    "kernelMonoidal":
    [{"id": "kernelMonoidal",
      "data": null,

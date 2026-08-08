@@ -146,31 +146,46 @@
  "17":
  "<code>ProbabilityTheory.Kernel.parallelComp_id_left_comp_parallelComp.{u_1, u_2, u_3, u_4, u_5} {X : Type u_1} {Y : Type u_2}\n  {Z : Type u_3} {T : Type u_4} {mX : MeasurableSpace X} {mY : MeasurableSpace Y} {mZ : MeasurableSpace Z}\n  {mT : MeasurableSpace T} {κ : Kernel X Y} {X' : Type u_5} {mX' : MeasurableSpace X'} {η : Kernel X' Z}\n  [IsSFiniteKernel η] {ξ : Kernel Z T} [IsSFiniteKernel ξ] : Kernel.id ∥ₖ ξ ∘ₖ (κ ∥ₖ η) = κ ∥ₖ (ξ ∘ₖ η)</code>",
  "16":
- "<code>ProbabilityTheory.Kernel.parallelComp_self_comp_copy₀.{u_1, u_2, u_3} {X : Type u_1} {Y : Type u_2} {Z : Type u_3}\n  [MeasurableSpace X] [MeasurableSpace Y] [MeasurableSpace Z] {κ : Kernel (X × Y) Z} [IsMarkovKernel κ]\n  [IsDeterministic κ] : κ ∥ₖ κ ∘ₖ copy (X × Y) = copy Z ∘ₖ κ</code>",
+ "<code>ProbabilityTheory.Kernel.parallelComp_self_comp_copy₀.{u_1, u_2, u_3} {X : Type u_1} {Y : Type u_2} {Z : Type u_3}\n  [MeasurableSpace X] [MeasurableSpace Y] [MeasurableSpace Z] (κ : Kernel (X × Y) Z) [IsMarkovKernel κ]\n  [IsDeterministic κ] : κ ∥ₖ κ ∘ₖ copy (X × Y) = copy Z ∘ₖ κ</code>",
+ "156":
+ "<code>ProbabilityTheory.Kernel.fromHom.{u_1, u_2, u_5} {X : Type u_1} {Y : Type u_2} [MeasurableSpace X] [MeasurableSpace Y]\n  {SX SY : SFinKer} {ex : SX.carrier ≃ᵐ X} {ey : SY.carrier ≃ᵐ Y} (κ : SX ⟶ SY) : ProbabilityTheory.Kernel X Y</code><span class=\"sep\"></span><code class=\"docstring\">Transform a morphism in `SFinKer` into a kernel. </code>",
+ "155": "<code>SY.carrier ≃ᵐ Y</code>",
+ "154":
+ "<code>SFinKer.carrier.{u} (self : SFinKer) : Type u</code><span class=\"sep\"></span><code class=\"docstring\">The underlying measurable space. </code>",
+ "153": "<code>SX.carrier ≃ᵐ X</code>",
+ "152": "<code>SFinKer</code>",
+ "151": "<code>MeasurableCoherence X Y</code>",
+ "150":
+ "<code>CategoryTheory.MonoidalCoherence.{v, u} {C : Type u} [CategoryTheory.Category.{v, u} C] (X Y : C) : Type v</code><span class=\"sep\"></span><code class=\"docstring\">A typeclass carrying a choice of monoidal structural isomorphism between two objects.\nUsed by the `⊗≫` monoidal composition operator, and the `coherence` tactic.\n</code>",
  "15":
  "<code class=\"docstring\">Display the kernel diagram for a given term.\n\nExample usage:\n```\n/- Kernel diagram for an equality theorem. -/\n#kernel_diagram ProbabilityTheory.Kernel.deterministic_comp_copy\n```\n</code>",
- "148":
- "<code>ProbabilityTheory.Kernel.fromHom.{u_1, u_2, u_5} {X : Type u_1} {Y : Type u_2} [MeasurableSpace X] [MeasurableSpace Y]\n  {SX SY : SFinKer} {ex : SX.carrier ≃ᵐ X} {ey : SY.carrier ≃ᵐ Y} (κ : SX ⟶ SY) : ProbabilityTheory.Kernel X Y</code><span class=\"sep\"></span><code class=\"docstring\">Transform a morphism in `SFinKer` into a kernel. </code>",
- "147": "<code>SY.carrier ≃ᵐ Y</code>",
- "146":
- "<code>SFinKer.carrier.{u} (self : SFinKer) : Type u</code><span class=\"sep\"></span><code class=\"docstring\">The underlying measurable space. </code>",
- "145": "<code>SX.carrier ≃ᵐ X</code>",
- "144": "<code>SFinKer</code>",
- "143": "<code>MeasurableCoherence X Y</code>",
- "142":
- "<code>CategoryTheory.MonoidalCoherence.{v, u} {C : Type u} [CategoryTheory.Category.{v, u} C] (X Y : C) : Type v</code><span class=\"sep\"></span><code class=\"docstring\">A typeclass carrying a choice of monoidal structural isomorphism between two objects.\nUsed by the `⊗≫` monoidal composition operator, and the `coherence` tactic.\n</code>",
- "141":
+ "149":
  "<code>MeasurableEquiv.{u_6, u_7} (α : Type u_6) (β : Type u_7) [MeasurableSpace α] [MeasurableSpace β] : Type (max u_6 u_7)</code><span class=\"sep\"></span><code class=\"docstring\">Equivalences between measurable spaces. Main application is the simplification of measurability\nstatements along measurable equivalences. </code>",
- "140":
+ "148":
  "<code>X ≃ᵐ Y</code><span class=\"sep\"></span><code class=\"docstring\">A measurable equivalence between `X` and `Y`. </code>",
+ "147":
+ "<code>MeasurableCoherence.mk.{u_1, u_2} {X : Type u_1} {Y : Type u_2} [MeasurableSpace X] [MeasurableSpace Y]\n  (miso : X ≃ᵐ Y) : MeasurableCoherence X Y</code>",
+ "146":
+ "<code>MeasurableCoherence.monoidalCoherence.{u_1, u_2, u_3} {X : Type u_1} {Y : Type u_2} [MeasurableSpace X]\n  [MeasurableSpace Y] [mXY : MeasurableCoherence X Y] {SX SY : SFinKer} (ex : SX.carrier ≃ᵐ X) (ey : SY.carrier ≃ᵐ Y) :\n  CategoryTheory.MonoidalCoherence SX SY</code><span class=\"sep\"></span><code class=\"docstring\">`MeasurableCoherence` gives an instance of `MonoidalCoherence` in the `SFinKer` category. </code>",
+ "145":
+ "<code>MeasurableCoherence.{u_1, u_2} (X : Type u_1) (Y : Type u_2) [MeasurableSpace X] [MeasurableSpace Y] :\n  Type (max u_1 u_2)</code><span class=\"sep\"></span><code class=\"docstring\">A class witnessing the existence of a measurable equivalence between two measurable spaces. </code>",
+ "144":
+ "<code>ProbabilityTheory.Kernel.parallelComp_self_comp_copy'_assoc.{u_1, u_2, u_3, _uniq.3551} {X : Type u_1} {Y : Type u_2}\n  {Z : Type u_3} [MeasurableSpace X] [MeasurableSpace Y] [MeasurableSpace Z] (κ : Kernel (X × Y) Z) [IsMarkovKernel κ]\n  [IsDeterministic κ] {Z✝ : Type _uniq.3551} [inst : MeasurableSpace Z✝] (ξ : Kernel (Z × Z) Z✝)\n  [inst_1 : IsSFiniteKernel ξ] : ξ ∘ₖ (κ ∥ₖ κ) ∘ₖ copy (X × Y) = ξ ∘ₖ copy Z ∘ₖ κ</code>",
+ "143": "<code>Kernel (Z × Z) W</code>",
+ "142":
+ "<code class=\"docstring\">The syntax `variable (X Y ... Z : Type*)` creates a new distinct implicit universe variable\n`&gt; 0` for each variable in the sequence. </code>",
+ "141":
+ "<code>ProbabilityTheory.Kernel.parallelComp_self_comp_copy'.{u_1, u_2, u_3} {X : Type u_1} {Y : Type u_2} {Z : Type u_3}\n  [MeasurableSpace X] [MeasurableSpace Y] [MeasurableSpace Z] (κ : Kernel (X × Y) Z) [IsMarkovKernel κ]\n  [IsDeterministic κ] : κ ∥ₖ κ ∘ₖ copy (X × Y) = copy Z ∘ₖ κ</code>",
+ "140":
+ "<code class=\"docstring\">Same as `@[reassoc]`, but for equalities of s-finite kernels. </code>",
  "14":
  "<code>CategoryTheory.categoryTheoryDischarger : Lean.Elab.Tactic.TacticM Unit</code><span class=\"sep\"></span><code class=\"docstring\">A tactic for discharging easy category theory goals, widely used as an autoparameter.\nCurrently this defaults to the `aesop_cat` wrapper around `aesop`, but by setting\nthe option `mathlib.tactic.category.grind` to `true`, it will use the `grind` tactic instead.\n</code>",
  "139":
- "<code>MeasurableCoherence.mk.{u_1, u_2} {X : Type u_1} {Y : Type u_2} [MeasurableSpace X] [MeasurableSpace Y]\n  (miso : X ≃ᵐ Y) : MeasurableCoherence X Y</code>",
+ "<code>Lean.LMVarId : Type</code><span class=\"sep\"></span><code class=\"docstring\">Short for `LevelMVarId` </code>",
  "138":
- "<code>MeasurableCoherence.monoidalCoherence.{u_1, u_2, u_3} {X : Type u_1} {Y : Type u_2} [MeasurableSpace X]\n  [MeasurableSpace Y] [mXY : MeasurableCoherence X Y] {SX SY : SFinKer} (ex : SX.carrier ≃ᵐ X) (ey : SY.carrier ≃ᵐ Y) :\n  CategoryTheory.MonoidalCoherence SX SY</code><span class=\"sep\"></span><code class=\"docstring\">`MeasurableCoherence` gives an instance of `MonoidalCoherence` in the `SFinKer` category. </code>",
+ "<code>Array.{u} (α : Type u) : Type u</code><span class=\"sep\"></span><code class=\"docstring\">`Array α` is the type of [dynamic arrays](https://en.wikipedia.org/wiki/Dynamic_array) with elements\nfrom `α`. This type has special support in the runtime.\n\nArrays perform best when unshared. As long as there is never more than one reference to an array,\nall updates will be performed _destructively_. This results in performance comparable to mutable\narrays in imperative programming languages.\n\nAn array has a size and a capacity. The size is the number of elements present in the array, while\nthe capacity is the amount of memory currently allocated for elements. The size is accessible via\n`Array.size`, but the capacity is not observable from Lean code. `Array.emptyWithCapacity n` creates\nan array which is equal to `#[]`, but internally allocates an array of capacity `n`. When the size\nexceeds the capacity, allocation is required to grow the array.\n\nFrom the point of view of proofs, `Array α` is just a wrapper around `List α`.\n</code>",
  "137":
- "<code>MeasurableCoherence.{u_1, u_2} (X : Type u_1) (Y : Type u_2) [MeasurableSpace X] [MeasurableSpace Y] :\n  Type (max u_1 u_2)</code><span class=\"sep\"></span><code class=\"docstring\">A class witnessing the existence of a measurable equivalence between two measurable spaces. </code>",
+ "<code>kernelReassocHandler (h_eq : Lean.Expr) : Lean.MetaM (Lean.Expr × Array Lean.LMVarId)</code><span class=\"sep\"></span><code class=\"docstring\">Core handler for `@[kernel_reassoc]`.\n\nGiven an equality between s-finite kernels, this constructs the corresponding reassociated\nequality in `SFinKer` category, under the extra `Z` measurable space and instance binders needed to\nstate the result. The returned array contains the fresh level metavariables that still need to be\nadded to the declaration's universe levels.\n</code>",
  "136":
  "<code class=\"docstring\">Use the coherence theorem for monoidal categories to solve equations in a monoidal equation,\nwhere the two sides only differ by replacing strings of monoidal structural morphisms\n(that is, associators, unitors, and identities)\nwith different strings of structural morphisms with the same source and target.\n\nThat is, `coherence` can handle goals of the form\n`a ≫ f ≫ b ≫ g ≫ c = a' ≫ f ≫ b' ≫ g ≫ c'`\nwhere `a = a'`, `b = b'`, and `c = c'` can be proved using `pure_coherence`.\n\n(If you have very large equations on which `coherence` is unexpectedly failing,\nyou may need to increase the typeclass search depth,\nusing e.g. `set_option synthInstance.maxSize 500`.)\n</code>",
  "135":
