@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gaëtan Serré
 -/
 
-import KernelLift.Tactic.KernelUnlift
+import EqLift.Tactic.Lift
+import EqLift.Tactic.Unlift
 import Mathlib.Probability.Kernel.Category.SFinKer
 import VersoManual
 
@@ -96,14 +97,14 @@ The type of the composition `κ ∘ₖ η` has universe level {name Level.max}`m
 
 The correct approach is to *lift all carrier spaces to the maximum universe level of every space in the entire expression*, which is {name Level.max}`max` `x y z` in this example. This includes spaces that may "disappear" in the type of the final expression but still need consistent lifting.
 
-To automate this, the {name kernelLift}`kernel_lift` tactic computes the maximum universe level of all carrier spaces in the kernel expression through the {name collectExprUniverses}`collectExprUniverses` function, and lifts all carrier spaces to this level using {name MeasurableEquiv.ulift}`ulift`. One can then translate the lifted kernel expression into a categorical expression in {name SFinKer}`SFinKer` without worrying about universe inconsistencies.
+To automate this, the {name EqLift}`lift_eq` tactic computes the maximum universe level of all carrier spaces in the kernel expression through the {name collectExprUniverses}`collectExprUniverses` function, and lifts all carrier spaces to this level using {name MeasurableEquiv.ulift}`ulift`. One can then translate the lifted kernel expression into a categorical expression in {name SFinKer}`SFinKer` without worrying about universe inconsistencies.
 
 The {name collectExprUniverses}`collectExprUniverses` function has the following type signature:
 
 {docstring collectExprUniverses}
 
-As the {name kernelLift}`kernel_lift` tactic could be used to translate kernel expressions into any equivalent expression that would require a common universe level, it is an independent project available on [GitHub](https://github.com/gaetanserre/KernelLift). We also provide the {name kernelUnlift}`kernel_unlift` tactic, which performs the inverse operation of {name kernelLift}`kernel_lift`, bringing a lifted kernel expression back to its original universe levels.
+The {name EqLift}`lift_eq` tactic is not confined to kernel expressions alone. Thanks to its modular design, it can be extended to other kinds of expressions, using the operators and primitives specific to that type. It is thus a general-purpose tactic for raising expressions to a shared universe level, and can be applied in other settings where universe levels need to be reconciled. It is available as a standalone project on [GitHub](https://github.com/gaetanserre/EqLift). The reverse tactic, {name EqUnlift}`unlift_eq`, is also included; it carries out the opposite operation of {name EqLift}`lift_eq`, restoring a lifted expression to its original universe levels.
 
-{docstring kernelLift}
+{docstring EqLift}
 
-{docstring kernelUnlift}
+{docstring EqUnlift}
