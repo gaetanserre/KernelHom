@@ -2,7 +2,6 @@ module  -- shake: keep-all --deprecated_module: ignore
 
 public import KernelHom.ForMathlib.Kernel
 public import KernelHom.ForMathlib.LIntegral
-public import KernelHom.ForMathlib.MeasurableEquiv
 public import KernelHom.Kernel.Hom
 public import KernelHom.Kernel.MonoidalComp
 public import KernelHom.Tactic.Delaborators

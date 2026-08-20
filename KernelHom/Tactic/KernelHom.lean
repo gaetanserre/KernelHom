@@ -7,7 +7,6 @@ module
 
 public import KernelHom.Kernel.MonoidalComp
 public import KernelHom.Tactic.Utils
-public import KernelHom.ForMathlib.MeasurableEquiv
 public import Lean.Elab.Tactic.Location
 public import EqLift.Tactic.Kernel.KernelLift
 
@@ -61,7 +60,7 @@ partial def idME (X : Expr) : MetaM Expr := do
     let args := X.getAppArgs
     let id1 ← idME args[0]!
     let id2 ← idME args[1]!
-    mkAppM ``MeasurableEquiv.prod #[id1, id2]
+    mkAppM ``MeasurableEquiv.prodCongr #[id1, id2]
   | Expr.const ``PUnit [xLvl] | Expr.const ``Unit [xLvl] =>
     let xLvl ← match xLvl with
       | Level.succ l => pure l
@@ -69,7 +68,7 @@ partial def idME (X : Expr) : MetaM Expr := do
     let punitME := mkConst ``MeasurableEquiv.punit [xLvl, xLvl]
     mkAppM' punitME #[]
   | _ =>
-    mkAppOptM ``MeasurableEquiv.id #[X, none]
+    mkAppOptM ``MeasurableEquiv.refl #[X, none]
 
 /-- Check if a kernel expression corresponds to a left or right whisker. -/
 def checkWhiskers (κ : Expr) (offset : Nat) : MetaM Bool := do
@@ -208,12 +207,12 @@ def getTypesFromThreeProds (prod : Expr) :
 def getMEFromThreeProds (me_prod : Expr) :
     MetaM (Expr × Expr × Expr) := do
   match me_prod.getAppFn with
-  | Expr.const ``MeasurableEquiv.prod _ =>
+  | Expr.const ``MeasurableEquiv.prodCongr _ =>
     let args := me_prod.getAppArgs
     let ex := args[args.size - 2]!
     let right := args[args.size - 1]!
     match right.getAppFn with
-    | Expr.const ``MeasurableEquiv.prod _ =>
+    | Expr.const ``MeasurableEquiv.prodCongr _ =>
       let rightArgs := right.getAppArgs
       let ey := rightArgs[rightArgs.size - 2]!
       let ez := rightArgs[rightArgs.size - 1]!
