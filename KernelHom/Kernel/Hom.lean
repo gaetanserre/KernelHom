@@ -73,6 +73,7 @@ instance {κ : Kernel X Y} [IsDeterministic κ] [IsMarkovKernel κ] :
     · rw [comp_apply', comp_apply', copy, deterministic_apply, lintegral_dirac',
         parallelComp_apply'] at this
       · convert this
+        all_goals try simp
         · ext y
           simp [MeasurableEquiv.prod]
           aesop
