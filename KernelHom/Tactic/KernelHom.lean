@@ -373,7 +373,7 @@ def mkKernelHomEqProof (eqProofType lhs rhs : Expr) (proofs : List Expr) : MetaM
     mvarId.assign e
     instantiateMVars mvar
   | _ =>
-    throwError "Failed to apply propext while building kernel_lift equivalence proof for
+    throwError "Failed to apply propext while building kernel_hom equivalence proof for
       {eqProofType}."
 
 /-- Transform a kernel equality into an equivalent equality in `SFinKer`, along with a proof of
