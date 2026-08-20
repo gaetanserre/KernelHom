@@ -122,7 +122,7 @@
  "32": "<code>MeasurableSpace Z</code>",
  "31": "<code>MeasurableSpace Y</code>",
  "30":
- "<code>MeasurableSpace.{u_7} (α : Type u_7) : Type u_7</code><span class=\"sep\"></span><code class=\"docstring\">A measurable space is a space equipped with a σ-algebra. </code>",
+ "<code>MeasurableSpace.{u_6} (α : Type u_6) : Type u_6</code><span class=\"sep\"></span><code class=\"docstring\">A measurable space is a space equipped with a σ-algebra. </code>",
  "3":
  "<code>homKernel : Lean.ParserDescr</code><span class=\"sep\"></span><code class=\"docstring\">The `hom_kernel` tactic is the inverse of `kernel_hom`: it transforms an\nequality written in the monoidal category back to an equivalent equality of\ns-finite kernels.\n\nThe tactic supports location specifiers like `rw` or `simp`:\n- `hom_kernel` — applies to the goal\n- `hom_kernel at h` — applies to hypothesis `h`\n- `hom_kernel at h₁ h₂` — applies to multiple hypotheses\n- `hom_kernel at h ⊢` — applies to hypothesis `h` and the goal\n- `hom_kernel at *` — applies to all hypotheses and the goal\n\nIt is useful to switch back to kernel equations once categorical rewrites are done. </code>",
  "29": "<code>MeasurableSpace X</code>",
@@ -170,7 +170,7 @@
  "145":
  "<code>MeasurableCoherence.{u_1, u_2} (X : Type u_1) (Y : Type u_2) [MeasurableSpace X] [MeasurableSpace Y] :\n  Type (max u_1 u_2)</code><span class=\"sep\"></span><code class=\"docstring\">A class witnessing the existence of a measurable equivalence between two measurable spaces. </code>",
  "144":
- "<code>ProbabilityTheory.Kernel.parallelComp_self_comp_copy'_assoc.{u_1, u_2, u_3, _uniq.3551} {X : Type u_1} {Y : Type u_2}\n  {Z : Type u_3} [MeasurableSpace X] [MeasurableSpace Y] [MeasurableSpace Z] (κ : Kernel (X × Y) Z) [IsMarkovKernel κ]\n  [IsDeterministic κ] {Z✝ : Type _uniq.3551} [inst : MeasurableSpace Z✝] (ξ : Kernel (Z × Z) Z✝)\n  [inst_1 : IsSFiniteKernel ξ] : ξ ∘ₖ (κ ∥ₖ κ) ∘ₖ copy (X × Y) = ξ ∘ₖ copy Z ∘ₖ κ</code>",
+ "<code>ProbabilityTheory.Kernel.parallelComp_self_comp_copy'_assoc.{u_1, u_2, u_3, _uniq.3573} {X : Type u_1} {Y : Type u_2}\n  {Z : Type u_3} [MeasurableSpace X] [MeasurableSpace Y] [MeasurableSpace Z] (κ : Kernel (X × Y) Z) [IsMarkovKernel κ]\n  [IsDeterministic κ] {Z✝ : Type _uniq.3573} [inst : MeasurableSpace Z✝] (ξ : Kernel (Z × Z) Z✝)\n  [inst_1 : IsSFiniteKernel ξ] : ξ ∘ₖ (κ ∥ₖ κ) ∘ₖ copy (X × Y) = ξ ∘ₖ copy Z ∘ₖ κ</code>",
  "143": "<code>Kernel (Z × Z) W</code>",
  "142":
  "<code class=\"docstring\">The syntax `variable (X Y ... Z : Type*)` creates a new distinct implicit universe variable\n`&gt; 0` for each variable in the sequence. </code>",
