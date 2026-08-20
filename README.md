@@ -67,7 +67,7 @@ git = "https://github.com/gaetanserre/KernelHom"
 If you're using a `lakefile.lean`, add:
 
 ```lean
-require verso from git "https://github.com/gaetanserre/KernelHom"@"latest"
+require kernelhom from git "https://github.com/gaetanserre/KernelHom"@"latest"
 ```
 
 ## Examples
