@@ -17,8 +17,6 @@ This file introduces the monoidal composition for s-finite kernels (noted `âŠ—â‰
 * `MeasurableCoherence`: class witnessing measurable equivalences between types.
 * `monoComp`: monoidal composition of kernels using measurable equivalences to transport to
   `SFinKer`.
-* `hom_monoComp`: the `SFinKer` morphism of the kernelized monoidal composition is the monoidal
-  composition of the morphisms in `SFinKer`.
 -/
 
 @[expose] public section
