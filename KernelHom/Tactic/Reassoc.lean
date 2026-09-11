@@ -50,7 +50,7 @@ def kernelReassocHandler (h_eq : Expr) : MetaM (Expr × Array LMVarId) := do
     withLocalDecl `Z .implicit (mkSort (mkLevelSucc u)) fun Z => do
       let mspaceType ← mkAppM ``MeasurableSpace #[Z]
       withLocalDecl `inst .instImplicit mspaceType fun _inst => do
-        let kernelType ← mkAppMInst ``Kernel #[Y, Z] 2
+        let kernelType ← mkAppOptM ``Kernel #[Y, Z, none, none]
         withLocalDeclD `ξ kernelType fun ξ => do
           let sfiniteType ← mkAppM ``IsSFiniteKernel #[ξ]
           withLocalDecl `inst_1 BinderInfo.instImplicit sfiniteType fun _inst_1 => do

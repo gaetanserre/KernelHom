@@ -13,6 +13,7 @@ import KernelHomManual.Pages.HomKernel
 import KernelHomManual.Pages.CatTactics
 import KernelHomManual.Pages.Reassoc
 import KernelHomManual.Pages.MonoidalComp
+import KernelHomManual.Pages.Performance
 import KernelHom.Tactic.KernelDiagram
 import EqLift.Tactic.Lift
 import Mathlib.Probability.Kernel.Category.Stoch
@@ -66,6 +67,10 @@ The library also provides the `@[kernel_reassoc]` attribute, which is a variant 
 
 An additional consequence of the translation to {name SFinKer}`SFinKer` is that one can adapt the categorical monoidal composition “{name CategoryTheory.monoidalComp}`⊗≫`” to kernels, resulting in a kernelized monoidal composition “{name ProbabilityTheory.Kernel.monoComp}`⊗≫ₖ`”. This composition automatically handles measurable equivalences, allowing for seamless composition of kernels while maintaining s-finiteness.
 
+*Performance*
+
+The translation builds its terms and proofs directly rather than through `mkAppM` and rewriting: the equivalence between the original and the translated equalities is proved by congruence from the translation lemmas, and the instances, inferred types and recursively built objects (measurable equivalences, objects of {name SFinKer}`SFinKer`) are memoized in a cache that is reset at each call. See the {ref "performance"}[Performance] page for the underlying structures.
+
 *About*
 
 This library is under active development and is under the [Apache 2.0 license](https://www.apache.org/licenses/LICENSE-2.0). Contributions and feedback are welcome!
@@ -83,3 +88,5 @@ This library is under active development and is under the [Apache 2.0 license](h
 {include 0 KernelHomManual.Pages.Reassoc}
 
 {include 0 KernelHomManual.Pages.MonoidalComp}
+
+{include 0 KernelHomManual.Pages.Performance}

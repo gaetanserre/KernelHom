@@ -27,12 +27,14 @@ open scoped SFinKer CategoryTheory CategoryTheory.MonoidalCategory
 
 namespace ProbabilityTheory.Kernel
 
-variable {X Y T Z : Type*} [MeasurableSpace X] [MeasurableSpace Y] [MeasurableSpace T]
-  [MeasurableSpace Z]
+universe x y t z u x₀ y₀ z₀
+
+variable {X : Type x} {Y : Type y} {T : Type t} {Z : Type z} [MeasurableSpace X] [MeasurableSpace Y]
+  [MeasurableSpace T] [MeasurableSpace Z]
 
 section
 
-variable {SX SY ST SZ : SFinKer} {ex : SX ≃ᵐ X} {ey : SY ≃ᵐ Y}
+variable {SX SY ST SZ : SFinKer.{u}} {ex : SX ≃ᵐ X} {ey : SY ≃ᵐ Y}
 
 /-- Transform a morphism in `SFinKer` into a kernel. -/
 noncomputable def fromHom (κ : SX ⟶ SY) : Kernel X Y := (κ.1.comap ex.symm (by fun_prop)).map ey
@@ -97,7 +99,7 @@ instance {κ : Kernel X Y} [IsDeterministic κ] [IsMarkovKernel κ] :
 
 end
 
-lemma hom_congr (SX SY : SFinKer) (ex : SX ≃ᵐ X) (ey : SY ≃ᵐ Y)
+lemma hom_congr (SX SY : SFinKer.{u}) (ex : SX ≃ᵐ X) (ey : SY ≃ᵐ Y)
     (κ η : Kernel X Y) [IsSFiniteKernel κ] [IsSFiniteKernel η] :
     κ = η ↔ κ.hom (ex := ex) (ey := ey) = η.hom (ex := ex) (ey := ey) := by
   constructor
@@ -114,7 +116,7 @@ lemma hom_congr (SX SY : SFinKer) (ex : SX ≃ᵐ X) (ey : SY ≃ᵐ Y)
 
 section
 
-variable (SX SY SZ ST : SFinKer) (ex : SX ≃ᵐ X) (ey : SY ≃ᵐ Y) (ez : SZ ≃ᵐ Z) (et : ST ≃ᵐ T)
+variable (SX SY SZ ST : SFinKer.{u}) (ex : SX ≃ᵐ X) (ey : SY ≃ᵐ Y) (ez : SZ ≃ᵐ Z) (et : ST ≃ᵐ T)
 
 lemma comp_hom (η : Kernel X Y) (κ : Kernel Z X) [IsSFiniteKernel η] [IsSFiniteKernel κ] :
     κ.hom (ex := ez) (ey := ex) ≫ η.hom (ex := ex) (ey := ey) =
@@ -196,7 +198,8 @@ lemma braiding_hom : (β_ SX SY).hom =
   congr with x
   all_goals simp [MeasurableEquiv.prodCongr]
 
-variable {X₀ Y₀ Z₀ : Type*} [MeasurableSpace X₀] [MeasurableSpace Y₀] [MeasurableSpace Z₀]
+variable {X₀ : Type x₀} {Y₀ : Type y₀} {Z₀ : Type z₀} [MeasurableSpace X₀] [MeasurableSpace Y₀]
+  [MeasurableSpace Z₀]
     (ex₀ : X ≃ᵐ X₀) (ey₀ : Y ≃ᵐ Y₀) (ez₀ : Z ≃ᵐ Z₀)
 
 lemma leftUnitor_hom : (λ_ SX).hom = hom (ex := punit.prodCongr ex) (ey := ex)

@@ -54,6 +54,10 @@ It first transforms the kernel equality into a categorical equality in `SFinKer`
 
 An additional consequence of the translation to `SFinKer` is that one can adapt the categorical monoidal composition `⊗≫` to kernels, resulting in a kernelized monoidal composition `⊗≫ₖ`. This composition automatically handles measurable equivalences, allowing for seamless composition of kernels while maintaining s-finiteness.
 
+## Performance
+
+The translation is designed to be cheap: the equivalence between the original kernel equality and its categorical counterpart is proved by congruence from the translation lemmas (`comp_hom`, `parallelComp_hom`, ...) rather than by rewriting, and the terms are built directly with explicit universe levels and instances. Instances (`MeasurableSpace`, `IsSFiniteKernel`, the categorical instances of `SFinKer`), inferred types and recursively built objects (measurable equivalences, objects of `SFinKer`) are memoized in a cache reset at each call of the tactics. On the lemmas of `KernelHomTests/Heartbeats.lean`, the heartbeat count of the Kernel-Hom proofs is below that of the corresponding Mathlib proofs by integral manipulations.
+
 ## Usage
 
 Add this in your `lakefile.toml`:
