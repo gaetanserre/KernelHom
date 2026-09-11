@@ -92,3 +92,7 @@ example (κ : Kernel Z Y) [IsSFiniteKernel κ] :
   simp only [ComonObj.counit_comul_hom]
   hom_kernel
   rfl
+
+example (κ : Kernel X Y) (η : Kernel Z W) [IsSFiniteKernel κ] [IsSFiniteKernel η] :
+    Kernel.swap Y W ∘ₖ (κ ∥ₖ η) = η ∥ₖ κ ∘ₖ Kernel.swap X Z := by
+  aesop_kernel

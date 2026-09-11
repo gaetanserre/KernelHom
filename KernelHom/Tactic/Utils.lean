@@ -29,9 +29,3 @@ def Lean.Meta.mkAppMInst (constName : Name) (xs : Array Expr) (n_impls : Nat) : 
   let e ← mkAppM constName xs
   let nones : Array (Option Expr) := Array.replicate n_impls none
   mkAppOptM' e nones
-
-/-- Similar to `mkAppMInst`, but takes an `Expr` instead of a constant name. -/
-def Lean.Meta.mkAppMInst' (f : Expr) (xs : Array Expr) (n_insts : Nat) : MetaM Expr := do
-  let e ← mkAppM' f xs
-  let nones : Array (Option Expr) := Array.replicate n_insts none
-  mkAppOptM' e nones

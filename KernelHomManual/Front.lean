@@ -46,7 +46,7 @@ The library introduces two main tactics:
 - {name kernelHom}`kernel_hom` : transforms a kernel equality into an equality in the monoidal category.
 - {name homKernel}`kernel_hom` : performs the inverse transformation, bringing the categorical equality back to a kernel equality.
 
-These tactics allow users to transform complex kernel equalities into categorical equalities, where powerful categorical tactics can be applied to simplify or prove them. To this end, the library provides built-in helpers like {name kernelMonoidal}`kernel_monoidal` and {name kernelCoherence}`kernel_coherence` to apply categorical tactics directly to kernels without needing to manually invoke the translation tactics.
+These tactics allow users to transform complex kernel equalities into categorical equalities, where powerful categorical tactics can be applied to simplify or prove them. To this end, the library provides built-in helpers like {name kernelMonoidal}`kernel_monoidal`, {name kernelCoherence}`kernel_coherence`, {name kernelDisch}`kernel_disch` and {name aesopKernel}`aesop_kernel` to apply categorical tactics directly to kernels without needing to manually invoke the translation tactics.
 
 The library rests on {name SFinKer}`SFinKer`, the category of measurable spaces with s-finite kernels as morphisms, equipped with monoidal and symmetric structures. This category is also used to define {name Stoch}`Stoch`, the category of measurable spaces with Markov kernels as morphisms, which is a wide subcategory of {name SFinKer}`SFinKer` (see {citep fritz2020}[]). Both categories have been merged into Mathlib (PR [#36779](https://github.com/leanprover-community/mathlib4/pull/36779)).
 

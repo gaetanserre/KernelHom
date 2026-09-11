@@ -20,9 +20,8 @@ kernels into equivalent equalities in the monoidal category.
 
 * `transformKernelToHom`: recursive translation from kernel expressions to
   categorical morphism expressions.
-* `mkKernelHomEqProof`: construction of the equivalence proof used by the
-  tactic.
-* `applyKernelHom`: core implementation of `kernel_hom` on goals and hypotheses.
+* `mkHomCongrProof`: construction of the equivalence proof used by the tactic.
+* `HomEquality`: core implementation of `kernel_hom` on an equality.
 * `kernel_hom`: user-facing tactic (with location support).
 -/
 
@@ -243,9 +242,9 @@ def constructAssociatorInv (left right ex₀ ey₀ ez₀ : Expr) :=
   constructAssociator left right ex₀ ey₀ ez₀ false
 
 /-- Recursive transformation from kernel expressions to morphism expressions in the `SFinKer`
-category. -/
-partial def transformKernelToHom (e : Expr) (proofs : List Expr) :
-    MetaM (Expr × List Expr) := do
+category. Returns the morphism expression `e'` together with a proof of `e' = e.hom`, built by
+congruence from the translation lemmas. -/
+partial def transformKernelToHom (e : Expr) : MetaM (Expr × Expr) := do
   match e.getAppFn with
   | Expr.const ``Kernel.comp _ =>
     let args := e.getAppArgs
@@ -257,26 +256,30 @@ partial def transformKernelToHom (e : Expr) (proofs : List Expr) :
     let SY ← computeSFinkerOf Y yLvl
     let SZ ← computeSFinkerOf Z tLvl
     let comp_hom_proof ← mkAppMInst ``comp_hom #[SX, SY, SZ, ← idME X, ← idME Y, ← idME Z, η, κ] 2
-    let (κ', proofs_κ) ← transformKernelToHom κ proofs
-    let (η', proofs_η) ← transformKernelToHom η proofs_κ
-    return (← mkAppM ``CategoryStruct.comp #[κ', η'], comp_hom_proof :: proofs_η)
+    let (κ', pκ) ← transformKernelToHom κ
+    let (η', pη) ← transformKernelToHom η
+    let e' ← mkAppM ``CategoryStruct.comp #[κ', η']
+    let h ← mkCongr (← mkCongrArg e'.appFn!.appFn! pκ) pη
+    return (e', ← mkEqTrans h comp_hom_proof)
   | Expr.const ``Kernel.parallelComp _ =>
     if ← checkWhiskerLeft e then
       let (X, Y, _, _) ← getTypesFromKernel e
       let (SZ, Z, SX, X, SY, Y, κ) ← constructWhiskersArgs e X Y false
-      let (κ', proofs_κ) ← transformKernelToHom κ proofs
       let whisker_left_hom_proof ← mkAppMInst ``Kernel.whiskerLeft
           #[SX, SY, SZ, ← idME X, ← idME Y, ← idME Z, κ] 1
-      let whiskerleft ← mkAppM ``MonoidalCategory.whiskerLeft #[SZ, κ']
-      return (whiskerleft, whisker_left_hom_proof :: proofs_κ)
+      let (κ', pκ) ← transformKernelToHom κ
+      let e' ← mkAppM ``MonoidalCategory.whiskerLeft #[SZ, κ']
+      let h ← mkCongrArg e'.appFn! pκ
+      return (e', ← mkEqTrans h whisker_left_hom_proof)
     else if ← checkWhiskerRight e then
       let (X, Y, _, _) ← getTypesFromKernel e
       let (SZ, Z, SX, X, SY, Y, κ) ← constructWhiskersArgs e X Y true
-      let (κ', proofs_κ) ← transformKernelToHom κ proofs
-      let whiskerright ← mkAppM ``MonoidalCategory.whiskerRight #[κ', SZ]
       let whiskerright_hom_proof ← mkAppMInst ``Kernel.whiskerRight
         #[SX, SY, SZ, ← idME X, ← idME Y, ← idME Z, κ] 1
-      return (whiskerright, whiskerright_hom_proof :: proofs_κ)
+      let (κ', pκ) ← transformKernelToHom κ
+      let e' ← mkAppM ``MonoidalCategory.whiskerRight #[κ', SZ]
+      let h ← mkCongrFun (← mkCongrArg e'.appFn!.appFn! pκ) SZ
+      return (e', ← mkEqTrans h whiskerright_hom_proof)
     else
       let args := e.getAppArgs
       let κ := args[args.size - 2]!
@@ -289,34 +292,32 @@ partial def transformKernelToHom (e : Expr) (proofs : List Expr) :
       let ST ← computeSFinkerOf T tLvl
       let parallelComp_hom_proof ← mkAppMInst ``parallelComp_hom
         #[SX, SY, SZ, ST, ← idME X, ← idME Y, ← idME Z, ← idME T, κ, η] 2
-      let (κ', proofs_κ) ← transformKernelToHom κ proofs
-      let (η', proofs_η) ← transformKernelToHom η proofs_κ
-      return (← mkAppM ``tensorHom #[κ', η'], parallelComp_hom_proof :: proofs_η)
+      let (κ', pκ) ← transformKernelToHom κ
+      let (η', pη) ← transformKernelToHom η
+      let e' ← mkAppM ``tensorHom #[κ', η']
+      let h ← mkCongr (← mkCongrArg e'.appFn!.appFn! pκ) pη
+      return (e', ← mkEqTrans h parallelComp_hom_proof)
   | Expr.const ``Kernel.id [xLvl] =>
     let X := e.getAppArgs[0]!
     let SX ← computeSFinkerOf X xLvl
-    let id_hom_proof ← mkAppM ``id_hom #[SX, ← idME X]
-    return (← mkAppM ``CategoryStruct.id #[SX], id_hom_proof :: proofs)
+    return (← mkAppM ``CategoryStruct.id #[SX], ← mkAppM ``id_hom #[SX, ← idME X])
   | Expr.const ``Kernel.discard [xLvl, punitLvl] =>
     let X := e.getAppArgs[0]!
     let SX ← computeSFinkerOf X xLvl
-    let discard_const := mkConst ``counit [xLvl, xLvl, punitLvl]
-    let discard_hom_proof ← mkAppM' discard_const #[SX, ← idME X]
-    return (← mkAppOptM ``ComonObj.counit #[none, none, none, SX, none],
-      discard_hom_proof :: proofs)
+    let discard_hom_proof ← mkAppM' (mkConst ``counit [xLvl, xLvl, punitLvl]) #[SX, ← idME X]
+    return (← mkAppOptM ``ComonObj.counit #[none, none, none, SX, none], discard_hom_proof)
   | Expr.const ``Kernel.copy [xLvl] =>
     let X := e.getAppArgs[0]!
     let SX ← computeSFinkerOf X xLvl
-    let copy_hom_proof ← mkAppM ``comul #[SX, ← idME X]
-    return (← mkAppOptM ``ComonObj.comul #[none, none, none, SX, none], copy_hom_proof :: proofs)
+    return (← mkAppOptM ``ComonObj.comul #[none, none, none, SX, none],
+      ← mkAppM ``comul #[SX, ← idME X])
   | Expr.const ``Kernel.swap [xLvl, yLvl] =>
     let X := e.getAppArgs[0]!
     let Y := e.getAppArgs[1]!
     let SX ← computeSFinkerOf X xLvl
     let SY ← computeSFinkerOf Y yLvl
-    let swap_hom_proof ← mkAppM ``braiding_hom #[SX, SY, ← idME X, ← idME Y]
     let braiding ← mkAppM ``Iso.hom #[← mkAppM ``BraidedCategory.braiding #[SX, SY]]
-    return (braiding, swap_hom_proof :: proofs)
+    return (braiding, ← mkAppM ``braiding_hom #[SX, SY, ← idME X, ← idME Y])
   | Expr.const ``Kernel.lift [_, y₀Lvl, _] =>
     let (X, Y, xLvl, yLvl) ← getTypesFromKernel e
     let args := e.getAppArgs
@@ -325,68 +326,51 @@ partial def transformKernelToHom (e : Expr) (proofs : List Expr) :
       let punitLvl ← match args[0]!.getAppFn with
         | Expr.const ``Prod [punitLvl, _] => pure punitLvl
         | _ => throwError "Expected a product with PUnit as the first component, got {args[0]!}."
-      let ey₀ := args[args.size - 2]!
-      let (leftUnitorExpr, left_unitor_hom_proof) ← constructUnitors Y ey₀ yLvl y₀Lvl punitLvl 0
-      return (leftUnitorExpr, left_unitor_hom_proof :: proofs)
+      constructUnitors Y args[args.size - 2]! yLvl y₀Lvl punitLvl 0
     else if ← checkRightUnitor κ then
       let punitLvl ← match args[0]!.getAppFn with
         | Expr.const ``Prod [_, punitLvl] => pure punitLvl
-        | _ => throwError "Expected a product with PUnit as the first component, got {args[0]!}."
-      let ey₀ := args[args.size - 2]!
-      let (rightUnitorExpr, right_unitor_hom_proof) ← constructUnitors Y ey₀ yLvl y₀Lvl punitLvl 1
-      return (rightUnitorExpr, right_unitor_hom_proof :: proofs)
+        | _ => throwError "Expected a product with PUnit as the second component, got {args[0]!}."
+      constructUnitors Y args[args.size - 2]! yLvl y₀Lvl punitLvl 1
     else if ← checkAssociatorHom κ then
       let (ex₀, ey₀, ez₀) ← getMEFromThreeProds args[args.size - 2]!
-      let (associatorExpr, associator_hom_proof) ← constructAssociatorHom X Y ex₀ ey₀ ez₀
-      return (associatorExpr, associator_hom_proof :: proofs)
+      constructAssociatorHom X Y ex₀ ey₀ ez₀
     else if ← checkAssociatorInv κ then
       let (ex₀, ey₀, ez₀) ← getMEFromThreeProds args[args.size - 3]!
-      let (associatorInvExpr, associator_inv_hom_proof) ← constructAssociatorInv X Y ex₀ ey₀ ez₀
-      return (associatorInvExpr, associator_inv_hom_proof :: proofs)
+      constructAssociatorInv X Y ex₀ ey₀ ez₀
     else
       let SX ← computeSFinkerOf X xLvl
       let SY ← computeSFinkerOf Y yLvl
       let homExpr ← mkAppOptM ``ProbabilityTheory.Kernel.hom
         #[X, Y, none, none, SX, SY, (← idME X), (← idME Y), e, none]
-      pure (homExpr, proofs)
+      return (homExpr, ← mkEqRefl homExpr)
   | _ =>
     throwError "Expected a lifted kernel expression, got: {e}."
 
-/-- Construct the proof of equivalence between the original equality and the transformed one. -/
-def mkKernelHomEqProof (eqProofType lhs rhs : Expr) (proofs : List Expr) : MetaM Expr := do
-  let mvar ← mkFreshExprSyntheticOpaqueMVar eqProofType
-  let mvarId := mvar.mvarId!
-  let propext := mkConst ``propext
-  match ← mvarId.apply propext with
-  | [mvarId] =>
-    let proofs := proofs.reverse
-    let mut mvarId := mvarId
-    for proof in proofs do
-      mvarId ← mvarId.nthRewrite 1 proof
-    let (X, Y, xLvl, yLvl) ← getTypesFromKernel lhs
-    let SX ← computeSFinkerOf X xLvl
-    let SY ← computeSFinkerOf Y yLvl
-    let e ← mkAppMInst ``hom_congr #[SX, SY, ← idME X, ← idME Y, lhs, rhs] 2
-    unless ← isDefEq (← mvarId.getType) (← inferType e) do
-      throwError "Type mismatch: expected {← mvarId.getType}, got {← inferType e}."
-    mvarId.assign e
-    instantiateMVars mvar
-  | _ =>
-    throwError "Failed to apply propext while building kernel_hom equivalence proof for
-      {eqProofType}."
+/-- Given lifted kernels `lhs rhs` and morphisms `lh rh` with proofs `pl : lh = lhs.hom` and
+`pr : rh = rhs.hom`, construct a proof of `(lhs = rhs) = (lh = rh)`. -/
+def mkHomCongrProof (lhs rhs pl pr : Expr) : MetaM Expr := do
+  let (X, Y, xLvl, yLvl) ← getTypesFromKernel lhs
+  let SX ← computeSFinkerOf X xLvl
+  let SY ← computeSFinkerOf Y yLvl
+  let hom_congr_proof ← mkAppMInst ``hom_congr #[SX, SY, ← idME X, ← idME Y, lhs, rhs] 2
+  mkEqTrans (← mkPropExt hom_congr_proof) (← mkEqSymm (← mkEqCongr pl pr))
+
+/-- Transform a kernel equality into an equivalent equality in `SFinKer`, along with a proof of
+equivalence. The equality is first lifted to a common universe level using `lift`. -/
+def HomEqualityWith (lift : Expr → MetaM (Expr × Expr)) (eq : Expr) : MetaM (Expr × Expr) := do
+  let eq ← unfoldKernelOp eq
+  let (lifted_expr, lifted_proof) ← lift eq
+  let some (_, lhs, rhs) := lifted_expr.eq? | throwError "Expected an equality, got: {lifted_expr}."
+  let (lhs_hom, pl) ← transformKernelToHom lhs
+  let (rhs_hom, pr) ← transformKernelToHom rhs
+  let hom_expr ← mkEq lhs_hom rhs_hom
+  let hom_eq_proof ← mkHomCongrProof lhs rhs pl pr
+  return (hom_expr, ← mkEqTrans lifted_proof hom_eq_proof)
 
 /-- Transform a kernel equality into an equivalent equality in `SFinKer`, along with a proof of
 equivalence. -/
-def HomEquality (eq : Expr) : MetaM (Expr × Expr) := do
-  let eq ← unfoldKernelOp eq
-  let (lifted_expr, lifted_proof) ← liftEquality eq
-  let some (_, lhs, rhs) := lifted_expr.eq? | throwError "Expected an equality, got: {lifted_expr}."
-  let (lhs_hom, proofs) ← transformKernelToHom lhs []
-  let (rhs_hom, proofs) ← transformKernelToHom rhs proofs
-  let hom_expr ← mkEq lhs_hom rhs_hom
-  let hom_eq_proof_type ← mkEq lifted_expr hom_expr
-  let hom_eq_proof ← mkKernelHomEqProof hom_eq_proof_type lhs rhs proofs
-  return (hom_expr, ← mkEqTrans lifted_proof hom_eq_proof)
+def HomEquality : Expr → MetaM (Expr × Expr) := HomEqualityWith liftEquality
 
 /-- The `kernel_hom` tactic transforms a kernel equality to an equivalent equality in
 the category of measurable spaces and s-finite kernels.

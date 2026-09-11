@@ -53,7 +53,7 @@ def Node.toPenroseVar_kernel (n : Node) : MetaM PenroseVar := do
         let res ← getTypeFromSFinKer n.e
         pure res
       | _ => do
-        let (expr, _) ← transformHomToKernel n.e []
+        let (expr, _) ← transformHomToKernel n.e
         pure expr
     catch _ =>
       pure n.e
@@ -95,7 +95,7 @@ open scoped Jsx in
 def KernelM? (e : Expr) : MetaM (Option Html) := do
   let e ← instantiateMVars e
   try
-    let (e, _) ← transformKernelToHom e []
+    let (e, _) ← transformKernelToHom e
     let k ← StringDiagram.mkKind e
     let x : Option (List (List StringDiagram.Node) × List (List StringDiagram.Strand))
     ← (match k with

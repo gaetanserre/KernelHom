@@ -23,16 +23,8 @@ open Lean Meta Elab Tactic ProbabilityTheory Mathlib.Tactic Reassoc
 
 /-- Same as `HomEquality`, but allows specifying a universe level that will be taken into account
 when computing the maximum universe level. -/
-def HomEqualityToLvl (eq : Expr) (Lvl : Level) : MetaM (Expr × Expr) := do
-  let eq ← unfoldKernelOp eq
-  let (lifted_expr, lifted_proof) ← liftEqualityWithLevel Lvl eq
-  let some (_, lhs, rhs) := lifted_expr.eq? | throwError "Expected an equality, got: {lifted_expr}."
-  let (lhs_hom, proofs) ← transformKernelToHom lhs []
-  let (rhs_hom, proofs) ← transformKernelToHom rhs proofs
-  let hom_expr ← mkEq lhs_hom rhs_hom
-  let hom_eq_proof_type ← mkEq lifted_expr hom_expr
-  let hom_eq_proof ← mkKernelHomEqProof hom_eq_proof_type lhs rhs proofs
-  return (hom_expr, ← mkEqTrans lifted_proof hom_eq_proof)
+def HomEqualityToLvl (eq : Expr) (Lvl : Level) : MetaM (Expr × Expr) :=
+  HomEqualityWith (liftEqualityWithLevel Lvl) eq
 
 /-- Replace all level metavariables appearing in an expression with named level parameters. -/
 def freshenLevelParam (e : Expr) : MetaM Expr := do
@@ -65,10 +57,9 @@ def kernelReassocHandler (h_eq : Expr) : MetaM (Expr × Array LMVarId) := do
             let (_, hom_proof) ← HomEqualityToLvl eq_type u
             let hom_proof ← mkAppM ``Eq.mp #[hom_proof, h_eq]
             let (hom_proof_reassoc, _) ← reassocExprHom hom_proof
-            let univs ← collectExprUniverses eq_type
-            let maxLvl ← computeMaxLevel <| u :: univs
-            let (ξ_lift, _) ← liftKernel ξ maxLvl []
-            let (ξ_hom, _) ← transformKernelToHom ξ_lift []
+            let maxLvl ← computeMaxLevel <| u :: (← collectEqUniverses eq_type)
+            let (ξ_lift, _) ← liftKernel ξ maxLvl
+            let (ξ_hom, _) ← transformKernelToHom ξ_lift
             let reassoc_body ← mkAppM' hom_proof_reassoc #[ξ_hom]
             let (_, kernel_reassoc_proof) ← KernelEquality <| ← inferType reassoc_body
             let kernel_reassoc_proof ← mkAppM ``Eq.mp #[kernel_reassoc_proof, reassoc_body]

@@ -11,14 +11,16 @@ public import Mathlib.Tactic.CategoryTheory.Coherence
 /-!
 # Kernel category tactics
 
-This file implements the `kernel_coherence` and `kernel_monoidal` tactics, which apply the
-`kernel_hom` transformation and then use categorical `coherence` or `monoidal` tactics to solve the
-resulting goal.
+This file implements tactics which apply the `kernel_hom` transformation and then use a
+categorical tactic to solve the resulting goal.
 
 ## Main declarations
 
-* `kernel_coherence`: tactic combining kernel_hom and categorical coherence.
-* `kernel_monoidal`: tactic combining kernel_hom and categorical monoidal coherence.
+* `kernel_monoidal`: `kernel_hom` followed by `monoidal`.
+* `kernel_coherence`: `kernel_hom` followed by `coherence`.
+* `kernel_disch`: `kernel_hom` followed by `cat_disch`.
+* `aesop_kernel`: `kernel_hom` followed by `aesop` with the `CategoryTheory` rule set, skipping the
+  `rfl_cat` attempt of `cat_disch`.
 -/
 
 public meta section
@@ -53,3 +55,14 @@ elab_rules : tactic
   | `(tactic| kernel_disch) => do
     evalTactic (← `(tactic| kernel_hom))
     evalTactic (← `(tactic| cat_disch))
+
+/-- The `aesop_kernel` tactic applies the `kernel_hom` transformation to the goal and then
+invokes `aesop` with the `CategoryTheory` rule set, using the same configuration as `aesop_cat`. -/
+syntax (name := aesopKernel) "aesop_kernel" : tactic
+
+elab_rules : tactic
+  | `(tactic| aesop_kernel) => do
+    evalTactic (← `(tactic| kernel_hom))
+    evalTactic (← `(tactic| aesop
+      (config := { introsTransparency? := some .default, terminal := true })
+      (rule_sets := [$(Lean.mkIdent `CategoryTheory):ident])))
