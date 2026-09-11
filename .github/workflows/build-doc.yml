@@ -49,7 +49,7 @@ jobs:
         uses: leanprover/lean-action@96e06131c0e9943c780388fd166f55d1e2fa0433 # 2026-01-15
         with:
           build: true
-          lint: false
+          lint: true
           mk_all-check: false
       
       - name: Lint project
