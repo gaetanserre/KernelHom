@@ -1,0 +1,759 @@
+<html lang="en"><head><meta charset="UTF-8"></meta><meta name="viewport" content="width=device-width, initial-scale=1"></meta><link rel="stylesheet" href="../../../.././style.css"></link><link rel="icon" href="../../../.././favicon.svg"></link><link rel="mask-icon" href="../../../.././favicon.svg" color="#000000"></link><link rel="prefetch" href="../../../.././/declarations/declaration-data.bmp" as="image"></link><title>Mathlib.Topology.Algebra.Group.ContinuousDiv</title><script defer="true" src="../../../.././mathjax-config.js"></script><script defer="true" src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script><script defer="true" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script><script>const SITE_ROOT="../../../.././";</script><script>const MODULE_NAME="Mathlib.Topology.Algebra.Group.ContinuousDiv";</script><script type="module" src="../../../.././jump-src.js"></script><script type="module" src="../../../.././search.js"></script><script type="module" src="../../../.././expand-nav.js"></script><script type="module" src="../../../.././how-about.js"></script><script type="module" src="../../../.././instances.js"></script><script type="module" src="../../../.././importedBy.js"></script></head><body><input id="nav_toggle" type="checkbox"></input><header><h1><label for="nav_toggle"></label><span>Documentation</span></h1><h2 class="header_filename break_within"><span class="name">Mathlib</span>.<span class="name">Topology</span>.<span class="name">Algebra</span>.<span class="name">Group</span>.<span class="name">ContinuousDiv</span></h2><form id="search_form"><input type="text" name="q" autocomplete="off"></input>&#32;<button id="search_button" onclick="javascript: form.action='../../../.././search.html';">Search</button></form></header><nav class="internal_nav"><p><a href="#top">return to top</a></p><p class="gh_nav_link"><a href="https://github.com/leanprover-community/mathlib4/blob/ac3d0c9671540e5ea16ebbbf0699e4f62f4e9f96/Mathlib/Topology/Algebra/Group/ContinuousDiv.lean">source</a></p><div class="imports"><details><summary>Imports</summary><ul><li><a href="../../../.././Init.html">Init</a></li><li><a href="../../../.././Mathlib/Topology/Algebra/Group/Neighborhood.html">Mathlib.Topology.Algebra.Group.Neighborhood</a></li></ul></details><details><summary>Imported by</summary><ul id="imported-by-Mathlib.Topology.Algebra.Group.ContinuousDiv" class="imported-by-list"></ul></details></div><div class="nav_link"><a class="break_within" href="#Filter.Tendsto.div_const'"><span class="name">Filter</span>.<span class="name">Tendsto</span>.<span class="name">div_const'</span></a></div><div class="nav_link"><a class="break_within" href="#Filter.Tendsto.sub_const"><span class="name">Filter</span>.<span class="name">Tendsto</span>.<span class="name">sub_const</span></a></div><div class="nav_link"><a class="break_within" href="#Filter.tendsto_div_const_iff"><span class="name">Filter</span>.<span class="name">tendsto_div_const_iff</span></a></div><div class="nav_link"><a class="break_within" href="#Filter.tendsto_div_const_iff'"><span class="name">Filter</span>.<span class="name">tendsto_div_const_iff'</span></a></div><div class="nav_link"><a class="break_within" href="#Filter.tendsto_sub_const_iff"><span class="name">Filter</span>.<span class="name">tendsto_sub_const_iff</span></a></div><div class="nav_link"><a class="break_within" href="#Filter.Tendsto.const_div'"><span class="name">Filter</span>.<span class="name">Tendsto</span>.<span class="name">const_div'</span></a></div><div class="nav_link"><a class="break_within" href="#Filter.Tendsto.const_sub"><span class="name">Filter</span>.<span class="name">Tendsto</span>.<span class="name">const_sub</span></a></div><div class="nav_link"><a class="break_within" href="#continuous_div_left'"><span class="name">continuous_div_left'</span></a></div><div class="nav_link"><a class="break_within" href="#continuous_sub_left"><span class="name">continuous_sub_left</span></a></div><div class="nav_link"><a class="break_within" href="#continuous_div_right'"><span class="name">continuous_div_right'</span></a></div><div class="nav_link"><a class="break_within" href="#continuous_sub_right"><span class="name">continuous_sub_right</span></a></div><div class="nav_link"><a class="break_within" href="#Filter.tendsto_const_div_iff'"><span class="name">Filter</span>.<span class="name">tendsto_const_div_iff'</span></a></div><div class="nav_link"><a class="break_within" href="#Filter.tendsto_const_sub_iff"><span class="name">Filter</span>.<span class="name">tendsto_const_sub_iff</span></a></div><div class="nav_link"><a class="break_within" href="#Homeomorph.divLeft"><span class="name">Homeomorph</span>.<span class="name">divLeft</span></a></div><div class="nav_link"><a class="break_within" href="#Homeomorph.subLeft"><span class="name">Homeomorph</span>.<span class="name">subLeft</span></a></div><div class="nav_link"><a class="break_within" href="#Homeomorph.divLeft_symm_apply"><span class="name">Homeomorph</span>.<span class="name">divLeft_symm_apply</span></a></div><div class="nav_link"><a class="break_within" href="#Homeomorph.divLeft_apply"><span class="name">Homeomorph</span>.<span class="name">divLeft_apply</span></a></div><div class="nav_link"><a class="break_within" href="#Homeomorph.subLeft_apply"><span class="name">Homeomorph</span>.<span class="name">subLeft_apply</span></a></div><div class="nav_link"><a class="break_within" href="#Homeomorph.subLeft_symm_apply"><span class="name">Homeomorph</span>.<span class="name">subLeft_symm_apply</span></a></div><div class="nav_link"><a class="break_within" href="#Homeomorph.coe_divLeft"><span class="name">Homeomorph</span>.<span class="name">coe_divLeft</span></a></div><div class="nav_link"><a class="break_within" href="#Homeomorph.coe_subLeft"><span class="name">Homeomorph</span>.<span class="name">coe_subLeft</span></a></div><div class="nav_link"><a class="break_within" href="#isOpenMap_div_left"><span class="name">isOpenMap_div_left</span></a></div><div class="nav_link"><a class="break_within" href="#isOpenMap_sub_left"><span class="name">isOpenMap_sub_left</span></a></div><div class="nav_link"><a class="break_within" href="#isClosedMap_div_left"><span class="name">isClosedMap_div_left</span></a></div><div class="nav_link"><a class="break_within" href="#isClosedMap_sub_left"><span class="name">isClosedMap_sub_left</span></a></div><div class="nav_link"><a class="break_within" href="#Homeomorph.divRight"><span class="name">Homeomorph</span>.<span class="name">divRight</span></a></div><div class="nav_link"><a class="break_within" href="#Homeomorph.subRight"><span class="name">Homeomorph</span>.<span class="name">subRight</span></a></div><div class="nav_link"><a class="break_within" href="#Homeomorph.subRight_symm_apply"><span class="name">Homeomorph</span>.<span class="name">subRight_symm_apply</span></a></div><div class="nav_link"><a class="break_within" href="#Homeomorph.divRight_symm_apply"><span class="name">Homeomorph</span>.<span class="name">divRight_symm_apply</span></a></div><div class="nav_link"><a class="break_within" href="#Homeomorph.divRight_apply"><span class="name">Homeomorph</span>.<span class="name">divRight_apply</span></a></div><div class="nav_link"><a class="break_within" href="#Homeomorph.subRight_apply"><span class="name">Homeomorph</span>.<span class="name">subRight_apply</span></a></div><div class="nav_link"><a class="break_within" href="#Homeomorph.coe_divRight"><span class="name">Homeomorph</span>.<span class="name">coe_divRight</span></a></div><div class="nav_link"><a class="break_within" href="#Homeomorph.coe_subRight"><span class="name">Homeomorph</span>.<span class="name">coe_subRight</span></a></div><div class="nav_link"><a class="break_within" href="#isOpenMap_div_right"><span class="name">isOpenMap_div_right</span></a></div><div class="nav_link"><a class="break_within" href="#isOpenMap_sub_right"><span class="name">isOpenMap_sub_right</span></a></div><div class="nav_link"><a class="break_within" href="#isClosedMap_div_right"><span class="name">isClosedMap_div_right</span></a></div><div class="nav_link"><a class="break_within" href="#isClosedMap_sub_right"><span class="name">isClosedMap_sub_right</span></a></div><div class="nav_link"><a class="break_within" href="#tendsto_div_nhds_one_iff"><span class="name">tendsto_div_nhds_one_iff</span></a></div><div class="nav_link"><a class="break_within" href="#tendsto_sub_nhds_zero_iff"><span class="name">tendsto_sub_nhds_zero_iff</span></a></div><div class="nav_link"><a class="break_within" href="#tendsto_div_nhds_one_iff_eq"><span class="name">tendsto_div_nhds_one_iff_eq</span></a></div><div class="nav_link"><a class="break_within" href="#tendsto_sub_nhds_zero_iff_eq"><span class="name">tendsto_sub_nhds_zero_iff_eq</span></a></div><div class="nav_link"><a class="break_within" href="#eq_of_tendsto_div_nhds_one"><span class="name">eq_of_tendsto_div_nhds_one</span></a></div><div class="nav_link"><a class="break_within" href="#eq_of_tendsto_sub_nhds_zero"><span class="name">eq_of_tendsto_sub_nhds_zero</span></a></div><div class="nav_link"><a class="break_within" href="#nhds_translation_div"><span class="name">nhds_translation_div</span></a></div><div class="nav_link"><a class="break_within" href="#nhds_translation_sub"><span class="name">nhds_translation_sub</span></a></div><div class="nav_link"><a class="break_within" href="#Filter.map_divRight_nhdsNE"><span class="name">Filter</span>.<span class="name">map_divRight_nhdsNE</span></a></div><div class="nav_link"><a class="break_within" href="#Filter.map_subRight_nhdsNE"><span class="name">Filter</span>.<span class="name">map_subRight_nhdsNE</span></a></div><div class="nav_link"><a class="break_within" href="#Filter.map_divRight_nhds"><span class="name">Filter</span>.<span class="name">map_divRight_nhds</span></a></div><div class="nav_link"><a class="break_within" href="#Filter.map_subRight_nhds"><span class="name">Filter</span>.<span class="name">map_subRight_nhds</span></a></div><div class="nav_link"><a class="break_within" href="#Filter.map_divLeft_nhdsNE"><span class="name">Filter</span>.<span class="name">map_divLeft_nhdsNE</span></a></div><div class="nav_link"><a class="break_within" href="#Filter.map_subLeft_nhdsNE"><span class="name">Filter</span>.<span class="name">map_subLeft_nhdsNE</span></a></div><div class="nav_link"><a class="break_within" href="#Filter.map_divLeft_nhds"><span class="name">Filter</span>.<span class="name">map_divLeft_nhds</span></a></div><div class="nav_link"><a class="break_within" href="#Filter.map_subLeft_nhds"><span class="name">Filter</span>.<span class="name">map_subLeft_nhds</span></a></div></nav><main>
+<div class="mod_doc"><h1 id="Continuous-division-in-topological-groups" class="markdown-heading">Continuous division in topological groups <a class="hover-link" href="#Continuous-division-in-topological-groups">#</a></h1><p>Continuity, homeomorphism, and neighborhood results for division and subtraction.</p></div><div class="decl" id="Filter.Tendsto.div_const'"><div class="theorem"><div class="gh_link"><a href="https://github.com/leanprover-community/mathlib4/blob/ac3d0c9671540e5ea16ebbbf0699e4f62f4e9f96/Mathlib/Topology/Algebra/Group/ContinuousDiv.lean#L26-L29">source</a></div><div class="decl_header"><span class="decl_kind">theorem</span>
+<span class="decl_name"><a class="break_within" href="../../../.././Mathlib/Topology/Algebra/Group/ContinuousDiv.html#Filter.Tendsto.div_const'"><span class="name">Filter</span>.<span class="name">Tendsto</span>.<span class="name">div_const'</span></a></span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">G</span> : <a href="../../../.././foundational_types.html">Type</a> u_1}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">α</span> : <a href="../../../.././foundational_types.html">Type</a> u_2}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Basic.html#TopologicalSpace">TopologicalSpace</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Init/Prelude.html#Div">Div</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Algebra/Group/Defs.html#ContinuousDiv">ContinuousDiv</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">c</span> : <span class="fn">G</span>}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">f</span> : <span class="fn"><span class="fn">α</span> → <span class="fn">G</span></span>}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">l</span> : <span class="fn"><a href="../../../.././Mathlib/Order/Filter/Defs.html#Filter">Filter</a> <span class="fn">α</span></span>}</span></span>
+</span><span class="decl_args">
+<span class="fn">(<span class="fn">h</span> : <span class="fn"><a href="../../../.././Mathlib/Order/Filter/Defs.html#Filter.Tendsto">Tendsto</a> <span class="fn">f</span> <span class="fn">l</span> <span class="fn">(<a href="../../../.././Mathlib/Topology/Defs/Filter.html#nhds">nhds</a> <span class="fn">c</span>)</span></span>)</span></span>
+<span class="decl_args">
+<span class="fn">(<span class="fn">b</span> : <span class="fn">G</span>)</span></span>
+<span class="decl_args"> :</span><div class="decl_type"><span class="fn"><a href="../../../.././Mathlib/Order/Filter/Defs.html#Filter.Tendsto">Tendsto</a> <span class="fn">(fun (<span class="fn">x</span> : <span class="fn">α</span>) =&gt; <span class="fn"><span class="fn">f</span> <span class="fn">x</span></span> <a href="../../../.././Init/Prelude.html#HDiv.hDiv">/</a> <span class="fn">b</span>)</span> <span class="fn">l</span> <span class="fn">(<a href="../../../.././Mathlib/Topology/Defs/Filter.html#nhds">nhds</a> (<span class="fn">c</span> <a href="../../../.././Init/Prelude.html#HDiv.hDiv">/</a> <span class="fn">b</span>))</span></span></div></div></div></div><div class="decl" id="Filter.Tendsto.sub_const"><div class="theorem"><div class="gh_link"><a href="https://github.com/leanprover-community/mathlib4/blob/ac3d0c9671540e5ea16ebbbf0699e4f62f4e9f96/Mathlib/Topology/Algebra/Group/ContinuousDiv.lean#L26-L26">source</a></div><div class="decl_header"><span class="decl_kind">theorem</span>
+<span class="decl_name"><a class="break_within" href="../../../.././Mathlib/Topology/Algebra/Group/ContinuousDiv.html#Filter.Tendsto.sub_const"><span class="name">Filter</span>.<span class="name">Tendsto</span>.<span class="name">sub_const</span></a></span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">G</span> : <a href="../../../.././foundational_types.html">Type</a> u_1}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">α</span> : <a href="../../../.././foundational_types.html">Type</a> u_2}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Basic.html#TopologicalSpace">TopologicalSpace</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Init/Prelude.html#Sub">Sub</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Algebra/Group/Defs.html#ContinuousSub">ContinuousSub</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">c</span> : <span class="fn">G</span>}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">f</span> : <span class="fn"><span class="fn">α</span> → <span class="fn">G</span></span>}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">l</span> : <span class="fn"><a href="../../../.././Mathlib/Order/Filter/Defs.html#Filter">Filter</a> <span class="fn">α</span></span>}</span></span>
+</span><span class="decl_args">
+<span class="fn">(<span class="fn">h</span> : <span class="fn"><a href="../../../.././Mathlib/Order/Filter/Defs.html#Filter.Tendsto">Tendsto</a> <span class="fn">f</span> <span class="fn">l</span> <span class="fn">(<a href="../../../.././Mathlib/Topology/Defs/Filter.html#nhds">nhds</a> <span class="fn">c</span>)</span></span>)</span></span>
+<span class="decl_args">
+<span class="fn">(<span class="fn">b</span> : <span class="fn">G</span>)</span></span>
+<span class="decl_args"> :</span><div class="decl_type"><span class="fn"><a href="../../../.././Mathlib/Order/Filter/Defs.html#Filter.Tendsto">Tendsto</a> <span class="fn">(fun (<span class="fn">x</span> : <span class="fn">α</span>) =&gt; <span class="fn"><span class="fn">f</span> <span class="fn">x</span></span> <a href="../../../.././Init/Prelude.html#HSub.hSub">-</a> <span class="fn">b</span>)</span> <span class="fn">l</span> <span class="fn">(<a href="../../../.././Mathlib/Topology/Defs/Filter.html#nhds">nhds</a> (<span class="fn">c</span> <a href="../../../.././Init/Prelude.html#HSub.hSub">-</a> <span class="fn">b</span>))</span></span></div></div></div></div><div class="decl" id="Filter.tendsto_div_const_iff"><div class="theorem"><div class="gh_link"><a href="https://github.com/leanprover-community/mathlib4/blob/ac3d0c9671540e5ea16ebbbf0699e4f62f4e9f96/Mathlib/Topology/Algebra/Group/ContinuousDiv.lean#L31-L36">source</a></div><div class="decl_header"><span class="decl_kind">theorem</span>
+<span class="decl_name"><a class="break_within" href="../../../.././Mathlib/Topology/Algebra/Group/ContinuousDiv.html#Filter.tendsto_div_const_iff"><span class="name">Filter</span>.<span class="name">tendsto_div_const_iff</span></a></span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">α</span> : <a href="../../../.././foundational_types.html">Type</a> u_2}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">G</span> : <a href="../../../.././foundational_types.html">Type</a> u_3}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Algebra/GroupWithZero/Defs.html#GroupWithZero">GroupWithZero</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Basic.html#TopologicalSpace">TopologicalSpace</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Algebra/Group/Defs.html#ContinuousDiv">ContinuousDiv</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">b</span> : <span class="fn">G</span>}</span></span>
+</span><span class="decl_args">
+<span class="fn">(<span class="fn">hb</span> : <span class="fn">b</span> <a href="../../../.././Init/Core.html#Ne">≠</a> <span class="fn">0</span>)</span></span>
+<span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">c</span> : <span class="fn">G</span>}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">f</span> : <span class="fn"><span class="fn">α</span> → <span class="fn">G</span></span>}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">l</span> : <span class="fn"><a href="../../../.././Mathlib/Order/Filter/Defs.html#Filter">Filter</a> <span class="fn">α</span></span>}</span></span>
+</span><span class="decl_args"> :</span><div class="decl_type"><span class="fn"><a href="../../../.././Mathlib/Order/Filter/Defs.html#Filter.Tendsto">Tendsto</a> <span class="fn">(fun (<span class="fn">x</span> : <span class="fn">α</span>) =&gt; <span class="fn"><span class="fn">f</span> <span class="fn">x</span></span> <a href="../../../.././Init/Prelude.html#HDiv.hDiv">/</a> <span class="fn">b</span>)</span> <span class="fn">l</span> <span class="fn">(<a href="../../../.././Mathlib/Topology/Defs/Filter.html#nhds">nhds</a> (<span class="fn">c</span> <a href="../../../.././Init/Prelude.html#HDiv.hDiv">/</a> <span class="fn">b</span>))</span></span> <a href="../../../.././Init/Core.html#Iff">↔</a> <span class="fn"><a href="../../../.././Mathlib/Order/Filter/Defs.html#Filter.Tendsto">Tendsto</a> <span class="fn">f</span> <span class="fn">l</span> <span class="fn">(<a href="../../../.././Mathlib/Topology/Defs/Filter.html#nhds">nhds</a> <span class="fn">c</span>)</span></span></div></div></div></div><div class="decl" id="Filter.tendsto_div_const_iff'"><div class="theorem"><div class="gh_link"><a href="https://github.com/leanprover-community/mathlib4/blob/ac3d0c9671540e5ea16ebbbf0699e4f62f4e9f96/Mathlib/Topology/Algebra/Group/ContinuousDiv.lean#L38-L44">source</a></div><div class="decl_header"><span class="decl_kind">theorem</span>
+<span class="decl_name"><a class="break_within" href="../../../.././Mathlib/Topology/Algebra/Group/ContinuousDiv.html#Filter.tendsto_div_const_iff'"><span class="name">Filter</span>.<span class="name">tendsto_div_const_iff'</span></a></span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">α</span> : <a href="../../../.././foundational_types.html">Type</a> u_2}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">G</span> : <a href="../../../.././foundational_types.html">Type</a> u_3}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Basic.html#TopologicalSpace">TopologicalSpace</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Algebra/Group/Defs.html#Group">Group</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Algebra/Group/Defs.html#ContinuousDiv">ContinuousDiv</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="decl_args">
+<span class="fn">(<span class="fn">b</span> : <span class="fn">G</span>)</span></span>
+<span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">c</span> : <span class="fn">G</span>}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">f</span> : <span class="fn"><span class="fn">α</span> → <span class="fn">G</span></span>}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">l</span> : <span class="fn"><a href="../../../.././Mathlib/Order/Filter/Defs.html#Filter">Filter</a> <span class="fn">α</span></span>}</span></span>
+</span><span class="decl_args"> :</span><div class="decl_type"><span class="fn"><a href="../../../.././Mathlib/Order/Filter/Defs.html#Filter.Tendsto">Tendsto</a> <span class="fn">(fun (<span class="fn">x</span> : <span class="fn">α</span>) =&gt; <span class="fn"><span class="fn">f</span> <span class="fn">x</span></span> <a href="../../../.././Init/Prelude.html#HDiv.hDiv">/</a> <span class="fn">b</span>)</span> <span class="fn">l</span> <span class="fn">(<a href="../../../.././Mathlib/Topology/Defs/Filter.html#nhds">nhds</a> (<span class="fn">c</span> <a href="../../../.././Init/Prelude.html#HDiv.hDiv">/</a> <span class="fn">b</span>))</span></span> <a href="../../../.././Init/Core.html#Iff">↔</a> <span class="fn"><a href="../../../.././Mathlib/Order/Filter/Defs.html#Filter.Tendsto">Tendsto</a> <span class="fn">f</span> <span class="fn">l</span> <span class="fn">(<a href="../../../.././Mathlib/Topology/Defs/Filter.html#nhds">nhds</a> <span class="fn">c</span>)</span></span></div></div></div></div><div class="decl" id="Filter.tendsto_sub_const_iff"><div class="theorem"><div class="gh_link"><a href="https://github.com/leanprover-community/mathlib4/blob/ac3d0c9671540e5ea16ebbbf0699e4f62f4e9f96/Mathlib/Topology/Algebra/Group/ContinuousDiv.lean#L38-L38">source</a></div><div class="decl_header"><span class="decl_kind">theorem</span>
+<span class="decl_name"><a class="break_within" href="../../../.././Mathlib/Topology/Algebra/Group/ContinuousDiv.html#Filter.tendsto_sub_const_iff"><span class="name">Filter</span>.<span class="name">tendsto_sub_const_iff</span></a></span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">α</span> : <a href="../../../.././foundational_types.html">Type</a> u_2}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">G</span> : <a href="../../../.././foundational_types.html">Type</a> u_3}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Basic.html#TopologicalSpace">TopologicalSpace</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Algebra/Group/Defs.html#AddGroup">AddGroup</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Algebra/Group/Defs.html#ContinuousSub">ContinuousSub</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="decl_args">
+<span class="fn">(<span class="fn">b</span> : <span class="fn">G</span>)</span></span>
+<span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">c</span> : <span class="fn">G</span>}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">f</span> : <span class="fn"><span class="fn">α</span> → <span class="fn">G</span></span>}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">l</span> : <span class="fn"><a href="../../../.././Mathlib/Order/Filter/Defs.html#Filter">Filter</a> <span class="fn">α</span></span>}</span></span>
+</span><span class="decl_args"> :</span><div class="decl_type"><span class="fn"><a href="../../../.././Mathlib/Order/Filter/Defs.html#Filter.Tendsto">Tendsto</a> <span class="fn">(fun (<span class="fn">x</span> : <span class="fn">α</span>) =&gt; <span class="fn"><span class="fn">f</span> <span class="fn">x</span></span> <a href="../../../.././Init/Prelude.html#HSub.hSub">-</a> <span class="fn">b</span>)</span> <span class="fn">l</span> <span class="fn">(<a href="../../../.././Mathlib/Topology/Defs/Filter.html#nhds">nhds</a> (<span class="fn">c</span> <a href="../../../.././Init/Prelude.html#HSub.hSub">-</a> <span class="fn">b</span>))</span></span> <a href="../../../.././Init/Core.html#Iff">↔</a> <span class="fn"><a href="../../../.././Mathlib/Order/Filter/Defs.html#Filter.Tendsto">Tendsto</a> <span class="fn">f</span> <span class="fn">l</span> <span class="fn">(<a href="../../../.././Mathlib/Topology/Defs/Filter.html#nhds">nhds</a> <span class="fn">c</span>)</span></span></div></div></div></div><div class="decl" id="Filter.Tendsto.const_div'"><div class="theorem"><div class="gh_link"><a href="https://github.com/leanprover-community/mathlib4/blob/ac3d0c9671540e5ea16ebbbf0699e4f62f4e9f96/Mathlib/Topology/Algebra/Group/ContinuousDiv.lean#L46-L49">source</a></div><div class="decl_header"><span class="decl_kind">theorem</span>
+<span class="decl_name"><a class="break_within" href="../../../.././Mathlib/Topology/Algebra/Group/ContinuousDiv.html#Filter.Tendsto.const_div'"><span class="name">Filter</span>.<span class="name">Tendsto</span>.<span class="name">const_div'</span></a></span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">G</span> : <a href="../../../.././foundational_types.html">Type</a> u_1}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">α</span> : <a href="../../../.././foundational_types.html">Type</a> u_2}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Basic.html#TopologicalSpace">TopologicalSpace</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Init/Prelude.html#Div">Div</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Algebra/Group/Defs.html#ContinuousDiv">ContinuousDiv</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="decl_args">
+<span class="fn">(<span class="fn">b</span> : <span class="fn">G</span>)</span></span>
+<span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">c</span> : <span class="fn">G</span>}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">f</span> : <span class="fn"><span class="fn">α</span> → <span class="fn">G</span></span>}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">l</span> : <span class="fn"><a href="../../../.././Mathlib/Order/Filter/Defs.html#Filter">Filter</a> <span class="fn">α</span></span>}</span></span>
+</span><span class="decl_args">
+<span class="fn">(<span class="fn">h</span> : <span class="fn"><a href="../../../.././Mathlib/Order/Filter/Defs.html#Filter.Tendsto">Tendsto</a> <span class="fn">f</span> <span class="fn">l</span> <span class="fn">(<a href="../../../.././Mathlib/Topology/Defs/Filter.html#nhds">nhds</a> <span class="fn">c</span>)</span></span>)</span></span>
+<span class="decl_args"> :</span><div class="decl_type"><span class="fn"><a href="../../../.././Mathlib/Order/Filter/Defs.html#Filter.Tendsto">Tendsto</a> <span class="fn">(fun (<span class="fn">x</span> : <span class="fn">α</span>) =&gt; <span class="fn">b</span> <a href="../../../.././Init/Prelude.html#HDiv.hDiv">/</a> <span class="fn"><span class="fn">f</span> <span class="fn">x</span></span>)</span> <span class="fn">l</span> <span class="fn">(<a href="../../../.././Mathlib/Topology/Defs/Filter.html#nhds">nhds</a> (<span class="fn">b</span> <a href="../../../.././Init/Prelude.html#HDiv.hDiv">/</a> <span class="fn">c</span>))</span></span></div></div></div></div><div class="decl" id="Filter.Tendsto.const_sub"><div class="theorem"><div class="gh_link"><a href="https://github.com/leanprover-community/mathlib4/blob/ac3d0c9671540e5ea16ebbbf0699e4f62f4e9f96/Mathlib/Topology/Algebra/Group/ContinuousDiv.lean#L46-L46">source</a></div><div class="decl_header"><span class="decl_kind">theorem</span>
+<span class="decl_name"><a class="break_within" href="../../../.././Mathlib/Topology/Algebra/Group/ContinuousDiv.html#Filter.Tendsto.const_sub"><span class="name">Filter</span>.<span class="name">Tendsto</span>.<span class="name">const_sub</span></a></span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">G</span> : <a href="../../../.././foundational_types.html">Type</a> u_1}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">α</span> : <a href="../../../.././foundational_types.html">Type</a> u_2}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Basic.html#TopologicalSpace">TopologicalSpace</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Init/Prelude.html#Sub">Sub</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Algebra/Group/Defs.html#ContinuousSub">ContinuousSub</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="decl_args">
+<span class="fn">(<span class="fn">b</span> : <span class="fn">G</span>)</span></span>
+<span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">c</span> : <span class="fn">G</span>}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">f</span> : <span class="fn"><span class="fn">α</span> → <span class="fn">G</span></span>}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">l</span> : <span class="fn"><a href="../../../.././Mathlib/Order/Filter/Defs.html#Filter">Filter</a> <span class="fn">α</span></span>}</span></span>
+</span><span class="decl_args">
+<span class="fn">(<span class="fn">h</span> : <span class="fn"><a href="../../../.././Mathlib/Order/Filter/Defs.html#Filter.Tendsto">Tendsto</a> <span class="fn">f</span> <span class="fn">l</span> <span class="fn">(<a href="../../../.././Mathlib/Topology/Defs/Filter.html#nhds">nhds</a> <span class="fn">c</span>)</span></span>)</span></span>
+<span class="decl_args"> :</span><div class="decl_type"><span class="fn"><a href="../../../.././Mathlib/Order/Filter/Defs.html#Filter.Tendsto">Tendsto</a> <span class="fn">(fun (<span class="fn">x</span> : <span class="fn">α</span>) =&gt; <span class="fn">b</span> <a href="../../../.././Init/Prelude.html#HSub.hSub">-</a> <span class="fn"><span class="fn">f</span> <span class="fn">x</span></span>)</span> <span class="fn">l</span> <span class="fn">(<a href="../../../.././Mathlib/Topology/Defs/Filter.html#nhds">nhds</a> (<span class="fn">b</span> <a href="../../../.././Init/Prelude.html#HSub.hSub">-</a> <span class="fn">c</span>))</span></span></div></div></div></div><div class="decl" id="continuous_div_left'"><div class="theorem"><div class="gh_link"><a href="https://github.com/leanprover-community/mathlib4/blob/ac3d0c9671540e5ea16ebbbf0699e4f62f4e9f96/Mathlib/Topology/Algebra/Group/ContinuousDiv.lean#L51-L52">source</a></div><div class="decl_header"><span class="decl_kind">theorem</span>
+<span class="decl_name"><a class="break_within" href="../../../.././Mathlib/Topology/Algebra/Group/ContinuousDiv.html#continuous_div_left'"><span class="name">continuous_div_left'</span></a></span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">G</span> : <a href="../../../.././foundational_types.html">Type</a> u_1}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Basic.html#TopologicalSpace">TopologicalSpace</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Init/Prelude.html#Div">Div</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Algebra/Group/Defs.html#ContinuousDiv">ContinuousDiv</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="decl_args">
+<span class="fn">(<span class="fn">a</span> : <span class="fn">G</span>)</span></span>
+<span class="decl_args"> :</span><div class="decl_type"><span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Basic.html#Continuous">Continuous</a> <span class="fn">fun (<span class="fn">x</span> : <span class="fn">G</span>) =&gt; <span class="fn">a</span> <a href="../../../.././Init/Prelude.html#HDiv.hDiv">/</a> <span class="fn">x</span></span></span></div></div></div></div><div class="decl" id="continuous_sub_left"><div class="theorem"><div class="gh_link"><a href="https://github.com/leanprover-community/mathlib4/blob/ac3d0c9671540e5ea16ebbbf0699e4f62f4e9f96/Mathlib/Topology/Algebra/Group/ContinuousDiv.lean#L51-L51">source</a></div><div class="decl_header"><span class="decl_kind">theorem</span>
+<span class="decl_name"><a class="break_within" href="../../../.././Mathlib/Topology/Algebra/Group/ContinuousDiv.html#continuous_sub_left"><span class="name">continuous_sub_left</span></a></span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">G</span> : <a href="../../../.././foundational_types.html">Type</a> u_1}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Basic.html#TopologicalSpace">TopologicalSpace</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Init/Prelude.html#Sub">Sub</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Algebra/Group/Defs.html#ContinuousSub">ContinuousSub</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="decl_args">
+<span class="fn">(<span class="fn">a</span> : <span class="fn">G</span>)</span></span>
+<span class="decl_args"> :</span><div class="decl_type"><span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Basic.html#Continuous">Continuous</a> <span class="fn">fun (<span class="fn">x</span> : <span class="fn">G</span>) =&gt; <span class="fn">a</span> <a href="../../../.././Init/Prelude.html#HSub.hSub">-</a> <span class="fn">x</span></span></span></div></div></div></div><div class="decl" id="continuous_div_right'"><div class="theorem"><div class="gh_link"><a href="https://github.com/leanprover-community/mathlib4/blob/ac3d0c9671540e5ea16ebbbf0699e4f62f4e9f96/Mathlib/Topology/Algebra/Group/ContinuousDiv.lean#L54-L55">source</a></div><div class="decl_header"><span class="decl_kind">theorem</span>
+<span class="decl_name"><a class="break_within" href="../../../.././Mathlib/Topology/Algebra/Group/ContinuousDiv.html#continuous_div_right'"><span class="name">continuous_div_right'</span></a></span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">G</span> : <a href="../../../.././foundational_types.html">Type</a> u_1}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Basic.html#TopologicalSpace">TopologicalSpace</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Init/Prelude.html#Div">Div</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Algebra/Group/Defs.html#ContinuousDiv">ContinuousDiv</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="decl_args">
+<span class="fn">(<span class="fn">a</span> : <span class="fn">G</span>)</span></span>
+<span class="decl_args"> :</span><div class="decl_type"><span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Basic.html#Continuous">Continuous</a> <span class="fn">fun (<span class="fn">x</span> : <span class="fn">G</span>) =&gt; <span class="fn">x</span> <a href="../../../.././Init/Prelude.html#HDiv.hDiv">/</a> <span class="fn">a</span></span></span></div></div></div></div><div class="decl" id="continuous_sub_right"><div class="theorem"><div class="gh_link"><a href="https://github.com/leanprover-community/mathlib4/blob/ac3d0c9671540e5ea16ebbbf0699e4f62f4e9f96/Mathlib/Topology/Algebra/Group/ContinuousDiv.lean#L54-L54">source</a></div><div class="decl_header"><span class="decl_kind">theorem</span>
+<span class="decl_name"><a class="break_within" href="../../../.././Mathlib/Topology/Algebra/Group/ContinuousDiv.html#continuous_sub_right"><span class="name">continuous_sub_right</span></a></span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">G</span> : <a href="../../../.././foundational_types.html">Type</a> u_1}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Basic.html#TopologicalSpace">TopologicalSpace</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Init/Prelude.html#Sub">Sub</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Algebra/Group/Defs.html#ContinuousSub">ContinuousSub</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="decl_args">
+<span class="fn">(<span class="fn">a</span> : <span class="fn">G</span>)</span></span>
+<span class="decl_args"> :</span><div class="decl_type"><span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Basic.html#Continuous">Continuous</a> <span class="fn">fun (<span class="fn">x</span> : <span class="fn">G</span>) =&gt; <span class="fn">x</span> <a href="../../../.././Init/Prelude.html#HSub.hSub">-</a> <span class="fn">a</span></span></span></div></div></div></div><div class="decl" id="Filter.tendsto_const_div_iff'"><div class="theorem"><div class="gh_link"><a href="https://github.com/leanprover-community/mathlib4/blob/ac3d0c9671540e5ea16ebbbf0699e4f62f4e9f96/Mathlib/Topology/Algebra/Group/ContinuousDiv.lean#L63-L67">source</a></div><div class="decl_header"><span class="decl_kind">theorem</span>
+<span class="decl_name"><a class="break_within" href="../../../.././Mathlib/Topology/Algebra/Group/ContinuousDiv.html#Filter.tendsto_const_div_iff'"><span class="name">Filter</span>.<span class="name">tendsto_const_div_iff'</span></a></span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">G</span> : <a href="../../../.././foundational_types.html">Type</a> u_1}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">α</span> : <a href="../../../.././foundational_types.html">Type</a> u_2}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Algebra/Group/Defs.html#Group">Group</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Basic.html#TopologicalSpace">TopologicalSpace</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Algebra/Group/Defs.html#IsTopologicalGroup">IsTopologicalGroup</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="decl_args">
+<span class="fn">(<span class="fn">b</span> : <span class="fn">G</span>)</span></span>
+<span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">c</span> : <span class="fn">G</span>}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">f</span> : <span class="fn"><span class="fn">α</span> → <span class="fn">G</span></span>}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">l</span> : <span class="fn"><a href="../../../.././Mathlib/Order/Filter/Defs.html#Filter">Filter</a> <span class="fn">α</span></span>}</span></span>
+</span><span class="decl_args"> :</span><div class="decl_type"><span class="fn"><a href="../../../.././Mathlib/Order/Filter/Defs.html#Filter.Tendsto">Tendsto</a> <span class="fn">(fun (<span class="fn">k</span> : <span class="fn">α</span>) =&gt; <span class="fn">b</span> <a href="../../../.././Init/Prelude.html#HDiv.hDiv">/</a> <span class="fn"><span class="fn">f</span> <span class="fn">k</span></span>)</span> <span class="fn">l</span> <span class="fn">(<a href="../../../.././Mathlib/Topology/Defs/Filter.html#nhds">nhds</a> (<span class="fn">b</span> <a href="../../../.././Init/Prelude.html#HDiv.hDiv">/</a> <span class="fn">c</span>))</span></span> <a href="../../../.././Init/Core.html#Iff">↔</a> <span class="fn"><a href="../../../.././Mathlib/Order/Filter/Defs.html#Filter.Tendsto">Tendsto</a> <span class="fn">f</span> <span class="fn">l</span> <span class="fn">(<a href="../../../.././Mathlib/Topology/Defs/Filter.html#nhds">nhds</a> <span class="fn">c</span>)</span></span></div></div></div></div><div class="decl" id="Filter.tendsto_const_sub_iff"><div class="theorem"><div class="gh_link"><a href="https://github.com/leanprover-community/mathlib4/blob/ac3d0c9671540e5ea16ebbbf0699e4f62f4e9f96/Mathlib/Topology/Algebra/Group/ContinuousDiv.lean#L63-L63">source</a></div><div class="decl_header"><span class="decl_kind">theorem</span>
+<span class="decl_name"><a class="break_within" href="../../../.././Mathlib/Topology/Algebra/Group/ContinuousDiv.html#Filter.tendsto_const_sub_iff"><span class="name">Filter</span>.<span class="name">tendsto_const_sub_iff</span></a></span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">G</span> : <a href="../../../.././foundational_types.html">Type</a> u_1}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">α</span> : <a href="../../../.././foundational_types.html">Type</a> u_2}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Algebra/Group/Defs.html#AddGroup">AddGroup</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Basic.html#TopologicalSpace">TopologicalSpace</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Algebra/Group/Defs.html#IsTopologicalAddGroup">IsTopologicalAddGroup</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="decl_args">
+<span class="fn">(<span class="fn">b</span> : <span class="fn">G</span>)</span></span>
+<span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">c</span> : <span class="fn">G</span>}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">f</span> : <span class="fn"><span class="fn">α</span> → <span class="fn">G</span></span>}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">l</span> : <span class="fn"><a href="../../../.././Mathlib/Order/Filter/Defs.html#Filter">Filter</a> <span class="fn">α</span></span>}</span></span>
+</span><span class="decl_args"> :</span><div class="decl_type"><span class="fn"><a href="../../../.././Mathlib/Order/Filter/Defs.html#Filter.Tendsto">Tendsto</a> <span class="fn">(fun (<span class="fn">k</span> : <span class="fn">α</span>) =&gt; <span class="fn">b</span> <a href="../../../.././Init/Prelude.html#HSub.hSub">-</a> <span class="fn"><span class="fn">f</span> <span class="fn">k</span></span>)</span> <span class="fn">l</span> <span class="fn">(<a href="../../../.././Mathlib/Topology/Defs/Filter.html#nhds">nhds</a> (<span class="fn">b</span> <a href="../../../.././Init/Prelude.html#HSub.hSub">-</a> <span class="fn">c</span>))</span></span> <a href="../../../.././Init/Core.html#Iff">↔</a> <span class="fn"><a href="../../../.././Mathlib/Order/Filter/Defs.html#Filter.Tendsto">Tendsto</a> <span class="fn">f</span> <span class="fn">l</span> <span class="fn">(<a href="../../../.././Mathlib/Topology/Defs/Filter.html#nhds">nhds</a> <span class="fn">c</span>)</span></span></div></div></div></div><div class="decl" id="Homeomorph.divLeft"><div class="def"><div class="gh_link"><a href="https://github.com/leanprover-community/mathlib4/blob/ac3d0c9671540e5ea16ebbbf0699e4f62f4e9f96/Mathlib/Topology/Algebra/Group/ContinuousDiv.lean#L69-L73">source</a></div><div class="decl_header"><span class="decl_kind">def</span>
+<span class="decl_name"><a class="break_within" href="../../../.././Mathlib/Topology/Algebra/Group/ContinuousDiv.html#Homeomorph.divLeft"><span class="name">Homeomorph</span>.<span class="name">divLeft</span></a></span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">G</span> : <a href="../../../.././foundational_types.html">Type</a> u_1}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Algebra/Group/Defs.html#Group">Group</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Basic.html#TopologicalSpace">TopologicalSpace</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Algebra/Group/Defs.html#IsTopologicalGroup">IsTopologicalGroup</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="decl_args">
+<span class="fn">(<span class="fn">x</span> : <span class="fn">G</span>)</span></span>
+<span class="decl_args"> :</span><div class="decl_type"><span class="fn">G</span> <a href="../../../.././Mathlib/Topology/Homeomorph/Defs.html#Homeomorph">≃ₜ</a> <span class="fn">G</span></div></div><p>A version of <code><a href="../../../.././Mathlib/Topology/Algebra/Group/Basic.html#Homeomorph.mulLeft">Homeomorph.mulLeft</a> a b⁻¹</code> that is defeq to <code>a / b</code>.</p><details><summary>Equations</summary><ul class="equations"><li class="equation"><span class="fn"><a href="../../../.././Mathlib/Topology/Algebra/Group/ContinuousDiv.html#Homeomorph.divLeft">Homeomorph.divLeft</a> <span class="fn">x</span></span> <a href="../../../.././Init/Prelude.html#Eq">=</a> <a href="../../../.././Mathlib/Topology/Homeomorph/Defs.html#Homeomorph.mk">{</a> <span class="fn">toEquiv</span> := <span class="fn"><a href="../../../.././Mathlib/Algebra/Group/Units/Equiv.html#Equiv.divLeft">Equiv.divLeft</a> <span class="fn">x</span></span>, <span class="fn">continuous_toFun</span> := <span class="fn">⋯</span>, <span class="fn">continuous_invFun</span> := <span class="fn">⋯</span> <a href="../../../.././Mathlib/Topology/Homeomorph/Defs.html#Homeomorph.mk">}</a></li></ul></details><details id="instances-for-list-Homeomorph.divLeft" class="instances-for-list"><summary>Instances For</summary><ul class="instances-for-enum"></ul></details></div></div><div class="decl" id="Homeomorph.subLeft"><div class="def"><div class="gh_link"><a href="https://github.com/leanprover-community/mathlib4/blob/ac3d0c9671540e5ea16ebbbf0699e4f62f4e9f96/Mathlib/Topology/Algebra/Group/ContinuousDiv.lean#L70-L71">source</a></div><div class="decl_header"><span class="decl_kind">def</span>
+<span class="decl_name"><a class="break_within" href="../../../.././Mathlib/Topology/Algebra/Group/ContinuousDiv.html#Homeomorph.subLeft"><span class="name">Homeomorph</span>.<span class="name">subLeft</span></a></span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">G</span> : <a href="../../../.././foundational_types.html">Type</a> u_1}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Algebra/Group/Defs.html#AddGroup">AddGroup</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Basic.html#TopologicalSpace">TopologicalSpace</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Algebra/Group/Defs.html#IsTopologicalAddGroup">IsTopologicalAddGroup</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="decl_args">
+<span class="fn">(<span class="fn">x</span> : <span class="fn">G</span>)</span></span>
+<span class="decl_args"> :</span><div class="decl_type"><span class="fn">G</span> <a href="../../../.././Mathlib/Topology/Homeomorph/Defs.html#Homeomorph">≃ₜ</a> <span class="fn">G</span></div></div><p>A version of <code><a href="../../../.././Mathlib/Topology/Algebra/Group/Basic.html#Homeomorph.addLeft">Homeomorph.addLeft</a> a (-b)</code> that is defeq to <code>a - b</code>.</p><details><summary>Equations</summary><ul class="equations"><li class="equation"><span class="fn"><a href="../../../.././Mathlib/Topology/Algebra/Group/ContinuousDiv.html#Homeomorph.subLeft">Homeomorph.subLeft</a> <span class="fn">x</span></span> <a href="../../../.././Init/Prelude.html#Eq">=</a> <a href="../../../.././Mathlib/Topology/Homeomorph/Defs.html#Homeomorph.mk">{</a> <span class="fn">toEquiv</span> := <span class="fn"><a href="../../../.././Mathlib/Algebra/Group/Units/Equiv.html#Equiv.subLeft">Equiv.subLeft</a> <span class="fn">x</span></span>, <span class="fn">continuous_toFun</span> := <span class="fn">⋯</span>, <span class="fn">continuous_invFun</span> := <span class="fn">⋯</span> <a href="../../../.././Mathlib/Topology/Homeomorph/Defs.html#Homeomorph.mk">}</a></li></ul></details><details id="instances-for-list-Homeomorph.subLeft" class="instances-for-list"><summary>Instances For</summary><ul class="instances-for-enum"></ul></details></div></div><div class="decl" id="Homeomorph.divLeft_symm_apply"><div class="theorem"><div class="gh_link"><a href="https://github.com/leanprover-community/mathlib4/blob/ac3d0c9671540e5ea16ebbbf0699e4f62f4e9f96/Mathlib/Topology/Algebra/Group/ContinuousDiv.lean#L70-L70">source</a></div><div class="attributes">@[simp]</div>
+<div class="decl_header"><span class="decl_kind">theorem</span>
+<span class="decl_name"><a class="break_within" href="../../../.././Mathlib/Topology/Algebra/Group/ContinuousDiv.html#Homeomorph.divLeft_symm_apply"><span class="name">Homeomorph</span>.<span class="name">divLeft_symm_apply</span></a></span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">G</span> : <a href="../../../.././foundational_types.html">Type</a> u_1}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Algebra/Group/Defs.html#Group">Group</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Basic.html#TopologicalSpace">TopologicalSpace</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Algebra/Group/Defs.html#IsTopologicalGroup">IsTopologicalGroup</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="decl_args">
+<span class="fn">(<span class="fn">x </span><span class="fn">b</span> : <span class="fn">G</span>)</span></span>
+<span class="decl_args"> :</span><div class="decl_type"><span class="fn"><span class="fn"><span class="fn">(<a href="../../../.././Mathlib/Topology/Algebra/Group/ContinuousDiv.html#Homeomorph.divLeft">divLeft</a> <span class="fn">x</span>)</span>.<a href="../../../.././Mathlib/Topology/Homeomorph/Defs.html#Homeomorph.symm">symm</a></span> <span class="fn">b</span></span> <a href="../../../.././Init/Prelude.html#Eq">=</a> <span class="fn">b</span><a href="../../../.././Init/Prelude.html#Inv.inv">⁻¹</a> <a href="../../../.././Init/Prelude.html#HMul.hMul">*</a> <span class="fn">x</span></div></div></div></div><div class="decl" id="Homeomorph.divLeft_apply"><div class="theorem"><div class="gh_link"><a href="https://github.com/leanprover-community/mathlib4/blob/ac3d0c9671540e5ea16ebbbf0699e4f62f4e9f96/Mathlib/Topology/Algebra/Group/ContinuousDiv.lean#L70-L70">source</a></div><div class="attributes">@[simp]</div>
+<div class="decl_header"><span class="decl_kind">theorem</span>
+<span class="decl_name"><a class="break_within" href="../../../.././Mathlib/Topology/Algebra/Group/ContinuousDiv.html#Homeomorph.divLeft_apply"><span class="name">Homeomorph</span>.<span class="name">divLeft_apply</span></a></span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">G</span> : <a href="../../../.././foundational_types.html">Type</a> u_1}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Algebra/Group/Defs.html#Group">Group</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Basic.html#TopologicalSpace">TopologicalSpace</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Algebra/Group/Defs.html#IsTopologicalGroup">IsTopologicalGroup</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="decl_args">
+<span class="fn">(<span class="fn">x </span><span class="fn">b</span> : <span class="fn">G</span>)</span></span>
+<span class="decl_args"> :</span><div class="decl_type"><span class="fn"><span class="fn">(<a href="../../../.././Mathlib/Topology/Algebra/Group/ContinuousDiv.html#Homeomorph.divLeft">divLeft</a> <span class="fn">x</span>)</span> <span class="fn">b</span></span> <a href="../../../.././Init/Prelude.html#Eq">=</a> <span class="fn">x</span> <a href="../../../.././Init/Prelude.html#HDiv.hDiv">/</a> <span class="fn">b</span></div></div></div></div><div class="decl" id="Homeomorph.subLeft_apply"><div class="theorem"><div class="gh_link"><a href="https://github.com/leanprover-community/mathlib4/blob/ac3d0c9671540e5ea16ebbbf0699e4f62f4e9f96/Mathlib/Topology/Algebra/Group/ContinuousDiv.lean#L70-L70">source</a></div><div class="attributes">@[simp]</div>
+<div class="decl_header"><span class="decl_kind">theorem</span>
+<span class="decl_name"><a class="break_within" href="../../../.././Mathlib/Topology/Algebra/Group/ContinuousDiv.html#Homeomorph.subLeft_apply"><span class="name">Homeomorph</span>.<span class="name">subLeft_apply</span></a></span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">G</span> : <a href="../../../.././foundational_types.html">Type</a> u_1}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Algebra/Group/Defs.html#AddGroup">AddGroup</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Basic.html#TopologicalSpace">TopologicalSpace</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Algebra/Group/Defs.html#IsTopologicalAddGroup">IsTopologicalAddGroup</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="decl_args">
+<span class="fn">(<span class="fn">x </span><span class="fn">b</span> : <span class="fn">G</span>)</span></span>
+<span class="decl_args"> :</span><div class="decl_type"><span class="fn"><span class="fn">(<a href="../../../.././Mathlib/Topology/Algebra/Group/ContinuousDiv.html#Homeomorph.subLeft">subLeft</a> <span class="fn">x</span>)</span> <span class="fn">b</span></span> <a href="../../../.././Init/Prelude.html#Eq">=</a> <span class="fn">x</span> <a href="../../../.././Init/Prelude.html#HSub.hSub">-</a> <span class="fn">b</span></div></div></div></div><div class="decl" id="Homeomorph.subLeft_symm_apply"><div class="theorem"><div class="gh_link"><a href="https://github.com/leanprover-community/mathlib4/blob/ac3d0c9671540e5ea16ebbbf0699e4f62f4e9f96/Mathlib/Topology/Algebra/Group/ContinuousDiv.lean#L70-L70">source</a></div><div class="attributes">@[simp]</div>
+<div class="decl_header"><span class="decl_kind">theorem</span>
+<span class="decl_name"><a class="break_within" href="../../../.././Mathlib/Topology/Algebra/Group/ContinuousDiv.html#Homeomorph.subLeft_symm_apply"><span class="name">Homeomorph</span>.<span class="name">subLeft_symm_apply</span></a></span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">G</span> : <a href="../../../.././foundational_types.html">Type</a> u_1}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Algebra/Group/Defs.html#AddGroup">AddGroup</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Basic.html#TopologicalSpace">TopologicalSpace</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Algebra/Group/Defs.html#IsTopologicalAddGroup">IsTopologicalAddGroup</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="decl_args">
+<span class="fn">(<span class="fn">x </span><span class="fn">b</span> : <span class="fn">G</span>)</span></span>
+<span class="decl_args"> :</span><div class="decl_type"><span class="fn"><span class="fn"><span class="fn">(<a href="../../../.././Mathlib/Topology/Algebra/Group/ContinuousDiv.html#Homeomorph.subLeft">subLeft</a> <span class="fn">x</span>)</span>.<a href="../../../.././Mathlib/Topology/Homeomorph/Defs.html#Homeomorph.symm">symm</a></span> <span class="fn">b</span></span> <a href="../../../.././Init/Prelude.html#Eq">=</a> <a href="../../../.././Init/Prelude.html#Neg.neg">-</a><span class="fn">b</span> <a href="../../../.././Init/Prelude.html#HAdd.hAdd">+</a> <span class="fn">x</span></div></div></div></div><div class="decl" id="Homeomorph.coe_divLeft"><div class="theorem"><div class="gh_link"><a href="https://github.com/leanprover-community/mathlib4/blob/ac3d0c9671540e5ea16ebbbf0699e4f62f4e9f96/Mathlib/Topology/Algebra/Group/ContinuousDiv.lean#L75-L77">source</a></div><div class="attributes">@[simp]</div>
+<div class="decl_header"><span class="decl_kind">theorem</span>
+<span class="decl_name"><a class="break_within" href="../../../.././Mathlib/Topology/Algebra/Group/ContinuousDiv.html#Homeomorph.coe_divLeft"><span class="name">Homeomorph</span>.<span class="name">coe_divLeft</span></a></span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">G</span> : <a href="../../../.././foundational_types.html">Type</a> u_1}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Algebra/Group/Defs.html#Group">Group</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Basic.html#TopologicalSpace">TopologicalSpace</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Algebra/Group/Defs.html#IsTopologicalGroup">IsTopologicalGroup</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="decl_args">
+<span class="fn">(<span class="fn">a</span> : <span class="fn">G</span>)</span></span>
+<span class="decl_args"> :</span><div class="decl_type"><span class="fn">⇑<span class="fn">(<a href="../../../.././Mathlib/Topology/Algebra/Group/ContinuousDiv.html#Homeomorph.divLeft">divLeft</a> <span class="fn">a</span>)</span></span> <a href="../../../.././Init/Prelude.html#Eq">=</a> <span class="fn">fun (<span class="fn">x</span> : <span class="fn">G</span>) =&gt; <span class="fn">a</span> <a href="../../../.././Init/Prelude.html#HDiv.hDiv">/</a> <span class="fn">x</span></span></div></div></div></div><div class="decl" id="Homeomorph.coe_subLeft"><div class="theorem"><div class="gh_link"><a href="https://github.com/leanprover-community/mathlib4/blob/ac3d0c9671540e5ea16ebbbf0699e4f62f4e9f96/Mathlib/Topology/Algebra/Group/ContinuousDiv.lean#L75-L75">source</a></div><div class="attributes">@[simp]</div>
+<div class="decl_header"><span class="decl_kind">theorem</span>
+<span class="decl_name"><a class="break_within" href="../../../.././Mathlib/Topology/Algebra/Group/ContinuousDiv.html#Homeomorph.coe_subLeft"><span class="name">Homeomorph</span>.<span class="name">coe_subLeft</span></a></span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">G</span> : <a href="../../../.././foundational_types.html">Type</a> u_1}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Algebra/Group/Defs.html#AddGroup">AddGroup</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Basic.html#TopologicalSpace">TopologicalSpace</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Algebra/Group/Defs.html#IsTopologicalAddGroup">IsTopologicalAddGroup</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="decl_args">
+<span class="fn">(<span class="fn">a</span> : <span class="fn">G</span>)</span></span>
+<span class="decl_args"> :</span><div class="decl_type"><span class="fn">⇑<span class="fn">(<a href="../../../.././Mathlib/Topology/Algebra/Group/ContinuousDiv.html#Homeomorph.subLeft">subLeft</a> <span class="fn">a</span>)</span></span> <a href="../../../.././Init/Prelude.html#Eq">=</a> <span class="fn">fun (<span class="fn">x</span> : <span class="fn">G</span>) =&gt; <span class="fn">a</span> <a href="../../../.././Init/Prelude.html#HSub.hSub">-</a> <span class="fn">x</span></span></div></div></div></div><div class="decl" id="isOpenMap_div_left"><div class="theorem"><div class="gh_link"><a href="https://github.com/leanprover-community/mathlib4/blob/ac3d0c9671540e5ea16ebbbf0699e4f62f4e9f96/Mathlib/Topology/Algebra/Group/ContinuousDiv.lean#L79-L81">source</a></div><div class="decl_header"><span class="decl_kind">theorem</span>
+<span class="decl_name"><a class="break_within" href="../../../.././Mathlib/Topology/Algebra/Group/ContinuousDiv.html#isOpenMap_div_left"><span class="name">isOpenMap_div_left</span></a></span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">G</span> : <a href="../../../.././foundational_types.html">Type</a> u_1}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Algebra/Group/Defs.html#Group">Group</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Basic.html#TopologicalSpace">TopologicalSpace</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Algebra/Group/Defs.html#IsTopologicalGroup">IsTopologicalGroup</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="decl_args">
+<span class="fn">(<span class="fn">a</span> : <span class="fn">G</span>)</span></span>
+<span class="decl_args"> :</span><div class="decl_type"><span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Basic.html#IsOpenMap">IsOpenMap</a> <span class="fn">fun (<span class="fn">x</span> : <span class="fn">G</span>) =&gt; <span class="fn">a</span> <a href="../../../.././Init/Prelude.html#HDiv.hDiv">/</a> <span class="fn">x</span></span></span></div></div></div></div><div class="decl" id="isOpenMap_sub_left"><div class="theorem"><div class="gh_link"><a href="https://github.com/leanprover-community/mathlib4/blob/ac3d0c9671540e5ea16ebbbf0699e4f62f4e9f96/Mathlib/Topology/Algebra/Group/ContinuousDiv.lean#L79-L79">source</a></div><div class="decl_header"><span class="decl_kind">theorem</span>
+<span class="decl_name"><a class="break_within" href="../../../.././Mathlib/Topology/Algebra/Group/ContinuousDiv.html#isOpenMap_sub_left"><span class="name">isOpenMap_sub_left</span></a></span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">G</span> : <a href="../../../.././foundational_types.html">Type</a> u_1}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Algebra/Group/Defs.html#AddGroup">AddGroup</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Basic.html#TopologicalSpace">TopologicalSpace</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Algebra/Group/Defs.html#IsTopologicalAddGroup">IsTopologicalAddGroup</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="decl_args">
+<span class="fn">(<span class="fn">a</span> : <span class="fn">G</span>)</span></span>
+<span class="decl_args"> :</span><div class="decl_type"><span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Basic.html#IsOpenMap">IsOpenMap</a> <span class="fn">fun (<span class="fn">x</span> : <span class="fn">G</span>) =&gt; <span class="fn">a</span> <a href="../../../.././Init/Prelude.html#HSub.hSub">-</a> <span class="fn">x</span></span></span></div></div></div></div><div class="decl" id="isClosedMap_div_left"><div class="theorem"><div class="gh_link"><a href="https://github.com/leanprover-community/mathlib4/blob/ac3d0c9671540e5ea16ebbbf0699e4f62f4e9f96/Mathlib/Topology/Algebra/Group/ContinuousDiv.lean#L83-L85">source</a></div><div class="decl_header"><span class="decl_kind">theorem</span>
+<span class="decl_name"><a class="break_within" href="../../../.././Mathlib/Topology/Algebra/Group/ContinuousDiv.html#isClosedMap_div_left"><span class="name">isClosedMap_div_left</span></a></span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">G</span> : <a href="../../../.././foundational_types.html">Type</a> u_1}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Algebra/Group/Defs.html#Group">Group</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Basic.html#TopologicalSpace">TopologicalSpace</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Algebra/Group/Defs.html#IsTopologicalGroup">IsTopologicalGroup</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="decl_args">
+<span class="fn">(<span class="fn">a</span> : <span class="fn">G</span>)</span></span>
+<span class="decl_args"> :</span><div class="decl_type"><span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Basic.html#IsClosedMap">IsClosedMap</a> <span class="fn">fun (<span class="fn">x</span> : <span class="fn">G</span>) =&gt; <span class="fn">a</span> <a href="../../../.././Init/Prelude.html#HDiv.hDiv">/</a> <span class="fn">x</span></span></span></div></div></div></div><div class="decl" id="isClosedMap_sub_left"><div class="theorem"><div class="gh_link"><a href="https://github.com/leanprover-community/mathlib4/blob/ac3d0c9671540e5ea16ebbbf0699e4f62f4e9f96/Mathlib/Topology/Algebra/Group/ContinuousDiv.lean#L83-L83">source</a></div><div class="decl_header"><span class="decl_kind">theorem</span>
+<span class="decl_name"><a class="break_within" href="../../../.././Mathlib/Topology/Algebra/Group/ContinuousDiv.html#isClosedMap_sub_left"><span class="name">isClosedMap_sub_left</span></a></span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">G</span> : <a href="../../../.././foundational_types.html">Type</a> u_1}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Algebra/Group/Defs.html#AddGroup">AddGroup</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Basic.html#TopologicalSpace">TopologicalSpace</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Algebra/Group/Defs.html#IsTopologicalAddGroup">IsTopologicalAddGroup</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="decl_args">
+<span class="fn">(<span class="fn">a</span> : <span class="fn">G</span>)</span></span>
+<span class="decl_args"> :</span><div class="decl_type"><span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Basic.html#IsClosedMap">IsClosedMap</a> <span class="fn">fun (<span class="fn">x</span> : <span class="fn">G</span>) =&gt; <span class="fn">a</span> <a href="../../../.././Init/Prelude.html#HSub.hSub">-</a> <span class="fn">x</span></span></span></div></div></div></div><div class="decl" id="Homeomorph.divRight"><div class="def"><div class="gh_link"><a href="https://github.com/leanprover-community/mathlib4/blob/ac3d0c9671540e5ea16ebbbf0699e4f62f4e9f96/Mathlib/Topology/Algebra/Group/ContinuousDiv.lean#L87-L91">source</a></div><div class="decl_header"><span class="decl_kind">def</span>
+<span class="decl_name"><a class="break_within" href="../../../.././Mathlib/Topology/Algebra/Group/ContinuousDiv.html#Homeomorph.divRight"><span class="name">Homeomorph</span>.<span class="name">divRight</span></a></span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">G</span> : <a href="../../../.././foundational_types.html">Type</a> u_1}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Algebra/Group/Defs.html#Group">Group</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Basic.html#TopologicalSpace">TopologicalSpace</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Algebra/Group/Defs.html#IsTopologicalGroup">IsTopologicalGroup</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="decl_args">
+<span class="fn">(<span class="fn">x</span> : <span class="fn">G</span>)</span></span>
+<span class="decl_args"> :</span><div class="decl_type"><span class="fn">G</span> <a href="../../../.././Mathlib/Topology/Homeomorph/Defs.html#Homeomorph">≃ₜ</a> <span class="fn">G</span></div></div><p>A version of <code><a href="../../../.././Mathlib/Topology/Algebra/Group/Basic.html#Homeomorph.mulRight">Homeomorph.mulRight</a> a⁻¹ b</code> that is defeq to <code>b / a</code>.</p><details><summary>Equations</summary><ul class="equations"><li class="equation"><span class="fn"><a href="../../../.././Mathlib/Topology/Algebra/Group/ContinuousDiv.html#Homeomorph.divRight">Homeomorph.divRight</a> <span class="fn">x</span></span> <a href="../../../.././Init/Prelude.html#Eq">=</a> <a href="../../../.././Mathlib/Topology/Homeomorph/Defs.html#Homeomorph.mk">{</a> <span class="fn">toEquiv</span> := <span class="fn"><a href="../../../.././Mathlib/Algebra/Group/Units/Equiv.html#Equiv.divRight">Equiv.divRight</a> <span class="fn">x</span></span>, <span class="fn">continuous_toFun</span> := <span class="fn">⋯</span>, <span class="fn">continuous_invFun</span> := <span class="fn">⋯</span> <a href="../../../.././Mathlib/Topology/Homeomorph/Defs.html#Homeomorph.mk">}</a></li></ul></details><details id="instances-for-list-Homeomorph.divRight" class="instances-for-list"><summary>Instances For</summary><ul class="instances-for-enum"></ul></details></div></div><div class="decl" id="Homeomorph.subRight"><div class="def"><div class="gh_link"><a href="https://github.com/leanprover-community/mathlib4/blob/ac3d0c9671540e5ea16ebbbf0699e4f62f4e9f96/Mathlib/Topology/Algebra/Group/ContinuousDiv.lean#L88-L89">source</a></div><div class="decl_header"><span class="decl_kind">def</span>
+<span class="decl_name"><a class="break_within" href="../../../.././Mathlib/Topology/Algebra/Group/ContinuousDiv.html#Homeomorph.subRight"><span class="name">Homeomorph</span>.<span class="name">subRight</span></a></span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">G</span> : <a href="../../../.././foundational_types.html">Type</a> u_1}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Algebra/Group/Defs.html#AddGroup">AddGroup</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Basic.html#TopologicalSpace">TopologicalSpace</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Algebra/Group/Defs.html#IsTopologicalAddGroup">IsTopologicalAddGroup</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="decl_args">
+<span class="fn">(<span class="fn">x</span> : <span class="fn">G</span>)</span></span>
+<span class="decl_args"> :</span><div class="decl_type"><span class="fn">G</span> <a href="../../../.././Mathlib/Topology/Homeomorph/Defs.html#Homeomorph">≃ₜ</a> <span class="fn">G</span></div></div><p>A version of <code><a href="../../../.././Mathlib/Topology/Algebra/Group/Basic.html#Homeomorph.addRight">Homeomorph.addRight</a> (-a) b</code> that is defeq to <code>b - a</code>.</p><details><summary>Equations</summary><ul class="equations"><li class="equation"><span class="fn"><a href="../../../.././Mathlib/Topology/Algebra/Group/ContinuousDiv.html#Homeomorph.subRight">Homeomorph.subRight</a> <span class="fn">x</span></span> <a href="../../../.././Init/Prelude.html#Eq">=</a> <a href="../../../.././Mathlib/Topology/Homeomorph/Defs.html#Homeomorph.mk">{</a> <span class="fn">toEquiv</span> := <span class="fn"><a href="../../../.././Mathlib/Algebra/Group/Units/Equiv.html#Equiv.subRight">Equiv.subRight</a> <span class="fn">x</span></span>, <span class="fn">continuous_toFun</span> := <span class="fn">⋯</span>, <span class="fn">continuous_invFun</span> := <span class="fn">⋯</span> <a href="../../../.././Mathlib/Topology/Homeomorph/Defs.html#Homeomorph.mk">}</a></li></ul></details><details id="instances-for-list-Homeomorph.subRight" class="instances-for-list"><summary>Instances For</summary><ul class="instances-for-enum"></ul></details></div></div><div class="decl" id="Homeomorph.subRight_symm_apply"><div class="theorem"><div class="gh_link"><a href="https://github.com/leanprover-community/mathlib4/blob/ac3d0c9671540e5ea16ebbbf0699e4f62f4e9f96/Mathlib/Topology/Algebra/Group/ContinuousDiv.lean#L88-L88">source</a></div><div class="attributes">@[simp]</div>
+<div class="decl_header"><span class="decl_kind">theorem</span>
+<span class="decl_name"><a class="break_within" href="../../../.././Mathlib/Topology/Algebra/Group/ContinuousDiv.html#Homeomorph.subRight_symm_apply"><span class="name">Homeomorph</span>.<span class="name">subRight_symm_apply</span></a></span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">G</span> : <a href="../../../.././foundational_types.html">Type</a> u_1}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Algebra/Group/Defs.html#AddGroup">AddGroup</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Basic.html#TopologicalSpace">TopologicalSpace</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Algebra/Group/Defs.html#IsTopologicalAddGroup">IsTopologicalAddGroup</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="decl_args">
+<span class="fn">(<span class="fn">x </span><span class="fn">b</span> : <span class="fn">G</span>)</span></span>
+<span class="decl_args"> :</span><div class="decl_type"><span class="fn"><span class="fn"><span class="fn">(<a href="../../../.././Mathlib/Topology/Algebra/Group/ContinuousDiv.html#Homeomorph.subRight">subRight</a> <span class="fn">x</span>)</span>.<a href="../../../.././Mathlib/Topology/Homeomorph/Defs.html#Homeomorph.symm">symm</a></span> <span class="fn">b</span></span> <a href="../../../.././Init/Prelude.html#Eq">=</a> <span class="fn">b</span> <a href="../../../.././Init/Prelude.html#HAdd.hAdd">+</a> <span class="fn">x</span></div></div></div></div><div class="decl" id="Homeomorph.divRight_symm_apply"><div class="theorem"><div class="gh_link"><a href="https://github.com/leanprover-community/mathlib4/blob/ac3d0c9671540e5ea16ebbbf0699e4f62f4e9f96/Mathlib/Topology/Algebra/Group/ContinuousDiv.lean#L88-L88">source</a></div><div class="attributes">@[simp]</div>
+<div class="decl_header"><span class="decl_kind">theorem</span>
+<span class="decl_name"><a class="break_within" href="../../../.././Mathlib/Topology/Algebra/Group/ContinuousDiv.html#Homeomorph.divRight_symm_apply"><span class="name">Homeomorph</span>.<span class="name">divRight_symm_apply</span></a></span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">G</span> : <a href="../../../.././foundational_types.html">Type</a> u_1}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Algebra/Group/Defs.html#Group">Group</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Basic.html#TopologicalSpace">TopologicalSpace</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Algebra/Group/Defs.html#IsTopologicalGroup">IsTopologicalGroup</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="decl_args">
+<span class="fn">(<span class="fn">x </span><span class="fn">b</span> : <span class="fn">G</span>)</span></span>
+<span class="decl_args"> :</span><div class="decl_type"><span class="fn"><span class="fn"><span class="fn">(<a href="../../../.././Mathlib/Topology/Algebra/Group/ContinuousDiv.html#Homeomorph.divRight">divRight</a> <span class="fn">x</span>)</span>.<a href="../../../.././Mathlib/Topology/Homeomorph/Defs.html#Homeomorph.symm">symm</a></span> <span class="fn">b</span></span> <a href="../../../.././Init/Prelude.html#Eq">=</a> <span class="fn">b</span> <a href="../../../.././Init/Prelude.html#HMul.hMul">*</a> <span class="fn">x</span></div></div></div></div><div class="decl" id="Homeomorph.divRight_apply"><div class="theorem"><div class="gh_link"><a href="https://github.com/leanprover-community/mathlib4/blob/ac3d0c9671540e5ea16ebbbf0699e4f62f4e9f96/Mathlib/Topology/Algebra/Group/ContinuousDiv.lean#L88-L88">source</a></div><div class="attributes">@[simp]</div>
+<div class="decl_header"><span class="decl_kind">theorem</span>
+<span class="decl_name"><a class="break_within" href="../../../.././Mathlib/Topology/Algebra/Group/ContinuousDiv.html#Homeomorph.divRight_apply"><span class="name">Homeomorph</span>.<span class="name">divRight_apply</span></a></span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">G</span> : <a href="../../../.././foundational_types.html">Type</a> u_1}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Algebra/Group/Defs.html#Group">Group</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Basic.html#TopologicalSpace">TopologicalSpace</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Algebra/Group/Defs.html#IsTopologicalGroup">IsTopologicalGroup</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="decl_args">
+<span class="fn">(<span class="fn">x </span><span class="fn">b</span> : <span class="fn">G</span>)</span></span>
+<span class="decl_args"> :</span><div class="decl_type"><span class="fn"><span class="fn">(<a href="../../../.././Mathlib/Topology/Algebra/Group/ContinuousDiv.html#Homeomorph.divRight">divRight</a> <span class="fn">x</span>)</span> <span class="fn">b</span></span> <a href="../../../.././Init/Prelude.html#Eq">=</a> <span class="fn">b</span> <a href="../../../.././Init/Prelude.html#HDiv.hDiv">/</a> <span class="fn">x</span></div></div></div></div><div class="decl" id="Homeomorph.subRight_apply"><div class="theorem"><div class="gh_link"><a href="https://github.com/leanprover-community/mathlib4/blob/ac3d0c9671540e5ea16ebbbf0699e4f62f4e9f96/Mathlib/Topology/Algebra/Group/ContinuousDiv.lean#L88-L88">source</a></div><div class="attributes">@[simp]</div>
+<div class="decl_header"><span class="decl_kind">theorem</span>
+<span class="decl_name"><a class="break_within" href="../../../.././Mathlib/Topology/Algebra/Group/ContinuousDiv.html#Homeomorph.subRight_apply"><span class="name">Homeomorph</span>.<span class="name">subRight_apply</span></a></span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">G</span> : <a href="../../../.././foundational_types.html">Type</a> u_1}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Algebra/Group/Defs.html#AddGroup">AddGroup</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Basic.html#TopologicalSpace">TopologicalSpace</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Algebra/Group/Defs.html#IsTopologicalAddGroup">IsTopologicalAddGroup</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="decl_args">
+<span class="fn">(<span class="fn">x </span><span class="fn">b</span> : <span class="fn">G</span>)</span></span>
+<span class="decl_args"> :</span><div class="decl_type"><span class="fn"><span class="fn">(<a href="../../../.././Mathlib/Topology/Algebra/Group/ContinuousDiv.html#Homeomorph.subRight">subRight</a> <span class="fn">x</span>)</span> <span class="fn">b</span></span> <a href="../../../.././Init/Prelude.html#Eq">=</a> <span class="fn">b</span> <a href="../../../.././Init/Prelude.html#HSub.hSub">-</a> <span class="fn">x</span></div></div></div></div><div class="decl" id="Homeomorph.coe_divRight"><div class="theorem"><div class="gh_link"><a href="https://github.com/leanprover-community/mathlib4/blob/ac3d0c9671540e5ea16ebbbf0699e4f62f4e9f96/Mathlib/Topology/Algebra/Group/ContinuousDiv.lean#L93-L95">source</a></div><div class="attributes">@[simp]</div>
+<div class="decl_header"><span class="decl_kind">theorem</span>
+<span class="decl_name"><a class="break_within" href="../../../.././Mathlib/Topology/Algebra/Group/ContinuousDiv.html#Homeomorph.coe_divRight"><span class="name">Homeomorph</span>.<span class="name">coe_divRight</span></a></span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">G</span> : <a href="../../../.././foundational_types.html">Type</a> u_1}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Algebra/Group/Defs.html#Group">Group</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Basic.html#TopologicalSpace">TopologicalSpace</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Algebra/Group/Defs.html#IsTopologicalGroup">IsTopologicalGroup</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="decl_args">
+<span class="fn">(<span class="fn">a</span> : <span class="fn">G</span>)</span></span>
+<span class="decl_args"> :</span><div class="decl_type"><span class="fn">⇑<span class="fn">(<a href="../../../.././Mathlib/Topology/Algebra/Group/ContinuousDiv.html#Homeomorph.divRight">divRight</a> <span class="fn">a</span>)</span></span> <a href="../../../.././Init/Prelude.html#Eq">=</a> <span class="fn">fun (<span class="fn">x</span> : <span class="fn">G</span>) =&gt; <span class="fn">x</span> <a href="../../../.././Init/Prelude.html#HDiv.hDiv">/</a> <span class="fn">a</span></span></div></div></div></div><div class="decl" id="Homeomorph.coe_subRight"><div class="theorem"><div class="gh_link"><a href="https://github.com/leanprover-community/mathlib4/blob/ac3d0c9671540e5ea16ebbbf0699e4f62f4e9f96/Mathlib/Topology/Algebra/Group/ContinuousDiv.lean#L93-L93">source</a></div><div class="attributes">@[simp]</div>
+<div class="decl_header"><span class="decl_kind">theorem</span>
+<span class="decl_name"><a class="break_within" href="../../../.././Mathlib/Topology/Algebra/Group/ContinuousDiv.html#Homeomorph.coe_subRight"><span class="name">Homeomorph</span>.<span class="name">coe_subRight</span></a></span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">G</span> : <a href="../../../.././foundational_types.html">Type</a> u_1}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Algebra/Group/Defs.html#AddGroup">AddGroup</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Basic.html#TopologicalSpace">TopologicalSpace</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Algebra/Group/Defs.html#IsTopologicalAddGroup">IsTopologicalAddGroup</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="decl_args">
+<span class="fn">(<span class="fn">a</span> : <span class="fn">G</span>)</span></span>
+<span class="decl_args"> :</span><div class="decl_type"><span class="fn">⇑<span class="fn">(<a href="../../../.././Mathlib/Topology/Algebra/Group/ContinuousDiv.html#Homeomorph.subRight">subRight</a> <span class="fn">a</span>)</span></span> <a href="../../../.././Init/Prelude.html#Eq">=</a> <span class="fn">fun (<span class="fn">x</span> : <span class="fn">G</span>) =&gt; <span class="fn">x</span> <a href="../../../.././Init/Prelude.html#HSub.hSub">-</a> <span class="fn">a</span></span></div></div></div></div><div class="decl" id="isOpenMap_div_right"><div class="theorem"><div class="gh_link"><a href="https://github.com/leanprover-community/mathlib4/blob/ac3d0c9671540e5ea16ebbbf0699e4f62f4e9f96/Mathlib/Topology/Algebra/Group/ContinuousDiv.lean#L97-L98">source</a></div><div class="decl_header"><span class="decl_kind">theorem</span>
+<span class="decl_name"><a class="break_within" href="../../../.././Mathlib/Topology/Algebra/Group/ContinuousDiv.html#isOpenMap_div_right"><span class="name">isOpenMap_div_right</span></a></span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">G</span> : <a href="../../../.././foundational_types.html">Type</a> u_1}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Algebra/Group/Defs.html#Group">Group</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Basic.html#TopologicalSpace">TopologicalSpace</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Algebra/Group/Defs.html#IsTopologicalGroup">IsTopologicalGroup</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="decl_args">
+<span class="fn">(<span class="fn">a</span> : <span class="fn">G</span>)</span></span>
+<span class="decl_args"> :</span><div class="decl_type"><span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Basic.html#IsOpenMap">IsOpenMap</a> <span class="fn">fun (<span class="fn">x</span> : <span class="fn">G</span>) =&gt; <span class="fn">x</span> <a href="../../../.././Init/Prelude.html#HDiv.hDiv">/</a> <span class="fn">a</span></span></span></div></div></div></div><div class="decl" id="isOpenMap_sub_right"><div class="theorem"><div class="gh_link"><a href="https://github.com/leanprover-community/mathlib4/blob/ac3d0c9671540e5ea16ebbbf0699e4f62f4e9f96/Mathlib/Topology/Algebra/Group/ContinuousDiv.lean#L97-L97">source</a></div><div class="decl_header"><span class="decl_kind">theorem</span>
+<span class="decl_name"><a class="break_within" href="../../../.././Mathlib/Topology/Algebra/Group/ContinuousDiv.html#isOpenMap_sub_right"><span class="name">isOpenMap_sub_right</span></a></span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">G</span> : <a href="../../../.././foundational_types.html">Type</a> u_1}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Algebra/Group/Defs.html#AddGroup">AddGroup</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Basic.html#TopologicalSpace">TopologicalSpace</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Algebra/Group/Defs.html#IsTopologicalAddGroup">IsTopologicalAddGroup</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="decl_args">
+<span class="fn">(<span class="fn">a</span> : <span class="fn">G</span>)</span></span>
+<span class="decl_args"> :</span><div class="decl_type"><span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Basic.html#IsOpenMap">IsOpenMap</a> <span class="fn">fun (<span class="fn">x</span> : <span class="fn">G</span>) =&gt; <span class="fn">x</span> <a href="../../../.././Init/Prelude.html#HSub.hSub">-</a> <span class="fn">a</span></span></span></div></div></div></div><div class="decl" id="isClosedMap_div_right"><div class="theorem"><div class="gh_link"><a href="https://github.com/leanprover-community/mathlib4/blob/ac3d0c9671540e5ea16ebbbf0699e4f62f4e9f96/Mathlib/Topology/Algebra/Group/ContinuousDiv.lean#L100-L101">source</a></div><div class="decl_header"><span class="decl_kind">theorem</span>
+<span class="decl_name"><a class="break_within" href="../../../.././Mathlib/Topology/Algebra/Group/ContinuousDiv.html#isClosedMap_div_right"><span class="name">isClosedMap_div_right</span></a></span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">G</span> : <a href="../../../.././foundational_types.html">Type</a> u_1}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Algebra/Group/Defs.html#Group">Group</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Basic.html#TopologicalSpace">TopologicalSpace</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Algebra/Group/Defs.html#IsTopologicalGroup">IsTopologicalGroup</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="decl_args">
+<span class="fn">(<span class="fn">a</span> : <span class="fn">G</span>)</span></span>
+<span class="decl_args"> :</span><div class="decl_type"><span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Basic.html#IsClosedMap">IsClosedMap</a> <span class="fn">fun (<span class="fn">x</span> : <span class="fn">G</span>) =&gt; <span class="fn">x</span> <a href="../../../.././Init/Prelude.html#HDiv.hDiv">/</a> <span class="fn">a</span></span></span></div></div></div></div><div class="decl" id="isClosedMap_sub_right"><div class="theorem"><div class="gh_link"><a href="https://github.com/leanprover-community/mathlib4/blob/ac3d0c9671540e5ea16ebbbf0699e4f62f4e9f96/Mathlib/Topology/Algebra/Group/ContinuousDiv.lean#L100-L100">source</a></div><div class="decl_header"><span class="decl_kind">theorem</span>
+<span class="decl_name"><a class="break_within" href="../../../.././Mathlib/Topology/Algebra/Group/ContinuousDiv.html#isClosedMap_sub_right"><span class="name">isClosedMap_sub_right</span></a></span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">G</span> : <a href="../../../.././foundational_types.html">Type</a> u_1}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Algebra/Group/Defs.html#AddGroup">AddGroup</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Basic.html#TopologicalSpace">TopologicalSpace</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Algebra/Group/Defs.html#IsTopologicalAddGroup">IsTopologicalAddGroup</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="decl_args">
+<span class="fn">(<span class="fn">a</span> : <span class="fn">G</span>)</span></span>
+<span class="decl_args"> :</span><div class="decl_type"><span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Basic.html#IsClosedMap">IsClosedMap</a> <span class="fn">fun (<span class="fn">x</span> : <span class="fn">G</span>) =&gt; <span class="fn">x</span> <a href="../../../.././Init/Prelude.html#HSub.hSub">-</a> <span class="fn">a</span></span></span></div></div></div></div><div class="decl" id="tendsto_div_nhds_one_iff"><div class="theorem"><div class="gh_link"><a href="https://github.com/leanprover-community/mathlib4/blob/ac3d0c9671540e5ea16ebbbf0699e4f62f4e9f96/Mathlib/Topology/Algebra/Group/ContinuousDiv.lean#L103-L107">source</a></div><div class="decl_header"><span class="decl_kind">theorem</span>
+<span class="decl_name"><a class="break_within" href="../../../.././Mathlib/Topology/Algebra/Group/ContinuousDiv.html#tendsto_div_nhds_one_iff"><span class="name">tendsto_div_nhds_one_iff</span></a></span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">G</span> : <a href="../../../.././foundational_types.html">Type</a> u_1}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Algebra/Group/Defs.html#Group">Group</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Basic.html#TopologicalSpace">TopologicalSpace</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Algebra/Group/Defs.html#IsTopologicalGroup">IsTopologicalGroup</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">α</span> : <a href="../../../.././foundational_types.html">Type</a> u_3}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">l</span> : <span class="fn"><a href="../../../.././Mathlib/Order/Filter/Defs.html#Filter">Filter</a> <span class="fn">α</span></span>}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">x</span> : <span class="fn">G</span>}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">u</span> : <span class="fn"><span class="fn">α</span> → <span class="fn">G</span></span>}</span></span>
+</span><span class="decl_args"> :</span><div class="decl_type"><span class="fn"><a href="../../../.././Mathlib/Order/Filter/Defs.html#Filter.Tendsto">Filter.Tendsto</a> <span class="fn">(fun (<span class="fn">x_1</span> : <span class="fn">α</span>) =&gt; <span class="fn"><span class="fn">u</span> <span class="fn">x_1</span></span> <a href="../../../.././Init/Prelude.html#HDiv.hDiv">/</a> <span class="fn">x</span>)</span> <span class="fn">l</span> <span class="fn">(<a href="../../../.././Mathlib/Topology/Defs/Filter.html#nhds">nhds</a> <span class="fn">1</span>)</span></span> <a href="../../../.././Init/Core.html#Iff">↔</a> <span class="fn"><a href="../../../.././Mathlib/Order/Filter/Defs.html#Filter.Tendsto">Filter.Tendsto</a> <span class="fn">u</span> <span class="fn">l</span> <span class="fn">(<a href="../../../.././Mathlib/Topology/Defs/Filter.html#nhds">nhds</a> <span class="fn">x</span>)</span></span></div></div></div></div><div class="decl" id="tendsto_sub_nhds_zero_iff"><div class="theorem"><div class="gh_link"><a href="https://github.com/leanprover-community/mathlib4/blob/ac3d0c9671540e5ea16ebbbf0699e4f62f4e9f96/Mathlib/Topology/Algebra/Group/ContinuousDiv.lean#L103-L103">source</a></div><div class="decl_header"><span class="decl_kind">theorem</span>
+<span class="decl_name"><a class="break_within" href="../../../.././Mathlib/Topology/Algebra/Group/ContinuousDiv.html#tendsto_sub_nhds_zero_iff"><span class="name">tendsto_sub_nhds_zero_iff</span></a></span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">G</span> : <a href="../../../.././foundational_types.html">Type</a> u_1}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Algebra/Group/Defs.html#AddGroup">AddGroup</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Basic.html#TopologicalSpace">TopologicalSpace</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Algebra/Group/Defs.html#IsTopologicalAddGroup">IsTopologicalAddGroup</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">α</span> : <a href="../../../.././foundational_types.html">Type</a> u_3}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">l</span> : <span class="fn"><a href="../../../.././Mathlib/Order/Filter/Defs.html#Filter">Filter</a> <span class="fn">α</span></span>}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">x</span> : <span class="fn">G</span>}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">u</span> : <span class="fn"><span class="fn">α</span> → <span class="fn">G</span></span>}</span></span>
+</span><span class="decl_args"> :</span><div class="decl_type"><span class="fn"><a href="../../../.././Mathlib/Order/Filter/Defs.html#Filter.Tendsto">Filter.Tendsto</a> <span class="fn">(fun (<span class="fn">x_1</span> : <span class="fn">α</span>) =&gt; <span class="fn"><span class="fn">u</span> <span class="fn">x_1</span></span> <a href="../../../.././Init/Prelude.html#HSub.hSub">-</a> <span class="fn">x</span>)</span> <span class="fn">l</span> <span class="fn">(<a href="../../../.././Mathlib/Topology/Defs/Filter.html#nhds">nhds</a> <span class="fn">0</span>)</span></span> <a href="../../../.././Init/Core.html#Iff">↔</a> <span class="fn"><a href="../../../.././Mathlib/Order/Filter/Defs.html#Filter.Tendsto">Filter.Tendsto</a> <span class="fn">u</span> <span class="fn">l</span> <span class="fn">(<a href="../../../.././Mathlib/Topology/Defs/Filter.html#nhds">nhds</a> <span class="fn">x</span>)</span></span></div></div></div></div><div class="decl" id="tendsto_div_nhds_one_iff_eq"><div class="theorem"><div class="gh_link"><a href="https://github.com/leanprover-community/mathlib4/blob/ac3d0c9671540e5ea16ebbbf0699e4f62f4e9f96/Mathlib/Topology/Algebra/Group/ContinuousDiv.lean#L109-L116">source</a></div><div class="decl_header"><span class="decl_kind">theorem</span>
+<span class="decl_name"><a class="break_within" href="../../../.././Mathlib/Topology/Algebra/Group/ContinuousDiv.html#tendsto_div_nhds_one_iff_eq"><span class="name">tendsto_div_nhds_one_iff_eq</span></a></span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">G</span> : <a href="../../../.././foundational_types.html">Type</a> u_1}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Algebra/Group/Defs.html#Group">Group</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Basic.html#TopologicalSpace">TopologicalSpace</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Algebra/Group/Defs.html#IsTopologicalGroup">IsTopologicalGroup</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">α</span> : <a href="../../../.././foundational_types.html">Type</a> u_3}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">l</span> : <span class="fn"><a href="../../../.././Mathlib/Order/Filter/Defs.html#Filter">Filter</a> <span class="fn">α</span></span>}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><span class="fn">l</span>.<a href="../../../.././Mathlib/Order/Filter/Defs.html#Filter.NeBot">NeBot</a></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Separation/Hausdorff.html#T2Space">T2Space</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">f </span><span class="fn">g</span> : <span class="fn"><span class="fn">α</span> → <span class="fn">G</span></span>}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">a </span><span class="fn">b</span> : <span class="fn">G</span>}</span></span>
+</span><span class="decl_args">
+<span class="fn">(<span class="fn">hf</span> : <span class="fn"><a href="../../../.././Mathlib/Order/Filter/Defs.html#Filter.Tendsto">Filter.Tendsto</a> <span class="fn">f</span> <span class="fn">l</span> <span class="fn">(<a href="../../../.././Mathlib/Topology/Defs/Filter.html#nhds">nhds</a> <span class="fn">a</span>)</span></span>)</span></span>
+<span class="decl_args">
+<span class="fn">(<span class="fn">hg</span> : <span class="fn"><a href="../../../.././Mathlib/Order/Filter/Defs.html#Filter.Tendsto">Filter.Tendsto</a> <span class="fn">g</span> <span class="fn">l</span> <span class="fn">(<a href="../../../.././Mathlib/Topology/Defs/Filter.html#nhds">nhds</a> <span class="fn">b</span>)</span></span>)</span></span>
+<span class="decl_args"> :</span><div class="decl_type"><span class="fn"><a href="../../../.././Mathlib/Order/Filter/Defs.html#Filter.Tendsto">Filter.Tendsto</a> <span class="fn">(fun (<span class="fn">x</span> : <span class="fn">α</span>) =&gt; <span class="fn"><span class="fn">f</span> <span class="fn">x</span></span> <a href="../../../.././Init/Prelude.html#HDiv.hDiv">/</a> <span class="fn"><span class="fn">g</span> <span class="fn">x</span></span>)</span> <span class="fn">l</span> <span class="fn">(<a href="../../../.././Mathlib/Topology/Defs/Filter.html#nhds">nhds</a> <span class="fn">1</span>)</span></span> <a href="../../../.././Init/Core.html#Iff">↔</a> <span class="fn">a</span> <a href="../../../.././Init/Prelude.html#Eq">=</a> <span class="fn">b</span></div></div><p>If <code>f → a</code> and <code>g → b</code> along a nontrivial filter on the domain, valued in a
+Hausdorff topological group, then <code>f / g → 1</code> if and only if <code>a = b</code>.</p></div></div><div class="decl" id="tendsto_sub_nhds_zero_iff_eq"><div class="theorem"><div class="gh_link"><a href="https://github.com/leanprover-community/mathlib4/blob/ac3d0c9671540e5ea16ebbbf0699e4f62f4e9f96/Mathlib/Topology/Algebra/Group/ContinuousDiv.lean#L111-L111">source</a></div><div class="decl_header"><span class="decl_kind">theorem</span>
+<span class="decl_name"><a class="break_within" href="../../../.././Mathlib/Topology/Algebra/Group/ContinuousDiv.html#tendsto_sub_nhds_zero_iff_eq"><span class="name">tendsto_sub_nhds_zero_iff_eq</span></a></span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">G</span> : <a href="../../../.././foundational_types.html">Type</a> u_1}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Algebra/Group/Defs.html#AddGroup">AddGroup</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Basic.html#TopologicalSpace">TopologicalSpace</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Algebra/Group/Defs.html#IsTopologicalAddGroup">IsTopologicalAddGroup</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">α</span> : <a href="../../../.././foundational_types.html">Type</a> u_3}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">l</span> : <span class="fn"><a href="../../../.././Mathlib/Order/Filter/Defs.html#Filter">Filter</a> <span class="fn">α</span></span>}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><span class="fn">l</span>.<a href="../../../.././Mathlib/Order/Filter/Defs.html#Filter.NeBot">NeBot</a></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Separation/Hausdorff.html#T2Space">T2Space</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">f </span><span class="fn">g</span> : <span class="fn"><span class="fn">α</span> → <span class="fn">G</span></span>}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">a </span><span class="fn">b</span> : <span class="fn">G</span>}</span></span>
+</span><span class="decl_args">
+<span class="fn">(<span class="fn">hf</span> : <span class="fn"><a href="../../../.././Mathlib/Order/Filter/Defs.html#Filter.Tendsto">Filter.Tendsto</a> <span class="fn">f</span> <span class="fn">l</span> <span class="fn">(<a href="../../../.././Mathlib/Topology/Defs/Filter.html#nhds">nhds</a> <span class="fn">a</span>)</span></span>)</span></span>
+<span class="decl_args">
+<span class="fn">(<span class="fn">hg</span> : <span class="fn"><a href="../../../.././Mathlib/Order/Filter/Defs.html#Filter.Tendsto">Filter.Tendsto</a> <span class="fn">g</span> <span class="fn">l</span> <span class="fn">(<a href="../../../.././Mathlib/Topology/Defs/Filter.html#nhds">nhds</a> <span class="fn">b</span>)</span></span>)</span></span>
+<span class="decl_args"> :</span><div class="decl_type"><span class="fn"><a href="../../../.././Mathlib/Order/Filter/Defs.html#Filter.Tendsto">Filter.Tendsto</a> <span class="fn">(fun (<span class="fn">x</span> : <span class="fn">α</span>) =&gt; <span class="fn"><span class="fn">f</span> <span class="fn">x</span></span> <a href="../../../.././Init/Prelude.html#HSub.hSub">-</a> <span class="fn"><span class="fn">g</span> <span class="fn">x</span></span>)</span> <span class="fn">l</span> <span class="fn">(<a href="../../../.././Mathlib/Topology/Defs/Filter.html#nhds">nhds</a> <span class="fn">0</span>)</span></span> <a href="../../../.././Init/Core.html#Iff">↔</a> <span class="fn">a</span> <a href="../../../.././Init/Prelude.html#Eq">=</a> <span class="fn">b</span></div></div></div></div><div class="decl" id="eq_of_tendsto_div_nhds_one"><div class="theorem"><div class="gh_link"><a href="https://github.com/leanprover-community/mathlib4/blob/ac3d0c9671540e5ea16ebbbf0699e4f62f4e9f96/Mathlib/Topology/Algebra/Group/ContinuousDiv.lean#L118-L119">source</a></div><div class="decl_header"><span class="decl_kind">theorem</span>
+<span class="decl_name"><a class="break_within" href="../../../.././Mathlib/Topology/Algebra/Group/ContinuousDiv.html#eq_of_tendsto_div_nhds_one"><span class="name">eq_of_tendsto_div_nhds_one</span></a></span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">G</span> : <a href="../../../.././foundational_types.html">Type</a> u_1}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Algebra/Group/Defs.html#Group">Group</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Basic.html#TopologicalSpace">TopologicalSpace</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Algebra/Group/Defs.html#IsTopologicalGroup">IsTopologicalGroup</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">α</span> : <a href="../../../.././foundational_types.html">Type</a> u_3}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">l</span> : <span class="fn"><a href="../../../.././Mathlib/Order/Filter/Defs.html#Filter">Filter</a> <span class="fn">α</span></span>}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><span class="fn">l</span>.<a href="../../../.././Mathlib/Order/Filter/Defs.html#Filter.NeBot">NeBot</a></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Separation/Hausdorff.html#T2Space">T2Space</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">f </span><span class="fn">g</span> : <span class="fn"><span class="fn">α</span> → <span class="fn">G</span></span>}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">a </span><span class="fn">b</span> : <span class="fn">G</span>}</span></span>
+</span><span class="decl_args">
+<span class="fn">(<span class="fn">hf</span> : <span class="fn"><a href="../../../.././Mathlib/Order/Filter/Defs.html#Filter.Tendsto">Filter.Tendsto</a> <span class="fn">f</span> <span class="fn">l</span> <span class="fn">(<a href="../../../.././Mathlib/Topology/Defs/Filter.html#nhds">nhds</a> <span class="fn">a</span>)</span></span>)</span></span>
+<span class="decl_args">
+<span class="fn">(<span class="fn">hg</span> : <span class="fn"><a href="../../../.././Mathlib/Order/Filter/Defs.html#Filter.Tendsto">Filter.Tendsto</a> <span class="fn">g</span> <span class="fn">l</span> <span class="fn">(<a href="../../../.././Mathlib/Topology/Defs/Filter.html#nhds">nhds</a> <span class="fn">b</span>)</span></span>)</span></span>
+<span class="decl_args"> :</span><div class="decl_type"><span class="fn"><span class="fn"><a href="../../../.././Mathlib/Order/Filter/Defs.html#Filter.Tendsto">Filter.Tendsto</a> <span class="fn">(fun (<span class="fn">x</span> : <span class="fn">α</span>) =&gt; <span class="fn"><span class="fn">f</span> <span class="fn">x</span></span> <a href="../../../.././Init/Prelude.html#HDiv.hDiv">/</a> <span class="fn"><span class="fn">g</span> <span class="fn">x</span></span>)</span> <span class="fn">l</span> <span class="fn">(<a href="../../../.././Mathlib/Topology/Defs/Filter.html#nhds">nhds</a> <span class="fn">1</span>)</span></span> → <span class="fn">a</span> <a href="../../../.././Init/Prelude.html#Eq">=</a> <span class="fn">b</span></span></div></div><p><strong>Alias</strong> of the forward direction of <code><a href="../../../.././Mathlib/Topology/Algebra/Group/ContinuousDiv.html#tendsto_div_nhds_one_iff_eq">tendsto_div_nhds_one_iff_eq</a></code>.</p><hr>
+<p>If <code>f → a</code> and <code>g → b</code> along a nontrivial filter on the domain, valued in a
+Hausdorff topological group, then <code>f / g → 1</code> if and only if <code>a = b</code>.</p></div></div><div class="decl" id="eq_of_tendsto_sub_nhds_zero"><div class="theorem"><div class="gh_link"><a href="https://github.com/leanprover-community/mathlib4/blob/ac3d0c9671540e5ea16ebbbf0699e4f62f4e9f96/Mathlib/Topology/Algebra/Group/ContinuousDiv.lean#L118-L118">source</a></div><div class="decl_header"><span class="decl_kind">theorem</span>
+<span class="decl_name"><a class="break_within" href="../../../.././Mathlib/Topology/Algebra/Group/ContinuousDiv.html#eq_of_tendsto_sub_nhds_zero"><span class="name">eq_of_tendsto_sub_nhds_zero</span></a></span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">G</span> : <a href="../../../.././foundational_types.html">Type</a> u_1}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Algebra/Group/Defs.html#AddGroup">AddGroup</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Basic.html#TopologicalSpace">TopologicalSpace</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Algebra/Group/Defs.html#IsTopologicalAddGroup">IsTopologicalAddGroup</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">α</span> : <a href="../../../.././foundational_types.html">Type</a> u_3}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">l</span> : <span class="fn"><a href="../../../.././Mathlib/Order/Filter/Defs.html#Filter">Filter</a> <span class="fn">α</span></span>}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><span class="fn">l</span>.<a href="../../../.././Mathlib/Order/Filter/Defs.html#Filter.NeBot">NeBot</a></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Separation/Hausdorff.html#T2Space">T2Space</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">f </span><span class="fn">g</span> : <span class="fn"><span class="fn">α</span> → <span class="fn">G</span></span>}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">a </span><span class="fn">b</span> : <span class="fn">G</span>}</span></span>
+</span><span class="decl_args">
+<span class="fn">(<span class="fn">hf</span> : <span class="fn"><a href="../../../.././Mathlib/Order/Filter/Defs.html#Filter.Tendsto">Filter.Tendsto</a> <span class="fn">f</span> <span class="fn">l</span> <span class="fn">(<a href="../../../.././Mathlib/Topology/Defs/Filter.html#nhds">nhds</a> <span class="fn">a</span>)</span></span>)</span></span>
+<span class="decl_args">
+<span class="fn">(<span class="fn">hg</span> : <span class="fn"><a href="../../../.././Mathlib/Order/Filter/Defs.html#Filter.Tendsto">Filter.Tendsto</a> <span class="fn">g</span> <span class="fn">l</span> <span class="fn">(<a href="../../../.././Mathlib/Topology/Defs/Filter.html#nhds">nhds</a> <span class="fn">b</span>)</span></span>)</span></span>
+<span class="decl_args"> :</span><div class="decl_type"><span class="fn"><span class="fn"><a href="../../../.././Mathlib/Order/Filter/Defs.html#Filter.Tendsto">Filter.Tendsto</a> <span class="fn">(fun (<span class="fn">x</span> : <span class="fn">α</span>) =&gt; <span class="fn"><span class="fn">f</span> <span class="fn">x</span></span> <a href="../../../.././Init/Prelude.html#HSub.hSub">-</a> <span class="fn"><span class="fn">g</span> <span class="fn">x</span></span>)</span> <span class="fn">l</span> <span class="fn">(<a href="../../../.././Mathlib/Topology/Defs/Filter.html#nhds">nhds</a> <span class="fn">0</span>)</span></span> → <span class="fn">a</span> <a href="../../../.././Init/Prelude.html#Eq">=</a> <span class="fn">b</span></span></div></div><p><strong>Alias</strong> of the forward direction of <code><a href="../../../.././Mathlib/Topology/Algebra/Group/ContinuousDiv.html#tendsto_sub_nhds_zero_iff_eq">tendsto_sub_nhds_zero_iff_eq</a></code>.</p></div></div><div class="decl" id="nhds_translation_div"><div class="theorem"><div class="gh_link"><a href="https://github.com/leanprover-community/mathlib4/blob/ac3d0c9671540e5ea16ebbbf0699e4f62f4e9f96/Mathlib/Topology/Algebra/Group/ContinuousDiv.lean#L121-L123">source</a></div><div class="decl_header"><span class="decl_kind">theorem</span>
+<span class="decl_name"><a class="break_within" href="../../../.././Mathlib/Topology/Algebra/Group/ContinuousDiv.html#nhds_translation_div"><span class="name">nhds_translation_div</span></a></span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">G</span> : <a href="../../../.././foundational_types.html">Type</a> u_1}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Algebra/Group/Defs.html#Group">Group</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Basic.html#TopologicalSpace">TopologicalSpace</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Algebra/Group/Defs.html#IsTopologicalGroup">IsTopologicalGroup</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="decl_args">
+<span class="fn">(<span class="fn">x</span> : <span class="fn">G</span>)</span></span>
+<span class="decl_args"> :</span><div class="decl_type"><span class="fn"><a href="../../../.././Mathlib/Order/Filter/Defs.html#Filter.comap">Filter.comap</a> <span class="fn">(fun (<span class="fn">x_1</span> : <span class="fn">G</span>) =&gt; <span class="fn">x_1</span> <a href="../../../.././Init/Prelude.html#HDiv.hDiv">/</a> <span class="fn">x</span>)</span> <span class="fn">(<a href="../../../.././Mathlib/Topology/Defs/Filter.html#nhds">nhds</a> <span class="fn">1</span>)</span></span> <a href="../../../.././Init/Prelude.html#Eq">=</a> <span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Filter.html#nhds">nhds</a> <span class="fn">x</span></span></div></div></div></div><div class="decl" id="nhds_translation_sub"><div class="theorem"><div class="gh_link"><a href="https://github.com/leanprover-community/mathlib4/blob/ac3d0c9671540e5ea16ebbbf0699e4f62f4e9f96/Mathlib/Topology/Algebra/Group/ContinuousDiv.lean#L121-L121">source</a></div><div class="decl_header"><span class="decl_kind">theorem</span>
+<span class="decl_name"><a class="break_within" href="../../../.././Mathlib/Topology/Algebra/Group/ContinuousDiv.html#nhds_translation_sub"><span class="name">nhds_translation_sub</span></a></span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">G</span> : <a href="../../../.././foundational_types.html">Type</a> u_1}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Algebra/Group/Defs.html#AddGroup">AddGroup</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Basic.html#TopologicalSpace">TopologicalSpace</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Algebra/Group/Defs.html#IsTopologicalAddGroup">IsTopologicalAddGroup</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="decl_args">
+<span class="fn">(<span class="fn">x</span> : <span class="fn">G</span>)</span></span>
+<span class="decl_args"> :</span><div class="decl_type"><span class="fn"><a href="../../../.././Mathlib/Order/Filter/Defs.html#Filter.comap">Filter.comap</a> <span class="fn">(fun (<span class="fn">x_1</span> : <span class="fn">G</span>) =&gt; <span class="fn">x_1</span> <a href="../../../.././Init/Prelude.html#HSub.hSub">-</a> <span class="fn">x</span>)</span> <span class="fn">(<a href="../../../.././Mathlib/Topology/Defs/Filter.html#nhds">nhds</a> <span class="fn">0</span>)</span></span> <a href="../../../.././Init/Prelude.html#Eq">=</a> <span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Filter.html#nhds">nhds</a> <span class="fn">x</span></span></div></div></div></div><div class="decl" id="Filter.map_divRight_nhdsNE"><div class="theorem"><div class="gh_link"><a href="https://github.com/leanprover-community/mathlib4/blob/ac3d0c9671540e5ea16ebbbf0699e4f62f4e9f96/Mathlib/Topology/Algebra/Group/ContinuousDiv.lean#L125-L129">source</a></div><div class="attributes">@[simp]</div>
+<div class="decl_header"><span class="decl_kind">theorem</span>
+<span class="decl_name"><a class="break_within" href="../../../.././Mathlib/Topology/Algebra/Group/ContinuousDiv.html#Filter.map_divRight_nhdsNE"><span class="name">Filter</span>.<span class="name">map_divRight_nhdsNE</span></a></span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">G</span> : <a href="../../../.././foundational_types.html">Type</a> u_1}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Algebra/Group/Defs.html#Group">Group</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Basic.html#TopologicalSpace">TopologicalSpace</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Algebra/Group/Defs.html#IsTopologicalGroup">IsTopologicalGroup</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">c </span><span class="fn">a</span> : <span class="fn">G</span>}</span></span>
+</span><span class="decl_args"> :</span><div class="decl_type"><span class="fn"><a href="../../../.././Mathlib/Order/Filter/Defs.html#Filter.map">map</a> <span class="fn">(fun (<span class="fn">x</span> : <span class="fn">G</span>) =&gt; <span class="fn">x</span> <a href="../../../.././Init/Prelude.html#HDiv.hDiv">/</a> <span class="fn">c</span>)</span> <span class="fn">(<a href="../../../.././Mathlib/Topology/Defs/Filter.html#nhdsWithin">nhdsWithin</a> <span class="fn">a</span> <a href="../../../.././Init/Core.html#Singleton.singleton">{</a><span class="fn">a</span><a href="../../../.././Init/Core.html#Singleton.singleton">}</a><a href="../../../.././Mathlib/Order/Notation.html#Compl.compl">ᶜ</a>)</span></span> <a href="../../../.././Init/Prelude.html#Eq">=</a> <span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Filter.html#nhdsWithin">nhdsWithin</a> (<span class="fn">a</span> <a href="../../../.././Init/Prelude.html#HDiv.hDiv">/</a> <span class="fn">c</span>) <a href="../../../.././Init/Core.html#Singleton.singleton">{</a><span class="fn">a</span> <a href="../../../.././Init/Prelude.html#HDiv.hDiv">/</a> <span class="fn">c</span><a href="../../../.././Init/Core.html#Singleton.singleton">}</a><a href="../../../.././Mathlib/Order/Notation.html#Compl.compl">ᶜ</a></span></div></div></div></div><div class="decl" id="Filter.map_subRight_nhdsNE"><div class="theorem"><div class="gh_link"><a href="https://github.com/leanprover-community/mathlib4/blob/ac3d0c9671540e5ea16ebbbf0699e4f62f4e9f96/Mathlib/Topology/Algebra/Group/ContinuousDiv.lean#L125-L125">source</a></div><div class="attributes">@[simp]</div>
+<div class="decl_header"><span class="decl_kind">theorem</span>
+<span class="decl_name"><a class="break_within" href="../../../.././Mathlib/Topology/Algebra/Group/ContinuousDiv.html#Filter.map_subRight_nhdsNE"><span class="name">Filter</span>.<span class="name">map_subRight_nhdsNE</span></a></span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">G</span> : <a href="../../../.././foundational_types.html">Type</a> u_1}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Algebra/Group/Defs.html#AddGroup">AddGroup</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Basic.html#TopologicalSpace">TopologicalSpace</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Algebra/Group/Defs.html#IsTopologicalAddGroup">IsTopologicalAddGroup</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">c </span><span class="fn">a</span> : <span class="fn">G</span>}</span></span>
+</span><span class="decl_args"> :</span><div class="decl_type"><span class="fn"><a href="../../../.././Mathlib/Order/Filter/Defs.html#Filter.map">map</a> <span class="fn">(fun (<span class="fn">x</span> : <span class="fn">G</span>) =&gt; <span class="fn">x</span> <a href="../../../.././Init/Prelude.html#HSub.hSub">-</a> <span class="fn">c</span>)</span> <span class="fn">(<a href="../../../.././Mathlib/Topology/Defs/Filter.html#nhdsWithin">nhdsWithin</a> <span class="fn">a</span> <a href="../../../.././Init/Core.html#Singleton.singleton">{</a><span class="fn">a</span><a href="../../../.././Init/Core.html#Singleton.singleton">}</a><a href="../../../.././Mathlib/Order/Notation.html#Compl.compl">ᶜ</a>)</span></span> <a href="../../../.././Init/Prelude.html#Eq">=</a> <span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Filter.html#nhdsWithin">nhdsWithin</a> (<span class="fn">a</span> <a href="../../../.././Init/Prelude.html#HSub.hSub">-</a> <span class="fn">c</span>) <a href="../../../.././Init/Core.html#Singleton.singleton">{</a><span class="fn">a</span> <a href="../../../.././Init/Prelude.html#HSub.hSub">-</a> <span class="fn">c</span><a href="../../../.././Init/Core.html#Singleton.singleton">}</a><a href="../../../.././Mathlib/Order/Notation.html#Compl.compl">ᶜ</a></span></div></div></div></div><div class="decl" id="Filter.map_divRight_nhds"><div class="theorem"><div class="gh_link"><a href="https://github.com/leanprover-community/mathlib4/blob/ac3d0c9671540e5ea16ebbbf0699e4f62f4e9f96/Mathlib/Topology/Algebra/Group/ContinuousDiv.lean#L131-L134">source</a></div><div class="attributes">@[simp]</div>
+<div class="decl_header"><span class="decl_kind">theorem</span>
+<span class="decl_name"><a class="break_within" href="../../../.././Mathlib/Topology/Algebra/Group/ContinuousDiv.html#Filter.map_divRight_nhds"><span class="name">Filter</span>.<span class="name">map_divRight_nhds</span></a></span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">G</span> : <a href="../../../.././foundational_types.html">Type</a> u_1}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Algebra/Group/Defs.html#Group">Group</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Basic.html#TopologicalSpace">TopologicalSpace</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Algebra/Group/Defs.html#IsTopologicalGroup">IsTopologicalGroup</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">c </span><span class="fn">a</span> : <span class="fn">G</span>}</span></span>
+</span><span class="decl_args"> :</span><div class="decl_type"><span class="fn"><a href="../../../.././Mathlib/Order/Filter/Defs.html#Filter.map">map</a> <span class="fn">(fun (<span class="fn">x</span> : <span class="fn">G</span>) =&gt; <span class="fn">x</span> <a href="../../../.././Init/Prelude.html#HDiv.hDiv">/</a> <span class="fn">c</span>)</span> <span class="fn">(<a href="../../../.././Mathlib/Topology/Defs/Filter.html#nhds">nhds</a> <span class="fn">a</span>)</span></span> <a href="../../../.././Init/Prelude.html#Eq">=</a> <span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Filter.html#nhds">nhds</a> (<span class="fn">a</span> <a href="../../../.././Init/Prelude.html#HDiv.hDiv">/</a> <span class="fn">c</span>)</span></div></div></div></div><div class="decl" id="Filter.map_subRight_nhds"><div class="theorem"><div class="gh_link"><a href="https://github.com/leanprover-community/mathlib4/blob/ac3d0c9671540e5ea16ebbbf0699e4f62f4e9f96/Mathlib/Topology/Algebra/Group/ContinuousDiv.lean#L131-L131">source</a></div><div class="attributes">@[simp]</div>
+<div class="decl_header"><span class="decl_kind">theorem</span>
+<span class="decl_name"><a class="break_within" href="../../../.././Mathlib/Topology/Algebra/Group/ContinuousDiv.html#Filter.map_subRight_nhds"><span class="name">Filter</span>.<span class="name">map_subRight_nhds</span></a></span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">G</span> : <a href="../../../.././foundational_types.html">Type</a> u_1}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Algebra/Group/Defs.html#AddGroup">AddGroup</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Basic.html#TopologicalSpace">TopologicalSpace</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Algebra/Group/Defs.html#IsTopologicalAddGroup">IsTopologicalAddGroup</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">c </span><span class="fn">a</span> : <span class="fn">G</span>}</span></span>
+</span><span class="decl_args"> :</span><div class="decl_type"><span class="fn"><a href="../../../.././Mathlib/Order/Filter/Defs.html#Filter.map">map</a> <span class="fn">(fun (<span class="fn">x</span> : <span class="fn">G</span>) =&gt; <span class="fn">x</span> <a href="../../../.././Init/Prelude.html#HSub.hSub">-</a> <span class="fn">c</span>)</span> <span class="fn">(<a href="../../../.././Mathlib/Topology/Defs/Filter.html#nhds">nhds</a> <span class="fn">a</span>)</span></span> <a href="../../../.././Init/Prelude.html#Eq">=</a> <span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Filter.html#nhds">nhds</a> (<span class="fn">a</span> <a href="../../../.././Init/Prelude.html#HSub.hSub">-</a> <span class="fn">c</span>)</span></div></div></div></div><div class="decl" id="Filter.map_divLeft_nhdsNE"><div class="theorem"><div class="gh_link"><a href="https://github.com/leanprover-community/mathlib4/blob/ac3d0c9671540e5ea16ebbbf0699e4f62f4e9f96/Mathlib/Topology/Algebra/Group/ContinuousDiv.lean#L136-L140">source</a></div><div class="attributes">@[simp]</div>
+<div class="decl_header"><span class="decl_kind">theorem</span>
+<span class="decl_name"><a class="break_within" href="../../../.././Mathlib/Topology/Algebra/Group/ContinuousDiv.html#Filter.map_divLeft_nhdsNE"><span class="name">Filter</span>.<span class="name">map_divLeft_nhdsNE</span></a></span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">G</span> : <a href="../../../.././foundational_types.html">Type</a> u_1}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Algebra/Group/Defs.html#Group">Group</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Basic.html#TopologicalSpace">TopologicalSpace</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Algebra/Group/Defs.html#IsTopologicalGroup">IsTopologicalGroup</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">c </span><span class="fn">a</span> : <span class="fn">G</span>}</span></span>
+</span><span class="decl_args"> :</span><div class="decl_type"><span class="fn"><a href="../../../.././Mathlib/Order/Filter/Defs.html#Filter.map">map</a> <span class="fn">(fun (<span class="fn">x</span> : <span class="fn">G</span>) =&gt; <span class="fn">c</span> <a href="../../../.././Init/Prelude.html#HDiv.hDiv">/</a> <span class="fn">x</span>)</span> <span class="fn">(<a href="../../../.././Mathlib/Topology/Defs/Filter.html#nhdsWithin">nhdsWithin</a> <span class="fn">a</span> <a href="../../../.././Init/Core.html#Singleton.singleton">{</a><span class="fn">a</span><a href="../../../.././Init/Core.html#Singleton.singleton">}</a><a href="../../../.././Mathlib/Order/Notation.html#Compl.compl">ᶜ</a>)</span></span> <a href="../../../.././Init/Prelude.html#Eq">=</a> <span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Filter.html#nhdsWithin">nhdsWithin</a> (<span class="fn">c</span> <a href="../../../.././Init/Prelude.html#HDiv.hDiv">/</a> <span class="fn">a</span>) <a href="../../../.././Init/Core.html#Singleton.singleton">{</a><span class="fn">c</span> <a href="../../../.././Init/Prelude.html#HDiv.hDiv">/</a> <span class="fn">a</span><a href="../../../.././Init/Core.html#Singleton.singleton">}</a><a href="../../../.././Mathlib/Order/Notation.html#Compl.compl">ᶜ</a></span></div></div></div></div><div class="decl" id="Filter.map_subLeft_nhdsNE"><div class="theorem"><div class="gh_link"><a href="https://github.com/leanprover-community/mathlib4/blob/ac3d0c9671540e5ea16ebbbf0699e4f62f4e9f96/Mathlib/Topology/Algebra/Group/ContinuousDiv.lean#L136-L136">source</a></div><div class="attributes">@[simp]</div>
+<div class="decl_header"><span class="decl_kind">theorem</span>
+<span class="decl_name"><a class="break_within" href="../../../.././Mathlib/Topology/Algebra/Group/ContinuousDiv.html#Filter.map_subLeft_nhdsNE"><span class="name">Filter</span>.<span class="name">map_subLeft_nhdsNE</span></a></span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">G</span> : <a href="../../../.././foundational_types.html">Type</a> u_1}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Algebra/Group/Defs.html#AddGroup">AddGroup</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Basic.html#TopologicalSpace">TopologicalSpace</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Algebra/Group/Defs.html#IsTopologicalAddGroup">IsTopologicalAddGroup</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">c </span><span class="fn">a</span> : <span class="fn">G</span>}</span></span>
+</span><span class="decl_args"> :</span><div class="decl_type"><span class="fn"><a href="../../../.././Mathlib/Order/Filter/Defs.html#Filter.map">map</a> <span class="fn">(fun (<span class="fn">x</span> : <span class="fn">G</span>) =&gt; <span class="fn">c</span> <a href="../../../.././Init/Prelude.html#HSub.hSub">-</a> <span class="fn">x</span>)</span> <span class="fn">(<a href="../../../.././Mathlib/Topology/Defs/Filter.html#nhdsWithin">nhdsWithin</a> <span class="fn">a</span> <a href="../../../.././Init/Core.html#Singleton.singleton">{</a><span class="fn">a</span><a href="../../../.././Init/Core.html#Singleton.singleton">}</a><a href="../../../.././Mathlib/Order/Notation.html#Compl.compl">ᶜ</a>)</span></span> <a href="../../../.././Init/Prelude.html#Eq">=</a> <span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Filter.html#nhdsWithin">nhdsWithin</a> (<span class="fn">c</span> <a href="../../../.././Init/Prelude.html#HSub.hSub">-</a> <span class="fn">a</span>) <a href="../../../.././Init/Core.html#Singleton.singleton">{</a><span class="fn">c</span> <a href="../../../.././Init/Prelude.html#HSub.hSub">-</a> <span class="fn">a</span><a href="../../../.././Init/Core.html#Singleton.singleton">}</a><a href="../../../.././Mathlib/Order/Notation.html#Compl.compl">ᶜ</a></span></div></div></div></div><div class="decl" id="Filter.map_divLeft_nhds"><div class="theorem"><div class="gh_link"><a href="https://github.com/leanprover-community/mathlib4/blob/ac3d0c9671540e5ea16ebbbf0699e4f62f4e9f96/Mathlib/Topology/Algebra/Group/ContinuousDiv.lean#L142-L145">source</a></div><div class="attributes">@[simp]</div>
+<div class="decl_header"><span class="decl_kind">theorem</span>
+<span class="decl_name"><a class="break_within" href="../../../.././Mathlib/Topology/Algebra/Group/ContinuousDiv.html#Filter.map_divLeft_nhds"><span class="name">Filter</span>.<span class="name">map_divLeft_nhds</span></a></span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">G</span> : <a href="../../../.././foundational_types.html">Type</a> u_1}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Algebra/Group/Defs.html#Group">Group</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Basic.html#TopologicalSpace">TopologicalSpace</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Algebra/Group/Defs.html#IsTopologicalGroup">IsTopologicalGroup</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">c </span><span class="fn">a</span> : <span class="fn">G</span>}</span></span>
+</span><span class="decl_args"> :</span><div class="decl_type"><span class="fn"><a href="../../../.././Mathlib/Order/Filter/Defs.html#Filter.map">map</a> <span class="fn">(fun (<span class="fn">x</span> : <span class="fn">G</span>) =&gt; <span class="fn">c</span> <a href="../../../.././Init/Prelude.html#HDiv.hDiv">/</a> <span class="fn">x</span>)</span> <span class="fn">(<a href="../../../.././Mathlib/Topology/Defs/Filter.html#nhds">nhds</a> <span class="fn">a</span>)</span></span> <a href="../../../.././Init/Prelude.html#Eq">=</a> <span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Filter.html#nhds">nhds</a> (<span class="fn">c</span> <a href="../../../.././Init/Prelude.html#HDiv.hDiv">/</a> <span class="fn">a</span>)</span></div></div></div></div><div class="decl" id="Filter.map_subLeft_nhds"><div class="theorem"><div class="gh_link"><a href="https://github.com/leanprover-community/mathlib4/blob/ac3d0c9671540e5ea16ebbbf0699e4f62f4e9f96/Mathlib/Topology/Algebra/Group/ContinuousDiv.lean#L142-L142">source</a></div><div class="attributes">@[simp]</div>
+<div class="decl_header"><span class="decl_kind">theorem</span>
+<span class="decl_name"><a class="break_within" href="../../../.././Mathlib/Topology/Algebra/Group/ContinuousDiv.html#Filter.map_subLeft_nhds"><span class="name">Filter</span>.<span class="name">map_subLeft_nhds</span></a></span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">G</span> : <a href="../../../.././foundational_types.html">Type</a> u_1}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Algebra/Group/Defs.html#AddGroup">AddGroup</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Basic.html#TopologicalSpace">TopologicalSpace</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[<span class="fn"><a href="../../../.././Mathlib/Topology/Algebra/Group/Defs.html#IsTopologicalAddGroup">IsTopologicalAddGroup</a> <span class="fn">G</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{<span class="fn">c </span><span class="fn">a</span> : <span class="fn">G</span>}</span></span>
+</span><span class="decl_args"> :</span><div class="decl_type"><span class="fn"><a href="../../../.././Mathlib/Order/Filter/Defs.html#Filter.map">map</a> <span class="fn">(fun (<span class="fn">x</span> : <span class="fn">G</span>) =&gt; <span class="fn">c</span> <a href="../../../.././Init/Prelude.html#HSub.hSub">-</a> <span class="fn">x</span>)</span> <span class="fn">(<a href="../../../.././Mathlib/Topology/Defs/Filter.html#nhds">nhds</a> <span class="fn">a</span>)</span></span> <a href="../../../.././Init/Prelude.html#Eq">=</a> <span class="fn"><a href="../../../.././Mathlib/Topology/Defs/Filter.html#nhds">nhds</a> (<span class="fn">c</span> <a href="../../../.././Init/Prelude.html#HSub.hSub">-</a> <span class="fn">a</span>)</span></div></div></div></div></main>
+<nav class="nav"><iframe src="../../../.././navbar.html" class="navframe" frameBorder="0"></iframe></nav></body></html>

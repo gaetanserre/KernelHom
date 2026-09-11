@@ -58,6 +58,105 @@
     <link rel="stylesheet" href="-verso-data/tippy-border.css">
     <link rel="stylesheet" href="-verso-data/katex/katex.css">
     <style>
+.marginalia .note {
+  position: relative;
+  padding: 0.5rem;
+}
+
+/*
+The margin-note layout responds to the width of <main>, not the viewport, because the
+ToC is resizable: a wider ToC leaves less room beside the text for notes. <main> is a
+query container (see Html/Style.lean), so the container queries below track the actual
+content width.
+
+There are two "in the margin" regimes, split at the same width where the content stops
+being left-aligned and becomes centered (1112px and 1212px of content width; at the
+default ToC width these are the old 1400px and 1500px viewport breakpoints):
+
+  * While the content is left-aligned there is a large area to its right, so a fixed
+    13rem note with a fixed 16rem overhang fits comfortably.
+  * Once the content is centered the note must fit the symmetric right gap, whose width
+    is (content - text column) / 2. A fixed overhang would overflow the page for content
+    widths just above the centering threshold, so the note and its overhang are sized in
+    container units, which always fit that gap.
+*/
+
+/* Narrow viewport (e.g. phone): the ToC is hidden and the note spans the text column. */
+@media screen and (width <= 700px) {
+  .marginalia .note {
+    float: left;
+    clear: left;
+    width: 90%;
+    margin: 1rem 5%;
+  }
+}
+
+/* Wider than a phone: by default float the note at the right of the text column,
+   overlapping the content. The container queries below lift it into the true margin
+   once there is room. */
+@media screen and (min-width: 701px) {
+  .marginalia .note {
+    float: right;
+    clear: right;
+    width: 40%;
+    margin: 1rem 0;
+    margin-left: 10%;
+  }
+}
+
+/* Left-aligned content: a fixed-size note in the wide area to its right. */
+@container main (width >= 1112px) {
+  .marginalia .note {
+    float: right;
+    clear: right;
+    width: 13rem;
+    margin: 1rem -16rem 0 0;
+  }
+}
+
+/* Centered content: size the note in container units so it always fits the symmetric
+   right gap. The threshold matches the content-centering threshold in Html/Style.lean,
+   so the fixed-overhang note above is only ever used while the content is left-aligned.
+   The overhang (18cqi) stays below the gap, (100cqi - text column) / 2, for every
+   content width at which the content is centered. */
+@container main (width >= 1212px) {
+  .marginalia .note {
+    width: 15cqi;
+    margin-right: -18cqi;
+  }
+}
+
+.marginalia:hover, .marginalia:hover .note, .marginalia:has(.note:hover) {
+  background-color: var(--lean-accent-light-blue);
+}
+
+/* The counter must be established inside <main>, whose container declaration (see
+   Html/Style.lean) applies style containment: a counter established outside the
+   containment boundary cannot be incremented by the notes within it. */
+.content-wrapper {
+  counter-reset: margin-note-counter;
+}
+.marginalia .note {
+  counter-increment: margin-note-counter;
+}
+.marginalia .note::before {
+  content: counter(margin-note-counter) ".";
+  position: absolute;
+  vertical-align: baseline;
+  font-size: 0.9em;
+  font-weight: bold;
+  left: -3rem;
+  width: 3rem;
+  text-align: right;
+}
+.marginalia::after {
+  content: counter(margin-note-counter);
+  vertical-align: super;
+  font-size: 0.7em;
+  font-weight: bold;
+  margin-right: 0.5em;
+}
+</style><style>
 .namedocs {
   position: relative;
   border: solid 1px #98B2C0;
@@ -813,102 +912,6 @@
 }
 .namedocs:has(input[data-parent-idx="49"]:checked):has(.inheritance[data-inherited-from="49"]:hover) [data-inherited-from]:not([data-inherited-from="49"]) {
   opacity: 0.5;
-}
-</style><style>
-.marginalia .note {
-  position: relative;
-  padding: 0.5rem;
-}
-
-/*
-The margin-note layout responds to the width of <main>, not the viewport, because the
-ToC is resizable: a wider ToC leaves less room beside the text for notes. <main> is a
-query container (see Html/Style.lean), so the container queries below track the actual
-content width.
-
-There are two "in the margin" regimes, split at the same width where the content stops
-being left-aligned and becomes centered (1112px and 1212px of content width; at the
-default ToC width these are the old 1400px and 1500px viewport breakpoints):
-
-  * While the content is left-aligned there is a large area to its right, so a fixed
-    13rem note with a fixed 16rem overhang fits comfortably.
-  * Once the content is centered the note must fit the symmetric right gap, whose width
-    is (content - text column) / 2. A fixed overhang would overflow the page for content
-    widths just above the centering threshold, so the note and its overhang are sized in
-    container units, which always fit that gap.
-*/
-
-/* Narrow viewport (e.g. phone): the ToC is hidden and the note spans the text column. */
-@media screen and (width <= 700px) {
-  .marginalia .note {
-    float: left;
-    clear: left;
-    width: 90%;
-    margin: 1rem 5%;
-  }
-}
-
-/* Wider than a phone: by default float the note at the right of the text column,
-   overlapping the content. The container queries below lift it into the true margin
-   once there is room. */
-@media screen and (min-width: 701px) {
-  .marginalia .note {
-    float: right;
-    clear: right;
-    width: 40%;
-    margin: 1rem 0;
-    margin-left: 10%;
-  }
-}
-
-/* Left-aligned content: a fixed-size note in the wide area to its right. */
-@container main (width >= 1112px) {
-  .marginalia .note {
-    float: right;
-    clear: right;
-    width: 13rem;
-    margin: 1rem -16rem 0 0;
-  }
-}
-
-/* Centered content: size the note in container units so it always fits the symmetric
-   right gap. The threshold matches the content-centering threshold in Html/Style.lean,
-   so the fixed-overhang note above is only ever used while the content is left-aligned.
-   The overhang (18cqi) stays below the gap, (100cqi - text column) / 2, for every
-   content width at which the content is centered. */
-@container main (width >= 1212px) {
-  .marginalia .note {
-    width: 15cqi;
-    margin-right: -18cqi;
-  }
-}
-
-.marginalia:hover, .marginalia:hover .note, .marginalia:has(.note:hover) {
-  background-color: var(--lean-accent-light-blue);
-}
-
-body {
-  counter-reset: margin-note-counter;
-}
-.marginalia .note {
-  counter-increment: margin-note-counter;
-}
-.marginalia .note::before {
-  content: counter(margin-note-counter) ".";
-  position: absolute;
-  vertical-align: baseline;
-  font-size: 0.9em;
-  font-weight: bold;
-  left: -3rem;
-  width: 3rem;
-  text-align: right;
-}
-.marginalia::after {
-  content: counter(margin-note-counter);
-  vertical-align: super;
-  font-size: 0.7em;
-  font-weight: bold;
-  margin-right: 0.5em;
 }
 </style><style>
 :root {
@@ -2029,7 +2032,7 @@ window.onload = async () => {
             <div class="split-toc book">
               <div class="title">
                 <label for="--verso-manual-toc-----bookRoot" class="toggle-split-toc"><input type="checkbox" class="toggle-split-toc" id="--verso-manual-toc-----bookRoot" checked="checked"></label><span class="">Table of Contents</span></div>
-              <table><tr class="numbered"><td class="num">1.</td><td><a href="Usage-and-examples/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Usage-and-examples">Usage and examples</a></td></tr><tr class="numbered"><td class="num">2.</td><td><a href="Universe-handling/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Universe-handling">Universe handling</a></td></tr><tr class="numbered"><td class="num">3.</td><td><a href="kernel_hom-tactic/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--kernel_hom-tactic">kernel_hom tactic</a></td></tr><tr class="numbered"><td class="num">4.</td><td><a href="hom_kernel-tactic/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--hom_kernel-tactic">hom_kernel tactic</a></td></tr><tr class="numbered"><td class="num">5.</td><td><a href="Categorical-tactics-for-kernels/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Categorical-tactics-for-kernels">Categorical tactics for kernels</a></td></tr><tr class="numbered"><td class="num">6.</td><td><a href="Kernel-reassociation/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Kernel-reassociation">Kernel reassociation</a></td></tr><tr class="current numbered"><td class="num">7.</td><td><a href="Kernelized-monoidal-composition/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Kernelized-monoidal-composition">Monoidal composition</a></td></tr></table></div>
+              <table><tr class="numbered"><td class="num">1.</td><td><a href="Usage-and-examples/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Usage-and-examples">Usage and examples</a></td></tr><tr class="numbered"><td class="num">2.</td><td><a href="Universe-handling/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Universe-handling">Universe handling</a></td></tr><tr class="numbered"><td class="num">3.</td><td><a href="kernel_hom-tactic/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--kernel_hom-tactic">kernel_hom tactic</a></td></tr><tr class="numbered"><td class="num">4.</td><td><a href="hom_kernel-tactic/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--hom_kernel-tactic">hom_kernel tactic</a></td></tr><tr class="numbered"><td class="num">5.</td><td><a href="Categorical-tactics-for-kernels/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Categorical-tactics-for-kernels">Categorical tactics for kernels</a></td></tr><tr class="numbered"><td class="num">6.</td><td><a href="Kernel-reassociation/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Kernel-reassociation">Kernel reassociation</a></td></tr><tr class="current numbered"><td class="num">7.</td><td><a href="Kernelized-monoidal-composition/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Kernelized-monoidal-composition">Monoidal composition</a></td></tr><tr class="numbered"><td class="num">8.</td><td><a href="Performance/#performance">Performance</a></td></tr></table></div>
             <div class="split-toc">
               <div class="title">
                 <label for="--verso-manual-toc-Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Kernelized-monoidal-composition" class="toggle-split-toc"><input type="checkbox" class="toggle-split-toc" id="--verso-manual-toc-Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Kernelized-monoidal-composition" checked="checked"></label><span class="number">7.</span> <span class="current"><a href="Kernelized-monoidal-composition/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Kernelized-monoidal-composition">Monoidal composition</a></span></div>
@@ -2058,62 +2061,61 @@ window.onload = async () => {
       <div class="toc-resize-handle"></div>
       <main><div class="content-wrapper">
           <nav class="prev-next-buttons">
-            <a class="local-button active" href="Kernel-reassociation/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Kernel-reassociation" rel="prev" title="6. Kernel reassociation"><span class="arrow">←</span><span class="where">6. Kernel reassociation</span></a><div></div>
-            </nav>
+            <a class="local-button active" href="Kernel-reassociation/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Kernel-reassociation" rel="prev" title="6. Kernel reassociation"><span class="arrow">←</span><span class="where">6. Kernel reassociation</span></a><a class="local-button active" href="Performance/#performance" rel="next" title="8. Performance"><span class="where">8. Performance</span><span class="arrow">→</span></a></nav>
           <section>
             <h1>
               7. Kernelized monoidal composition<span class="permalink-widget inline"><a href="find/?domain=Verso.Genre.Manual.section&amp;name=Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Kernelized-monoidal-composition" title="Permalink">🔗</a></span></h1>
             <p>
-              The translation of kernels to morphisms in the <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-SFinKer" data-verso-hover="6">SFinKer</span></code> category allows to adapt the “<code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-CategoryTheory.monoidalComp" data-verso-hover="11">⊗≫</span></code>” monoidal composition for kernels. The <code class="hl lean inline" data-lean-context="examples"><a href="Kernelized-monoidal-composition/#MeasurableCoherence___mk" title="Documentation for MeasurableCoherence"><span class="const token" data-binding="const-MeasurableCoherence" data-verso-hover="145">MeasurableCoherence</span></a></code> class witnesses measurable equivalences between types, enabling an instance of categorical <code class="hl lean inline" data-lean-context="examples"><a href="Kernelized-monoidal-composition/#MeasurableCoherence___monoidalCoherence" title="Documentation for MeasurableCoherence.monoidalCoherence"><span class="const token" data-binding="const-MeasurableCoherence.monoidalCoherence" data-verso-hover="146">MonoidalCoherence</span></a></code> that makes the kernelized monoidal composition (noted “<code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-ProbabilityTheory.Kernel.monoComp" data-verso-hover="12">⊗≫ₖ</span></code>”) possible.</p>
+              The translation of kernels to morphisms in the <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-SFinKer" data-verso-hover="8">SFinKer</span></code> category allows to adapt the “<code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-CategoryTheory.monoidalComp" data-verso-hover="13">⊗≫</span></code>” monoidal composition for kernels. The <code class="hl lean inline" data-lean-context="examples"><a href="Kernelized-monoidal-composition/#MeasurableCoherence___mk" title="Documentation for MeasurableCoherence"><span class="const token" data-binding="const-MeasurableCoherence" data-verso-hover="150">MeasurableCoherence</span></a></code> class witnesses measurable equivalences between types, enabling an instance of categorical <code class="hl lean inline" data-lean-context="examples"><a href="Kernelized-monoidal-composition/#MeasurableCoherence___monoidalCoherence" title="Documentation for MeasurableCoherence.monoidalCoherence"><span class="const token" data-binding="const-MeasurableCoherence.monoidalCoherence" data-verso-hover="151">MonoidalCoherence</span></a></code> that makes the kernelized monoidal composition (noted “<code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-ProbabilityTheory.Kernel.monoComp" data-verso-hover="14">⊗≫ₖ</span></code>”) possible.</p>
             <section>
               <h2 id="Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Kernelized-monoidal-composition--Measurable-Coherence">
                 7.1. Measurable Coherence<span class="permalink-widget inline"><a href="find/?domain=Verso.Genre.Manual.section&amp;name=Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Kernelized-monoidal-composition--Measurable-Coherence" title="Permalink">🔗</a></span></h2>
               <p>
-                The <code class="hl lean inline" data-lean-context="examples"><a href="Kernelized-monoidal-composition/#MeasurableCoherence___mk" title="Documentation for MeasurableCoherence"><span class="const token" data-binding="const-MeasurableCoherence" data-verso-hover="145">MeasurableCoherence</span></a></code> class witnesses the existence of measurable equivalences between two measurable spaces. It acts as a kernel-level counterpart to the categorical <code class="hl lean inline" data-lean-context="examples"><a href="Kernelized-monoidal-composition/#MeasurableCoherence___monoidalCoherence" title="Documentation for MeasurableCoherence.monoidalCoherence"><span class="const token" data-binding="const-MeasurableCoherence.monoidalCoherence" data-verso-hover="146">MonoidalCoherence</span></a></code> class:</p>
+                The <code class="hl lean inline" data-lean-context="examples"><a href="Kernelized-monoidal-composition/#MeasurableCoherence___mk" title="Documentation for MeasurableCoherence"><span class="const token" data-binding="const-MeasurableCoherence" data-verso-hover="150">MeasurableCoherence</span></a></code> class witnesses the existence of measurable equivalences between two measurable spaces. It acts as a kernel-level counterpart to the categorical <code class="hl lean inline" data-lean-context="examples"><a href="Kernelized-monoidal-composition/#MeasurableCoherence___monoidalCoherence" title="Documentation for MeasurableCoherence.monoidalCoherence"><span class="const token" data-binding="const-MeasurableCoherence.monoidalCoherence" data-verso-hover="151">MonoidalCoherence</span></a></code> class:</p>
               <div class="namedocs" id="MeasurableCoherence___mk">
-                <span class="permalink-widget block"><a href="find/?domain=Verso.Genre.Manual.doc&amp;name=MeasurableCoherence.miso" title="Permalink">🔗</a></span><span class="label">type class</span><pre class="signature hl lean block"><div class="wide-only"><a href="Kernelized-monoidal-composition/#MeasurableCoherence___mk" title="Documentation for MeasurableCoherence"><span class="const token" data-binding="const-MeasurableCoherence" data-verso-hover="145">MeasurableCoherence.{u_1, u_2}</span></a><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="var token" data-binding="var-_uniq.124" data-verso-hover="24">X</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="sort token" data-binding="sort-7243200735919010059" data-verso-hover="25">Type u_1</span><span class="unknown token" data-binding="">)</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="var token" data-binding="var-_uniq.125" data-verso-hover="26">Y</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="sort token" data-binding="sort-7243200735919010059" data-verso-hover="25">Type u_2</span><span class="unknown token" data-binding="">)</span><span class="inter-text">
-  </span><span class="unknown token" data-binding="">[</span><span class="const token" data-binding="const-MeasurableSpace" data-verso-hover="30">MeasurableSpace</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.124" data-verso-hover="24">X</span><span class="unknown token" data-binding="">]</span><span class="inter-text"> </span><span class="unknown token" data-binding="">[</span><span class="const token" data-binding="const-MeasurableSpace" data-verso-hover="30">MeasurableSpace</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.125" data-verso-hover="26">Y</span><span class="unknown token" data-binding="">]</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="sort token" data-binding="sort-7243200735919010059" data-verso-hover="25">Type (max u_1 u_2)</span></div><div class="narrow-only"><a href="Kernelized-monoidal-composition/#MeasurableCoherence___mk" title="Documentation for MeasurableCoherence"><span class="const token" data-binding="const-MeasurableCoherence" data-verso-hover="145">MeasurableCoherence.{u_1, u_2}</span></a><span class="inter-text">
-  </span><span class="unknown token" data-binding="">(</span><span class="var token" data-binding="var-_uniq.124" data-verso-hover="24">X</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="sort token" data-binding="sort-7243200735919010059" data-verso-hover="25">Type u_1</span><span class="unknown token" data-binding="">)</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="var token" data-binding="var-_uniq.125" data-verso-hover="26">Y</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="sort token" data-binding="sort-7243200735919010059" data-verso-hover="25">Type u_2</span><span class="unknown token" data-binding="">)</span><span class="inter-text">
-  </span><span class="unknown token" data-binding="">[</span><span class="const token" data-binding="const-MeasurableSpace" data-verso-hover="30">MeasurableSpace</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.124" data-verso-hover="24">X</span><span class="unknown token" data-binding="">]</span><span class="inter-text">
-  </span><span class="unknown token" data-binding="">[</span><span class="const token" data-binding="const-MeasurableSpace" data-verso-hover="30">MeasurableSpace</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.125" data-verso-hover="26">Y</span><span class="unknown token" data-binding="">]</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="sort token" data-binding="sort-7243200735919010059" data-verso-hover="25">Type (max u_1 u_2)</span></div></pre><div class="text">
+                <span class="permalink-widget block"><a href="find/?domain=Verso.Genre.Manual.doc&amp;name=MeasurableCoherence.miso" title="Permalink">🔗</a></span><span class="label">type class</span><pre class="signature hl lean block"><div class="wide-only"><a href="Kernelized-monoidal-composition/#MeasurableCoherence___mk" title="Documentation for MeasurableCoherence"><span class="const token" data-binding="const-MeasurableCoherence" data-verso-hover="150">MeasurableCoherence.{u_1, u_2}</span></a><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="var token" data-binding="var-_uniq.124" data-verso-hover="25">X</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="sort token" data-binding="sort-7243200735919010059" data-verso-hover="26">Type u_1</span><span class="unknown token" data-binding="">)</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="var token" data-binding="var-_uniq.125" data-verso-hover="27">Y</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="sort token" data-binding="sort-7243200735919010059" data-verso-hover="26">Type u_2</span><span class="unknown token" data-binding="">)</span><span class="inter-text">
+  </span><span class="unknown token" data-binding="">[</span><span class="const token" data-binding="const-MeasurableSpace" data-verso-hover="31">MeasurableSpace</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.124" data-verso-hover="25">X</span><span class="unknown token" data-binding="">]</span><span class="inter-text"> </span><span class="unknown token" data-binding="">[</span><span class="const token" data-binding="const-MeasurableSpace" data-verso-hover="31">MeasurableSpace</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.125" data-verso-hover="27">Y</span><span class="unknown token" data-binding="">]</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="sort token" data-binding="sort-7243200735919010059" data-verso-hover="26">Type (max u_1 u_2)</span></div><div class="narrow-only"><a href="Kernelized-monoidal-composition/#MeasurableCoherence___mk" title="Documentation for MeasurableCoherence"><span class="const token" data-binding="const-MeasurableCoherence" data-verso-hover="150">MeasurableCoherence.{u_1, u_2}</span></a><span class="inter-text">
+  </span><span class="unknown token" data-binding="">(</span><span class="var token" data-binding="var-_uniq.124" data-verso-hover="25">X</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="sort token" data-binding="sort-7243200735919010059" data-verso-hover="26">Type u_1</span><span class="unknown token" data-binding="">)</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="var token" data-binding="var-_uniq.125" data-verso-hover="27">Y</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="sort token" data-binding="sort-7243200735919010059" data-verso-hover="26">Type u_2</span><span class="unknown token" data-binding="">)</span><span class="inter-text">
+  </span><span class="unknown token" data-binding="">[</span><span class="const token" data-binding="const-MeasurableSpace" data-verso-hover="31">MeasurableSpace</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.124" data-verso-hover="25">X</span><span class="unknown token" data-binding="">]</span><span class="inter-text">
+  </span><span class="unknown token" data-binding="">[</span><span class="const token" data-binding="const-MeasurableSpace" data-verso-hover="31">MeasurableSpace</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.125" data-verso-hover="27">Y</span><span class="unknown token" data-binding="">]</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="sort token" data-binding="sort-7243200735919010059" data-verso-hover="26">Type (max u_1 u_2)</span></div></pre><div class="text">
                   <p>
                     A class witnessing the existence of a measurable equivalence between two measurable spaces.</p>
                   <div class="docstring-section" role="group" aria-labelledby="docstring-section-Instance-Constructor">
                     <p class="docstring-section-label" id="docstring-section-Instance-Constructor">
                       Instance Constructor</p>
                     <section class="subdocs">
-                      <pre class="name-and-type hl lean"><a href="Kernelized-monoidal-composition/#MeasurableCoherence___mk" title="Documentation for MeasurableCoherence.mk"><span class="const token" data-binding="const-MeasurableCoherence.mk" data-verso-hover="147">MeasurableCoherence.mk</span></a><span class="unknown token" data-binding="">.{u_1,</span><span class="inter-text"> </span><span class="unknown token" data-binding="">u_2}</span></pre><div class="docs"></div>
+                      <pre class="name-and-type hl lean"><a href="Kernelized-monoidal-composition/#MeasurableCoherence___mk" title="Documentation for MeasurableCoherence.mk"><span class="const token" data-binding="const-MeasurableCoherence.mk" data-verso-hover="152">MeasurableCoherence.mk</span></a><span class="unknown token" data-binding="">.{u_1,</span><span class="inter-text"> </span><span class="unknown token" data-binding="">u_2}</span></pre><div class="docs"></div>
                       </section>
                     </div>
                   <div class="docstring-section" role="group" aria-labelledby="docstring-section-Methods">
                     <p class="docstring-section-label" id="docstring-section-Methods">
                       Methods</p>
                     <section class="subdocs">
-                      <pre class="name-and-type hl lean"><span class="const token" data-binding="const-MeasurableCoherence.miso" data-verso-hover="148">miso</span> : <span class="var token" data-binding="var-_uniq.114" data-verso-hover="24">X</span><span class="inter-text"> </span><span class="const token" data-binding="const-MeasurableEquiv" data-verso-hover="149">≃ᵐ</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.115" data-verso-hover="26">Y</span></pre><div class="docs">
+                      <pre class="name-and-type hl lean"><span class="const token" data-binding="const-MeasurableCoherence.miso" data-verso-hover="153">miso</span> : <span class="var token" data-binding="var-_uniq.114" data-verso-hover="25">X</span><span class="inter-text"> </span><span class="const token" data-binding="const-MeasurableEquiv" data-verso-hover="154">≃ᵐ</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.115" data-verso-hover="27">Y</span></pre><div class="docs">
                         <p>
-                          A measurable equivalence between <code class="hl lean inline" data-lean-context="docstring-examples"><span class="var token" data-binding="var-_uniq.132" data-verso-hover="24">X</span></code> and <code class="hl lean inline" data-lean-context="docstring-examples"><span class="var token" data-binding="var-_uniq.133" data-verso-hover="26">Y</span></code>.</p>
+                          A measurable equivalence between <code class="hl lean inline" data-lean-context="docstring-examples"><span class="var token" data-binding="var-_uniq.132" data-verso-hover="25">X</span></code> and <code class="hl lean inline" data-lean-context="docstring-examples"><span class="var token" data-binding="var-_uniq.133" data-verso-hover="27">Y</span></code>.</p>
                         </div>
                       </section>
                     </div>
                   </div>
                 </div>
               <p>
-                This class enables an instance of <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-CategoryTheory.MonoidalCoherence" data-verso-hover="150">MonoidalCoherence</span></code> between <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-SFinKer" data-verso-hover="6">SFinKer</span></code> objects at a common universe level via the <code class="hl lean inline" data-lean-context="examples"><a href="Kernelized-monoidal-composition/#MeasurableCoherence___monoidalCoherence" title="Documentation for MeasurableCoherence.monoidalCoherence"><span class="const token" data-binding="const-MeasurableCoherence.monoidalCoherence" data-verso-hover="146">monoidalCoherence</span></a></code> function, using measurable equivalences from the original types.</p>
+                This class enables an instance of <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-CategoryTheory.MonoidalCoherence" data-verso-hover="155">MonoidalCoherence</span></code> between <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-SFinKer" data-verso-hover="8">SFinKer</span></code> objects at a common universe level via the <code class="hl lean inline" data-lean-context="examples"><a href="Kernelized-monoidal-composition/#MeasurableCoherence___monoidalCoherence" title="Documentation for MeasurableCoherence.monoidalCoherence"><span class="const token" data-binding="const-MeasurableCoherence.monoidalCoherence" data-verso-hover="151">monoidalCoherence</span></a></code> function, using measurable equivalences from the original types.</p>
               <div class="namedocs" id="MeasurableCoherence___monoidalCoherence">
-                <span class="permalink-widget block"><a href="find/?domain=Verso.Genre.Manual.doc&amp;name=MeasurableCoherence.monoidalCoherence" title="Permalink">🔗</a></span><span class="label">def</span><pre class="signature hl lean block"><div class="wide-only"><a href="Kernelized-monoidal-composition/#MeasurableCoherence___monoidalCoherence" title="Documentation for MeasurableCoherence.monoidalCoherence"><span class="const token" data-binding="const-MeasurableCoherence.monoidalCoherence" data-verso-hover="146">MeasurableCoherence.monoidalCoherence.{u_1, u_2, u_3}</span></a><span class="inter-text"> </span><span class="unknown token" data-binding="">{</span><span class="var token" data-binding="var-_uniq.180" data-verso-hover="24">X</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="sort token" data-binding="sort-7243200735919010059" data-verso-hover="25">Type u_1</span><span class="unknown token" data-binding="">}</span><span class="inter-text">
-  </span><span class="unknown token" data-binding="">{</span><span class="var token" data-binding="var-_uniq.181" data-verso-hover="26">Y</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="sort token" data-binding="sort-7243200735919010059" data-verso-hover="25">Type u_2</span><span class="unknown token" data-binding="">}</span><span class="inter-text"> </span><span class="unknown token" data-binding="">[</span><span class="const token" data-binding="const-MeasurableSpace" data-verso-hover="30">MeasurableSpace</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.180" data-verso-hover="24">X</span><span class="unknown token" data-binding="">]</span><span class="inter-text"> </span><span class="unknown token" data-binding="">[</span><span class="const token" data-binding="const-MeasurableSpace" data-verso-hover="30">MeasurableSpace</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.181" data-verso-hover="26">Y</span><span class="unknown token" data-binding="">]</span><span class="inter-text">
-  </span><span class="unknown token" data-binding="">[</span><span class="var token" data-binding="var-_uniq.184" data-verso-hover="151">mXY</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><a href="Kernelized-monoidal-composition/#MeasurableCoherence___mk" title="Documentation for MeasurableCoherence"><span class="const token" data-binding="const-MeasurableCoherence" data-verso-hover="145">MeasurableCoherence</span></a><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.180" data-verso-hover="24">X</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.181" data-verso-hover="26">Y</span><span class="unknown token" data-binding="">]</span><span class="inter-text"> </span><span class="unknown token" data-binding="">{</span><span class="var token" data-binding="var-_uniq.185" data-verso-hover="152">SX</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.186" data-verso-hover="152">SY</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-SFinKer" data-verso-hover="6">SFinKer</span><span class="unknown token" data-binding="">}</span><span class="inter-text">
-  </span><span class="unknown token" data-binding="">(</span><span class="var token" data-binding="var-_uniq.187" data-verso-hover="153">ex</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.185" data-verso-hover="152">SX</span><span class="unknown token" data-binding="">.</span><span class="const token" data-binding="const-SFinKer.carrier" data-verso-hover="154">carrier</span><span class="inter-text"> </span><span class="const token" data-binding="const-MeasurableEquiv" data-verso-hover="149">≃ᵐ</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.180" data-verso-hover="24">X</span><span class="unknown token" data-binding="">)</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="var token" data-binding="var-_uniq.188" data-verso-hover="155">ey</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.186" data-verso-hover="152">SY</span><span class="unknown token" data-binding="">.</span><span class="const token" data-binding="const-SFinKer.carrier" data-verso-hover="154">carrier</span><span class="inter-text"> </span><span class="const token" data-binding="const-MeasurableEquiv" data-verso-hover="149">≃ᵐ</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.181" data-verso-hover="26">Y</span><span class="unknown token" data-binding="">)</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text">
-  </span><span class="const token" data-binding="const-CategoryTheory.MonoidalCoherence" data-verso-hover="150">CategoryTheory.MonoidalCoherence</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.185" data-verso-hover="152">SX</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.186" data-verso-hover="152">SY</span></div><div class="narrow-only"><a href="Kernelized-monoidal-composition/#MeasurableCoherence___monoidalCoherence" title="Documentation for MeasurableCoherence.monoidalCoherence"><span class="const token" data-binding="const-MeasurableCoherence.monoidalCoherence" data-verso-hover="146">MeasurableCoherence.monoidalCoherence.{u_1,
+                <span class="permalink-widget block"><a href="find/?domain=Verso.Genre.Manual.doc&amp;name=MeasurableCoherence.monoidalCoherence" title="Permalink">🔗</a></span><span class="label">def</span><pre class="signature hl lean block"><div class="wide-only"><a href="Kernelized-monoidal-composition/#MeasurableCoherence___monoidalCoherence" title="Documentation for MeasurableCoherence.monoidalCoherence"><span class="const token" data-binding="const-MeasurableCoherence.monoidalCoherence" data-verso-hover="151">MeasurableCoherence.monoidalCoherence.{u_1, u_2, u_3}</span></a><span class="inter-text"> </span><span class="unknown token" data-binding="">{</span><span class="var token" data-binding="var-_uniq.180" data-verso-hover="25">X</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="sort token" data-binding="sort-7243200735919010059" data-verso-hover="26">Type u_1</span><span class="unknown token" data-binding="">}</span><span class="inter-text">
+  </span><span class="unknown token" data-binding="">{</span><span class="var token" data-binding="var-_uniq.181" data-verso-hover="27">Y</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="sort token" data-binding="sort-7243200735919010059" data-verso-hover="26">Type u_2</span><span class="unknown token" data-binding="">}</span><span class="inter-text"> </span><span class="unknown token" data-binding="">[</span><span class="const token" data-binding="const-MeasurableSpace" data-verso-hover="31">MeasurableSpace</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.180" data-verso-hover="25">X</span><span class="unknown token" data-binding="">]</span><span class="inter-text"> </span><span class="unknown token" data-binding="">[</span><span class="const token" data-binding="const-MeasurableSpace" data-verso-hover="31">MeasurableSpace</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.181" data-verso-hover="27">Y</span><span class="unknown token" data-binding="">]</span><span class="inter-text">
+  </span><span class="unknown token" data-binding="">[</span><span class="var token" data-binding="var-_uniq.184" data-verso-hover="156">mXY</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><a href="Kernelized-monoidal-composition/#MeasurableCoherence___mk" title="Documentation for MeasurableCoherence"><span class="const token" data-binding="const-MeasurableCoherence" data-verso-hover="150">MeasurableCoherence</span></a><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.180" data-verso-hover="25">X</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.181" data-verso-hover="27">Y</span><span class="unknown token" data-binding="">]</span><span class="inter-text"> </span><span class="unknown token" data-binding="">{</span><span class="var token" data-binding="var-_uniq.185" data-verso-hover="157">SX</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.186" data-verso-hover="157">SY</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-SFinKer" data-verso-hover="8">SFinKer</span><span class="unknown token" data-binding="">}</span><span class="inter-text">
+  </span><span class="unknown token" data-binding="">(</span><span class="var token" data-binding="var-_uniq.187" data-verso-hover="158">ex</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.185" data-verso-hover="157">SX</span><span class="unknown token" data-binding="">.</span><span class="const token" data-binding="const-SFinKer.carrier" data-verso-hover="159">carrier</span><span class="inter-text"> </span><span class="const token" data-binding="const-MeasurableEquiv" data-verso-hover="154">≃ᵐ</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.180" data-verso-hover="25">X</span><span class="unknown token" data-binding="">)</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="var token" data-binding="var-_uniq.188" data-verso-hover="160">ey</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.186" data-verso-hover="157">SY</span><span class="unknown token" data-binding="">.</span><span class="const token" data-binding="const-SFinKer.carrier" data-verso-hover="159">carrier</span><span class="inter-text"> </span><span class="const token" data-binding="const-MeasurableEquiv" data-verso-hover="154">≃ᵐ</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.181" data-verso-hover="27">Y</span><span class="unknown token" data-binding="">)</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text">
+  </span><span class="const token" data-binding="const-CategoryTheory.MonoidalCoherence" data-verso-hover="155">CategoryTheory.MonoidalCoherence</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.185" data-verso-hover="157">SX</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.186" data-verso-hover="157">SY</span></div><div class="narrow-only"><a href="Kernelized-monoidal-composition/#MeasurableCoherence___monoidalCoherence" title="Documentation for MeasurableCoherence.monoidalCoherence"><span class="const token" data-binding="const-MeasurableCoherence.monoidalCoherence" data-verso-hover="151">MeasurableCoherence.monoidalCoherence.{u_1,
     u_2, u_3}</span></a><span class="inter-text">
-  </span><span class="unknown token" data-binding="">{</span><span class="var token" data-binding="var-_uniq.180" data-verso-hover="24">X</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="sort token" data-binding="sort-7243200735919010059" data-verso-hover="25">Type u_1</span><span class="unknown token" data-binding="">}</span><span class="inter-text"> </span><span class="unknown token" data-binding="">{</span><span class="var token" data-binding="var-_uniq.181" data-verso-hover="26">Y</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="sort token" data-binding="sort-7243200735919010059" data-verso-hover="25">Type u_2</span><span class="unknown token" data-binding="">}</span><span class="inter-text">
-  </span><span class="unknown token" data-binding="">[</span><span class="const token" data-binding="const-MeasurableSpace" data-verso-hover="30">MeasurableSpace</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.180" data-verso-hover="24">X</span><span class="unknown token" data-binding="">]</span><span class="inter-text"> </span><span class="unknown token" data-binding="">[</span><span class="const token" data-binding="const-MeasurableSpace" data-verso-hover="30">MeasurableSpace</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.181" data-verso-hover="26">Y</span><span class="unknown token" data-binding="">]</span><span class="inter-text">
-  </span><span class="unknown token" data-binding="">[</span><span class="var token" data-binding="var-_uniq.184" data-verso-hover="151">mXY</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><a href="Kernelized-monoidal-composition/#MeasurableCoherence___mk" title="Documentation for MeasurableCoherence"><span class="const token" data-binding="const-MeasurableCoherence" data-verso-hover="145">MeasurableCoherence</span></a><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.180" data-verso-hover="24">X</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.181" data-verso-hover="26">Y</span><span class="unknown token" data-binding="">]</span><span class="inter-text">
-  </span><span class="unknown token" data-binding="">{</span><span class="var token" data-binding="var-_uniq.185" data-verso-hover="152">SX</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.186" data-verso-hover="152">SY</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-SFinKer" data-verso-hover="6">SFinKer</span><span class="unknown token" data-binding="">}</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="var token" data-binding="var-_uniq.187" data-verso-hover="153">ex</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.185" data-verso-hover="152">SX</span><span class="unknown token" data-binding="">.</span><span class="const token" data-binding="const-SFinKer.carrier" data-verso-hover="154">carrier</span><span class="inter-text"> </span><span class="const token" data-binding="const-MeasurableEquiv" data-verso-hover="149">≃ᵐ</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.180" data-verso-hover="24">X</span><span class="unknown token" data-binding="">)</span><span class="inter-text">
-  </span><span class="unknown token" data-binding="">(</span><span class="var token" data-binding="var-_uniq.188" data-verso-hover="155">ey</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.186" data-verso-hover="152">SY</span><span class="unknown token" data-binding="">.</span><span class="const token" data-binding="const-SFinKer.carrier" data-verso-hover="154">carrier</span><span class="inter-text"> </span><span class="const token" data-binding="const-MeasurableEquiv" data-verso-hover="149">≃ᵐ</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.181" data-verso-hover="26">Y</span><span class="unknown token" data-binding="">)</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text">
-  </span><span class="const token" data-binding="const-CategoryTheory.MonoidalCoherence" data-verso-hover="150">CategoryTheory.MonoidalCoherence</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.185" data-verso-hover="152">SX</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.186" data-verso-hover="152">SY</span></div></pre><div class="text">
+  </span><span class="unknown token" data-binding="">{</span><span class="var token" data-binding="var-_uniq.180" data-verso-hover="25">X</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="sort token" data-binding="sort-7243200735919010059" data-verso-hover="26">Type u_1</span><span class="unknown token" data-binding="">}</span><span class="inter-text"> </span><span class="unknown token" data-binding="">{</span><span class="var token" data-binding="var-_uniq.181" data-verso-hover="27">Y</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="sort token" data-binding="sort-7243200735919010059" data-verso-hover="26">Type u_2</span><span class="unknown token" data-binding="">}</span><span class="inter-text">
+  </span><span class="unknown token" data-binding="">[</span><span class="const token" data-binding="const-MeasurableSpace" data-verso-hover="31">MeasurableSpace</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.180" data-verso-hover="25">X</span><span class="unknown token" data-binding="">]</span><span class="inter-text"> </span><span class="unknown token" data-binding="">[</span><span class="const token" data-binding="const-MeasurableSpace" data-verso-hover="31">MeasurableSpace</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.181" data-verso-hover="27">Y</span><span class="unknown token" data-binding="">]</span><span class="inter-text">
+  </span><span class="unknown token" data-binding="">[</span><span class="var token" data-binding="var-_uniq.184" data-verso-hover="156">mXY</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><a href="Kernelized-monoidal-composition/#MeasurableCoherence___mk" title="Documentation for MeasurableCoherence"><span class="const token" data-binding="const-MeasurableCoherence" data-verso-hover="150">MeasurableCoherence</span></a><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.180" data-verso-hover="25">X</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.181" data-verso-hover="27">Y</span><span class="unknown token" data-binding="">]</span><span class="inter-text">
+  </span><span class="unknown token" data-binding="">{</span><span class="var token" data-binding="var-_uniq.185" data-verso-hover="157">SX</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.186" data-verso-hover="157">SY</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-SFinKer" data-verso-hover="8">SFinKer</span><span class="unknown token" data-binding="">}</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="var token" data-binding="var-_uniq.187" data-verso-hover="158">ex</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.185" data-verso-hover="157">SX</span><span class="unknown token" data-binding="">.</span><span class="const token" data-binding="const-SFinKer.carrier" data-verso-hover="159">carrier</span><span class="inter-text"> </span><span class="const token" data-binding="const-MeasurableEquiv" data-verso-hover="154">≃ᵐ</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.180" data-verso-hover="25">X</span><span class="unknown token" data-binding="">)</span><span class="inter-text">
+  </span><span class="unknown token" data-binding="">(</span><span class="var token" data-binding="var-_uniq.188" data-verso-hover="160">ey</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.186" data-verso-hover="157">SY</span><span class="unknown token" data-binding="">.</span><span class="const token" data-binding="const-SFinKer.carrier" data-verso-hover="159">carrier</span><span class="inter-text"> </span><span class="const token" data-binding="const-MeasurableEquiv" data-verso-hover="154">≃ᵐ</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.181" data-verso-hover="27">Y</span><span class="unknown token" data-binding="">)</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text">
+  </span><span class="const token" data-binding="const-CategoryTheory.MonoidalCoherence" data-verso-hover="155">CategoryTheory.MonoidalCoherence</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.185" data-verso-hover="157">SX</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.186" data-verso-hover="157">SY</span></div></pre><div class="text">
                   <p>
-                    <code class="hl lean inline" data-lean-context="docstring-examples"><a href="Kernelized-monoidal-composition/#MeasurableCoherence___mk" title="Documentation for MeasurableCoherence"><span class="const token" data-binding="const-MeasurableCoherence" data-verso-hover="145">MeasurableCoherence</span></a></code> gives an instance of <code class="hl lean inline" data-lean-context="docstring-examples"><span class="unknown token" data-binding="">MonoidalCoherence</span></code> in the <code class="hl lean inline" data-lean-context="docstring-examples"><span class="const token" data-binding="const-SFinKer" data-verso-hover="6">SFinKer</span></code> category.</p>
+                    <code class="hl lean inline" data-lean-context="docstring-examples"><a href="Kernelized-monoidal-composition/#MeasurableCoherence___mk" title="Documentation for MeasurableCoherence"><span class="const token" data-binding="const-MeasurableCoherence" data-verso-hover="150">MeasurableCoherence</span></a></code> gives an instance of <code class="hl lean inline" data-lean-context="docstring-examples"><span class="unknown token" data-binding="">MonoidalCoherence</span></code> in the <code class="hl lean inline" data-lean-context="docstring-examples"><span class="const token" data-binding="const-SFinKer" data-verso-hover="8">SFinKer</span></code> category.</p>
                   </div>
                 </div>
               <p>
@@ -2123,27 +2125,26 @@ window.onload = async () => {
               <h2 id="Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Kernelized-monoidal-composition--Monoidal-Composition-of-Kernels">
                 7.2. Monoidal Composition of Kernels<span class="permalink-widget inline"><a href="find/?domain=Verso.Genre.Manual.section&amp;name=Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Kernelized-monoidal-composition--Monoidal-Composition-of-Kernels" title="Permalink">🔗</a></span></h2>
               <p>
-                The kernelized monoidal composition “<code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-ProbabilityTheory.Kernel.monoComp" data-verso-hover="12">⊗≫ₖ</span></code>” is defined by composing two kernels while automatically handling measurable equivalences through the categorical framework:</p>
+                The kernelized monoidal composition “<code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-ProbabilityTheory.Kernel.monoComp" data-verso-hover="14">⊗≫ₖ</span></code>” is defined by composing two kernels while automatically handling measurable equivalences through the categorical framework:</p>
               <ol start="1">
                 <li>
                   <p>
-                    <strong>Transport to <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-SFinKer" data-verso-hover="6">SFinKer</span></code></strong>: Both kernels are translated to morphisms in the <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-SFinKer" data-verso-hover="6">SFinKer</span></code> category using the <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-ProbabilityTheory.Kernel.hom" data-verso-hover="128">hom</span></code> function, which lifts carrier spaces to a common universe level.</p>
+                    <strong>Transport to <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-SFinKer" data-verso-hover="8">SFinKer</span></code></strong>: Both kernels are translated to morphisms in the <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-SFinKer" data-verso-hover="8">SFinKer</span></code> category using the <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-ProbabilityTheory.Kernel.hom" data-verso-hover="129">hom</span></code> function, which lifts carrier spaces to a common universe level.</p>
                   </li>
                 <li>
                   <p>
-                    <strong>Categorical composition</strong>: The categorical monoidal composition “<code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-CategoryTheory.monoidalComp" data-verso-hover="11">⊗≫</span></code>” is applied to the resulting morphisms in <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-SFinKer" data-verso-hover="6">SFinKer</span></code>, which automatically inserts the necessary associators and unitors.</p>
+                    <strong>Categorical composition</strong>: The categorical monoidal composition “<code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-CategoryTheory.monoidalComp" data-verso-hover="13">⊗≫</span></code>” is applied to the resulting morphisms in <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-SFinKer" data-verso-hover="8">SFinKer</span></code>, which automatically inserts the necessary associators and unitors.</p>
                   </li>
                 <li>
                   <p>
-                    <strong>Transport back to kernels</strong>: The result is translated back to a kernel using the <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-ProbabilityTheory.Kernel.fromHom" data-verso-hover="156">fromHom</span></code> function.
+                    <strong>Transport back to kernels</strong>: The result is translated back to a kernel using the <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-ProbabilityTheory.Kernel.fromHom" data-verso-hover="161">fromHom</span></code> function.
 </p>
                   </li>
                 </ol>
               </section>
             </section>
           <nav class="prev-next-buttons">
-            <a class="local-button active" href="Kernel-reassociation/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Kernel-reassociation" rel="prev" title="6. Kernel reassociation"><span class="arrow">←</span><span class="where">6. Kernel reassociation</span></a><div></div>
-            </nav>
+            <a class="local-button active" href="Kernel-reassociation/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Kernel-reassociation" rel="prev" title="6. Kernel reassociation"><span class="arrow">←</span><span class="where">6. Kernel reassociation</span></a><a class="local-button active" href="Performance/#performance" rel="next" title="8. Performance"><span class="where">8. Performance</span><span class="arrow">→</span></a></nav>
           </div>
         </main></div>
     </body>

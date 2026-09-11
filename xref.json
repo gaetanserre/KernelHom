@@ -2,7 +2,20 @@
  {"title": "Sections or chapters of the manual",
   "description": null,
   "contents":
-  {"Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--kernel_hom-tactic":
+  {"performance":
+   [{"id": "performance",
+     "data":
+     {"title": "Performance",
+      "shortTitle": null,
+      "sectionNum": "8.",
+      "searchPriority": 50,
+      "context":
+      [{"title": "Kernel-Hom: Tactics for Kernel Categorical Reasoning",
+        "shortTitle": "Kernel Categorical Reasoning",
+        "number": null},
+       {"title": "Performance", "shortTitle": null, "number": "8"}]},
+     "address": "/Performance/"}],
+   "Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--kernel_hom-tactic":
    [{"id":
      "Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--kernel_hom-tactic",
      "data":
@@ -88,6 +101,53 @@
         "number": null},
        {"title": "Universe handling", "shortTitle": null, "number": "2"}]},
      "address": "/Universe-handling/"}],
+   "Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Performance--Proofs-by-congruence":
+   [{"id":
+     "Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Performance--Proofs-by-congruence",
+     "data":
+     {"title": "Proofs by congruence",
+      "shortTitle": null,
+      "sectionNum": "8.1.",
+      "searchPriority": 50,
+      "context":
+      [{"title": "Kernel-Hom: Tactics for Kernel Categorical Reasoning",
+        "shortTitle": "Kernel Categorical Reasoning",
+        "number": null},
+       {"title": "Performance", "shortTitle": null, "number": "8"},
+       {"title": "Proofs by congruence", "shortTitle": null, "number": "1"}]},
+     "address": "/Performance/"}],
+   "Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Performance--Explicit-constructors-and-memoization":
+   [{"id":
+     "Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Performance--Explicit-constructors-and-memoization",
+     "data":
+     {"title": "Explicit constructors and memoization",
+      "shortTitle": null,
+      "sectionNum": "8.2.",
+      "searchPriority": 50,
+      "context":
+      [{"title": "Kernel-Hom: Tactics for Kernel Categorical Reasoning",
+        "shortTitle": "Kernel Categorical Reasoning",
+        "number": null},
+       {"title": "Performance", "shortTitle": null, "number": "8"},
+       {"title": "Explicit constructors and memoization",
+        "shortTitle": null,
+        "number": "2"}]},
+     "address": "/Performance/"}],
+   "Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Performance--Carriers":
+   [{"id":
+     "Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Performance--Carriers",
+     "data":
+     {"title": "Carriers",
+      "shortTitle": null,
+      "sectionNum": "8.3.",
+      "searchPriority": 50,
+      "context":
+      [{"title": "Kernel-Hom: Tactics for Kernel Categorical Reasoning",
+        "shortTitle": "Kernel Categorical Reasoning",
+        "number": null},
+       {"title": "Performance", "shortTitle": null, "number": "8"},
+       {"title": "Carriers", "shortTitle": null, "number": "3"}]},
+     "address": "/Performance/"}],
    "Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Kernelized-monoidal-composition--Monoidal-Composition-of-Kernels":
    [{"id":
      "Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Kernelized-monoidal-composition--Monoidal-Composition-of-Kernels",
@@ -313,6 +373,15 @@
    [{"id": "transformHomToKernel",
      "data": null,
      "address": "/hom_kernel-tactic/"}],
+   "synthInstanceCached":
+   [{"id": "synthInstanceCached", "data": null, "address": "/Performance/"}],
+   "sfinkerInsts":
+   [{"id": "sfinkerInsts", "data": null, "address": "/Performance/"}],
+   "resetTransformCache":
+   [{"id": "resetTransformCache", "data": null, "address": "/Performance/"}],
+   "mkHomCongrProof":
+   [{"id": "mkHomCongrProof", "data": null, "address": "/Performance/"}],
+   "memoized": [{"id": "memoized", "data": null, "address": "/Performance/"}],
    "kernelReassocHandler":
    [{"id": "kernelReassocHandler",
      "data": null,
@@ -331,12 +400,55 @@
    [{"id": "kernelCoherence",
      "data": null,
      "address": "/Categorical-tactics-for-kernels/"}],
+   "inferTypeCached":
+   [{"id": "inferTypeCached", "data": null, "address": "/Performance/"}],
+   "idME": [{"id": "idME", "data": null, "address": "/Performance/"}],
    "homKernel":
    [{"id": "homKernel", "data": null, "address": "/hom_kernel-tactic/"}],
+   "getCarriersFromKernel":
+   [{"id": "getCarriersFromKernel", "data": null, "address": "/Performance/"}],
+   "constructMeasurableEquiv":
+   [{"id": "constructMeasurableEquiv",
+     "data": null,
+     "address": "/Performance/"}],
+   "computeSFinkerOf":
+   [{"id": "computeSFinkerOf", "data": null, "address": "/Performance/"}],
    "collectExprUniverses":
    [{"id": "collectExprUniverses",
      "data": null,
      "address": "/Universe-handling/"}],
+   "aesopKernel":
+   [{"id": "aesopKernel",
+     "data": null,
+     "address": "/Categorical-tactics-for-kernels/"}],
+   "[anonymous]":
+   [{"id": "HomCarrier___mk", "data": null, "address": "/Performance/"}],
+   "TransformCache.types":
+   [{"id": "TransformCache___mk", "data": null, "address": "/Performance/"}],
+   "TransformCache.mk":
+   [{"id": "TransformCache___mk", "data": null, "address": "/Performance/"}],
+   "TransformCache.memo":
+   [{"id": "TransformCache___mk", "data": null, "address": "/Performance/"}],
+   "TransformCache.insts":
+   [{"id": "TransformCache___mk", "data": null, "address": "/Performance/"}],
+   "TransformCache":
+   [{"id": "TransformCache___mk", "data": null, "address": "/Performance/"}],
+   "SFinKerInsts.u":
+   [{"id": "SFinKerInsts___mk", "data": null, "address": "/Performance/"}],
+   "SFinKerInsts.monoidal":
+   [{"id": "SFinKerInsts___mk", "data": null, "address": "/Performance/"}],
+   "SFinKerInsts.monStruct":
+   [{"id": "SFinKerInsts___mk", "data": null, "address": "/Performance/"}],
+   "SFinKerInsts.mk":
+   [{"id": "SFinKerInsts___mk", "data": null, "address": "/Performance/"}],
+   "SFinKerInsts.catStruct":
+   [{"id": "SFinKerInsts___mk", "data": null, "address": "/Performance/"}],
+   "SFinKerInsts.cat":
+   [{"id": "SFinKerInsts___mk", "data": null, "address": "/Performance/"}],
+   "SFinKerInsts.C":
+   [{"id": "SFinKerInsts___mk", "data": null, "address": "/Performance/"}],
+   "SFinKerInsts":
+   [{"id": "SFinKerInsts___mk", "data": null, "address": "/Performance/"}],
    "MeasurableCoherence.monoidalCoherence":
    [{"id": "MeasurableCoherence___monoidalCoherence",
      "data": null,
@@ -353,7 +465,30 @@
    [{"id": "MeasurableCoherence___mk",
      "data": null,
      "address": "/Kernelized-monoidal-composition/"}],
+   "HomCarrier.toCarrier":
+   [{"id": "HomCarrier___mk", "data": null, "address": "/Performance/"}],
+   "HomCarrier.sfinite":
+   [{"id": "HomCarrier___sfinite", "data": null, "address": "/Performance/"}],
+   "HomCarrier.mk'":
+   [{"id": "HomCarrier___mk___", "data": null, "address": "/Performance/"}],
+   "HomCarrier.mk":
+   [{"id": "HomCarrier___mk", "data": null, "address": "/Performance/"}],
+   "HomCarrier.inst":
+   [{"id": "HomCarrier___mk", "data": null, "address": "/Performance/"}],
+   "HomCarrier":
+   [{"id": "HomCarrier___mk", "data": null, "address": "/Performance/"}],
    "EqUnlift":
    [{"id": "EqUnlift", "data": null, "address": "/Universe-handling/"}],
-   "EqLift":
-   [{"id": "EqLift", "data": null, "address": "/Universe-handling/"}]}}}
+   "EqLift": [{"id": "EqLift", "data": null, "address": "/Universe-handling/"}],
+   "Carrier.type":
+   [{"id": "Carrier___mk", "data": null, "address": "/Performance/"}],
+   "Carrier.mk":
+   [{"id": "Carrier___mk", "data": null, "address": "/Performance/"}],
+   "Carrier.lvl":
+   [{"id": "Carrier___mk", "data": null, "address": "/Performance/"}],
+   "Carrier.lift":
+   [{"id": "Carrier___lift", "data": null, "address": "/Performance/"}],
+   "Carrier.inst":
+   [{"id": "Carrier___inst", "data": null, "address": "/Performance/"}],
+   "Carrier":
+   [{"id": "Carrier___mk", "data": null, "address": "/Performance/"}]}}}
