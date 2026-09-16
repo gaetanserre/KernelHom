@@ -54,8 +54,7 @@ lemma swap_parallelComp₀ : swap Y T ∘ₖ (κ ∥ₖ ξ) = ξ ∥ₖ κ ∘�
   swap; · simp [hκ]
   by_cases hη : IsSFiniteKernel ξ
   swap; · simp [hη]
-  kernel_hom
-  cat_disch
+  kernel_disch
 
 variable [IsSFiniteKernel η] [IsSFiniteKernel ξ]
 
@@ -99,55 +98,6 @@ lemma parallelComp_id_right_comp_parallelComp₀ :
   by_cases hκ : IsSFiniteKernel κ
   swap; · simp [hκ]
   kernel_monoidal
-
-variable [IsSFiniteKernel κ]
-
-variable {κ' : Kernel X Y'} {η' : Kernel Y' Z'} [IsSFiniteKernel κ'] [IsSFiniteKernel η']
-
-#count_heartbeats! in
-lemma parallelComp_comp_parallelComp_orig :
-    (η ∥ₖ η') ∘ₖ (κ ∥ₖ κ') = (η ∘ₖ κ) ∥ₖ (η' ∘ₖ κ') := by
-  rw [← parallelComp_id_left_comp_parallelComp, ← parallelComp_id_right_comp_parallelComp,
-    ← comp_assoc, parallelComp_id_left_comp_parallelComp, comp_id]
-
-#count_heartbeats! in
-lemma parallelComp_comp_parallelComp₀ :
-    (η ∥ₖ η') ∘ₖ (κ ∥ₖ κ') = (η ∘ₖ κ) ∥ₖ (η' ∘ₖ κ') := by
-  kernel_monoidal
-
-#count_heartbeats! in
-lemma parallelComp_comp_prod_orig :
-    (η ∥ₖ η') ∘ₖ (κ ×ₖ κ') = (η ∘ₖ κ) ×ₖ (η' ∘ₖ κ') := by
-  rw [← parallelComp_comp_copy, ← comp_assoc, parallelComp_comp_parallelComp,
-    ← parallelComp_comp_copy]
-
-#count_heartbeats! in
-lemma parallelComp_comp_prod₀ :
-    (η ∥ₖ η') ∘ₖ (κ ×ₖ κ') = (η ∘ₖ κ) ×ₖ (η' ∘ₖ κ') := by
-  kernel_monoidal
-
-#count_heartbeats! in
-lemma discard_comp_deterministic_orig {f : X → Y} (hf : Measurable f) :
-    discard Y ∘ₖ (deterministic f hf) = discard X :=
-  comp_discard _
-
-#count_heartbeats! in
-lemma discard_comp_deterministic {f : X → Y} (hf : Measurable f) :
-    discard Y ∘ₖ (deterministic f hf) = discard X := by
-  kernel_hom
-  simp only [IsComonHom.hom_counit]
-
-variable (κ : Kernel (X × Y) Z)
-
-#count_heartbeats! in
-lemma parallelComp_self_comp_copy_orig [IsMarkovKernel κ] [IsDeterministic κ] :
-    (κ ∥ₖ κ) ∘ₖ copy (X × Y) = copy Z ∘ₖ κ :=
-  parallelComp_self_comp_copy
-
-#count_heartbeats! in
-lemma parallelComp_self_comp_copy₀ [IsMarkovKernel κ] [IsDeterministic κ] :
-    (κ ∥ₖ κ) ∘ₖ copy (X × Y) = copy Z ∘ₖ κ := by
-  kernel_disch
 
 end ProbabilityTheory.Kernel
 
