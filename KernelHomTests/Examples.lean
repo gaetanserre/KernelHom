@@ -85,9 +85,23 @@ lemma parallelComp_self_comp_copy₀ [IsMarkovKernel κ] [IsDeterministic κ] :
     (κ ∥ₖ κ) ∘ₖ copy (X × Y) = copy Z ∘ₖ κ := by
   kernel_disch
 
+example {κ : Kernel X Y} {η : Kernel Y Z} {ξ : Kernel X Z} {ζ : Kernel Z T} [IsSFiniteKernel κ]
+    [IsSFiniteKernel η] [IsSFiniteKernel ξ] [IsSFiniteKernel ζ] (h : η ∘ₖ κ = ξ) :
+    ζ ∘ₖ η ∘ₖ κ = ζ ∘ₖ ξ := by
+  rw [kernel_reassoc_of% h]
+
 @[kernel_reassoc]
 lemma parallelComp_self_comp_copy' [IsMarkovKernel κ] [IsDeterministic κ] :
     (κ ∥ₖ κ) ∘ₖ copy (X × Y) = copy Z ∘ₖ κ := by
   kernel_disch
+
+variable [IsMarkovKernel κ] (ξ : Kernel (Z × Z) T) [IsDeterministic κ] [IsSFiniteKernel ξ]
+
+/--
+info: parallelComp_self_comp_copy'_assoc κ ξ :
+ξ ∘ₖ (κ ∥ₖ κ) ∘ₖ copy (X × Y) = ξ ∘ₖ copy Z ∘ₖ κ
+-/
+#guard_msgs in
+#check parallelComp_self_comp_copy'_assoc κ ξ
 
 end ProbabilityTheory.Kernel
