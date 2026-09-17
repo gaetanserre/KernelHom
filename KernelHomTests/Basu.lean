@@ -6,7 +6,6 @@ Authors: Gaëtan Serré
 module
 
 public import KernelHom
-public import Mathlib.Tactic.Widget.StringDiagram
 
 /-!
 # Basu's theorem for Markov kernels
@@ -85,10 +84,9 @@ the product of their distributions. The kernel `a` does not need to be determini
 theorem basu {p : Kernel Θ X} [IsMarkovKernel p] {s : Kernel X V} [IsMarkovKernel s]
     {a : Kernel X W} [IsMarkovKernel a] (hs : IsSufficient p s) (hc : IsComplete (s ∘ₖ p) W)
     (ha : IsAncillary p a) : (s ∥ₖ a) ∘ₖ copy X ∘ₖ p = (s ∘ₖ p) ×ₖ (a ∘ₖ p) := by
-  with_panel_widgets [Mathlib.Tactic.Widget.StringDiagram, KernelDiagram]
+  with_panel_widgets [KernelDiagram]
   obtain ⟨α, _, hα⟩ := hs
   obtain ⟨ψ, _, hψ⟩ := ha
-  have h := hc (a ∘ₖ α) (ψ ∘ₖ discard V) (basu_aux hα hψ)
   calc (s ∥ₖ a) ∘ₖ copy X ∘ₖ p
   _ = swap W V ∘ₖ ((a ∥ₖ Kernel.id) ∘ₖ ((Kernel.id ∥ₖ s) ∘ₖ copy X ∘ₖ p)) := by
     kernel_disch
@@ -96,7 +94,7 @@ theorem basu {p : Kernel Θ X} [IsMarkovKernel p] {s : Kernel X V} [IsMarkovKern
     rw [hα]
     kernel_disch
   _ = swap W V ∘ₖ (((ψ ∘ₖ discard V) ∥ₖ Kernel.id) ∘ₖ copy V ∘ₖ (s ∘ₖ p)) := by
-    rw [h]
+    rw [hc (a ∘ₖ α) (ψ ∘ₖ discard V) (basu_aux hα hψ)]
   _ = (s ∘ₖ p) ×ₖ (ψ ∘ₖ discard Θ) := by
     kernel_disch
   _ = (s ∘ₖ p) ×ₖ (a ∘ₖ p) := by
