@@ -8,100 +8,67 @@ module
 public import KernelHom
 
 /-!
-# Examples for Kernel-Hom
+# Structural lemmas of Mathlib
+
+Lemmas of `Mathlib.Probability.Kernel.Composition` that are equalities of kernels built only from
+composition, parallel composition, product, identity, copy and swap, and that are not used to build
+the category `SFinKer`. The other lemmas of this kind, such as `Kernel.comp_assoc` or
+`Kernel.swap_parallelComp`, are used to prove the axioms of `SFinKer`, so their proofs with
+Kernel-Hom could not replace the ones of Mathlib. Each lemma has the name of its Mathlib
+counterpart, suffixed by `₀`.
+
+They are all proved by a single call to `kernel_monoidal` or `kernel_disch`, which also handles the
+exchange law (`parallelComp_comm₀`) and the coassociativity of copy (`prodAssoc_prod₀`).
+
+`Kernel.map` is not translated, so `map_prod_swap₀` and `prodAssoc_prod₀` are first rewritten with
+`swap_comp_eq_map` and `deterministic_comp_eq_map`. As in Mathlib, `parallelComp_comm₀` holds for
+any kernels, and the case of a non s-finite kernel is closed by `simp`.
 -/
 
 @[expose] public section
 
-open MeasureTheory ProbabilityTheory CategoryTheory BraidedCategory
+open MeasureTheory ProbabilityTheory CategoryTheory MonoidalCategory
 
-open scoped MonoidalCategory ComonObj KernelHom
+open scoped KernelHom
 
 show_panel_widgets [local KernelDiagram]
 
-variable {X Y Z T X' Y' Z' : Type*} [MeasurableSpace X] [MeasurableSpace Y]
-  [MeasurableSpace Z] [MeasurableSpace T] [MeasurableSpace X'] [MeasurableSpace Y']
-  [MeasurableSpace Z']
+variable {X Y Z T Y' Z' : Type*} [MeasurableSpace X] [MeasurableSpace Y] [MeasurableSpace Z]
+  [MeasurableSpace T] [MeasurableSpace Y'] [MeasurableSpace Z']
 
 namespace ProbabilityTheory.Kernel
 
-variable {κ : Kernel X Y} {ξ : Kernel Z T} {η : Kernel Y Z}
+/-! ### `Mathlib.Probability.Kernel.Composition.Prod` -/
 
-lemma swap_parallelComp₀ : swap Y T ∘ₖ (κ ∥ₖ ξ) = ξ ∥ₖ κ ∘ₖ swap X Z := by
-  by_cases hκ : IsSFiniteKernel κ
-  swap; · simp [hκ]
-  by_cases hη : IsSFiniteKernel ξ
-  swap; · simp [hη]
-  kernel_hom
-  cat_disch
+lemma map_prod_swap₀ (κ : Kernel X Y) (η : Kernel X Z) [IsSFiniteKernel κ] [IsSFiniteKernel η] :
+    map (κ ×ₖ η) Prod.swap = η ×ₖ κ := by
+  rw [← swap_comp_eq_map]
+  kernel_disch
 
-lemma swap_parallelComp_diag [IsSFiniteKernel κ] [IsSFiniteKernel ξ] :
-    swap Y T ∘ₖ (κ ∥ₖ ξ) = ξ ∥ₖ κ ∘ₖ swap X Z := by
-  kernel_hom
-  cat_disch
+lemma swap_prod₀ {κ : Kernel X Y} [IsSFiniteKernel κ] {η : Kernel X Z} [IsSFiniteKernel η] :
+    swap Y Z ∘ₖ (κ ×ₖ η) = η ×ₖ κ := by
+  kernel_disch
 
-variable [IsSFiniteKernel η] [IsSFiniteKernel ξ]
+lemma prodAssoc_prod₀ (κ : Kernel X Y) [IsSFiniteKernel κ] (η : Kernel X Z) [IsSFiniteKernel η]
+    (ξ : Kernel X T) [IsSFiniteKernel ξ] :
+    ((κ ×ₖ ξ) ×ₖ η).map MeasurableEquiv.prodAssoc = κ ×ₖ (ξ ×ₖ η) := by
+  rw [← deterministic_comp_eq_map (MeasurableEquiv.measurable _)]
+  kernel_disch
 
-lemma parallelComp_id_left_comp_parallelComp₀ :
-    (Kernel.id ∥ₖ ξ) ∘ₖ (κ ∥ₖ η) = κ ∥ₖ (ξ ∘ₖ η) := by
-  by_cases hκ : IsSFiniteKernel κ
-  swap; · simp [hκ]
-  kernel_monoidal
+/-! ### `Mathlib.Probability.Kernel.Composition.KernelLemmas` -/
 
-lemma parallelComp_id_left_comp_parallelComp_diag [IsSFiniteKernel κ] :
-    (Kernel.id ∥ₖ ξ) ∘ₖ (κ ∥ₖ η) = κ ∥ₖ (ξ ∘ₖ η) := by
-  kernel_monoidal
-
-lemma parallelComp_id_right_comp_parallelComp₀ :
-    (ξ ∥ₖ Kernel.id) ∘ₖ (η ∥ₖ κ) = (ξ ∘ₖ η) ∥ₖ κ := by
-  by_cases hκ : IsSFiniteKernel κ
-  swap; · simp [hκ]
-  kernel_monoidal
-
-lemma parallelComp_id_right_comp_parallelComp_diag [IsSFiniteKernel κ] :
-    (ξ ∥ₖ Kernel.id) ∘ₖ (η ∥ₖ κ) = (ξ ∘ₖ η) ∥ₖ κ := by
-  kernel_monoidal
-
-variable [IsSFiniteKernel κ]
-
-variable {κ' : Kernel X Y'} {η' : Kernel Y' Z'} [IsSFiniteKernel κ'] [IsSFiniteKernel η']
-
-lemma parallelComp_comp_parallelComp₀ :
-    (η ∥ₖ η') ∘ₖ (κ ∥ₖ κ') = (η ∘ₖ κ) ∥ₖ (η' ∘ₖ κ') := by
-  kernel_monoidal
-
-lemma parallelComp_comp_prod₀ :
+lemma parallelComp_comp_prod₀ {κ : Kernel X Y} [IsSFiniteKernel κ] {η : Kernel Y Z}
+    [IsSFiniteKernel η] {κ' : Kernel X Y'} [IsSFiniteKernel κ'] {η' : Kernel Y' Z'}
+    [IsSFiniteKernel η'] :
     (η ∥ₖ η') ∘ₖ (κ ×ₖ κ') = (η ∘ₖ κ) ×ₖ (η' ∘ₖ κ') := by
   kernel_monoidal
 
-lemma discard_comp_deterministic {f : X → Y} (hf : Measurable f) :
-    discard Y ∘ₖ (deterministic f hf) = discard X := by
-  kernel_hom
-  simp only [IsComonHom.hom_counit]
-
-variable (κ : Kernel (X × Y) Z)
-
-lemma parallelComp_self_comp_copy₀ [IsMarkovKernel κ] [IsDeterministic κ] :
-    (κ ∥ₖ κ) ∘ₖ copy (X × Y) = copy Z ∘ₖ κ := by
+lemma parallelComp_comm₀ {κ : Kernel X Y} {η : Kernel Z T} :
+    (Kernel.id ∥ₖ κ) ∘ₖ (η ∥ₖ Kernel.id) = (η ∥ₖ Kernel.id) ∘ₖ (Kernel.id ∥ₖ κ) := by
+  by_cases hκ : IsSFiniteKernel κ
+  swap; · simp [hκ]
+  by_cases hη : IsSFiniteKernel η
+  swap; · simp [hη]
   kernel_disch
-
-example {κ : Kernel X Y} {η : Kernel Y Z} {ξ : Kernel X Z} {ζ : Kernel Z T} [IsSFiniteKernel κ]
-    [IsSFiniteKernel η] [IsSFiniteKernel ξ] [IsSFiniteKernel ζ] (h : η ∘ₖ κ = ξ) :
-    ζ ∘ₖ η ∘ₖ κ = ζ ∘ₖ ξ := by
-  rw [kernel_reassoc_of% h]
-
-@[kernel_reassoc]
-lemma parallelComp_self_comp_copy' [IsMarkovKernel κ] [IsDeterministic κ] :
-    (κ ∥ₖ κ) ∘ₖ copy (X × Y) = copy Z ∘ₖ κ := by
-  kernel_disch
-
-variable [IsMarkovKernel κ] (ξ : Kernel (Z × Z) T) [IsDeterministic κ] [IsSFiniteKernel ξ]
-
-/--
-info: parallelComp_self_comp_copy'_assoc κ ξ :
-ξ ∘ₖ (κ ∥ₖ κ) ∘ₖ copy (X × Y) = ξ ∘ₖ copy Z ∘ₖ κ
--/
-#guard_msgs in
-#check parallelComp_self_comp_copy'_assoc κ ξ
 
 end ProbabilityTheory.Kernel

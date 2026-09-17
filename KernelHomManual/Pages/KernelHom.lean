@@ -26,12 +26,12 @@ The {name kernelHom}`kernel_hom` tactic transforms a s-finite kernel equality in
 
 The tactic can be described in 4 steps:
 
-1. First, it finds the minimum common universe level for which all carrier spaces of the kernels involved in the equality can be lifted to.
+1. First, the derived operations `κ ×ₖ η` and `κ ⊗ₖ η` are unfolded into compositions, parallel compositions and copies ({name unfoldKernelOp}`unfoldKernelOp`).
 
-1. Then, it recursively traverses the kernel equality and creates a new expression where each kernel is replaced by its translation in the {name SFinKer}`SFinKer` category, uniformly lifting carrier spaces to the common universe level determined in the first step. During this process, it recognizes patterns of kernel composition and identities, and translates them to the corresponding categorical operations (composition, identity, unitors, whiskers, monoidal composition, braiding, comul, etc...). This is done using the {name transformKernelToHom}`transformKernelToHom` function.
+1. Then, the equality is lifted to a common universe level with the machinery of {name EqLift}`lift_eq`, together with a proof of equivalence. When the tactic is applied at several locations, all the equalities are lifted to the same universe level, so that the translated equalities live in the same category and can be used to rewrite each other.
+
+1. Next, it recursively traverses the lifted equality and creates a new expression where each kernel is replaced by its translation in the {name SFinKer}`SFinKer` category. The kernel operations are translated to the corresponding categorical operations (composition, tensor product, whiskers, identity, unitors, associators, braiding, copy and discard), and the other kernels `κ` to `κ.hom`. Each translated subexpression comes with a proof that it is the translation of the original one, built by congruence from the translation lemmas. This is done using the {name transformKernelToHom}`transformKernelToHom` function.
 
   {docstring transformKernelToHom}
 
-1. Next, it constructs the proof of equivalence between the original kernel equality and the transformed categorical equality. This proof relies on the properties of the translation (e.g., that it preserves composition and identities) and on the fact that all kernels can be uniformly lifted to the common universe level using measurable equivalences.
-
-1. Finally, it replaces the original goal or hypothesis with the transformed one.
+1. Finally, the proofs of the two sides give, with {name ProbabilityTheory.Kernel.hom_congr}`hom_congr`, a proof that the lifted equality is equivalent to the categorical one, which replaces the goal or the hypothesis.

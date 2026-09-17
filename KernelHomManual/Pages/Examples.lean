@@ -26,6 +26,7 @@ set_option verso.exampleModule "KernelHomTests.Examples"
 #doc (Manual) "Usage and examples" =>
 %%%
 htmlSplit := .never
+tag := "examples"
 %%%
 
 # Usage
@@ -55,63 +56,56 @@ The library provides several tactics for working with s-finite kernels equalitie
 
 - {name homKernel}`hom_kernel`: The inverse of {name kernelHom}`kernel_hom`, transforms an equality in {name SFinKer}`SFinKer` back into a kernel equality.
 
+- {name kernelDisch}`kernel_disch`: The tactic to use by default. Applies the {name CategoryTheory.categoryTheoryDischarger}`cat_disch` and {name Monoidal.monoidal}`monoidal` tactics to a s-finite kernel equality, possibly after normalizing the tensor products of morphisms, so that it also handles the exchange law and the comonoid laws of copy and discard.
+
 - {name kernelMonoidal}`kernel_monoidal`: Applies the {name Monoidal.monoidal}`monoidal` tactic to a s-finite kernel equality.
 
 - {name kernelCoherence}`kernel_coherence`: Applies the {name Coherence.coherence}`coherence` tactic to a s-finite kernel equality.
 
-- {name kernelDisch}`kernel_disch`: Applies the {name CategoryTheory.categoryTheoryDischarger}`cat_disch` tactic to a s-finite kernel equality.
-
 - {name aesopKernel}`aesop_kernel`: Applies `aesop` with the `CategoryTheory` rule set to a s-finite kernel equality, without the `rfl_cat` attempt of {name CategoryTheory.categoryTheoryDischarger}`cat_disch`.
 
-Basically, whenever you have a equality of s-finite kernels that you want to simplify, you can apply {name kernelHom}`kernel_hom` to transform it into a categorical equality, try applying categorical tactics, simps, or manually manipulate it, and then apply {name homKernel}`hom_kernel` to get back to a kernel equality if needed. The built-in helpers {name kernelMonoidal}`kernel_monoidal`, {name kernelCoherence}`kernel_coherence`, {name kernelDisch}`kernel_disch` and {name aesopKernel}`aesop_kernel` directly apply categorical tactics to kernels without needing to manually invoke the translation tactic.
+Basically, whenever you have a equality of s-finite kernels that you want to simplify, you can apply {name kernelHom}`kernel_hom` to transform it into a categorical equality, try applying categorical tactics, simps, or manually manipulate it, and then apply {name homKernel}`hom_kernel` to get back to a kernel equality if needed. The built-in helpers {name kernelDisch}`kernel_disch`, {name kernelMonoidal}`kernel_monoidal`, {name kernelCoherence}`kernel_coherence` and {name aesopKernel}`aesop_kernel` directly apply categorical tactics to kernels without needing to manually invoke the translation tactic.
 
 *Kernel diagrams*
 
 The library also provides the {name kernelDiagram}`kernel_diagram` command, which generates string diagrams for kernel expressions. This is an adaptation of the {name Widget.stringDiagram}`string_diagram` command, where s-finite kernels are represented as morphisms using {name kernelHom}`kernel_hom`. This provides a visual representation of kernel compositions and transformations, aiding intuition and understanding. The use of this command is similar to {name Widget.stringDiagram}`string_diagram`:
 
 ```lean
-#kernel_diagram parallelComp_self_comp_copy₀
+#kernel_diagram swap_prod₀
 ```
 
 ```VersoTools.kernelDiagram
-parallelComp_self_comp_copy₀
+swap_prod₀
 ```
 
 # Examples
 
-These tactics are particularly useful when dealing with compositions and parallel compositions of kernels. The following examples are taken from the file [`KernelLemmas.lean`](doc/Mathlib/Probability/Kernel/Composition/KernelLemmas.html) and illustrate how the tactics can be used to drastically simplify the proofs of kernel equalities.
+*Kernel-Hom* makes it easy to prove "API" lemmas about the usual operations on kernels. The following lemmas of Mathlib are equalities of kernels built only from composition, parallel composition, product, identity, copy and swap. In Mathlib, their proofs either manipulate integrals or rely on other lemmas about kernels. With *Kernel-Hom*, they are proved from the structure of {name SFinKer}`SFinKer`, without any knowledge of the lemmas about kernels. They are collected in the file `KernelHomTests/Examples.lean`, where their names are suffixed by `₀`. The tactics are also useful in longer proofs, written by calculation (see the {ref "calculational-proofs"}[calculational proof of Basu's theorem]).
 
-- {name parallelComp_id_left_comp_parallelComp}`parallelComp_id_left_comp_parallelComp`
+The other lemmas of Mathlib built from these operations, such as {name ProbabilityTheory.Kernel.comp_assoc}`comp_assoc`, {name ProbabilityTheory.Kernel.swap_parallelComp}`swap_parallelComp` or {name ProbabilityTheory.Kernel.parallelComp_comp_parallelComp}`parallelComp_comp_parallelComp`, are used, directly or not, to prove the axioms of {name SFinKer}`SFinKer`. The tactics also prove them, but these proofs could not replace the ones of Mathlib, so they are not listed here.
+
+As {name ProbabilityTheory.Kernel.map}`Kernel.map` is not translated, {name ProbabilityTheory.Kernel.map_prod_swap}`map_prod_swap` and {name ProbabilityTheory.Kernel.prodAssoc_prod}`prodAssoc_prod` are first rewritten with {name ProbabilityTheory.Kernel.swap_comp_eq_map}`swap_comp_eq_map` and {name ProbabilityTheory.Kernel.deterministic_comp_eq_map}`deterministic_comp_eq_map`. The tactics only apply to s-finite kernels: as in Mathlib, the case of a non s-finite kernel in {name ProbabilityTheory.Kernel.parallelComp_comm}`parallelComp_comm` is closed by `simp`.
+
+All of them are proved by a single call to {name kernelDisch}`kernel_disch` or {name kernelMonoidal}`kernel_monoidal`. In particular, {name kernelDisch}`kernel_disch` handles the exchange law {name CategoryTheory.MonoidalCategory.whisker_exchange}`whisker_exchange` in {name ProbabilityTheory.Kernel.parallelComp_comm}`parallelComp_comm`, and the coassociativity of copy {name CategoryTheory.ComonObj.comul_assoc}`comul_assoc` in {name ProbabilityTheory.Kernel.prodAssoc_prod}`prodAssoc_prod`, which the tactics of Mathlib do not apply on their own.
+
+*`Mathlib.Probability.Kernel.Composition.Prod`*
+
+The kernel {name ProbabilityTheory.Kernel.swap}`Kernel.swap` is translated to the braiding of {name SFinKer}`SFinKer`, and the product `κ ×ₖ η` to the composition of the copy with `κ ⊗ₘ η`.
 
 ```VersoTools.leanDecl
-ProbabilityTheory.Kernel.parallelComp_id_left_comp_parallelComp₀
+ProbabilityTheory.Kernel.map_prod_swap₀
+ProbabilityTheory.Kernel.swap_prod₀
 ```
 
 ```VersoTools.kernelDiagram
-ProbabilityTheory.Kernel.parallelComp_id_left_comp_parallelComp_diag
+ProbabilityTheory.Kernel.swap_prod₀
 ```
-
-- {name parallelComp_id_right_comp_parallelComp}`parallelComp_id_right_comp_parallelComp`
 
 ```VersoTools.leanDecl
-ProbabilityTheory.Kernel.parallelComp_id_right_comp_parallelComp₀
+ProbabilityTheory.Kernel.prodAssoc_prod₀
 ```
 
-```VersoTools.kernelDiagram
-ProbabilityTheory.Kernel.parallelComp_id_right_comp_parallelComp_diag
-```
-
-- {name parallelComp_comp_parallelComp}`parallelComp_comp_parallelComp`
-
-```VersoTools.leanDecl
-ProbabilityTheory.Kernel.parallelComp_comp_parallelComp₀
-```
-
-```VersoTools.kernelDiagram
-ProbabilityTheory.Kernel.parallelComp_comp_parallelComp₀
-```
-
-- {name parallelComp_comp_prod}`parallelComp_comp_prod`
+*`Mathlib.Probability.Kernel.Composition.KernelLemmas`*
 
 ```VersoTools.leanDecl
 ProbabilityTheory.Kernel.parallelComp_comp_prod₀
@@ -121,35 +115,14 @@ ProbabilityTheory.Kernel.parallelComp_comp_prod₀
 ProbabilityTheory.Kernel.parallelComp_comp_prod₀
 ```
 
-- {name swap_parallelComp}`swap_parallelComp`
-
-  Object of the symmetric category are also handled by the tactic, such as {name ProbabilityTheory.Kernel.swap}`Kernel.swap` that is translated to the right braiding of {name SFinKer}`SFinKer`.
-
-
 ```VersoTools.leanDecl
-ProbabilityTheory.Kernel.swap_parallelComp₀
+ProbabilityTheory.Kernel.parallelComp_comm₀
 ```
+
+The diagram below is drawn for s-finite kernels.
 
 ```VersoTools.kernelDiagram
-ProbabilityTheory.Kernel.swap_parallelComp_diag
-```
-
-- {name parallelComp_self_comp_copy}`parallelComp_self_comp_copy`
-
-  The categorical counterpart of {name ProbabilityTheory.Kernel.deterministic}`Kernel.deterministic` are automatically treated as {name CategoryTheory.Deterministic}`Deterministic` morphisms.
-
-```VersoTools.leanDecl
-ProbabilityTheory.Kernel.parallelComp_self_comp_copy₀
-```
-
-```VersoTools.kernelDiagram
-ProbabilityTheory.Kernel.parallelComp_self_comp_copy₀
-```
-
-```VersoTools.leanDecl
-ProbabilityTheory.Kernel.discard_comp_deterministic
-```
-
-```VersoTools.kernelDiagram
-ProbabilityTheory.Kernel.discard_comp_deterministic
+fun {X Y Z T : Type} [MeasurableSpace X] [MeasurableSpace Y] [MeasurableSpace Z] [MeasurableSpace T]
+    (κ : Kernel X Y) (η : Kernel Z T) [IsSFiniteKernel κ] [IsSFiniteKernel η] ↦
+  parallelComp_comm₀ (κ := κ) (η := η)
 ```

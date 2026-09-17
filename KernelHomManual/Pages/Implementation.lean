@@ -17,10 +17,10 @@ set_option linter.style.longLine false
 set_option pp.rawOnError true
 set_option verso.code.warnLineLength 100
 
-#doc (Manual) "Performance" =>
+#doc (Manual) "Implementation of the translation" =>
 %%%
 htmlSplit := .never
-tag := "performance"
+tag := "implementation"
 %%%
 
 The translation performed by {name kernelHom}`kernel_hom` traverses the kernel expression twice (once to lift it to a common universe level, once to translate it into {name SFinKer}`SFinKer`) and builds, at each node, an instance of a translation lemma such as {name ProbabilityTheory.Kernel.comp_hom}`comp_hom` or {name ProbabilityTheory.Kernel.comp_lift}`comp_lift`. Two design choices keep this cheap.

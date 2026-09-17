@@ -97,7 +97,7 @@ The type of the composition `κ ∘ₖ η` has universe level {name Level.max}`m
 
 The correct approach is to *lift all carrier spaces to the maximum universe level of every space in the entire expression*, which is {name Level.max}`max` `x y z` in this example. This includes spaces that may "disappear" in the type of the final expression but still need consistent lifting.
 
-To automate this, the {name EqLift}`lift_eq` tactic computes the maximum universe level of all carrier spaces in the kernel expression through the {name collectExprUniverses}`collectExprUniverses` function, and lifts all carrier spaces to this level using {name MeasurableEquiv.ulift}`ulift`. One can then translate the lifted kernel expression into a categorical expression in {name SFinKer}`SFinKer` without worrying about universe inconsistencies.
+To automate this, the {name EqLift}`lift_eq` tactic computes the maximum universe level of all carrier spaces in the kernel expression through the {name collectExprUniverses}`collectExprUniverses` function, and lifts all carrier spaces to this level using {name MeasurableEquiv.ulift}`ulift`. One can then translate the lifted kernel expression into a categorical expression in {name SFinKer}`SFinKer` without worrying about universe inconsistencies. When the tactic is applied at several locations, such as `lift_eq at h ⊢`, all the equalities are lifted to the maximum of their universe levels, so that the lifted equalities can be used to rewrite each other.
 
 The {name collectExprUniverses}`collectExprUniverses` function has the following type signature:
 

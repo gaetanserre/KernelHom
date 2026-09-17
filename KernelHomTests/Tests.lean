@@ -96,3 +96,18 @@ example (κ : Kernel Z Y) [IsSFiniteKernel κ] :
 example (κ : Kernel X Y) (η : Kernel Z W) [IsSFiniteKernel κ] [IsSFiniteKernel η] :
     Kernel.swap Y W ∘ₖ (κ ∥ₖ η) = η ∥ₖ κ ∘ₖ Kernel.swap X Z := by
   aesop_kernel
+
+example (κ : Kernel X Y) (η : Kernel Y Z) (ζ : Kernel X Z) (ξ : Kernel Z W) [IsSFiniteKernel κ]
+    [IsSFiniteKernel η] [IsSFiniteKernel ζ] [IsSFiniteKernel ξ] (h : η ∘ₖ κ = ζ) :
+    ξ ∘ₖ η ∘ₖ κ = ξ ∘ₖ ζ := by
+  kernel_hom at h ⊢
+  rw [reassoc_of% h]
+
+example (κ : Kernel X Y) (η : Kernel Z W) [IsSFiniteKernel κ] [IsSFiniteKernel η] :
+    (Kernel.id ∥ₖ κ) ∘ₖ (η ∥ₖ Kernel.id) = (η ∥ₖ Kernel.id) ∘ₖ (Kernel.id ∥ₖ κ) := by
+  kernel_disch
+
+example (p : Kernel X Y) (s : Kernel Y Z) (ψ : Kernel Unit W) [IsMarkovKernel p]
+    [IsMarkovKernel s] [IsDeterministic s] [IsMarkovKernel ψ] :
+    ψ ∘ₖ Kernel.discard X = (ψ ∘ₖ Kernel.discard Z) ∘ₖ (s ∘ₖ p) := by
+  kernel_disch

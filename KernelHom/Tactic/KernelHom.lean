@@ -319,30 +319,6 @@ def HomEqualityWith (lift : Expr → MetaM (Expr × Expr)) (eq : Expr) : MetaM (
 equivalence. -/
 def HomEquality : Expr → MetaM (Expr × Expr) := HomEqualityWith liftEquality
 
-/-- The types of the hypotheses and of the goal at a location. -/
-def locationTypes (loc : Location) : TacticM (Array Expr) := withMainContext do
-  match loc with
-  | .targets hyps target =>
-    let types ← hyps.mapM fun h ↦ do (← getFVarId h).getType
-    if target then return types.push (← getMainTarget) else return types
-  | .wildcard =>
-    let types := (← getLCtx).foldl (init := #[]) fun types decl ↦
-      if decl.isImplementationDetail then types else types.push decl.type
-    return types.push (← getMainTarget)
-
-/-- Transform the kernel equalities at a location into equalities in `SFinKer`. When there are
-several of them, they are all lifted to a common universe level (the maximum of their universe
-levels), so that the translated equalities live in the same category and can be used together. -/
-def HomEqualityAt (loc : Location) : TacticM Unit := do
-  let types ← locationTypes loc
-  if types.size ≤ 1 then
-    return ← applyLocTactic loc HomEquality
-  let lvls ← types.foldlM (init := []) fun lvls type ↦ do
-    try return lvls ++ (← collectEqUniverses (← unfoldKernelOp type)) catch _ => return lvls
-  if lvls.isEmpty then
-    return ← applyLocTactic loc HomEquality
-  applyLocTactic loc <| HomEqualityWith (liftEqualityWithLevel (← computeMaxLevel lvls))
-
 /-- The `kernel_hom` tactic transforms a kernel equality to an equivalent equality in
 the category of measurable spaces and s-finite kernels.
 
@@ -369,4 +345,4 @@ syntax (name := kernelHom) "kernel_hom" (ppSpace location)? : tactic
 
 elab_rules : tactic
   | `(tactic| kernel_hom $[$loc]?) =>
-    HomEqualityAt <| expandOptLocation (Lean.mkOptionalNode loc)
+    liftEqualityAt (expandOptLocation <| mkOptionalNode loc) HomEqualityWith
