@@ -8,6 +8,7 @@
   --verso-info-indicator-color: #657ed4;
   --verso-error-color: #d11c41;
   --verso-error-indicator-color: #d11c41;
+  --verso-code-comment-color: #7d7f92;
 }
 
 @font-face {
@@ -48,6 +49,11 @@ code.block {
 .hl.lean.block .sort {
   color: var(--verso-code-keyword-color) !important;
   font-weight: 600 !important;
+}
+
+.hl.lean.block .token.doc-comment,
+.hl.lean.block .token.comment {
+  color: var(--verso-code-comment-color) !important;
 }
 
 /* Style for the code block action container and buttons */
