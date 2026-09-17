@@ -26,13 +26,6 @@ when computing the maximum universe level. -/
 def HomEqualityToLvl (eq : Expr) (Lvl : Level) : MetaM (Expr × Expr) :=
   HomEqualityWith (liftEqualityWithLevel Lvl) eq
 
-/-- Replace all level metavariables appearing in an expression with named level parameters. -/
-def freshenLevelParam (e : Expr) : MetaM Expr := do
-  let mvarIds := (Lean.collectLevelMVars {} e).result
-  for mvarId in mvarIds do
-    Lean.assignLevelMVar mvarId (Level.param mvarId.name)
-  instantiateMVars e
-
 /-- Core handler for `@[kernel_reassoc]`.
 
 Given an equality between s-finite kernels, this constructs the corresponding reassociated
@@ -64,7 +57,6 @@ def kernelReassocHandler (h_eq : Expr) : MetaM (Expr × Array LMVarId) := do
             let (_, kernel_reassoc_proof) ← KernelEquality <| ← inferType reassoc_body
             let kernel_reassoc_proof ← mkAppM ``Eq.mp #[kernel_reassoc_proof, reassoc_body]
             mkLambdaFVars #[Z, _inst, ξ, _inst_1] kernel_reassoc_proof
-  let proof ← freshenLevelParam proof
   return (proof, #[u.mvarId!])
 
 /-- Same as `@[reassoc]`, but for equalities of s-finite kernels. -/
@@ -104,13 +96,22 @@ private def kernelReassocImpl (src : Name) (ref : Syntax) (kind : AttributeKind)
     addRelatedDecl src tgt ref optAttr fun value levels => do
       Term.TermElabM.run' <| Term.withSynthesize do
         let (pf, newLevelMVars) ← kernelreassocExpr value
-        let newNames := newLevelMVars.map (·.name)
+        let mut names := levels
         for mvarId in newLevelMVars do
-          Lean.assignLevelMVar mvarId (Level.param mvarId.name)
+          let mut i := 1
+          while names.contains (.mkSimple s!"u_{i}") do
+            i := i + 1
+          names := names ++ [.mkSimple s!"u_{i}"]
+          Lean.assignLevelMVar mvarId (.param (.mkSimple s!"u_{i}"))
         let pf ← instantiateMVars pf
-        pure (pf, levels ++ newNames.toList)
+        pure (pf, names)
     return tgt
   | _ => throwUnsupportedSyntax
+
+/-- Same as `reassoc_of%`, but for equalities of s-finite kernels. -/
+elab "kernel_reassoc_of% " t:term : term => do
+  let e ← Term.withSynthesizeLight <| Term.elabTerm t none
+  return (← kernelreassocExpr e).1
 
 initialize
   registerGeneratingAttr `kernelReassoc ((#[·]) <$> kernelReassocImpl · · ·)

@@ -20,13 +20,13 @@ set_option verso.code.warnLineLength 100
 htmlSplit := .never
 %%%
 
-Two of the most powerful tactics for categories is Mathlib are {name Monoidal.monoidal}`monoidal` and {name Coherence.coherence}`coherence`. To facilitate the use of these tactics for kernel equalities, *Kernel-Hom* provide the {name kernelMonoidal}`kernel_monoidal`, {name kernelCoherence}`kernel_coherence`, {name kernelDisch}`kernel_disch` and {name aesopKernel}`aesop_kernel` tactics which first apply {name kernelHom}`kernel_hom` to the goal to translate the kernel equality into a categorical equality in the {name SFinKer}`SFinKer` category, then apply {name Monoidal.monoidal}`monoidal`, {name Coherence.coherence}`coherence`, {name CategoryTheory.categoryTheoryDischarger}`cat_disch` or `aesop` (with the `CategoryTheory` rule set) to solve or simplify the categorical equality.
+Two of the most powerful tactics for categories in Mathlib are {name Monoidal.monoidal}`monoidal` and {name Coherence.coherence}`coherence`. To facilitate the use of these tactics for kernel equalities, *Kernel-Hom* provides the {name kernelDisch}`kernel_disch`, {name kernelMonoidal}`kernel_monoidal`, {name kernelCoherence}`kernel_coherence` and {name aesopKernel}`aesop_kernel` tactics which first apply {name kernelHom}`kernel_hom` to the goal to translate the kernel equality into a categorical equality in the {name SFinKer}`SFinKer` category, then apply, respectively, {name CategoryTheory.categoryTheoryDischarger}`cat_disch` and {name Monoidal.monoidal}`monoidal`, {name Monoidal.monoidal}`monoidal`, {name Coherence.coherence}`coherence`, or `aesop` (with the `CategoryTheory` rule set) to solve or simplify the categorical equality. {name kernelDisch}`kernel_disch` is the tactic to use by default: it tries both {name CategoryTheory.categoryTheoryDischarger}`cat_disch` and {name Monoidal.monoidal}`monoidal`, and before giving up, it also normalizes the tensor products of morphisms, which allows it to use the exchange law and the comonoid laws of copy and discard, including for deterministic and Markov kernels.
+
+{docstring kernelDisch}
 
 {docstring kernelMonoidal}
 
 {docstring kernelCoherence}
-
-{docstring kernelDisch}
 
 {docstring aesopKernel}
 

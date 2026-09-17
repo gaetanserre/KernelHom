@@ -1,5 +1,6 @@
 module  -- shake: keep-all --deprecated_module: ignore
 
+public import KernelHom.ForMathlib.Comon
 public import KernelHom.ForMathlib.Kernel
 public import KernelHom.ForMathlib.LIntegral
 public import KernelHom.Kernel.Hom

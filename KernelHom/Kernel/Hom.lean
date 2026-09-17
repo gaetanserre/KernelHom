@@ -190,6 +190,13 @@ lemma comul : Δ[SX] = (Kernel.copy X).hom (ex := ex) (ey := ex.prodCongr ex) :=
   congr with x
   all_goals simp [MeasurableEquiv.prodCongr]
 
+variable {SX SY ex ey} in
+@[reassoc (attr := simp)]
+lemma hom_counit_of_isMarkovKernel (κ : Kernel X Y) [IsMarkovKernel κ] :
+    κ.hom (ex := ex) (ey := ey) ≫ ε[SY] = ε[SX] := by
+  rw [counit.{_, _, 0} (ex := ey), counit.{_, _, 0} (ex := ex), comp_hom]
+  simp only [comp_discard]
+
 lemma braiding_hom : (β_ SX SY).hom =
     (Kernel.swap X Y).hom (ex := ex.prodCongr ey) (ey := ey.prodCongr ex) := by
   ext : 1; dsimp

@@ -329,6 +329,9 @@ The tactic supports location specifiers like `rw` or `simp`:
 * `kernel_hom at h ⊢` — applies to hypothesis `h` and the goal
 * `kernel_hom at *` — applies to all hypotheses and the goal
 
+All the equalities are lifted to a common universe level, so that the resulting categorical
+equalities live in the same category and can be used to rewrite each other.
+
 Example:
 ```lean
 example {W X Y Z : Type*} [MeasurableSpace X] [MeasurableSpace Y] [MeasurableSpace Z]
@@ -342,4 +345,4 @@ syntax (name := kernelHom) "kernel_hom" (ppSpace location)? : tactic
 
 elab_rules : tactic
   | `(tactic| kernel_hom $[$loc]?) =>
-    expandOptLocation (Lean.mkOptionalNode loc) |> applyLocTactic <| HomEquality
+    liftEqualityAt (expandOptLocation <| mkOptionalNode loc) HomEqualityWith

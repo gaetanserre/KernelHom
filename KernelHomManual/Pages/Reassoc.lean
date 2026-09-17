@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gaëtan Serré
 -/
 
-import KernelHomTests.Examples
+import KernelHom
 import KernelHomManual.Tools.VersoKernelDiagram
 import KernelHomManual.Tools.LeanDecl
 import KernelHom.Tactic.Reassoc
@@ -23,39 +23,54 @@ set_option linter.style.longLine false
 set_option pp.rawOnError true
 set_option verso.code.warnLineLength 100
 set_option verso.exampleProject "."
-set_option verso.exampleModule "KernelHomTests.Examples"
 
 #doc (Manual) "Kernel reassociation" =>
 %%%
 htmlSplit := .never
 %%%
 
-The translation of kernels to morphisms in the {name SFinKer}`SFinKer` category allows to adapt the
-`@[reassoc]` attribute to equalities of s-finite kernels.
+The composition of kernels associates to the left: `ξ ∘ₖ η ∘ₖ κ` stands for `(ξ ∘ₖ η) ∘ₖ κ`. An equality `h : η ∘ₖ κ = ζ` therefore cannot rewrite this kernel, since `η ∘ₖ κ` is not one of its subterms: `rw [h]` fails, and one first has to reassociate with {name ProbabilityTheory.Kernel.comp_assoc}`Kernel.comp_assoc`. The composition `≫` of morphisms in a category raises the same issue, which Mathlib solves with the attribute `@[reassoc]`. From a lemma `F : f = g` with `f g : X ⟶ Y`, it generates the lemma `F_assoc : ∀ {Z} (h : Y ⟶ Z), f ≫ h = g ≫ h`, whose two sides are normalized with the associativity of `≫`, so that `F_assoc` rewrites `f` inside longer compositions. The translation of kernels to morphisms of {name SFinKer}`SFinKer` allows to adapt this attribute to kernels.
 
-To this end, the library provides the `@[kernel_reassoc]` attribute, which is a variant of `@[reassoc]` that, given a lemma named `F` of shape `∀ .., f = g`, where `f g : Kernel X Y` are
-s-finite kernels, will create a new lemma named `F_assoc` of shape `∀ .. {Z : Type u} [MeasurableSpace Z] (ξ : Kernel Y Z) [IsSFiniteKernel], ξ ∘ₖ f = ξ ∘ₖ g`.
-As a new measurable space `Z` is introduced, the new declaration has a new universe level, which prevents the use of the `@[reassoc]` pipeline. Instead, `@[kernel_reassoc]` mirrors the structure of `@[reassoc]` but uses the {name kernelReassocHandler}`kernelReassocHandler` function to generate the proof of the new declaration. It first transforms the kernel equality into a categorical equality in `SFinKer`, then applies the `@[reassoc]` pipeline to generate the reassociated equality, and finally transforms the result back into a kernel equality.
+# The `@[kernel_reassoc]` attribute
 
-{docstring kernelReassocHandler}
-
-# Example
-
-The `@[kernel_reassoc]` attribute works the exact same way as `@[reassoc]`, but for equalities of s-finite kernels:
-
-```VersoTools.leanDecl
-ProbabilityTheory.Kernel.parallelComp_self_comp_copy'
-```
+From a lemma `F` whose conclusion is `f = g` with `f g : Kernel X Y` s-finite kernels, `@[kernel_reassoc]` generates a lemma `F_assoc` with the same hypotheses and the conclusion
+`∀ {Z : Type u} [MeasurableSpace Z] (ξ : Kernel Y Z) [IsSFiniteKernel ξ], ξ ∘ₖ f = ξ ∘ₖ g`,
+where both sides are normalized so that all the compositions associate to the left. For instance:
 
 ```lean -show
-variable {X Y Z : Type*} [MeasurableSpace X] [MeasurableSpace Y] [MeasurableSpace Z]
-variable (κ : Kernel (X × Y) Z) [IsMarkovKernel κ] [IsDeterministic κ]
+variable {X Y Z T : Type*} [MeasurableSpace X] [MeasurableSpace Y] [MeasurableSpace Z]
+  [MeasurableSpace T]
+```
+
+```lean
+@[kernel_reassoc]
+lemma parallelComp_self_comp_copy' (κ : Kernel (X × Y) Z) [IsMarkovKernel κ]
+    [IsDeterministic κ] :
+    (κ ∥ₖ κ) ∘ₖ copy (X × Y) = copy Z ∘ₖ κ := by
+  kernel_disch
 ```
 
 ```lean (name := parallelComp_self_comp_copy_assoc)
-variable {W : Type*} [MeasurableSpace W] (ξ : Kernel (Z × Z) W) [IsSFiniteKernel ξ]
+variable (κ : Kernel (X × Y) Z) [IsMarkovKernel κ] [IsDeterministic κ]
+  (ξ : Kernel (Z × Z) T) [IsSFiniteKernel ξ]
 #check parallelComp_self_comp_copy'_assoc κ ξ
 ```
 ```leanOutput parallelComp_self_comp_copy_assoc
 parallelComp_self_comp_copy'_assoc κ ξ : ξ ∘ₖ (κ ∥ₖ κ) ∘ₖ copy (X × Y) = ξ ∘ₖ copy Z ∘ₖ κ
+```
+
+The attribute works by transport. The kernel equality is translated into an equality of morphisms of {name SFinKer}`SFinKer`, as in {name kernelHom}`kernel_hom`. The `@[reassoc]` pipeline of Mathlib is applied to this equality, and the result is translated back into kernels, as in {name homKernel}`hom_kernel`. The only subtlety concerns universes. The translation lifts all the carriers of `F` to a common level `w`, so the lemma produced by `@[reassoc]` quantifies over the objects `Z` of `SFinKer.{w}` only. Translated back, it would not apply to a kernel `ξ` whose codomain lives in an arbitrary universe. The equality is therefore lifted to `max u w`, where `u` is a fresh level for `Z`, and `u` becomes a new universe parameter of `F_assoc`.
+
+{docstring kernelReassocHandler}
+
+# The `kernel_reassoc_of%` elaborator
+
+As `@[reassoc]` comes with the term elaborator `reassoc_of%`, `@[kernel_reassoc]` comes with `kernel_reassoc_of%`. For a proof `h` of an equality of s-finite kernels, `kernel_reassoc_of% h` is a proof of the reassociated equality, built as above. Unlike the attribute, it also applies to local hypotheses. For instance, it solves the rewriting problem described at the beginning of this page:
+
+```lean
+example {κ : Kernel X Y} {η : Kernel Y Z} {ζ : Kernel X Z} {ξ : Kernel Z T}
+    [IsSFiniteKernel κ] [IsSFiniteKernel η] [IsSFiniteKernel ζ] [IsSFiniteKernel ξ]
+    (h : η ∘ₖ κ = ζ) :
+    ξ ∘ₖ η ∘ₖ κ = ξ ∘ₖ ζ := by
+  rw [kernel_reassoc_of% h]
 ```

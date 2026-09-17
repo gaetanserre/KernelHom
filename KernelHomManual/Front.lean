@@ -7,13 +7,14 @@ Authors: Gaëtan Serré
 import VersoManual
 import KernelHomManual.Papers
 import KernelHomManual.Pages.Examples
+import KernelHomManual.Pages.Basu
 import KernelHomManual.Pages.Universe
 import KernelHomManual.Pages.KernelHom
 import KernelHomManual.Pages.HomKernel
 import KernelHomManual.Pages.CatTactics
 import KernelHomManual.Pages.Reassoc
 import KernelHomManual.Pages.MonoidalComp
-import KernelHomManual.Pages.Performance
+import KernelHomManual.Pages.Implementation
 import KernelHom.Tactic.KernelDiagram
 import EqLift.Tactic.Lift
 import Mathlib.Probability.Kernel.Category.Stoch
@@ -33,7 +34,10 @@ shortTitle := "Kernel Categorical Reasoning"
 
 *Overview*
 
-*Kernel-Hom* is a Lean 4 library that provides tactics to simplify kernel equalities by leveraging categorical reasoning. It automatically translates s-finite kernel equalities into equalities in a monoidal category, where tactics like {name Monoidal.monoidal}`monoidal` or {name Coherence.coherence}`coherence` can be applied, and then translates the result back to a kernel equality if needed. The translation from kernels to categorical expressions also allows to use any tool from category theory within the context of kernels, such as string diagram visualization or monoidal composition.
+*Kernel-Hom* is a Lean 4 library that provides tactics to simplify kernel equalities by leveraging categorical reasoning. It automatically translates s-finite kernel equalities into equalities in a monoidal category, where tactics like {name Monoidal.monoidal}`monoidal` or {name Coherence.coherence}`coherence` can be applied, and then translates the result back to a kernel equality if needed. The translation from kernels to categorical expressions gives access to the tools of category theory for kernels, which has three main benefits:
+- *Proving API lemmas easily.* Equalities of kernels built from compositions, parallel compositions, products, copies, discards and swaps are proved by a single call to {name kernelDisch}`kernel_disch`, without any knowledge of the lemmas about kernels (see the {ref "examples"}[examples]).
+- *Visualizing kernels.* The {name kernelDiagram}`kernel_diagram` command and the string diagram widget draw complex kernel expressions as string diagrams, which makes their structure easier to understand.
+- *Reasoning by calculation.* A proof can be written as a `calc` whose lines are the mathematically meaningful rewrites, while the structural steps between them are proved automatically by the categorical tactics. Each step can moreover be visualized. Such proofs by calculation were rare for kernels, since each structural step needed its own lemma or a computation with integrals (see the {ref "calculational-proofs"}[calculational proof of Basu's theorem]).
 
 ![](static/diagram.svg)
 
@@ -45,15 +49,15 @@ The complete documentation for the library is available in the [API reference](d
 
 The library introduces two main tactics:
 - {name kernelHom}`kernel_hom` : transforms a kernel equality into an equality in the monoidal category.
-- {name homKernel}`kernel_hom` : performs the inverse transformation, bringing the categorical equality back to a kernel equality.
+- {name homKernel}`hom_kernel` : performs the inverse transformation, bringing the categorical equality back to a kernel equality.
 
-These tactics allow users to transform complex kernel equalities into categorical equalities, where powerful categorical tactics can be applied to simplify or prove them. To this end, the library provides built-in helpers like {name kernelMonoidal}`kernel_monoidal`, {name kernelCoherence}`kernel_coherence`, {name kernelDisch}`kernel_disch` and {name aesopKernel}`aesop_kernel` to apply categorical tactics directly to kernels without needing to manually invoke the translation tactics.
+These tactics allow users to transform complex kernel equalities into categorical equalities, where powerful categorical tactics can be applied to simplify or prove them. To this end, the library provides built-in helpers like {name kernelDisch}`kernel_disch`, {name kernelMonoidal}`kernel_monoidal`, {name kernelCoherence}`kernel_coherence` and {name aesopKernel}`aesop_kernel` to apply categorical tactics directly to kernels without needing to manually invoke the translation tactics. {name kernelDisch}`kernel_disch` is the tactic to use by default, as it tries both {name CategoryTheory.categoryTheoryDischarger}`cat_disch` and {name Monoidal.monoidal}`monoidal`.
 
 The library rests on {name SFinKer}`SFinKer`, the category of measurable spaces with s-finite kernels as morphisms, equipped with monoidal and symmetric structures. This category is also used to define {name Stoch}`Stoch`, the category of measurable spaces with Markov kernels as morphisms, which is a wide subcategory of {name SFinKer}`SFinKer` (see {citep fritz2020}[]). Both categories have been merged into Mathlib (PR [#36779](https://github.com/leanprover-community/mathlib4/pull/36779)).
 
 *Universe handling*
 
-A key aspect of the library is automatic universe management: expressions are lifted to a common universe level during translation, ensuring categorical expressions are well-typed. This allows users to work with kernels of varying universe levels without needing to manually manage universe annotations. This part is handled by the {name EqLift}`lift_eq` tactic, which can also be used independently (see [the GitHub repository](https://github.com/gaetanserre/EqLift)).
+A key aspect of the library is automatic universe management: expressions are lifted to a common universe level during translation, ensuring categorical expressions are well-typed. This allows users to work with kernels of varying universe levels without needing to manually manage universe annotations. When several hypotheses and the goal are translated together (`kernel_hom at h ⊢`), they are all lifted to the same universe level, so that the translated equalities can be used to rewrite each other. This part is handled by the {name EqLift}`lift_eq` tactic, which can also be used independently (see [the GitHub repository](https://github.com/gaetanserre/EqLift)).
 
 *Kernel diagrams*
 
@@ -61,21 +65,23 @@ The library provides the {name kernelDiagram}`kernel_diagram` command, which gen
 
 *Kernel reassociation*
 
-The library also provides the `@[kernel_reassoc]` attribute, which is a variant of `@[reassoc]` that, given a lemma named `F` of shape `∀ .., f = g`, where `f g : Kernel X Y` are s-finite kernels, will create a new lemma named `F_assoc` of shape `∀ .. {Z : Type u} [MeasurableSpace Z] (ξ : Kernel Y Z) [IsSFiniteKernel], ξ ∘ₖ f = ξ ∘ₖ g`. It first transforms the kernel equality into a categorical equality in `SFinKer`, then applies the `@[reassoc]` pipeline to generate the reassociated equality, and finally transforms the result back into a kernel equality.
+The library also provides the `@[kernel_reassoc]` attribute, which is a variant of `@[reassoc]` that, given a lemma named `F` of shape `∀ .., f = g`, where `f g : Kernel X Y` are s-finite kernels, will create a new lemma named `F_assoc` of shape `∀ .. {Z : Type u} [MeasurableSpace Z] (ξ : Kernel Y Z) [IsSFiniteKernel ξ], ξ ∘ₖ f = ξ ∘ₖ g`. It first transforms the kernel equality into a categorical equality in `SFinKer`, then applies the `@[reassoc]` pipeline to generate the reassociated equality, and finally transforms the result back into a kernel equality. It comes with the term elaborator `kernel_reassoc_of%`, the variant of `reassoc_of%`, which applies the same construction to any proof of an equality of s-finite kernels, such as a local hypothesis.
 
 *Kernelized monoidal composition*
 
 An additional consequence of the translation to {name SFinKer}`SFinKer` is that one can adapt the categorical monoidal composition “{name CategoryTheory.monoidalComp}`⊗≫`” to kernels, resulting in a kernelized monoidal composition “{name ProbabilityTheory.Kernel.monoComp}`⊗≫ₖ`”. This composition automatically handles measurable equivalences, allowing for seamless composition of kernels while maintaining s-finiteness.
 
-*Performance*
+*Implementation*
 
-The translation builds its terms and proofs directly rather than through `mkAppM` and rewriting: the equivalence between the original and the translated equalities is proved by congruence from the translation lemmas, and the instances, inferred types and recursively built objects (measurable equivalences, objects of {name SFinKer}`SFinKer`) are memoized in a cache that is reset at each call. See the {ref "performance"}[Performance] page for the underlying structures.
+The translation builds its terms and proofs directly rather than through `mkAppM` and rewriting: the equivalence between the original and the translated equalities is proved by congruence from the translation lemmas, and the instances, inferred types and recursively built objects (measurable equivalences, objects of {name SFinKer}`SFinKer`) are memoized in a cache that is reset at each call. See the {ref "implementation"}[Implementation of the translation] page for the underlying structures.
 
 *About*
 
 This library is under active development and is under the [Apache 2.0 license](https://www.apache.org/licenses/LICENSE-2.0). Contributions and feedback are welcome!
 
 {include 0 KernelHomManual.Pages.Examples}
+
+{include 0 KernelHomManual.Pages.Basu}
 
 {include 0 KernelHomManual.Pages.Universe}
 
@@ -89,4 +95,4 @@ This library is under active development and is under the [Apache 2.0 license](h
 
 {include 0 KernelHomManual.Pages.MonoidalComp}
 
-{include 0 KernelHomManual.Pages.Performance}
+{include 0 KernelHomManual.Pages.Implementation}
