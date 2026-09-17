@@ -14,10 +14,12 @@ maxSynthPendingDepth = 3
 [[require]]
 name = "verso"
 git = "https://github.com/leanprover/verso"
+rev = "main"
 
 [[require]]
 name = "eqlift"
 git = "https://github.com/gaetanserre/EqLift"
+rev = "main"
 
 [[require]]
 name = "mathlib"
