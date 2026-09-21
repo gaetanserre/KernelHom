@@ -49,7 +49,7 @@ The proof consists of two calculations. The first one shows that `a ∘ₖ α` a
 ProbabilityTheory.Kernel.basu_aux
 ```
 
-The visible rewrites are the sufficiency equation `hα` and the ancillarity equation `hψ`. The first line marginalizes the right-hand side of the sufficiency equation, so that `hα` can be applied. After each rewrite, {name kernelDisch}`kernel_disch` proves the remaining equality.
+The visible rewrites are the sufficiency equation `hα` and the ancillarity equation `hψ`. The first line marginalizes the right-hand side of the sufficiency equation, so that `hα` can be applied. Each rewrite is followed by a step proved by {name kernelDisch}`kernel_disch`.
 
 The second calculation uses the completeness of `s ∘ₖ p` on the first one:
 
@@ -77,10 +77,22 @@ Step 2. By sufficiency.
 ProbabilityTheory.Kernel.basu_aux_step₂
 ```
 
-Step 3. By ancillarity.
+Step 3. Since `s` is a Markov kernel, discarding its output is discarding its input, and the copy disappears by its counit law.
 
 ```VersoTools.kernelDiagram
 ProbabilityTheory.Kernel.basu_aux_step₃
+```
+
+Step 4. By ancillarity.
+
+```VersoTools.kernelDiagram
+ProbabilityTheory.Kernel.basu_aux_step₄
+```
+
+Step 5. Since `s ∘ₖ p` is a Markov kernel, discarding its output is discarding its input.
+
+```VersoTools.kernelDiagram
+ProbabilityTheory.Kernel.basu_aux_step₅
 ```
 
 ## Second calculation

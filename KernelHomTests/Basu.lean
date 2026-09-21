@@ -69,11 +69,13 @@ lemma basu_aux
   _ = Kernel.id.map Prod.fst ∘ₖ (a ∥ₖ (discard V : Kernel V Unit)) ∘ₖ
       ((α ∥ₖ Kernel.id) ∘ₖ copy V ∘ₖ s ∘ₖ p) := by
     kernel_disch
-  _ = a ∘ₖ p := by
+  _ = Kernel.id.map Prod.fst ∘ₖ (a ∥ₖ discard V) ∘ₖ (Kernel.id ∥ₖ s ∘ₖ copy X ∘ₖ p) := by
     rw [← hα]
+  _ = a ∘ₖ p := by
     kernel_disch
-  _ = (ψ ∘ₖ discard V) ∘ₖ (s ∘ₖ p) := by
+  _ = ψ ∘ₖ discard Θ := by
     rw [hψ]
+  _ = (ψ ∘ₖ discard V) ∘ₖ (s ∘ₖ p) := by
     kernel_disch
 
 end
@@ -125,14 +127,23 @@ lemma basu_aux_step₁ :
 lemma basu_aux_step₂
     (hα : (Kernel.id ∥ₖ s) ∘ₖ copy X ∘ₖ p = (α ∥ₖ Kernel.id) ∘ₖ copy V ∘ₖ s ∘ₖ p) :
     Kernel.id.map Prod.fst ∘ₖ (a ∥ₖ (discard V : Kernel V Unit)) ∘ₖ
-        ((α ∥ₖ Kernel.id) ∘ₖ copy V ∘ₖ s ∘ₖ p) = a ∘ₖ p := by
+        ((α ∥ₖ Kernel.id) ∘ₖ copy V ∘ₖ s ∘ₖ p) =
+      Kernel.id.map Prod.fst ∘ₖ (a ∥ₖ (discard V : Kernel V Unit)) ∘ₖ
+        (Kernel.id ∥ₖ s ∘ₖ copy X ∘ₖ p) := by
   rw [← hα]
+
+lemma basu_aux_step₃ :
+    Kernel.id.map Prod.fst ∘ₖ (a ∥ₖ (discard V : Kernel V Unit)) ∘ₖ
+        (Kernel.id ∥ₖ s ∘ₖ copy X ∘ₖ p) = a ∘ₖ p := by
   kernel_disch
 
 /-- By ancillarity. -/
-lemma basu_aux_step₃ (hψ : a ∘ₖ p = ψ ∘ₖ discard Θ) :
-    a ∘ₖ p = (ψ ∘ₖ discard V) ∘ₖ (s ∘ₖ p) := by
+lemma basu_aux_step₄ (hψ : a ∘ₖ p = ψ ∘ₖ discard Θ) :
+    a ∘ₖ p = ψ ∘ₖ discard Θ := by
   rw [hψ]
+
+lemma basu_aux_step₅ :
+    ψ ∘ₖ discard Θ = (ψ ∘ₖ discard V) ∘ₖ (s ∘ₖ p) := by
   kernel_disch
 
 lemma basu_step₁ :
