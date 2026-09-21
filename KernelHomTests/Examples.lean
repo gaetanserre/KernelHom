@@ -17,6 +17,10 @@ the category `SFinKer`. The other lemmas of this kind, such as `Kernel.comp_asso
 Kernel-Hom could not replace the ones of Mathlib. Each lemma has the name of its Mathlib
 counterpart, suffixed by `₀`.
 
+The file also contains `parallelComp_self_comp_copy₀`, from
+`Mathlib.Probability.Kernel.Deterministic`, which shows that the properties of deterministic kernels
+are available after translation.
+
 They are all proved by a single call to `kernel_monoidal` or `kernel_disch`, which also handles the
 exchange law (`parallelComp_comm₀`) and the coassociativity of copy (`prodAssoc_prod₀`).
 
@@ -69,6 +73,13 @@ lemma parallelComp_comm₀ {κ : Kernel X Y} {η : Kernel Z T} :
   swap; · simp [hκ]
   by_cases hη : IsSFiniteKernel η
   swap; · simp [hη]
+  kernel_disch
+
+/-! ### `Mathlib.Probability.Kernel.Deterministic` -/
+
+lemma parallelComp_self_comp_copy₀ (κ : Kernel (X × Y) Z) [IsMarkovKernel κ]
+    [IsDeterministic κ] :
+    (κ ∥ₖ κ) ∘ₖ copy (X × Y) = copy Z ∘ₖ κ := by
   kernel_disch
 
 end ProbabilityTheory.Kernel

@@ -4,7 +4,8 @@
 // nodes: `obj` for the objects at the boundary of the diagram and `atom` for the kernels. A string
 // `((i, j), (k, l))` joins the `j`-th node of the row `i` to the `l`-th node of the row `k > i`.
 // Unless a position `x` is given, a node is placed below the nodes of the previous rows it is
-// joined to, without overlapping the other nodes of its row.
+// joined to, or below the node with the same index in the previous row if there is none, without
+// overlapping the other nodes of its row.
 
 #let row-sep = 100
 #let node-sep = 15
@@ -26,7 +27,9 @@
       .map(((j, node)) => {
         if node.x != auto { return node.x }
         let parents = strings.filter(((a, b)) => b == (i, j)).map(((a, b)) => xs.at(a.at(0)).at(a.at(1)))
-        if parents.len() > 0 { parents.sum() / parents.len() }
+        if parents.len() > 0 { parents.sum() / parents.len() } else if i > 0 and j < xs.at(i - 1).len() {
+          xs.at(i - 1).at(j)
+        }
       })
     let pos = ()
     for (j, d) in desired.enumerate() {
@@ -48,7 +51,7 @@
   xs
 }
 
-#let string-diagram(rows, strings) = context {
+#let string-diagram(rows, strings, row-sep: row-sep) = context {
   let label(node) = text(font: label-font, size: 13pt, node.label)
   let widths = rows.map(row => row.map(node => calc.max(
     min-box-width,

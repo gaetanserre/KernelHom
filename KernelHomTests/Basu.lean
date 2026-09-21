@@ -6,7 +6,6 @@ Authors: Gaëtan Serré
 module
 
 public import KernelHom
-public import Mathlib.Tactic.Widget.StringDiagram
 
 /-!
 # Basu's theorem for Markov kernels
@@ -85,18 +84,18 @@ the product of their distributions. The kernel `a` does not need to be determini
 theorem basu {p : Kernel Θ X} [IsMarkovKernel p] {s : Kernel X V} [IsMarkovKernel s]
     {a : Kernel X W} [IsMarkovKernel a] (hs : IsSufficient p s) (hc : IsComplete (s ∘ₖ p) W)
     (ha : IsAncillary p a) : (s ∥ₖ a) ∘ₖ copy X ∘ₖ p = (s ∘ₖ p) ×ₖ (a ∘ₖ p) := by
-  with_panel_widgets [Mathlib.Tactic.Widget.StringDiagram, KernelDiagram]
+  with_panel_widgets [KernelDiagram]
   obtain ⟨α, _, hα⟩ := hs
   obtain ⟨ψ, _, hψ⟩ := ha
-  have h := hc (a ∘ₖ α) (ψ ∘ₖ discard V) (basu_aux hα hψ)
   calc (s ∥ₖ a) ∘ₖ copy X ∘ₖ p
   _ = swap W V ∘ₖ ((a ∥ₖ Kernel.id) ∘ₖ ((Kernel.id ∥ₖ s) ∘ₖ copy X ∘ₖ p)) := by
     kernel_disch
-  _ = swap W V ∘ₖ (((a ∘ₖ α) ∥ₖ Kernel.id) ∘ₖ copy V ∘ₖ (s ∘ₖ p)) := by
+  _ = swap W V ∘ₖ (a ∥ₖ Kernel.id ∘ₖ (α ∥ₖ Kernel.id ∘ₖ copy V ∘ₖ s ∘ₖ p)) := by
     rw [hα]
+  _ = swap W V ∘ₖ (((a ∘ₖ α) ∥ₖ Kernel.id) ∘ₖ copy V ∘ₖ (s ∘ₖ p)) := by
     kernel_disch
   _ = swap W V ∘ₖ (((ψ ∘ₖ discard V) ∥ₖ Kernel.id) ∘ₖ copy V ∘ₖ (s ∘ₖ p)) := by
-    rw [h]
+    rw [hc (a ∘ₖ α) (ψ ∘ₖ discard V) (basu_aux hα hψ)]
   _ = (s ∘ₖ p) ×ₖ (ψ ∘ₖ discard Θ) := by
     kernel_disch
   _ = (s ∘ₖ p) ×ₖ (a ∘ₖ p) := by
@@ -145,23 +144,27 @@ lemma basu_step₁ :
 lemma basu_step₂
     (hα : (Kernel.id ∥ₖ s) ∘ₖ copy X ∘ₖ p = (α ∥ₖ Kernel.id) ∘ₖ copy V ∘ₖ s ∘ₖ p) :
     swap W V ∘ₖ ((a ∥ₖ Kernel.id) ∘ₖ ((Kernel.id ∥ₖ s) ∘ₖ copy X ∘ₖ p)) =
-      swap W V ∘ₖ (((a ∘ₖ α) ∥ₖ Kernel.id) ∘ₖ copy V ∘ₖ (s ∘ₖ p)) := by
+      swap W V ∘ₖ (a ∥ₖ Kernel.id ∘ₖ (α ∥ₖ Kernel.id ∘ₖ copy V ∘ₖ s ∘ₖ p)) := by
   rw [hα]
+
+lemma basu_step₃ :
+    swap W V ∘ₖ (a ∥ₖ Kernel.id ∘ₖ (α ∥ₖ Kernel.id ∘ₖ copy V ∘ₖ s ∘ₖ p)) =
+      swap W V ∘ₖ (((a ∘ₖ α) ∥ₖ Kernel.id) ∘ₖ copy V ∘ₖ (s ∘ₖ p)) := by
   kernel_disch
 
 /-- By completeness, with `basu_aux`. -/
-lemma basu_step₃ (h : AEEq (s ∘ₖ p) (a ∘ₖ α) (ψ ∘ₖ discard V)) :
+lemma basu_step₄ (h : AEEq (s ∘ₖ p) (a ∘ₖ α) (ψ ∘ₖ discard V)) :
     swap W V ∘ₖ (((a ∘ₖ α) ∥ₖ Kernel.id) ∘ₖ copy V ∘ₖ (s ∘ₖ p)) =
       swap W V ∘ₖ (((ψ ∘ₖ discard V) ∥ₖ Kernel.id) ∘ₖ copy V ∘ₖ (s ∘ₖ p)) := by
   rw [h]
 
-lemma basu_step₄ :
+lemma basu_step₅ :
     swap W V ∘ₖ (((ψ ∘ₖ discard V) ∥ₖ Kernel.id) ∘ₖ copy V ∘ₖ (s ∘ₖ p)) =
       (s ∘ₖ p) ×ₖ (ψ ∘ₖ discard Θ) := by
   kernel_disch
 
 /-- By ancillarity. -/
-lemma basu_step₅ (hψ : a ∘ₖ p = ψ ∘ₖ discard Θ) :
+lemma basu_step₆ (hψ : a ∘ₖ p = ψ ∘ₖ discard Θ) :
     (s ∘ₖ p) ×ₖ (ψ ∘ₖ discard Θ) = (s ∘ₖ p) ×ₖ (a ∘ₖ p) := by
   rw [hψ]
 

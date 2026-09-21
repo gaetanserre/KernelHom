@@ -93,6 +93,14 @@ example (κ : Kernel Z Y) [IsSFiniteKernel κ] :
   hom_kernel
   rfl
 
+example (κ : Kernel Y Z) [IsSFiniteKernel κ] (f : X → Y) (hf : Measurable f) :
+    Kernel.swap Z Z ∘ₖ Kernel.copy Z ∘ₖ κ ∘ₖ Kernel.deterministic f hf =
+      Kernel.copy Z ∘ₖ κ.comap f hf := by
+  kernel_hom
+  simp only [IsCommComonObj.comul_comm]
+  hom_kernel
+  rw [Kernel.comp_assoc, Kernel.comp_deterministic_eq_comap]
+
 example (κ : Kernel X Y) (η : Kernel Z W) [IsSFiniteKernel κ] [IsSFiniteKernel η] :
     Kernel.swap Y W ∘ₖ (κ ∥ₖ η) = η ∥ₖ κ ∘ₖ Kernel.swap X Z := by
   aesop_kernel

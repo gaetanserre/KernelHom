@@ -28,7 +28,7 @@ htmlSplit := .never
 tag := "calculational-proofs"
 %%%
 
-Proofs by calculation on kernels are rare in Mathlib: each step, such as reassociating a composition, marginalizing with {name ProbabilityTheory.Kernel.discard}`Kernel.discard`, or moving a kernel along {name ProbabilityTheory.Kernel.copy}`Kernel.copy`, needs its own lemma or a computation with integrals. With *Kernel-Hom*, these steps are closed by {name kernelDisch}`kernel_disch`, in the same way as {name CategoryTheory.cat_disch}`cat_disch` closes easy steps of categorical proofs.
+In Mathlib, proofs by calculation whose steps are equalities of kernels are rare. Calculations on measures built from kernels are more common, but each of their structural steps, such as reassociating a composition, marginalizing with {name ProbabilityTheory.Kernel.discard}`Kernel.discard`, or moving a kernel along {name ProbabilityTheory.Kernel.copy}`Kernel.copy`, is a chain of rewritings with lemmas about kernels and measures. With *Kernel-Hom*, these steps are closed by {name kernelDisch}`kernel_disch`, in the same way as {name CategoryTheory.cat_disch}`cat_disch` closes easy steps of categorical proofs.
 
 A proof can therefore be written as a `calc` whose lines are the mathematically meaningful rewrites, typically by hypotheses. To apply a rewrite, the kernels are first arranged so that the hypothesis appears, and the remaining equality only differs by the structure of the kernels (composition, parallel composition, copy, discard, swap). {name kernelDisch}`kernel_disch` closes it. Each step of the calculation can moreover be visualized with string diagrams.
 
@@ -97,20 +97,26 @@ Step 2. By sufficiency.
 ProbabilityTheory.Kernel.basu_step₂
 ```
 
-Step 3. By completeness, with the first calculation.
+Step 3. Composition of `a` and `α`, so that the completeness applies. The string diagrams of both sides are the same.
 
 ```VersoTools.kernelDiagram
 ProbabilityTheory.Kernel.basu_step₃
 ```
 
-Step 4. The factorization of Theorem 15.8.
+Step 4. By completeness, with the first calculation.
 
 ```VersoTools.kernelDiagram
 ProbabilityTheory.Kernel.basu_step₄
 ```
 
-Step 5. By ancillarity.
+Step 5. The factorization of Theorem 15.8.
 
 ```VersoTools.kernelDiagram
 ProbabilityTheory.Kernel.basu_step₅
+```
+
+Step 6. By ancillarity.
+
+```VersoTools.kernelDiagram
+ProbabilityTheory.Kernel.basu_step₆
 ```

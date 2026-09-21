@@ -38,25 +38,29 @@ From a lemma `F` whose conclusion is `f = g` with `f g : Kernel X Y` s-finite ke
 where both sides are normalized so that all the compositions associate to the left. For instance:
 
 ```lean -show
-variable {X Y Z T : Type*} [MeasurableSpace X] [MeasurableSpace Y] [MeasurableSpace Z]
-  [MeasurableSpace T]
+variable {X Y Z Y' Z' : Type*} [MeasurableSpace X] [MeasurableSpace Y] [MeasurableSpace Z]
+  [MeasurableSpace Y'] [MeasurableSpace Z']
+variable (κ : Kernel X Y) [IsSFiniteKernel κ] (η : Kernel Y Z)
+    [IsSFiniteKernel η] (κ' : Kernel X Y') [IsSFiniteKernel κ'] (η' : Kernel Y' Z')
+    [IsSFiniteKernel η']
 ```
 
 ```lean
 @[kernel_reassoc]
-lemma parallelComp_self_comp_copy' (κ : Kernel (X × Y) Z) [IsMarkovKernel κ]
-    [IsDeterministic κ] :
-    (κ ∥ₖ κ) ∘ₖ copy (X × Y) = copy Z ∘ₖ κ := by
+lemma parallelComp_comp_prod₀ : (η ∥ₖ η') ∘ₖ (κ ×ₖ κ') = (η ∘ₖ κ) ×ₖ (η' ∘ₖ κ') := by
   kernel_disch
 ```
 
-```lean (name := parallelComp_self_comp_copy_assoc)
-variable (κ : Kernel (X × Y) Z) [IsMarkovKernel κ] [IsDeterministic κ]
-  (ξ : Kernel (Z × Z) T) [IsSFiniteKernel ξ]
-#check parallelComp_self_comp_copy'_assoc κ ξ
+```lean -show
+variable {W: Type*} [MeasurableSpace W] (ξ : Kernel (Z × Z') W) [IsSFiniteKernel ξ]
 ```
-```leanOutput parallelComp_self_comp_copy_assoc
-parallelComp_self_comp_copy'_assoc κ ξ : ξ ∘ₖ (κ ∥ₖ κ) ∘ₖ copy (X × Y) = ξ ∘ₖ copy Z ∘ₖ κ
+
+```lean (name := parallelComp_comp_prod_assoc)
+#check parallelComp_comp_prod₀_assoc κ η κ' η' ξ
+```
+```leanOutput parallelComp_comp_prod_assoc
+parallelComp_comp_prod₀_assoc κ η κ' η'
+  ξ : ξ ∘ₖ (η ∥ₖ η') ∘ₖ (κ ∥ₖ κ') ∘ₖ copy X = ξ ∘ₖ (η ∘ₖ κ ∥ₖ (η' ∘ₖ κ')) ∘ₖ copy X
 ```
 
 The attribute works by transport. The kernel equality is translated into an equality of morphisms of {name SFinKer}`SFinKer`, as in {name kernelHom}`kernel_hom`. The `@[reassoc]` pipeline of Mathlib is applied to this equality, and the result is translated back into kernels, as in {name homKernel}`hom_kernel`. The only subtlety concerns universes. The translation lifts all the carriers of `F` to a common level `w`, so the lemma produced by `@[reassoc]` quantifies over the objects `Z` of `SFinKer.{w}` only. Translated back, it would not apply to a kernel `ξ` whose codomain lives in an arbitrary universe. The equality is therefore lifted to `max u w`, where `u` is a fresh level for `Z`, and `u` becomes a new universe parameter of `F_assoc`.
@@ -68,7 +72,7 @@ The attribute works by transport. The kernel equality is translated into an equa
 As `@[reassoc]` comes with the term elaborator `reassoc_of%`, `@[kernel_reassoc]` comes with `kernel_reassoc_of%`. For a proof `h` of an equality of s-finite kernels, `kernel_reassoc_of% h` is a proof of the reassociated equality, built as above. Unlike the attribute, it also applies to local hypotheses. For instance, it solves the rewriting problem described at the beginning of this page:
 
 ```lean
-example {κ : Kernel X Y} {η : Kernel Y Z} {ζ : Kernel X Z} {ξ : Kernel Z T}
+example {κ : Kernel X Y} {η : Kernel Y Z} {ζ : Kernel X Z} {ξ : Kernel Z W}
     [IsSFiniteKernel κ] [IsSFiniteKernel η] [IsSFiniteKernel ζ] [IsSFiniteKernel ξ]
     (h : η ∘ₖ κ = ζ) :
     ξ ∘ₖ η ∘ₖ κ = ξ ∘ₖ ζ := by
