@@ -90,8 +90,9 @@ theorem basu {p : Kernel Θ X} [IsMarkovKernel p] {s : Kernel X V} [IsMarkovKern
   calc (s ∥ₖ a) ∘ₖ copy X ∘ₖ p
   _ = swap W V ∘ₖ ((a ∥ₖ Kernel.id) ∘ₖ ((Kernel.id ∥ₖ s) ∘ₖ copy X ∘ₖ p)) := by
     kernel_disch
-  _ = swap W V ∘ₖ (((a ∘ₖ α) ∥ₖ Kernel.id) ∘ₖ copy V ∘ₖ (s ∘ₖ p)) := by
+  _ = swap W V ∘ₖ (a ∥ₖ Kernel.id ∘ₖ (α ∥ₖ Kernel.id ∘ₖ copy V ∘ₖ s ∘ₖ p)) := by
     rw [hα]
+  _ = swap W V ∘ₖ (((a ∘ₖ α) ∥ₖ Kernel.id) ∘ₖ copy V ∘ₖ (s ∘ₖ p)) := by
     kernel_disch
   _ = swap W V ∘ₖ (((ψ ∘ₖ discard V) ∥ₖ Kernel.id) ∘ₖ copy V ∘ₖ (s ∘ₖ p)) := by
     rw [hc (a ∘ₖ α) (ψ ∘ₖ discard V) (basu_aux hα hψ)]
@@ -143,23 +144,27 @@ lemma basu_step₁ :
 lemma basu_step₂
     (hα : (Kernel.id ∥ₖ s) ∘ₖ copy X ∘ₖ p = (α ∥ₖ Kernel.id) ∘ₖ copy V ∘ₖ s ∘ₖ p) :
     swap W V ∘ₖ ((a ∥ₖ Kernel.id) ∘ₖ ((Kernel.id ∥ₖ s) ∘ₖ copy X ∘ₖ p)) =
-      swap W V ∘ₖ (((a ∘ₖ α) ∥ₖ Kernel.id) ∘ₖ copy V ∘ₖ (s ∘ₖ p)) := by
+      swap W V ∘ₖ (a ∥ₖ Kernel.id ∘ₖ (α ∥ₖ Kernel.id ∘ₖ copy V ∘ₖ s ∘ₖ p)) := by
   rw [hα]
+
+lemma basu_step₃ :
+    swap W V ∘ₖ (a ∥ₖ Kernel.id ∘ₖ (α ∥ₖ Kernel.id ∘ₖ copy V ∘ₖ s ∘ₖ p)) =
+      swap W V ∘ₖ (((a ∘ₖ α) ∥ₖ Kernel.id) ∘ₖ copy V ∘ₖ (s ∘ₖ p)) := by
   kernel_disch
 
 /-- By completeness, with `basu_aux`. -/
-lemma basu_step₃ (h : AEEq (s ∘ₖ p) (a ∘ₖ α) (ψ ∘ₖ discard V)) :
+lemma basu_step₄ (h : AEEq (s ∘ₖ p) (a ∘ₖ α) (ψ ∘ₖ discard V)) :
     swap W V ∘ₖ (((a ∘ₖ α) ∥ₖ Kernel.id) ∘ₖ copy V ∘ₖ (s ∘ₖ p)) =
       swap W V ∘ₖ (((ψ ∘ₖ discard V) ∥ₖ Kernel.id) ∘ₖ copy V ∘ₖ (s ∘ₖ p)) := by
   rw [h]
 
-lemma basu_step₄ :
+lemma basu_step₅ :
     swap W V ∘ₖ (((ψ ∘ₖ discard V) ∥ₖ Kernel.id) ∘ₖ copy V ∘ₖ (s ∘ₖ p)) =
       (s ∘ₖ p) ×ₖ (ψ ∘ₖ discard Θ) := by
   kernel_disch
 
 /-- By ancillarity. -/
-lemma basu_step₅ (hψ : a ∘ₖ p = ψ ∘ₖ discard Θ) :
+lemma basu_step₆ (hψ : a ∘ₖ p = ψ ∘ₖ discard Θ) :
     (s ∘ₖ p) ×ₖ (ψ ∘ₖ discard Θ) = (s ∘ₖ p) ×ₖ (a ∘ₖ p) := by
   rw [hψ]
 

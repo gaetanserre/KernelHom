@@ -97,20 +97,26 @@ Step 2. By sufficiency.
 ProbabilityTheory.Kernel.basu_step₂
 ```
 
-Step 3. By completeness, with the first calculation.
+Step 3. Composition of `a` and `α`, so that the completeness applies. The string diagrams of both sides are the same.
 
 ```VersoTools.kernelDiagram
 ProbabilityTheory.Kernel.basu_step₃
 ```
 
-Step 4. The factorization of Theorem 15.8.
+Step 4. By completeness, with the first calculation.
 
 ```VersoTools.kernelDiagram
 ProbabilityTheory.Kernel.basu_step₄
 ```
 
-Step 5. By ancillarity.
+Step 5. The factorization of Theorem 15.8.
 
 ```VersoTools.kernelDiagram
 ProbabilityTheory.Kernel.basu_step₅
+```
+
+Step 6. By ancillarity.
+
+```VersoTools.kernelDiagram
+ProbabilityTheory.Kernel.basu_step₆
 ```
