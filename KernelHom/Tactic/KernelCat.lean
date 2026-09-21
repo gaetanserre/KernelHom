@@ -69,6 +69,8 @@ elab_rules : tactic
     evalTactic (← `(tactic| first
       | cat_disch
       | (monoidal; done)
+      /- Merge the whiskers and the compositions of tensor products into single tensor products,
+         which makes the exchange law syntactic and exposes the comonoid laws hidden inside them. -/
       | ((try simp only [← MonoidalCategory.tensorHom_id, ← MonoidalCategory.id_tensorHom,
           MonoidalCategory.tensorHom_comp_tensorHom,
           MonoidalCategory.tensorHom_comp_tensorHom_assoc,
@@ -81,6 +83,8 @@ elab_rules : tactic
           ComonObj.comul_tensorHom_counit_comp, ComonObj.comul_tensorHom_counit_comp_assoc,
           ComonObj.comul_counit_comp_tensorHom, ComonObj.comul_counit_comp_tensorHom_assoc])
         <;> cat_disch)
+      /- Split the tensor products of compositions into whiskers, the form in which `comul_assoc`
+         is stated, so that `monoidal` is left with the associators only. -/
       | (((try simp only [← MonoidalCategory.whiskerRight_comp_tensorHom,
           ← MonoidalCategory.whiskerLeft_comp_tensorHom, Category.assoc,
           ComonObj.comul_assoc, ComonObj.comul_assoc_assoc])
