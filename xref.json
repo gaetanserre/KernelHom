@@ -368,11 +368,11 @@
  {"title": "Verso.Genre.Manual.example",
   "description": null,
   "contents":
-  {"parallelComp_self_comp_copy'":
-   [{"id": "parallelComp_self_comp_copy___",
+  {"parallelComp_comp_prod₀":
+   [{"id": "parallelComp_comp_prod___",
      "data":
-     {"/Kernel-reassociation/#parallelComp_self_comp_copy___":
-      {"display": "parallelComp_self_comp_copy'",
+     {"/Kernel-reassociation/#parallelComp_comp_prod___":
+      {"display": "parallelComp_comp_prod₀",
        "context":
        ["Kernel-Hom: Tactics for Kernel Categorical Reasoning",
         "Kernel reassociation",
