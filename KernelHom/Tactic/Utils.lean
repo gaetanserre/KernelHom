@@ -28,13 +28,20 @@ public meta section
 
 open Lean Meta ProbabilityTheory CategoryTheory
 
-/-- Unfold kernel operations in an expression. -/
-def unfoldKernelOp (e : Expr) : MetaM Expr := do
-  let names := (.empty |> NameSet.insert <| ``Kernel.prod) |> NameSet.insert <| ``Kernel.compProd
-  transform e (post := fun e => do
-    let e' ← deltaExpand e names.contains
-    let e' ← Core.betaReduce e'
-    return .done e')
+/-- Unfold kernel operations in an expression. Returns the unfolded expression `e'` together with a
+proof of `e = e'`. `Kernel.prod` is delta-expanded, while `Kernel.compProd`, being an
+`irreducible_def`, is rewritten using `Kernel.compProd_def`. -/
+def unfoldKernelOp (e : Expr) : MetaM (Expr × Expr) := do
+  let e ← zetaReduce (← instantiateMVars e)
+  let e ← transform e (post := fun e => do
+    return .done (← Core.betaReduce (← deltaExpand e (· == ``Kernel.prod))))
+  if !e.containsConst (· == ``Kernel.compProd) then
+    return (e, ← mkEqRefl e)
+  let thms ← ({} : SimpTheorems).addConst ``Kernel.compProd_def
+  let ctx ← Simp.mkContext (config := { dsimp := false }) (simpTheorems := #[thms])
+    (congrTheorems := ← getSimpCongrTheorems)
+  let (r, _) ← simp e ctx
+  return (r.expr, ← r.getProof)
 
 /-- The `IsSFiniteKernel` instance of a kernel (cached). -/
 def sfiniteInst (X Y : Carrier) (κ : Expr) : MetaM Expr := do

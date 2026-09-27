@@ -141,7 +141,7 @@ def mkEqHtml (lhs rhs : Html) : Html :=
 Otherwise `none`. -/
 def kernelEqM? (e : Expr) : MetaM (Option Html) := do
   try
-    let e ← unfoldKernelOp <| ← instantiateMVars e
+    let (e, _) ← unfoldKernelOp <| ← instantiateMVars e
     let (lifted_e, _) ← liftEquality e
     let some (_, lhs, rhs) := lifted_e.eq? | return none
     let some lhs ← KernelM? lhs | return none
