@@ -306,14 +306,14 @@ def mkHomCongrProof (lhs rhs pl pr : Expr) : MetaM Expr := do
 /-- Transform a kernel equality into an equivalent equality in `SFinKer`, along with a proof of
 equivalence. The equality is first lifted to a common universe level using `lift`. -/
 def HomEqualityWith (lift : Expr → MetaM (Expr × Expr)) (eq : Expr) : MetaM (Expr × Expr) := do
-  let eq ← unfoldKernelOp eq
+  let (eq, unfold_proof) ← unfoldKernelOp eq
   let (lifted_expr, lifted_proof) ← lift eq
   let some (_, lhs, rhs) := lifted_expr.eq? | throwError "Expected an equality, got: {lifted_expr}."
   let (lhs_hom, pl) ← transformKernelToHom lhs
   let (rhs_hom, pr) ← transformKernelToHom rhs
   let hom_expr ← mkEq lhs_hom rhs_hom
   let hom_eq_proof ← mkHomCongrProof lhs rhs pl pr
-  return (hom_expr, ← mkEqTrans lifted_proof hom_eq_proof)
+  return (hom_expr, ← mkEqTrans unfold_proof (← mkEqTrans lifted_proof hom_eq_proof))
 
 /-- Transform a kernel equality into an equivalent equality in `SFinKer`, along with a proof of
 equivalence. -/

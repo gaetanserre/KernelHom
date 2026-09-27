@@ -119,3 +119,28 @@ example (p : Kernel X Y) (s : Kernel Y Z) (ψ : Kernel Unit W) [IsMarkovKernel p
     [IsMarkovKernel s] [IsDeterministic s] [IsMarkovKernel ψ] :
     ψ ∘ₖ Kernel.discard X = (ψ ∘ₖ Kernel.discard Z) ∘ₖ (s ∘ₖ p) := by
   kernel_disch
+
+/-! Tests for `Kernel.compProd`, which is an `irreducible_def` and is unfolded by rewriting. -/
+
+example (κ : Kernel X Y) (η : Kernel (X × Y) Z) [IsSFiniteKernel κ] [IsSFiniteKernel η] :
+    κ ⊗ₖ η = Kernel.swap Z Y ∘ₖ (η ∥ₖ Kernel.id)
+      ∘ₖ Kernel.deterministic MeasurableEquiv.prodAssoc.symm (by fun_prop)
+      ∘ₖ (Kernel.id ∥ₖ Kernel.copy Y) ∘ₖ (Kernel.id ∥ₖ κ) ∘ₖ Kernel.copy X := by
+  kernel_monoidal
+
+example (κ : Kernel X Y) (η : Kernel (X × Y) Z) [IsSFiniteKernel κ] [IsSFiniteKernel η]
+    (h : κ ⊗ₖ η = 0) : κ ⊗ₖ η = 0 := by
+  kernel_hom at h ⊢
+  exact h
+
+example (κ : Kernel X Y) (η : Kernel (X × Y) Z) (f : Kernel Y W) (g : Kernel Z W)
+    [IsSFiniteKernel κ] [IsSFiniteKernel η] [IsSFiniteKernel f] [IsSFiniteKernel g] :
+    (f ∥ₖ g) ∘ₖ (κ ⊗ₖ η) = (f ∥ₖ Kernel.id) ∘ₖ (Kernel.id ∥ₖ g) ∘ₖ (κ ⊗ₖ η) := by
+  kernel_disch
+
+example (κ : Kernel X Y) (η : Kernel (X × Y) Z) [IsSFiniteKernel κ] [IsSFiniteKernel η] :
+    κ ⊗ₖ η = Kernel.swap Z Y ∘ₖ (η ∥ₖ Kernel.id)
+      ∘ₖ Kernel.deterministic MeasurableEquiv.prodAssoc.symm (by fun_prop)
+      ∘ₖ (Kernel.id ∥ₖ Kernel.copy Y) ∘ₖ (Kernel.id ∥ₖ κ) ∘ₖ Kernel.copy X := by
+  set ζ := κ ⊗ₖ η
+  kernel_monoidal
