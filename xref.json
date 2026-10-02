@@ -570,6 +570,8 @@
    [{"id": "getCarriersFromKernel",
      "data": null,
      "address": "/Implementation-of-the-translation/"}],
+   "foldKernelOp":
+   [{"id": "foldKernelOp", "data": null, "address": "/hom_kernel-tactic/"}],
    "constructMeasurableEquiv":
    [{"id": "constructMeasurableEquiv",
      "data": null,
