@@ -207,9 +207,9 @@ def objEquivArgs (cs : Array HomCarrier) : Array Expr :=
 def homLemmaArgs (cs : Array HomCarrier) : Array Expr :=
   typeInstArgs cs ++ objEquivArgs cs
 
-/-- `κ.hom (ex := ex) (ey := ey) : SX ⟶ SY`. -/
+/-- `κ.toHom (ex := ex) (ey := ey) : SX ⟶ SY`. -/
 def mkHom (X Y : HomCarrier) (κ : Expr) : MetaM Expr := do
-  return mkAppN (mkConst ``Kernel.hom [X.lvl, Y.lvl, X.lvl])
+  return mkAppN (mkConst ``Kernel.toHom [X.lvl, Y.lvl, X.lvl])
     (homLemmaArgs #[X, Y] ++ #[κ, ← X.sfinite Y κ])
 
 end

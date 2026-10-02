@@ -77,8 +77,8 @@ variable {W X Y Z : Type*} [MeasurableSpace W] [MeasurableSpace X] [MeasurableSp
 It uses arbitrary measurable equivalences to transport the kernels to the `SFinKer` category. -/
 noncomputable def monoComp₀ : Kernel W Z :=
   have := monoidalCoherence ex ey
-  fromHom (ex := ew) (ey := ez) <| hom (ex := ew) (ey := ex) κ ⊗≫
-    hom (ex := ey) (ey := ez) η
+  fromHom (ex := ew) (ey := ez) <| toHom (ex := ew) (ey := ex) κ ⊗≫
+    toHom (ex := ey) (ey := ez) η
 
 instance monoComp'_sfinite : IsSFiniteKernel (monoComp₀ ew ex ey ez κ η) := by
   simp only [monoComp₀]

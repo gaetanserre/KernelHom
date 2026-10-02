@@ -23,11 +23,11 @@ htmlSplit := .never
 tag := "implementation"
 %%%
 
-The translation performed by {name kernelHom}`kernel_hom` traverses the kernel expression twice (once to lift it to a common universe level, once to translate it into {name SFinKer}`SFinKer`) and builds, at each node, an instance of a translation lemma such as {name ProbabilityTheory.Kernel.comp_hom}`comp_hom` or {name ProbabilityTheory.Kernel.comp_lift}`comp_lift`. Two design choices keep this cheap.
+The translation performed by {name kernelHom}`kernel_hom` traverses the kernel expression twice (once to lift it to a common universe level, once to translate it into {name SFinKer}`SFinKer`) and builds, at each node, an instance of a translation lemma such as {name ProbabilityTheory.Kernel.comp_toHom}`comp_toHom` or {name ProbabilityTheory.Kernel.comp_lift}`comp_lift`. Two design choices keep this cheap.
 
 # Proofs by congruence
 
-The proof of equivalence between the original equality and the translated one is not obtained by rewriting the goal with the translation lemmas (which requires abstracting a pattern and type-checking a motive at each step), but by congruence: each translation function returns the translated expression together with a proof that it is the translation of the original one, built from the proofs of its subterms with {name Lean.Meta.mkCongr}`mkCongr`, {name Lean.Meta.mkCongrArg}`mkCongrArg` and {name Lean.Meta.mkEqTrans}`mkEqTrans`. The equality of propositions is then obtained from {name ProbabilityTheory.Kernel.hom_congr}`hom_congr` (or {name ProbabilityTheory.Kernel.lift_congr}`lift_congr`) and `propext`, see {name mkHomCongrProof}`mkHomCongrProof`.
+The proof of equivalence between the original equality and the translated one is not obtained by rewriting the goal with the translation lemmas (which requires abstracting a pattern and type-checking a motive at each step), but by congruence: each translation function returns the translated expression together with a proof that it is the translation of the original one, built from the proofs of its subterms with {name Lean.Meta.mkCongr}`mkCongr`, {name Lean.Meta.mkCongrArg}`mkCongrArg` and {name Lean.Meta.mkEqTrans}`mkEqTrans`. The equality of propositions is then obtained from {name ProbabilityTheory.Kernel.toHom_congr}`toHom_congr` (or {name ProbabilityTheory.Kernel.lift_congr}`lift_congr`) and `propext`, see {name mkHomCongrProof}`mkHomCongrProof`.
 
 {docstring mkHomCongrProof}
 
@@ -61,7 +61,7 @@ A measurable space is represented during the transformations by its carrier type
 
 {docstring constructMeasurableEquiv}
 
-The translation to {name SFinKer}`SFinKer` needs more data about each carrier `X`: the object of {name SFinKer}`SFinKer` it is translated to (`SFinKer.of X`, or a tensor product of such objects when `X` is a product, so that the monoidal tactics see the tensor structure) and the measurable equivalence between the carrier of this object and `X`, which is the argument `ex` of {name ProbabilityTheory.Kernel.hom}`hom` and of the translation lemmas. These are computed once per carrier by {name computeSFinkerOf}`computeSFinkerOf` and {name idME}`idME`, and gathered in a {name HomCarrier}`HomCarrier`.
+The translation to {name SFinKer}`SFinKer` needs more data about each carrier `X`: the object of {name SFinKer}`SFinKer` it is translated to (`SFinKer.of X`, or a tensor product of such objects when `X` is a product, so that the monoidal tactics see the tensor structure) and the measurable equivalence between the carrier of this object and `X`, which is the argument `ex` of {name ProbabilityTheory.Kernel.toHom}`toHom` and of the translation lemmas. These are computed once per carrier by {name computeSFinkerOf}`computeSFinkerOf` and {name idME}`idME`, and gathered in a {name HomCarrier}`HomCarrier`.
 
 {docstring HomCarrier}
 

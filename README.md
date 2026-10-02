@@ -64,7 +64,7 @@ An additional consequence of the translation to `SFinKer` is that one can adapt 
 
 ## Implementation
 
-The translation is designed to be cheap: the equivalence between the original kernel equality and its categorical counterpart is proved by congruence from the translation lemmas (`comp_hom`, `parallelComp_hom`, ...) rather than by rewriting, and the terms are built directly with explicit universe levels and instances. Instances (`MeasurableSpace`, `IsSFiniteKernel`, the categorical instances of `SFinKer`), inferred types and recursively built objects (measurable equivalences, objects of `SFinKer`) are memoized in a cache reset at each call of the tactics.
+The translation is designed to be cheap: the equivalence between the original kernel equality and its categorical counterpart is proved by congruence from the translation lemmas (`comp_toHom`, `parallelComp_toHom`, ...) rather than by rewriting, and the terms are built directly with explicit universe levels and instances. Instances (`MeasurableSpace`, `IsSFiniteKernel`, the categorical instances of `SFinKer`), inferred types and recursively built objects (measurable equivalences, objects of `SFinKer`) are memoized in a cache reset at each call of the tactics.
 
 ## Usage
 

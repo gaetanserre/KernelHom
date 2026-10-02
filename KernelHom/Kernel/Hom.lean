@@ -17,7 +17,7 @@ This file defines the transformation between categorical morphisms in `SFinKer` 
 ## Main declarations
 
 * `fromHom`: transforms a categorical morphism in `SFinKer` to a `Kernel`.
-* `hom`: transforms a `Kernel` to a categorical morphism in `SFinKer`.
+* `toHom`: transforms a `Kernel` to a categorical morphism in `SFinKer`.
 -/
 
 @[expose] public section
@@ -45,27 +45,27 @@ instance {κ : SX ⟶ SY} : IsSFiniteKernel (fromHom (ex := ex) (ey := ey) κ) :
   infer_instance
 
 /-- Transform a kernel into a morphism in `SFinKer`. -/
-noncomputable def hom (κ : Kernel X Y) [IsSFiniteKernel κ] : SX ⟶ SY := by
+noncomputable def toHom (κ : Kernel X Y) [IsSFiniteKernel κ] : SX ⟶ SY := by
   refine ⟨(κ.map ey.symm).comap ex (by fun_prop), ?_⟩
   have := κ.2
   infer_instance
 
-lemma hom_apply (κ : Kernel X Y) [IsSFiniteKernel κ] (a : SX) :
-    (κ.hom (ex := ex) (ey := ey)).1 a = (κ.map ey.symm) (ex a) := rfl
+lemma toHom_apply (κ : Kernel X Y) [IsSFiniteKernel κ] (a : SX) :
+    (κ.toHom (ex := ex) (ey := ey)).1 a = (κ.map ey.symm) (ex a) := rfl
 
-lemma hom_apply' (κ : Kernel X Y) [IsSFiniteKernel κ] (a : SX) {s : Set SY}
+lemma toHom_apply' (κ : Kernel X Y) [IsSFiniteKernel κ] (a : SX) {s : Set SY}
     (hs : MeasurableSet s) :
-    (κ.hom (ex := ex) (ey := ey)).1 a s = κ (ex a) (ey '' s) := by
-  simp only [hom, coe_comap, Function.comp_apply]
+    (κ.toHom (ex := ex) (ey := ey)).1 a s = κ (ex a) (ey '' s) := by
+  simp only [toHom, coe_comap, Function.comp_apply]
   rw [map_apply' _ ey.symm.measurable _ hs, preimage_symm]
 
 instance {κ : Kernel X Y} [IsDeterministic κ] [IsMarkovKernel κ] :
-    Deterministic (hom (ex := ex) (ey := ey) κ) := by
-  set κ_hom := hom (ex := ex) (ey := ey) κ
+    Deterministic (toHom (ex := ex) (ey := ey) κ) := by
+  set κ_hom := toHom (ex := ex) (ey := ey) κ
   have : IsDeterministic κ_hom.hom := by
     refine ⟨?_⟩
     ext a s hs
-    simp only [hom, κ_hom]
+    simp only [toHom, κ_hom]
     have := κ.parallelComp_self_comp_copy
     have := DFunLike.congr_fun (x := ex a) this
     have := DFunLike.congr_fun (x := ey.prodCongr ey '' s) this
@@ -99,16 +99,16 @@ instance {κ : Kernel X Y} [IsDeterministic κ] [IsMarkovKernel κ] :
 
 end
 
-lemma hom_congr (SX SY : SFinKer.{u}) (ex : SX ≃ᵐ X) (ey : SY ≃ᵐ Y)
+lemma toHom_congr (SX SY : SFinKer.{u}) (ex : SX ≃ᵐ X) (ey : SY ≃ᵐ Y)
     (κ η : Kernel X Y) [IsSFiniteKernel κ] [IsSFiniteKernel η] :
-    κ = η ↔ κ.hom (ex := ex) (ey := ey) = η.hom (ex := ex) (ey := ey) := by
+    κ = η ↔ κ.toHom (ex := ex) (ey := ey) = η.toHom (ex := ex) (ey := ey) := by
   constructor
   · grind
   · intro h
     ext a s hs
     replace h := DFunLike.congr (x := ex.symm a) (congrArg SFinKer.Hom.hom h) rfl
     replace h := DFunLike.congr (x := ey.symm '' s) h rfl
-    rw [hom_apply', hom_apply'] at h
+    rw [toHom_apply', toHom_apply'] at h
     · simp only [apply_symm_apply] at h
       rwa [image_symm, image_preimage] at h
     · measurability
@@ -118,37 +118,37 @@ section
 
 variable (SX SY SZ ST : SFinKer.{u}) (ex : SX ≃ᵐ X) (ey : SY ≃ᵐ Y) (ez : SZ ≃ᵐ Z) (et : ST ≃ᵐ T)
 
-lemma comp_hom (η : Kernel X Y) (κ : Kernel Z X) [IsSFiniteKernel η] [IsSFiniteKernel κ] :
-    κ.hom (ex := ez) (ey := ex) ≫ η.hom (ex := ex) (ey := ey) =
-      (η ∘ₖ κ).hom (ex := ez) (ey := ey) := by
+lemma comp_toHom (η : Kernel X Y) (κ : Kernel Z X) [IsSFiniteKernel η] [IsSFiniteKernel κ] :
+    κ.toHom (ex := ez) (ey := ex) ≫ η.toHom (ex := ex) (ey := ey) =
+      (η ∘ₖ κ).toHom (ex := ez) (ey := ey) := by
   ext a s hs
   dsimp
-  rw [hom_apply', comp_apply', comp_apply', hom_apply, lintegral_map]
+  rw [toHom_apply', comp_apply', comp_apply', toHom_apply, lintegral_map]
   · congr with y
-    simp [hom_apply' _ _ hs]
+    simp [toHom_apply' _ _ hs]
   all_goals try fun_prop
   all_goals try measurability
-  · exact Kernel.measurable_coe η.hom.hom hs
+  · exact Kernel.measurable_coe η.toHom.hom hs
 
-lemma parallelComp_hom (κ : Kernel X Y) (η : Kernel Z T) [IsSFiniteKernel η] [IsSFiniteKernel κ] :
-    κ.hom (ex := ex) (ey := ey) ⊗ₘ η.hom (ex := ez) (ey := et) =
-      hom (ex := ex.prodCongr ez) (ey := ey.prodCongr et) (κ ∥ₖ η) := by
+lemma parallelComp_toHom (κ : Kernel X Y) (η : Kernel Z T) [IsSFiniteKernel η] [IsSFiniteKernel κ] :
+    κ.toHom (ex := ex) (ey := ey) ⊗ₘ η.toHom (ex := ez) (ey := et) =
+      toHom (ex := ex.prodCongr ez) (ey := ey.prodCongr et) (κ ∥ₖ η) := by
   ext : 1; dsimp
-  simp only [hom]
+  simp only [toHom]
   rw [id_parallelComp_comp_parallelComp_id, comap_parallelComp_comap, map_parallelComp_map]
   · rfl
   all_goals fun_prop
 
-lemma id_hom : 𝟙 SX = Kernel.id.hom (ex := ex) (ey := ex) := by
+lemma id_toHom : 𝟙 SX = Kernel.id.toHom (ex := ex) (ey := ex) := by
   ext; dsimp
-  rw [hom_apply', id_apply, id_apply, Measure.dirac_apply', Measure.dirac_apply']
+  rw [toHom_apply', id_apply, id_apply, Measure.dirac_apply', Measure.dirac_apply']
   · exact Set.indicator_eq_indicator (by simp) rfl
   all_goals measurability
 
-lemma whiskerLeft (κ : Kernel X Y) [IsSFiniteKernel κ] : SZ ◁ κ.hom (ex := ex) (ey := ey) =
-      (Kernel.id (α := Z) ∥ₖ κ).hom (ex := ez.prodCongr ex) (ey := ez.prodCongr ey) := by
+lemma whiskerLeft (κ : Kernel X Y) [IsSFiniteKernel κ] : SZ ◁ κ.toHom (ex := ex) (ey := ey) =
+      (Kernel.id (α := Z) ∥ₖ κ).toHom (ex := ez.prodCongr ex) (ey := ez.prodCongr ey) := by
   ext _ _ hs; dsimp
-  simp only [hom]
+  simp only [toHom]
   rw [parallelComp_apply, comap_apply, map_apply, id_apply,
     comap_apply, map_apply, parallelComp_apply, id_apply]
   · simp only [Measure.dirac_prod, MeasurableEquiv.prodCongr]
@@ -160,10 +160,10 @@ lemma whiskerLeft (κ : Kernel X Y) [IsSFiniteKernel κ] : SZ ◁ κ.hom (ex := 
   all_goals fun_prop
 
 lemma whiskerRight (κ : Kernel X Y) [IsSFiniteKernel κ] :
-    κ.hom (ex := ex) (ey := ey) ▷ SZ =
-      (κ ∥ₖ Kernel.id (α := Z)).hom (ex := ex.prodCongr ez) (ey := ey.prodCongr ez) := by
+    κ.toHom (ex := ex) (ey := ey) ▷ SZ =
+      (κ ∥ₖ Kernel.id (α := Z)).toHom (ex := ex.prodCongr ez) (ey := ey.prodCongr ez) := by
   ext _ _ hs; dsimp
-  simp only [hom]
+  simp only [toHom]
   rw [parallelComp_apply, comap_apply, map_apply, id_apply, comap_apply, map_apply,
     parallelComp_apply, id_apply]
   · simp only [Measure.prod_dirac, MeasurableEquiv.prodCongr]
@@ -177,30 +177,30 @@ lemma whiskerRight (κ : Kernel X Y) [IsSFiniteKernel κ] :
 
 open scoped ComonObj
 
-lemma counit : ε[SX] = (Kernel.discard X).hom (ex := ex) (ey := punit) := by
+lemma counit : ε[SX] = (Kernel.discard X).toHom (ex := ex) (ey := punit) := by
   ext : 1; dsimp
-  simp only [hom, discard]
+  simp only [toHom, discard]
   rw [deterministic_map (by fun_prop) (by fun_prop)]
   rfl
 
-lemma comul : Δ[SX] = (Kernel.copy X).hom (ex := ex) (ey := ex.prodCongr ex) := by
+lemma comul : Δ[SX] = (Kernel.copy X).toHom (ex := ex) (ey := ex.prodCongr ex) := by
   ext : 1; dsimp
-  simp only [hom, copy]
+  simp only [toHom, copy]
   rw [deterministic_map (by fun_prop) (by fun_prop)]
   congr with x
   all_goals simp [MeasurableEquiv.prodCongr]
 
 variable {SX SY ex ey} in
 @[reassoc (attr := simp)]
-lemma hom_counit_of_isMarkovKernel (κ : Kernel X Y) [IsMarkovKernel κ] :
-    κ.hom (ex := ex) (ey := ey) ≫ ε[SY] = ε[SX] := by
-  rw [counit.{_, _, 0} (ex := ey), counit.{_, _, 0} (ex := ex), comp_hom]
+lemma toHom_counit_of_isMarkovKernel (κ : Kernel X Y) [IsMarkovKernel κ] :
+    κ.toHom (ex := ex) (ey := ey) ≫ ε[SY] = ε[SX] := by
+  rw [counit.{_, _, 0} (ex := ey), counit.{_, _, 0} (ex := ex), comp_toHom]
   simp only [comp_discard]
 
 lemma braiding_hom : (β_ SX SY).hom =
-    (Kernel.swap X Y).hom (ex := ex.prodCongr ey) (ey := ey.prodCongr ex) := by
+    (Kernel.swap X Y).toHom (ex := ex.prodCongr ey) (ey := ey.prodCongr ex) := by
   ext : 1; dsimp
-  simp only [hom, swap]
+  simp only [toHom, swap]
   rw [deterministic_map (by fun_prop) (by fun_prop)]
   congr with x
   all_goals simp [MeasurableEquiv.prodCongr]
@@ -209,20 +209,20 @@ variable {X₀ : Type x₀} {Y₀ : Type y₀} {Z₀ : Type z₀} [MeasurableSpa
   [MeasurableSpace Z₀]
     (ex₀ : X ≃ᵐ X₀) (ey₀ : Y ≃ᵐ Y₀) (ez₀ : Z ≃ᵐ Z₀)
 
-lemma leftUnitor_hom : (λ_ SX).hom = hom (ex := punit.prodCongr ex) (ey := ex)
+lemma leftUnitor_hom : (λ_ SX).hom = toHom (ex := punit.prodCongr ex) (ey := ex)
     (lift (Kernel.id.map (Prod.snd : PUnit × X₀ → X₀))
       (ex := punit.prodCongr ex₀) (ey := ex₀)) := by
   ext; dsimp
-  rw [hom_apply', lift_apply', id_map (by fun_prop), id_map (by fun_prop), deterministic_apply',
+  rw [toHom_apply', lift_apply', id_map (by fun_prop), id_map (by fun_prop), deterministic_apply',
     deterministic_apply', Set.image]
   · refine Set.indicator_eq_indicator ?_ rfl
     simp [MeasurableEquiv.prodCongr]
   all_goals measurability
 
-lemma leftUnitor_inv : (λ_ SX).inv = hom (ex := ex) (ey := punit.prodCongr ex)
+lemma leftUnitor_inv : (λ_ SX).inv = toHom (ex := ex) (ey := punit.prodCongr ex)
     (lift (Kernel.id.map (fun x ↦ (PUnit.unit, x))) (ex := ex₀) (ey := punit.prodCongr ex₀)) := by
   ext; dsimp
-  rw [hom_apply', lift_apply', id_map (by fun_prop), id_map (by fun_prop), deterministic_apply',
+  rw [toHom_apply', lift_apply', id_map (by fun_prop), id_map (by fun_prop), deterministic_apply',
     deterministic_apply']
   · refine Set.indicator_eq_indicator ?_ rfl
     simp [Set.image, MeasurableEquiv.prodCongr]
@@ -230,20 +230,20 @@ lemma leftUnitor_inv : (λ_ SX).inv = hom (ex := ex) (ey := punit.prodCongr ex)
     all_goals simp_all
   all_goals measurability
 
-lemma rightUnitor_hom : (ρ_ SX).hom = hom (ex := ex.prodCongr punit) (ey := ex)
+lemma rightUnitor_hom : (ρ_ SX).hom = toHom (ex := ex.prodCongr punit) (ey := ex)
     (lift (Kernel.id.map (Prod.fst : X₀ × PUnit → X₀))
       (ex := ex₀.prodCongr punit) (ey := ex₀)) := by
   ext; dsimp
-  rw [hom_apply', lift_apply', id_map (by fun_prop), id_map (by fun_prop), deterministic_apply',
+  rw [toHom_apply', lift_apply', id_map (by fun_prop), id_map (by fun_prop), deterministic_apply',
     deterministic_apply']
   · refine Set.indicator_eq_indicator ?_ rfl
     simp [MeasurableEquiv.prodCongr]
   all_goals measurability
 
-lemma rightUnitor_inv : (ρ_ SX).inv = hom (ex := ex) (ey := ex.prodCongr punit)
+lemma rightUnitor_inv : (ρ_ SX).inv = toHom (ex := ex) (ey := ex.prodCongr punit)
     (lift (Kernel.id.map (fun x ↦ (x, PUnit.unit))) (ex := ex₀) (ey := ex₀.prodCongr punit)) := by
   ext; dsimp
-  rw [hom_apply', lift_apply', id_map (by fun_prop), id_map (by fun_prop), deterministic_apply',
+  rw [toHom_apply', lift_apply', id_map (by fun_prop), id_map (by fun_prop), deterministic_apply',
     deterministic_apply']
   · refine Set.indicator_eq_indicator ?_ rfl
     simp [Set.image, MeasurableEquiv.prodCongr]
@@ -252,22 +252,22 @@ lemma rightUnitor_inv : (ρ_ SX).inv = hom (ex := ex) (ey := ex.prodCongr punit)
   all_goals measurability
 
 lemma associator_hom : (α_ SX SY SZ).hom =
-    hom (ex := (ex.prodCongr ey).prodCongr ez) (ey := ex.prodCongr (ey.prodCongr ez))
+    toHom (ex := (ex.prodCongr ey).prodCongr ez) (ey := ex.prodCongr (ey.prodCongr ez))
       (lift (Kernel.deterministic prodAssoc (by fun_prop))
         (ex := (ex₀.prodCongr ey₀).prodCongr ez₀) (ey := ex₀.prodCongr (ey₀.prodCongr ez₀))) := by
   ext; dsimp
-  simp only [hom]
+  simp only [toHom]
   rw [comap_apply', map_apply', lift_apply', deterministic_apply', deterministic_apply']
   · refine Set.indicator_eq_indicator ?_ rfl
     simp [MeasurableEquiv.prodCongr, prodAssoc]
   all_goals measurability
 
 lemma associator_inv : (α_ SX SY SZ).inv =
-    hom (ex := ex.prodCongr (ey.prodCongr ez)) (ey := (ex.prodCongr ey).prodCongr ez)
+    toHom (ex := ex.prodCongr (ey.prodCongr ez)) (ey := (ex.prodCongr ey).prodCongr ez)
       (lift (Kernel.deterministic prodAssoc.symm (by fun_prop))
         (ex := ex₀.prodCongr (ey₀.prodCongr ez₀)) (ey := (ex₀.prodCongr ey₀).prodCongr ez₀)) := by
   ext; dsimp
-  simp only [hom]
+  simp only [toHom]
   rw [comap_apply', map_apply', lift_apply', deterministic_apply', deterministic_apply']
   · refine Set.indicator_eq_indicator ?_ rfl
     simp [MeasurableEquiv.prodCongr, prodAssoc]

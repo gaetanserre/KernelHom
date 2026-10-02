@@ -39,7 +39,7 @@ This allows to bridge the gap between the notion of measurable equivalence and t
 
 The kernelized monoidal composition “{name ProbabilityTheory.Kernel.monoComp}`⊗≫ₖ`” is defined by composing two kernels while automatically handling measurable equivalences through the categorical framework:
 
-1. *Transport to {name SFinKer}`SFinKer`*: Both kernels are translated to morphisms in the {name SFinKer}`SFinKer` category using the {name ProbabilityTheory.Kernel.hom}`hom` function, which lifts carrier spaces to a common universe level.
+1. *Transport to {name SFinKer}`SFinKer`*: Both kernels are translated to morphisms in the {name SFinKer}`SFinKer` category using the {name ProbabilityTheory.Kernel.toHom}`toHom` function, which lifts carrier spaces to a common universe level.
 
 1. *Categorical composition*: The categorical monoidal composition “{name CategoryTheory.monoidalComp}`⊗≫`” is applied to the resulting morphisms in {name SFinKer}`SFinKer`, which automatically inserts the necessary associators and unitors.
 

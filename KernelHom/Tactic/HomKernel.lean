@@ -50,7 +50,7 @@ the kernel on the right side of the equality. -/
 def getKernelRHSEqProofType (e : Expr) : MetaM Expr := do
   let some (_, _, hom_expr) := (← inferType e).eq? | throwError "Expected an equality, got: {e}."
   match hom_expr.getAppFn with
-  | Expr.const ``Kernel.hom _ =>
+  | Expr.const ``Kernel.toHom _ =>
     let args := hom_expr.getAppArgs
     return args[args.size - 2]!
   | _ => throwError "Expected a hom expression, got: {hom_expr}."
@@ -103,8 +103,8 @@ def homCarrierOfObj (SX : Expr) (u : Level) : MetaM HomCarrier := do
   HomCarrier.mk' ⟨← getTypeFromSFinKer SX, u⟩
 
 /-- Recursive transformation from morphism expression in `SFinKer` to kernel expression.
-Returns the kernel expression `e'` together with a proof of `e = e'.hom`, built by congruence from
-the translation lemmas (`comp_hom`, `parallelComp_hom`, ...). -/
+Returns the kernel expression `e'` together with a proof of `e = e'.toHom`, built by congruence from
+the translation lemmas (`comp_toHom`, `parallelComp_toHom`, ...). -/
 partial def transformHomToKernel (e : Expr) : MetaM (Expr × Expr) := do
   match e.getAppFn with
   | Expr.const ``tensorHom _ =>
@@ -117,7 +117,7 @@ partial def transformHomToKernel (e : Expr) : MetaM (Expr × Expr) := do
     let (Z, T) ← getCarriersFromKernel η'
     let (X, Y, Z, T) :=
       (← HomCarrier.mk' X, ← HomCarrier.mk' Y, ← HomCarrier.mk' Z, ← HomCarrier.mk' T)
-    let pf := mkAppN (mkConst ``parallelComp_hom [X.lvl, Y.lvl, T.lvl, Z.lvl, X.lvl])
+    let pf := mkAppN (mkConst ``parallelComp_toHom [X.lvl, Y.lvl, T.lvl, Z.lvl, X.lvl])
       (typeInstArgs #[X, Y, T, Z] ++ objEquivArgs #[X, Y, Z, T] ++
         #[κ', η', ← Z.sfinite T η', ← X.sfinite Y κ'])
     let h ← mkCongr (← mkCongrArg e.appFn!.appFn! pκ) pη
@@ -132,7 +132,7 @@ partial def transformHomToKernel (e : Expr) : MetaM (Expr × Expr) := do
     let (X, Y) ← getCarriersFromKernel η'
     let (Z, _) ← getCarriersFromKernel κ'
     let (X, Y, Z) := (← HomCarrier.mk' X, ← HomCarrier.mk' Y, ← HomCarrier.mk' Z)
-    let pf := mkAppN (mkConst ``comp_hom [X.lvl, Y.lvl, Z.lvl, X.lvl])
+    let pf := mkAppN (mkConst ``comp_toHom [X.lvl, Y.lvl, Z.lvl, X.lvl])
       (homLemmaArgs #[X, Y, Z] ++
         #[η', κ', ← X.sfinite Y η', ← Z.sfinite X κ'])
     let h ← mkCongr (← mkCongrArg e.appFn!.appFn! pκ) pη
@@ -140,7 +140,7 @@ partial def transformHomToKernel (e : Expr) : MetaM (Expr × Expr) := do
   | Expr.const ``CategoryStruct.id [u, _] =>
     let args := e.getAppArgs
     let X ← homCarrierOfObj args[args.size - 1]! u
-    return (← mkKernelId X, mkAppN (mkConst ``id_hom [u, u]) (homLemmaArgs #[X]))
+    return (← mkKernelId X, mkAppN (mkConst ``id_toHom [u, u]) (homLemmaArgs #[X]))
   | Expr.const ``ComonObj.counit [u, _] =>
     let args := e.getAppArgs
     let X ← homCarrierOfObj args[args.size - 2]! u
@@ -150,7 +150,7 @@ partial def transformHomToKernel (e : Expr) : MetaM (Expr × Expr) := do
     let args := e.getAppArgs
     let X ← homCarrierOfObj args[args.size - 2]! u
     return (← mkKernelCopy X, mkAppN (mkConst ``comul [u, u]) (homLemmaArgs #[X]))
-  | Expr.const ``Kernel.hom _ =>
+  | Expr.const ``Kernel.toHom _ =>
     let args := e.getAppArgs
     return (args[args.size - 2]!, ← mkEqRefl e)
   | Expr.const ``MonoidalCategory.whiskerLeft [u, _] =>
