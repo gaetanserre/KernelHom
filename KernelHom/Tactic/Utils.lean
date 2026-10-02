@@ -6,6 +6,7 @@ Authors: Gaëtan Serré
 module
 
 public import EqLift.Tactic.Kernel.Utils
+public import KernelHom.ForMathlib.Kernel
 public import KernelHom.Kernel.Hom
 
 /-!
@@ -17,7 +18,7 @@ and cached instances) instead of going through `mkAppM`.
 
 ## Main declarations
 
-* `unfoldKernelOp`: unfolds `Kernel.prod` and `Kernel.compProd`.
+* `unfoldKernelOp`, `foldKernelOp`: unfold and fold back `Kernel.prod` and `Kernel.compProd`.
 * `SFinKerInsts`: the category-theoretic instances of `SFinKer.{u}`.
 * `computeSFinkerOf`, `idME`: the object of `SFinKer` associated with a measurable space, and the
   identity measurable equivalence, recursively on products (memoized).
@@ -42,6 +43,38 @@ def unfoldKernelOp (e : Expr) : MetaM (Expr × Expr) := do
     (congrTheorems := ← getSimpCongrTheorems)
   let (r, _) ← simp e ctx
   return (r.expr, ← r.getProof)
+
+/-- Fold back `Kernel.compProd` and `Kernel.prod` in an expression, in the form produced by
+`unfoldKernelOp` and possibly reassociated. Returns the folded expression `e'` together with a proof
+of `e = e'`. As the compositions associate to the left, an operation preceded by a kernel `ξ` is not
+a subterm of its unfolding, `ξ ∘ₖ (κ ∥ₖ η) ∘ₖ copy α` for a product: each operation is folded by two
+lemmas, with and without such a prefix. `Kernel.compProd` is folded first, since its unfolding
+contains the unfolding `(Kernel.id ∥ₖ κ) ∘ₖ copy α` of a product. -/
+def foldKernelOp (e : Expr) : MetaM (Expr × Expr) := do
+  let e ← instantiateMVars e
+  if !e.containsConst (· == ``Kernel.copy) then
+    return (e, ← mkEqRefl e)
+  let pass (e : Expr) (lemmas : List (Name × Bool)) : MetaM (Expr × Expr) := do
+    let mut thms : SimpTheorems := {}
+    for (name, inv) in lemmas do
+      thms ← thms.addConst name (inv := inv)
+    let ctx ← Simp.mkContext (config := { dsimp := false }) (simpTheorems := #[thms])
+      (congrTheorems := ← getSimpCongrTheorems)
+    let (r, _) ← simp e ctx
+    -- A fold by `parallelComp_comp_copy`, which holds by `rfl`, is definitional: `simp` gives
+    -- no proof, and `Eq.refl` of the folded term would be dropped by `mkEqTrans`, so that the
+    -- final proof would have the unfolded form in its type. `hom_kernel` uses the returned
+    -- expression and the kernel accepts the mismatch by unfolding `Kernel.prod`, but
+    -- `@[kernel_reassoc]` reads its statement from the type of the proof. The proof is
+    -- therefore `Eq.refl e` with the explicit type `e = r.expr`.
+    match r.proof? with
+    | some p => return (r.expr, p)
+    | none => return (r.expr, ← mkExpectedTypeHint (← mkEqRefl e) (← mkEq e r.expr))
+  let (e, p₁) ← pass e [(``Kernel.comp_compProd_def_eq_comp_compProd, false),
+    (``Kernel.compProd_def, true)]
+  let (e, p₂) ← pass e [(``Kernel.comp_parallelComp_comp_copy_eq_comp_prod, false),
+    (``Kernel.parallelComp_comp_copy, false)]
+  return (e, ← mkEqTrans p₁ p₂)
 
 /-- The `IsSFiniteKernel` instance of a kernel (cached). -/
 def sfiniteInst (X Y : Carrier) (κ : Expr) : MetaM Expr := do
@@ -207,9 +240,9 @@ def objEquivArgs (cs : Array HomCarrier) : Array Expr :=
 def homLemmaArgs (cs : Array HomCarrier) : Array Expr :=
   typeInstArgs cs ++ objEquivArgs cs
 
-/-- `κ.hom (ex := ex) (ey := ey) : SX ⟶ SY`. -/
+/-- `κ.toHom (ex := ex) (ey := ey) : SX ⟶ SY`. -/
 def mkHom (X Y : HomCarrier) (κ : Expr) : MetaM Expr := do
-  return mkAppN (mkConst ``Kernel.hom [X.lvl, Y.lvl, X.lvl])
+  return mkAppN (mkConst ``Kernel.toHom [X.lvl, Y.lvl, X.lvl])
     (homLemmaArgs #[X, Y] ++ #[κ, ← X.sfinite Y κ])
 
 end

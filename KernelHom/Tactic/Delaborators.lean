@@ -35,8 +35,8 @@ meta def delabSFinKerOf : Delab := do
   let x ← withNaryArg 0 delab
   `($x)
 
-/-- Only display the underlying kernel of `Kernel.hom` for readability. -/
-@[scoped app_delab ProbabilityTheory.Kernel.hom]
+/-- Only display the underlying kernel of `Kernel.toHom` for readability. -/
+@[scoped app_delab ProbabilityTheory.Kernel.toHom]
 meta def delabKernelHom : Delab := do
   let x ← withNaryArg 8 delab
   `($x)

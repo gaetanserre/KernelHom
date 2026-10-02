@@ -29,6 +29,31 @@ meta def delabTensorObj : Delab :=
     let stx ← `(($x ⊗ $y))
     annotateTermInfo stx
 
+/-- Quotation of an integer, for the mantissa of a JSON number. -/
+private def quoteInt : Int → Term
+  | .ofNat n => Syntax.mkCApp ``Int.ofNat #[quote n]
+  | .negSucc n => Syntax.mkCApp ``Int.negSucc #[quote n]
+
+/-- Quotation of a list of terms as a list literal. -/
+private def quoteTermList : List Term → Term
+  | [] => Syntax.mkCApp ``List.nil #[]
+  | t :: ts => Syntax.mkCApp ``List.cons #[t, quoteTermList ts]
+
+/-- Quotation of a JSON value. SubVerso provided this instance until its update of
+October 2026; it is needed by the derived `Quote` instance of `StringDiagramPayload`. -/
+private partial def quoteJson : Json → Term
+  | .null => Syntax.mkCApp ``Json.null #[]
+  | .str s => Syntax.mkCApp ``Json.str #[quote s]
+  | .bool b => Syntax.mkCApp ``Json.bool #[quote b]
+  | .num ⟨m, e⟩ => Syntax.mkCApp ``Json.num #[Syntax.mkCApp ``JsonNumber.mk #[quoteInt m, quote e]]
+  | .arr xs => Syntax.mkCApp ``Json.arr
+      #[Syntax.mkCApp ``List.toArray #[quoteTermList (xs.toList.map quoteJson)]]
+  | .obj fields => Syntax.mkCApp ``Json.mkObj
+      #[quoteTermList (fields.toArray.toList.map fun f ↦
+        Syntax.mkCApp ``Prod.mk #[quote f.1, quoteJson f.2])]
+
+instance : Quote Json := ⟨quoteJson⟩
+
 structure StringDiagramPayload where
   html : Json
   diagramHash : Nat

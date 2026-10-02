@@ -77,7 +77,7 @@ elab_rules : tactic
           Category.id_comp, Category.comp_id, Category.assoc,
           IsComonHom.hom_comul, IsComonHom.hom_comul_assoc,
           IsComonHom.hom_counit, IsComonHom.hom_counit_assoc,
-          Kernel.hom_counit_of_isMarkovKernel, Kernel.hom_counit_of_isMarkovKernel_assoc,
+          Kernel.toHom_counit_of_isMarkovKernel, Kernel.toHom_counit_of_isMarkovKernel_assoc,
           ComonObj.comul_counit_hom, ComonObj.comul_counit_hom_assoc,
           ComonObj.counit_comul_hom, ComonObj.counit_comul_hom_assoc,
           ComonObj.comul_tensorHom_counit_comp, ComonObj.comul_tensorHom_counit_comp_assoc,

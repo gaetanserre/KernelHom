@@ -190,8 +190,8 @@ def constructAssociatorInv (left right ex₀ ey₀ ez₀ : Expr) :=
   constructAssociator left right ex₀ ey₀ ez₀ false
 
 /-- Recursive transformation from kernel expressions to morphism expressions in the `SFinKer`
-category. Returns the morphism expression `e'` together with a proof of `e' = e.hom`, built by
-congruence from the translation lemmas (`comp_hom`, `parallelComp_hom`, ...). -/
+category. Returns the morphism expression `e'` together with a proof of `e' = e.toHom`, built by
+congruence from the translation lemmas (`comp_toHom`, `parallelComp_toHom`, ...). -/
 partial def transformKernelToHom (e : Expr) : MetaM (Expr × Expr) := do
   match e.getAppFn with
   | Expr.const ``Kernel.comp _ =>
@@ -202,7 +202,7 @@ partial def transformKernelToHom (e : Expr) : MetaM (Expr × Expr) := do
     let (Z, _) ← getCarriersFromKernel κ
     let (X, Y, Z) := (← HomCarrier.mk' X, ← HomCarrier.mk' Y, ← HomCarrier.mk' Z)
     let I ← sfinkerInsts X.lvl
-    let pf := mkAppN (mkConst ``comp_hom [X.lvl, Y.lvl, Z.lvl, I.u])
+    let pf := mkAppN (mkConst ``comp_toHom [X.lvl, Y.lvl, Z.lvl, I.u])
       (homLemmaArgs #[X, Y, Z] ++
         #[η, κ, ← X.sfinite Y η, ← Z.sfinite X κ])
     let (κ', pκ) ← transformKernelToHom κ
@@ -240,7 +240,7 @@ partial def transformKernelToHom (e : Expr) : MetaM (Expr × Expr) := do
       let (X, Y, Z, T) :=
         (← HomCarrier.mk' X, ← HomCarrier.mk' Y, ← HomCarrier.mk' Z, ← HomCarrier.mk' T)
       let I ← sfinkerInsts X.lvl
-      let pf := mkAppN (mkConst ``parallelComp_hom [X.lvl, Y.lvl, T.lvl, Z.lvl, I.u])
+      let pf := mkAppN (mkConst ``parallelComp_toHom [X.lvl, Y.lvl, T.lvl, Z.lvl, I.u])
         (typeInstArgs #[X, Y, T, Z] ++ objEquivArgs #[X, Y, Z, T] ++
           #[κ, η, ← Z.sfinite T η, ← X.sfinite Y κ])
       let (κ', pκ) ← transformKernelToHom κ
@@ -251,7 +251,7 @@ partial def transformKernelToHom (e : Expr) : MetaM (Expr × Expr) := do
   | Expr.const ``Kernel.id [xLvl] =>
     let X ← HomCarrier.mk' ⟨e.getAppArgs[0]!, xLvl⟩
     let I ← sfinkerInsts xLvl
-    return (I.id X.obj, mkAppN (mkConst ``id_hom [xLvl, I.u]) (homLemmaArgs #[X]))
+    return (I.id X.obj, mkAppN (mkConst ``id_toHom [xLvl, I.u]) (homLemmaArgs #[X]))
   | Expr.const ``Kernel.discard [xLvl, punitLvl] =>
     let X ← HomCarrier.mk' ⟨e.getAppArgs[0]!, xLvl⟩
     let I ← sfinkerInsts xLvl
@@ -293,12 +293,12 @@ partial def transformKernelToHom (e : Expr) : MetaM (Expr × Expr) := do
   | _ =>
     throwError "Expected a lifted kernel expression, got: {e}."
 
-/-- Given lifted kernels `lhs rhs` and morphisms `lh rh` with proofs `pl : lh = lhs.hom` and
-`pr : rh = rhs.hom`, construct a proof of `(lhs = rhs) = (lh = rh)`. -/
+/-- Given lifted kernels `lhs rhs` and morphisms `lh rh` with proofs `pl : lh = lhs.toHom` and
+`pr : rh = rhs.toHom`, construct a proof of `(lhs = rhs) = (lh = rh)`. -/
 def mkHomCongrProof (lhs rhs pl pr : Expr) : MetaM Expr := do
   let (X, Y) ← getCarriersFromKernel lhs
   let (X, Y) := (← HomCarrier.mk' X, ← HomCarrier.mk' Y)
-  let hom_congr_proof := mkAppN (mkConst ``hom_congr [X.lvl, Y.lvl, X.lvl]) <|
+  let hom_congr_proof := mkAppN (mkConst ``toHom_congr [X.lvl, Y.lvl, X.lvl]) <|
     homLemmaArgs #[X, Y] ++
       #[lhs, rhs, ← X.sfinite Y lhs, ← X.sfinite Y rhs]
   mkEqTrans (← mkPropExt hom_congr_proof) (← mkEqSymm (← mkEqCongr pl pr))
