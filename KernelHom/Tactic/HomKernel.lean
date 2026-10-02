@@ -202,7 +202,7 @@ partial def transformHomToKernel (e : Expr) : MetaM (Expr × Expr) := do
   | _ => throwError "Expected a hom expression, got: {e}."
 
 /-- Transform a `SFinKer` equality into an equivalent equality of kernels, along with a proof of
-equivalence. -/
+equivalence. The products `×ₖ` and composition-products `⊗ₖ` are folded back (`foldKernelOp`). -/
 def KernelEquality (eq : Expr) : MetaM (Expr × Expr) := do
   resetTransformCache
   let eq ← whnfR <| ← instantiateMVars eq
@@ -211,8 +211,9 @@ def KernelEquality (eq : Expr) : MetaM (Expr × Expr) := do
   let (rhs, pr) ← transformHomToKernel rhs_hom
   let kernel_expr ← mkEq lhs rhs
   let (unlifted_expr, unlifted_proof) ← unliftEquality kernel_expr
+  let (folded_expr, folded_proof) ← foldKernelOp unlifted_expr
   let kernel_eq_proof ← mkEqSymm (← mkHomCongrProof lhs rhs pl pr)
-  return (unlifted_expr, ← mkEqTrans kernel_eq_proof unlifted_proof)
+  return (folded_expr, ← mkEqTrans (← mkEqTrans kernel_eq_proof unlifted_proof) folded_proof)
 
 /-- The `hom_kernel` tactic is the inverse of `kernel_hom`: it transforms an
 equality written in the monoidal category back to an equivalent equality of
