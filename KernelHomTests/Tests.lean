@@ -144,3 +144,28 @@ example (κ : Kernel X Y) (η : Kernel (X × Y) Z) [IsSFiniteKernel κ] [IsSFini
       ∘ₖ (Kernel.id ∥ₖ Kernel.copy Y) ∘ₖ (Kernel.id ∥ₖ κ) ∘ₖ Kernel.copy X := by
   set ζ := κ ⊗ₖ η
   kernel_monoidal
+
+/-! `@[kernel_reassoc]` and `kernel_reassoc_of%` on equalities stated with `⊗ₖ`. Unfolding
+`Kernel.compProd` adds universe levels (through the coercion of `MeasurableEquiv.prodAssoc.symm`),
+and the kernel `ξ` of the generated lemma must be lifted to the same level as the equality. -/
+
+@[kernel_reassoc]
+lemma compProd_eq_of_eq (κ : Kernel X Y) (η : Kernel (X × Y) Z) (ζ : Kernel X (Y × Z))
+    [IsSFiniteKernel κ] [IsSFiniteKernel η] [IsSFiniteKernel ζ] (h : κ ⊗ₖ η = ζ) :
+    κ ⊗ₖ η = ζ := h
+
+example (κ : Kernel X Y) (η : Kernel (X × Y) Z) (ζ : Kernel X (Y × Z)) (ξ : Kernel (Y × Z) W)
+    [IsSFiniteKernel κ] [IsSFiniteKernel η] [IsSFiniteKernel ζ] [IsSFiniteKernel ξ]
+    (h : κ ⊗ₖ η = ζ) :
+    ξ ∘ₖ Kernel.swap Z Y ∘ₖ (η ∥ₖ Kernel.id)
+      ∘ₖ Kernel.deterministic MeasurableEquiv.prodAssoc.symm (by fun_prop)
+      ∘ₖ (Kernel.id ∥ₖ Kernel.copy Y) ∘ₖ (Kernel.id ∥ₖ κ) ∘ₖ Kernel.copy X = ξ ∘ₖ ζ :=
+  compProd_eq_of_eq_assoc κ η ζ h ξ
+
+example (κ : Kernel X Y) (η : Kernel (X × Y) Z) (ζ : Kernel X (Y × Z)) (ξ : Kernel (Y × Z) W)
+    [IsSFiniteKernel κ] [IsSFiniteKernel η] [IsSFiniteKernel ζ] [IsSFiniteKernel ξ]
+    (h : κ ⊗ₖ η = ζ) :
+    ξ ∘ₖ Kernel.swap Z Y ∘ₖ (η ∥ₖ Kernel.id)
+      ∘ₖ Kernel.deterministic MeasurableEquiv.prodAssoc.symm (by fun_prop)
+      ∘ₖ (Kernel.id ∥ₖ Kernel.copy Y) ∘ₖ (Kernel.id ∥ₖ κ) ∘ₖ Kernel.copy X = ξ ∘ₖ ζ :=
+  (kernel_reassoc_of% h) ξ
