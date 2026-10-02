@@ -32,19 +32,32 @@ example (h : Kernel.id.map (Prod.snd : Unit × X → X) = (0 : Kernel (Unit × X
   hom_kernel at h
   exact h
 
-example (κ : Kernel W Z) [IsSFiniteKernel κ] :
+/- Round trips on statements that do not hold: the statement is taken as a hypothesis `h`, the goal
+and `h` are transformed in the same way, and `guard_target` checks the result. -/
+
+example (κ : Kernel W Z) [IsSFiniteKernel κ]
+    (h : (Kernel.id (α := Unit)) ∥ₖ κ = (0 : Kernel (Unit × W) (Unit × Z))) :
     (Kernel.id (α := Unit)) ∥ₖ κ = (0 : Kernel (Unit × W) (Unit × Z)) := by
   kernel_hom
   simp only [id_whiskerLeft]
   hom_kernel
-  sorry
+  guard_target = (Kernel.id.map fun x ↦ (PUnit.unit, x)) ∘ₖ κ ∘ₖ Kernel.id.map Prod.snd = 0
+  kernel_hom at h
+  simp only [id_whiskerLeft] at h
+  hom_kernel at h
+  exact h
 
-example (κ : Kernel W Z) [IsSFiniteKernel κ] :
+example (κ : Kernel W Z) [IsSFiniteKernel κ]
+    (h : (κ ∥ₖ Kernel.id (α := Unit)) = (0 : Kernel (W × Unit) (Z × Unit))) :
     (κ ∥ₖ Kernel.id (α := Unit)) = (0 : Kernel (W × Unit) (Z × Unit)) := by
   kernel_hom
   simp only [whiskerRight_id]
   hom_kernel
-  sorry
+  guard_target = (Kernel.id.map fun x ↦ (x, PUnit.unit)) ∘ₖ κ ∘ₖ Kernel.id.map Prod.fst = 0
+  kernel_hom at h
+  simp only [whiskerRight_id] at h
+  hom_kernel at h
+  exact h
 
 open MeasurableEquiv in
 example (κ : Kernel W Z) [IsSFiniteKernel κ] :
@@ -53,12 +66,12 @@ example (κ : Kernel W Z) [IsSFiniteKernel κ] :
       Kernel.deterministic prodAssoc (by fun_prop)) := by
   kernel_monoidal
 
-example (κ : Kernel X Y) (η : Kernel Y Z) (ξ : Kernel Z W)
-    [IsSFiniteKernel κ] [IsSFiniteKernel η] [IsFiniteKernel ξ] :
-    ξ ∥ₖ κ = 0 := by
+example (κ : Kernel X Y) (ξ : Kernel Z W) [IsSFiniteKernel κ] [IsFiniteKernel ξ]
+    (h : ξ ∥ₖ κ = 0) : ξ ∥ₖ κ = 0 := by
   kernel_hom
   hom_kernel
-  sorry
+  guard_target = ξ ∥ₖ κ = 0
+  exact h
 
 example (κ : Kernel X Y) (η : Kernel Y Z) [IsFiniteKernel η] [IsSFiniteKernel κ]
     (h : (Kernel.id (α := Unit)) ∥ₖ (η ∘ₖ κ) =
