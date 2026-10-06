@@ -30,7 +30,7 @@ Very briefly, the tactics:
 - let you run category-theory tactics such as `cat_disch`, `monoidal` or `coherence` (`kernel_disch`, `kernel_monoidal` and `kernel_coherence` do it directly on kernels),
 - translate the result back to a kernel equality.
 
-Universe handling is part of this translation: expressions are lifted to a common universe level, so rewrites stay well-typed across universe levels. When several hypotheses and the goal are translated together (`kernel_hom at h ⊢`), they are all lifted to the same universe level. This part is handled by the `lift_eq` tactic, which can also be used independently (see [the GitHub repository](https://github.com/gaetanserre/EqLift)).
+Universe handling is part of this translation: expressions are lifted to a common universe level, so rewrites stay well-typed across universe levels. When several hypotheses and the goal are translated together (`kernel_hom at h ⊢`), they are all lifted to the same universe level. This part is handled by the `lift_eq` tactic, which can also be used independently (see [EqLift](https://github.com/gaetanserre/EqLift)).
 
 In addition, `SFinKer` also gives a direct route to `Stoch`, the Markov category of measurable spaces and Markov kernels, defined as the wide subcategory of `SFinKer` with Markov kernels as morphisms. The definitions/results for `SFinKer` and `Stoch` are now in Mathlib (PR [#36779](https://github.com/leanprover-community/mathlib4/pull/36779)).
 
