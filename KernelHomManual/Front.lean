@@ -56,7 +56,7 @@ The library rests on {name SFinKer}`SFinKer`, the category of measurable spaces 
 
 *Universe handling*
 
-A key aspect of the library is automatic universe management: expressions are lifted to a common universe level during translation, ensuring categorical expressions are well-typed. This allows users to work with kernels of varying universe levels without needing to manually manage universe annotations. When several hypotheses and the goal are translated together (`kernel_hom at h ⊢`), they are all lifted to the same universe level, so that the translated equalities can be used to rewrite each other. This part is handled by the {name EqLift}`lift_eq` tactic, which can also be used independently (see [the GitHub repository](https://github.com/gaetanserre/EqLift)).
+A key aspect of the library is automatic universe management: expressions are lifted to a common universe level during translation, ensuring categorical expressions are well-typed. This allows users to work with kernels of varying universe levels without needing to manually manage universe annotations. When several hypotheses and the goal are translated together (`kernel_hom at h ⊢`), they are all lifted to the same universe level, so that the translated equalities can be used to rewrite each other. This part is handled by the {name EqLift}`lift_eq` tactic, which can also be used independently (see [EqLift](https://github.com/gaetanserre/EqLift)).
 
 *Kernel diagrams*
 
