@@ -7,6 +7,7 @@ module
 
 public import KernelHom.Tactic.KernelHom
 public import EqLift.Tactic.Kernel.KernelUnlift
+public meta import Qq
 
 /-!
 # `hom_kernel` tactic
@@ -17,202 +18,159 @@ equivalent equalities of kernels.
 
 ## Main declarations
 
-* `transformHomToKernel`: recursive translation from categorical morphism expressions to
-  kernel expressions.
+* `homToKernel`: recursive translation from categorical morphism expressions to kernel expressions.
+* `homToKernelQ`: its typed version, for given carriers.
 * `KernelEquality`: core implementation of `hom_kernel` on an equality.
 * `hom_kernel`: user-facing tactic (with location support).
 -/
 
 public meta section
 
-open Lean Elab Tactic Meta CategoryTheory Parser.Tactic ProbabilityTheory MonoidalCategory
-open ProbabilityTheory.Kernel
+open Lean Elab Tactic Meta Qq CategoryTheory Parser.Tactic ProbabilityTheory MonoidalCategory
+open scoped ComonObj
 
-/-- Get the original type and its universe from a `SFinKer.of` expression. -/
-partial def getTypeFromSFinKer (e : Expr) : MetaM Expr := do
-  match e.getAppFn with
-  | Expr.const ``tensorUnit [eLvl, _] =>
-    return mkConst ``PUnit [eLvl.succ]
-  | Expr.const ``SFinKer.of _ =>
-    let args := e.getAppArgs
-    return args[0]!
-  | Expr.const ``MonoidalCategory.tensorObj _ =>
-    let args := e.getAppArgs
-    let SY := args[args.size - 1]!
-    let SX := args[args.size - 2]!
-    let Y ← getTypeFromSFinKer SY
-    let X ← getTypeFromSFinKer SX
-    mkAppOptM ``Prod #[X, Y]
-  | _ => throwError "Expected a SFinKer.of expression, got: {e}."
+/-- The carrier of an object of `SFinKer` (see `typeOfObj`). -/
+def getTypeFromSFinKer (SX : Expr) : MetaM Expr := do
+  typeOfObj (← objLevel SX) SX
 
-/-- Given an equality between a categorical morphism (left) and a "morphized" kernel (right), get
-the kernel on the right side of the equality. -/
-def getKernelRHSEqProofType (e : Expr) : MetaM Expr := do
-  let some (_, _, hom_expr) := (← inferType e).eq? | throwError "Expected an equality, got: {e}."
-  match hom_expr.getAppFn with
-  | Expr.const ``Kernel.toHom _ =>
-    let args := hom_expr.getAppArgs
-    return args[args.size - 2]!
-  | _ => throwError "Expected a hom expression, got: {hom_expr}."
+/-- An object `SX` of `SFinKer.{u}` with its carrier `X`, the `MeasurableSpace` instance of `X` and
+the measurable equivalence `SX ≃ᵐ X` of `homCarrier`. -/
+def objCarrier (u : Level) (SX : Expr) : MetaM
+    ((SX : Q(SFinKer.{u})) × (X : Q(Type u)) × (_ : Q(MeasurableSpace $X)) × Q($SX ≃ᵐ $X)) := do
+  let ⟨X, mX, _, ex⟩ ← homCarrier u (← typeOfObj u SX)
+  return ⟨SX, X, mX, ex⟩
 
-/-- Deconstruct a left or right unitor [inverse] morphism. -/
-def deconstructUnitors (e : Expr) (eLvl : Level) (left hom : Bool) :
-    MetaM (Expr × Expr) := do
-  let args := e.getAppArgs
-  let SX := args[args.size - 1]!
-  let X ← getTypeFromSFinKer SX
-  let ex ← idME X eLvl
-  let (X₀, x₀Lvl) ← getOriginalType X
-  let (ex₀, _) ← constructMeasurableEquiv X₀ x₀Lvl eLvl
-  let const_args := [eLvl, eLvl, x₀Lvl, Level.zero]
-  let const_name :=
-    if left then
-      if hom then ``leftUnitor_hom
-      else ``leftUnitor_inv
-    else
-      if hom then ``rightUnitor_hom
-      else ``rightUnitor_inv
-  let const := mkConst const_name const_args
-  let unitor_proof_eq ← mkAppM' const #[SX, ex, ex₀]
-  return (← getKernelRHSEqProofType unitor_proof_eq, unitor_proof_eq)
+/-- The measurable equivalence `X ≃ᵐ X₀` from a lifted measurable space `X : Type u` to the original
+space `X₀` (see `getOriginalType` and `constructMeasurableEquiv`). -/
+def originalEquiv (u : Level) (X : Q(Type u)) {mX : Q(MeasurableSpace $X)} :
+    MetaM ((v : Level) × (X₀ : Q(Type v)) × (_ : Q(MeasurableSpace $X₀)) × Q($X ≃ᵐ $X₀)) := do
+  let (X₀, v) ← getOriginalType X
+  let (e₀, _) ← constructMeasurableEquiv X₀ v u
+  have X₀ : Q(Type v) := X₀
+  return ⟨v, X₀, ← synthInstanceQCached q(MeasurableSpace $X₀), e₀⟩
 
-/-- Deconstruct an associator [inverse] morphism. -/
-def deconstructAssociator (e : Expr) (eLvl : Level) (hom : Bool) : MetaM (Expr × Expr) := do
-  let args := e.getAppArgs
-  let SZ := args[args.size - 1]!
-  let SY := args[args.size - 2]!
-  let SX := args[args.size - 3]!
-  let Z ← getTypeFromSFinKer SZ
-  let Y ← getTypeFromSFinKer SY
-  let X ← getTypeFromSFinKer SX
-  let (Z₀, z₀Lvl) ← getOriginalType Z
-  let (Y₀, y₀Lvl) ← getOriginalType Y
-  let (X₀, x₀Lvl) ← getOriginalType X
-  let (ez₀, _) ← constructMeasurableEquiv Z₀ z₀Lvl eLvl
-  let (ey₀, _) ← constructMeasurableEquiv Y₀ y₀Lvl eLvl
-  let (ex₀, _) ← constructMeasurableEquiv X₀ x₀Lvl eLvl
-  let associator_const := mkConst
-    (if hom then ``Kernel.associator_hom else ``Kernel.associator_inv)
-    [eLvl, eLvl, eLvl, eLvl, x₀Lvl, y₀Lvl, z₀Lvl]
-  let associator_proof_eq ← mkAppM' associator_const
-    #[SX, SY, SZ, ← idME X eLvl, ← idME Y eLvl, ← idME Z eLvl, ex₀, ey₀, ez₀]
-  return (← getKernelRHSEqProofType associator_proof_eq, associator_proof_eq)
+/-- Given a proof of `f = κ.toHom`, return `κ` with the proof. -/
+def withKernelOfProof (pf : Expr) : MetaM (Expr × Expr) := do
+  let some (_, _, hom) := (← inferType pf).eq? | throwError "Expected an equality, got: {pf}."
+  let_expr Kernel.toHom _ _ _ _ _ _ _ _ κ _ := hom | throwError "Expected a hom expression: {hom}."
+  return (κ, pf)
 
-/-- The `HomCarrier` of the carrier of an object of `SFinKer` living in universe `u`. -/
-def homCarrierOfObj (SX : Expr) (u : Level) : MetaM HomCarrier := do
-  HomCarrier.mk' ⟨← getTypeFromSFinKer SX, u⟩
+/-- Translation of the left or right unitor `(λ_ SX).hom`, `(ρ_ SX).hom` or of their inverses. -/
+def unitorToKernel (u : Level) (SX : Expr) (left hom : Bool) : MetaM (Expr × Expr) := do
+  let ⟨SX, X, _, ex⟩ ← objCarrier u SX
+  let ⟨v, _, _, ex₀⟩ ← originalEquiv u X
+  withKernelOfProof <| match left, hom with
+    | true, true => q(Kernel.leftUnitor_hom.{u, u, v, 0} $SX $ex $ex₀)
+    | true, false => q(Kernel.leftUnitor_inv.{u, u, v, 0} $SX $ex $ex₀)
+    | false, true => q(Kernel.rightUnitor_hom.{u, u, v, 0} $SX $ex $ex₀)
+    | false, false => q(Kernel.rightUnitor_inv.{u, u, v, 0} $SX $ex $ex₀)
 
-/-- Recursive transformation from morphism expression in `SFinKer` to kernel expression.
-Returns the kernel expression `e'` together with a proof of `e = e'.toHom`, built by congruence from
-the translation lemmas (`comp_toHom`, `parallelComp_toHom`, ...). -/
-partial def transformHomToKernel (e : Expr) : MetaM (Expr × Expr) := do
-  match e.getAppFn with
-  | Expr.const ``tensorHom _ =>
-    let args := e.getAppArgs
-    let κ := args[args.size - 2]!
-    let η := args[args.size - 1]!
-    let (κ', pκ) ← transformHomToKernel κ
-    let (η', pη) ← transformHomToKernel η
-    let (X, Y) ← getCarriersFromKernel κ'
-    let (Z, T) ← getCarriersFromKernel η'
-    let (X, Y, Z, T) :=
-      (← HomCarrier.mk' X, ← HomCarrier.mk' Y, ← HomCarrier.mk' Z, ← HomCarrier.mk' T)
-    let pf := mkAppN (mkConst ``parallelComp_toHom [X.lvl, Y.lvl, T.lvl, Z.lvl, X.lvl])
-      (typeInstArgs #[X, Y, T, Z] ++ objEquivArgs #[X, Y, Z, T] ++
-        #[κ', η', ← Z.sfinite T η', ← X.sfinite Y κ'])
-    let h ← mkCongr (← mkCongrArg e.appFn!.appFn! pκ) pη
-    let e' ← mkKernelParallelComp X Y Z T κ' η'
-    return (e', ← mkEqTrans h pf)
-  | Expr.const ``CategoryStruct.comp _ =>
-    let args := e.getAppArgs
-    let κ := args[args.size - 2]!
-    let η := args[args.size - 1]!
-    let (κ', pκ) ← transformHomToKernel κ
-    let (η', pη) ← transformHomToKernel η
-    let (X, Y) ← getCarriersFromKernel η'
-    let (Z, _) ← getCarriersFromKernel κ'
-    let (X, Y, Z) := (← HomCarrier.mk' X, ← HomCarrier.mk' Y, ← HomCarrier.mk' Z)
-    let pf := mkAppN (mkConst ``comp_toHom [X.lvl, Y.lvl, Z.lvl, X.lvl])
-      (homLemmaArgs #[X, Y, Z] ++
-        #[η', κ', ← X.sfinite Y η', ← Z.sfinite X κ'])
-    let h ← mkCongr (← mkCongrArg e.appFn!.appFn! pκ) pη
-    return (← mkKernelComp Z X Y η' κ', ← mkEqTrans h pf)
-  | Expr.const ``CategoryStruct.id [u, _] =>
-    let args := e.getAppArgs
-    let X ← homCarrierOfObj args[args.size - 1]! u
-    return (← mkKernelId X, mkAppN (mkConst ``id_toHom [u, u]) (homLemmaArgs #[X]))
-  | Expr.const ``ComonObj.counit [u, _] =>
-    let args := e.getAppArgs
-    let X ← homCarrierOfObj args[args.size - 2]! u
-    return (← mkKernelDiscard X u,
-      mkAppN (mkConst ``counit [u, u, u]) (homLemmaArgs #[X]))
-  | Expr.const ``ComonObj.comul [u, _] =>
-    let args := e.getAppArgs
-    let X ← homCarrierOfObj args[args.size - 2]! u
-    return (← mkKernelCopy X, mkAppN (mkConst ``comul [u, u]) (homLemmaArgs #[X]))
-  | Expr.const ``Kernel.toHom _ =>
-    let args := e.getAppArgs
-    return (args[args.size - 2]!, ← mkEqRefl e)
-  | Expr.const ``MonoidalCategory.whiskerLeft [u, _] =>
-    let args := e.getAppArgs
-    let Z ← homCarrierOfObj args[args.size - 4]! u
-    let X ← homCarrierOfObj args[args.size - 3]! u
-    let Y ← homCarrierOfObj args[args.size - 2]! u
-    let (κ', pκ) ← transformHomToKernel args[args.size - 1]!
-    let pf := mkAppN (mkConst ``Kernel.whiskerLeft [u, u, u, u])
-      (homLemmaArgs #[X, Y, Z] ++ #[κ', ← X.sfinite Y κ'])
-    let h ← mkCongrArg e.appFn! pκ
-    let e' ← mkKernelParallelComp Z Z X Y
-      (← mkKernelId Z) κ'
-    return (e', ← mkEqTrans h pf)
-  | Expr.const ``MonoidalCategory.whiskerRight [u, _] =>
-    let args := e.getAppArgs
-    let X ← homCarrierOfObj args[args.size - 4]! u
-    let Y ← homCarrierOfObj args[args.size - 3]! u
-    let Z ← homCarrierOfObj args[args.size - 1]! u
-    let (κ', pκ) ← transformHomToKernel args[args.size - 2]!
-    let pf := mkAppN (mkConst ``Kernel.whiskerRight [u, u, u, u])
-      (homLemmaArgs #[X, Y, Z] ++ #[κ', ← X.sfinite Y κ'])
-    let h ← mkCongrFun (← mkCongrArg e.appFn!.appFn! pκ) Z.obj
-    let e' ← mkKernelParallelComp X Y Z Z κ'
-      (← mkKernelId Z)
-    return (e', ← mkEqTrans h pf)
-  | Expr.const ``Iso.hom _ =>
-    let args := e.getAppArgs
-    let iso := args[args.size - 1]!
-    match iso.getAppFn with
-    | Expr.const ``BraidedCategory.braiding [u, _] =>
-      let args := iso.getAppArgs
-      let X ← homCarrierOfObj args[args.size - 2]! u
-      let Y ← homCarrierOfObj args[args.size - 1]! u
-      return (← mkKernelSwap X Y,
-        mkAppN (mkConst ``braiding_hom [u, u, u]) (homLemmaArgs #[X, Y]))
-    | Expr.const ``leftUnitor [eLvl, _] => deconstructUnitors iso eLvl true true
-    | Expr.const ``rightUnitor [eLvl, _] => deconstructUnitors iso eLvl false true
-    | Expr.const ``MonoidalCategory.associator [eLvl, _] => deconstructAssociator iso eLvl true
+/-- Translation of the associator `(α_ SX SY SZ).hom` or of its inverse. -/
+def associatorToKernel (u : Level) (SX SY SZ : Expr) (hom : Bool) : MetaM (Expr × Expr) := do
+  let ⟨SX, X, _, ex⟩ ← objCarrier u SX
+  let ⟨SY, Y, _, ey⟩ ← objCarrier u SY
+  let ⟨SZ, Z, _, ez⟩ ← objCarrier u SZ
+  let ⟨_, _, _, ex₀⟩ ← originalEquiv u X
+  let ⟨_, _, _, ey₀⟩ ← originalEquiv u Y
+  let ⟨_, _, _, ez₀⟩ ← originalEquiv u Z
+  withKernelOfProof <| if hom then
+      q(Kernel.associator_hom $SX $SY $SZ $ex $ey $ez $ex₀ $ey₀ $ez₀)
+    else q(Kernel.associator_inv $SX $SY $SZ $ex $ey $ez $ex₀ $ey₀ $ez₀)
+
+mutual
+
+/-- Recursive translation of a morphism `e` of `SFinKer.{u}` into a kernel `e'`. Returns `e'`
+together with a proof of `e = e'.toHom`, where the carriers of the source and of the target of `e`
+are given by `objCarrier`. Each step is a single application of a translation lemma, given the
+translations of the subterms (`Kernel.comp_toHom_of_eq`, `Kernel.parallelComp_toHom_of_eq`, ...). -/
+partial def homToKernel (u : Level) (e : Expr) : MetaM (Expr × Expr) := do
+  match_expr e with
+  | CategoryStruct.comp _ _ SX SY SZ f g =>
+    let ⟨_, _, _, ex⟩ ← objCarrier u SX
+    let ⟨_, _, _, ey⟩ ← objCarrier u SY
+    let ⟨_, _, _, ez⟩ ← objCarrier u SZ
+    let ⟨_, κ, _, pf⟩ ← homToKernelQ ex ey f
+    let ⟨_, η, _, pg⟩ ← homToKernelQ ey ez g
+    return (q($η ∘ₖ $κ), q(Kernel.comp_toHom_of_eq $pf $pg))
+  | MonoidalCategoryStruct.tensorHom _ _ _ SX SY SZ ST f g =>
+    let ⟨_, _, _, ex⟩ ← objCarrier u SX
+    let ⟨_, _, _, ey⟩ ← objCarrier u SY
+    let ⟨_, _, _, ez⟩ ← objCarrier u SZ
+    let ⟨_, _, _, et⟩ ← objCarrier u ST
+    let ⟨_, κ, _, pf⟩ ← homToKernelQ ex ey f
+    let ⟨_, η, _, pg⟩ ← homToKernelQ ez et g
+    return (q($κ ∥ₖ $η), q(Kernel.parallelComp_toHom_of_eq $pf $pg))
+  | MonoidalCategoryStruct.whiskerLeft _ _ _ SZ SX SY f =>
+    let ⟨SZ, Z, mZ, ez⟩ ← objCarrier u SZ
+    let ⟨_, _, _, ex⟩ ← objCarrier u SX
+    let ⟨_, _, _, ey⟩ ← objCarrier u SY
+    let ⟨_, κ, _, pf⟩ ← homToKernelQ ex ey f
+    return (q(@Kernel.id $Z $mZ ∥ₖ $κ), q(Kernel.whiskerLeft_of_eq $SZ $ez $pf))
+  | MonoidalCategoryStruct.whiskerRight _ _ _ SX SY f SZ =>
+    let ⟨_, _, _, ex⟩ ← objCarrier u SX
+    let ⟨_, _, _, ey⟩ ← objCarrier u SY
+    let ⟨SZ, Z, mZ, ez⟩ ← objCarrier u SZ
+    let ⟨_, κ, _, pf⟩ ← homToKernelQ ex ey f
+    return (q($κ ∥ₖ @Kernel.id $Z $mZ), q(Kernel.whiskerRight_of_eq $SZ $ez $pf))
+  | CategoryStruct.id _ _ SX =>
+    let ⟨SX, X, mX, ex⟩ ← objCarrier u SX
+    return (q(@Kernel.id $X $mX), q(Kernel.id_toHom $SX $ex))
+  | ComonObj.counit _ _ _ SX _ =>
+    let ⟨SX, X, _, ex⟩ ← objCarrier u SX
+    return (q(Kernel.discard.{u, u} $X), q(Kernel.counit.{u, u, u} $SX $ex))
+  | ComonObj.comul _ _ _ SX _ =>
+    let ⟨SX, X, _, ex⟩ ← objCarrier u SX
+    return (q(Kernel.copy $X), q(Kernel.comul $SX $ex))
+  | Kernel.toHom _ _ _ _ _ _ _ _ κ _ => return (κ, ← mkEqRefl e)
+  | Iso.hom _ _ _ _ iso =>
+    match_expr iso with
+    | BraidedCategory.braiding _ _ _ _ SX SY =>
+      let ⟨SX, X, _, ex⟩ ← objCarrier u SX
+      let ⟨SY, Y, _, ey⟩ ← objCarrier u SY
+      return (q(Kernel.swap $X $Y), q(Kernel.braiding_hom $SX $SY $ex $ey))
+    | MonoidalCategoryStruct.leftUnitor _ _ _ SX => unitorToKernel u SX true true
+    | MonoidalCategoryStruct.rightUnitor _ _ _ SX => unitorToKernel u SX false true
+    | MonoidalCategoryStruct.associator _ _ _ SX SY SZ => associatorToKernel u SX SY SZ true
     | _ => throwError "Unexpected isomorphism {iso}."
-  | Expr.const ``Iso.inv _ =>
-    let args := e.getAppArgs
-    let iso := args[args.size - 1]!
-    match iso.getAppFn with
-    | Expr.const ``leftUnitor [eLvl, _] => deconstructUnitors iso eLvl true false
-    | Expr.const ``rightUnitor [eLvl, _] => deconstructUnitors iso eLvl false false
-    | Expr.const ``MonoidalCategory.associator [eLvl, _] => deconstructAssociator iso eLvl false
+  | Iso.inv _ _ _ _ iso =>
+    match_expr iso with
+    | MonoidalCategoryStruct.leftUnitor _ _ _ SX => unitorToKernel u SX true false
+    | MonoidalCategoryStruct.rightUnitor _ _ _ SX => unitorToKernel u SX false false
+    | MonoidalCategoryStruct.associator _ _ _ SX SY SZ => associatorToKernel u SX SY SZ false
     | _ => throwError "Unexpected isomorphism {iso}."
   | _ => throwError "Expected a hom expression, got: {e}."
+
+/-- Typed version of `homToKernel`, for a morphism `f : SX ⟶ SY` and the carriers `ex : SX ≃ᵐ X`
+and `ey : SY ≃ᵐ Y` given by `objCarrier` (as in `homToKernel`): returns `f`, its translation
+`κ : Kernel X Y` with its `IsSFiniteKernel` instance and the proof of `f = κ.toHom`. -/
+partial def homToKernelQ {u : Level} {X Y : Q(Type u)} {mX : Q(MeasurableSpace $X)}
+    {mY : Q(MeasurableSpace $Y)} {SX SY : Q(SFinKer.{u})} (ex : Q($SX ≃ᵐ $X)) (ey : Q($SY ≃ᵐ $Y))
+    (f : Expr) : MetaM ((f : Q($SX ⟶ $SY)) × (κ : Q(Kernel $X $Y)) × (_ : Q(IsSFiniteKernel $κ)) ×
+      Q($f = Kernel.toHom (ex := $ex) (ey := $ey) $κ)) := do
+  let (κ, pf) ← homToKernel u f
+  have κ : Q(Kernel $X $Y) := κ
+  return ⟨f, κ, ← synthInstanceQCached q(IsSFiniteKernel $κ), pf⟩
+
+end
+
+/-- Translation of a morphism of `SFinKer` into a kernel, see `homToKernel`. -/
+def transformHomToKernel (e : Expr) : MetaM (Expr × Expr) := do
+  let_expr Quiver.Hom _ _ SX _ := ← inferType e | throwError "Expected a morphism, got: {e}."
+  homToKernel (← objLevel SX) e
 
 /-- Transform a `SFinKer` equality into an equivalent equality of kernels, along with a proof of
 equivalence. The products `×ₖ` and composition-products `⊗ₖ` are folded back (`foldKernelOp`). -/
 def KernelEquality (eq : Expr) : MetaM (Expr × Expr) := do
   resetTransformCache
   let eq ← whnfR <| ← instantiateMVars eq
-  let some (_, lhs_hom, rhs_hom) := eq.eq? | throwError "Expected an equality, got: {eq}."
-  let (lhs, pl) ← transformHomToKernel lhs_hom
-  let (rhs, pr) ← transformHomToKernel rhs_hom
-  let kernel_expr ← mkEq lhs rhs
-  let (unlifted_expr, unlifted_proof) ← unliftEquality kernel_expr
+  let some (_, lhs, rhs) := eq.eq? | throwError "Expected an equality, got: {eq}."
+  let_expr Quiver.Hom _ _ SX _ := ← inferType lhs | throwError "Expected a morphism, got: {lhs}."
+  let u ← objLevel SX
+  let (κ, pf) ← homToKernel u lhs
+  let (η, pg) ← homToKernel u rhs
+  let (unlifted_expr, unlifted_proof) ← unliftEquality (← mkEq κ η)
   let (folded_expr, folded_proof) ← foldKernelOp unlifted_expr
-  let kernel_eq_proof ← mkEqSymm (← mkHomCongrProof lhs rhs pl pr)
+  let kernel_eq_proof ← mkEqSymm (← mkAppM ``Kernel.toHom_congr_of_eq #[pf, pg])
   return (folded_expr, ← mkEqTrans (← mkEqTrans kernel_eq_proof unlifted_proof) folded_proof)
 
 /-- The `hom_kernel` tactic is the inverse of `kernel_hom`: it transforms an

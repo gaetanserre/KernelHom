@@ -275,4 +275,55 @@ lemma associator_inv : (α_ SX SY SZ).inv =
 
 end
 
+/-! ### Translation lemmas with hypotheses
+
+The translation lemmas above, with the translations of the subterms given as hypotheses. They are
+used by the `kernel_hom` and `hom_kernel` tactics, which translate a term from the translations of
+its subterms, so that each step of the translation is a single application of these lemmas. -/
+
+section OfEq
+
+variable {SX SY SZ ST : SFinKer.{u}} {ex : SX ≃ᵐ X} {ey : SY ≃ᵐ Y} {ez : SZ ≃ᵐ Z} {et : ST ≃ᵐ T}
+
+/-- The equivalence between an equality of kernels and the equality of their translations `f` and
+`g`, given by `toHom_congr`. -/
+lemma toHom_congr_of_eq {κ η : Kernel X Y} [IsSFiniteKernel κ] [IsSFiniteKernel η] {f g : SX ⟶ SY}
+    (hf : f = κ.toHom (ex := ex) (ey := ey)) (hg : g = η.toHom (ex := ex) (ey := ey)) :
+    (κ = η) = (f = g) := by
+  rw [hf, hg, toHom_congr SX SY ex ey]
+
+/-- The translation `f ≫ g` of a composition `η ∘ₖ κ`, from the translations `f` of `κ` and `g` of
+`η` (see `comp_toHom`). -/
+lemma comp_toHom_of_eq {η : Kernel X Y} {κ : Kernel Z X} [IsSFiniteKernel η] [IsSFiniteKernel κ]
+    {f : SZ ⟶ SX} {g : SX ⟶ SY} (hf : f = κ.toHom (ex := ez) (ey := ex))
+    (hg : g = η.toHom (ex := ex) (ey := ey)) :
+    f ≫ g = (η ∘ₖ κ).toHom (ex := ez) (ey := ey) := by
+  rw [hf, hg, comp_toHom]
+
+/-- The translation `f ⊗ₘ g` of a parallel composition `κ ∥ₖ η`, from the translations `f` of `κ`
+and `g` of `η` (see `parallelComp_toHom`). -/
+lemma parallelComp_toHom_of_eq {κ : Kernel X Y} {η : Kernel Z T} [IsSFiniteKernel κ]
+    [IsSFiniteKernel η] {f : SX ⟶ SY} {g : SZ ⟶ ST} (hf : f = κ.toHom (ex := ex) (ey := ey))
+    (hg : g = η.toHom (ex := ez) (ey := et)) :
+    f ⊗ₘ g = (κ ∥ₖ η).toHom (ex := ex.prodCongr ez) (ey := ey.prodCongr et) := by
+  rw [hf, hg, parallelComp_toHom]
+
+variable (SZ ez) in
+/-- The translation `SZ ◁ f` of `Kernel.id ∥ₖ κ`, from the translation `f` of `κ` (see
+`whiskerLeft`). -/
+lemma whiskerLeft_of_eq {κ : Kernel X Y} [IsSFiniteKernel κ] {f : SX ⟶ SY}
+    (hf : f = κ.toHom (ex := ex) (ey := ey)) :
+    SZ ◁ f = (Kernel.id (α := Z) ∥ₖ κ).toHom (ex := ez.prodCongr ex) (ey := ez.prodCongr ey) := by
+  rw [hf, Kernel.whiskerLeft SX SY SZ ex ey ez κ]
+
+variable (SZ ez) in
+/-- The translation `f ▷ SZ` of `κ ∥ₖ Kernel.id`, from the translation `f` of `κ` (see
+`whiskerRight`). -/
+lemma whiskerRight_of_eq {κ : Kernel X Y} [IsSFiniteKernel κ] {f : SX ⟶ SY}
+    (hf : f = κ.toHom (ex := ex) (ey := ey)) :
+    f ▷ SZ = (κ ∥ₖ Kernel.id (α := Z)).toHom (ex := ex.prodCongr ez) (ey := ey.prodCongr ez) := by
+  rw [hf, Kernel.whiskerRight SX SY SZ ex ey ez κ]
+
+end OfEq
+
 end ProbabilityTheory.Kernel

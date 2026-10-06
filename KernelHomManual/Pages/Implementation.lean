@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gaëtan Serré
 -/
 
-import KernelHom.Tactic.KernelHom
+import KernelHom.Tactic.HomKernel
 import EqLift.Tactic.Cache
 import EqLift.Tactic.Kernel.Utils
 import VersoManual
@@ -23,19 +23,29 @@ htmlSplit := .never
 tag := "implementation"
 %%%
 
-The translation performed by {name kernelHom}`kernel_hom` traverses the kernel expression twice (once to lift it to a common universe level, once to translate it into {name SFinKer}`SFinKer`) and builds, at each node, an instance of a translation lemma such as {name ProbabilityTheory.Kernel.comp_toHom}`comp_toHom` or {name ProbabilityTheory.Kernel.comp_lift}`comp_lift`. Two design choices keep this cheap.
+The translation performed by {name kernelHom}`kernel_hom` traverses the kernel expression twice (once to lift it to a common universe level, once to translate it into {name SFinKer}`SFinKer`) and builds, at each node, an instance of a translation lemma such as {name ProbabilityTheory.Kernel.comp_toHom_of_eq}`comp_toHom_of_eq` or {name ProbabilityTheory.Kernel.comp_lift}`comp_lift`. Three design choices keep this cheap and safe.
 
-# Proofs by congruence
+# Proofs by congruence lemmas
 
-The proof of equivalence between the original equality and the translated one is not obtained by rewriting the goal with the translation lemmas (which requires abstracting a pattern and type-checking a motive at each step), but by congruence: each translation function returns the translated expression together with a proof that it is the translation of the original one, built from the proofs of its subterms with {name Lean.Meta.mkCongr}`mkCongr`, {name Lean.Meta.mkCongrArg}`mkCongrArg` and {name Lean.Meta.mkEqTrans}`mkEqTrans`. The equality of propositions is then obtained from {name ProbabilityTheory.Kernel.toHom_congr}`toHom_congr` (or {name ProbabilityTheory.Kernel.lift_congr}`lift_congr`) and `propext`, see {name mkHomCongrProof}`mkHomCongrProof`.
+The proof of equivalence between the original equality and the translated one is not obtained by rewriting the goal with the translation lemmas (which requires abstracting a pattern and type-checking a motive at each step), but by congruence: each translation function returns the translated expression together with a proof that it is the translation of the original one, built from the proofs of its subterms. The translation lemmas are stated for this purpose with the translations of the subterms as hypotheses, so that each step of the translation is a single application of a lemma:
 
-{docstring mkHomCongrProof}
+{docstring ProbabilityTheory.Kernel.comp_toHom_of_eq}
 
-# Explicit constructors and memoization
+The same lemmas serve both directions: {name kernelToHom}`kernelToHom` and {name homToKernel}`homToKernel` both return a proof of `f = κ.toHom`, where `f` is the morphism and `κ` the kernel. The equality of propositions is then obtained from {name ProbabilityTheory.Kernel.toHom_congr_of_eq}`toHom_congr_of_eq` (or {name ProbabilityTheory.Kernel.lift_congr}`lift_congr` for the lifting).
 
-The terms and lemma instances are built directly with `mkAppN`, with explicit universe levels and instances, instead of `mkAppM`, whose unification and instance synthesis dominated the cost of the translation. This requires a fixed order of the universe parameters of the translation lemmas, which is why the universes of `KernelHom.Kernel.Hom` are declared explicitly (`x y t z u x₀ y₀ z₀`).
+{docstring ProbabilityTheory.Kernel.toHom_congr_of_eq}
 
-The instances (`MeasurableSpace X`, `IsSFiniteKernel κ`, the category-theoretic instances of {name SFinKer}`SFinKer`, ...), the inferred types of kernels and the recursively built objects (measurable equivalences, objects of {name SFinKer}`SFinKer`) are memoized in a cache which is reset at the beginning of each transformation. The cache lives in *Eq-Lift*:
+# Terms built with Qq
+
+The terms and the lemma instances are built with the quotations `q(...)` of [Qq](https://github.com/leanprover-community/quote4). A quotation is elaborated when the tactic is compiled, and only instantiated at run time: the result is as cheap as an explicit application (`mkAppN` with explicit universe levels and instances), without the unification and instance synthesis of `mkAppM`, which dominated the cost of the translation. Moreover, the quotations are type-checked against the statements of the lemmas, so that an argument in the wrong position is a compilation error rather than an ill-typed proof at run time. The category-theoretic instances of {name SFinKer}`SFinKer` (`Category`, `MonoidalCategory`, ...) are synthesized at compilation as well.
+
+The expressions are typed by the expressions of their types: `Q(Kernel $X $Y)` is the type of the expressions of a kernel from `X` to `Y`. The kernel and categorical expressions are matched syntactically, with `match_expr`, and their subterms are then given such types. The recursion itself works on untyped expressions: {name kernelToHomQ}`kernelToHomQ` gives the typed view of the translation of a subterm, assuming that the carriers of its source and target are those of {name homCarrier}`homCarrier`.
+
+{docstring kernelToHomQ}
+
+# Memoization
+
+The instances (`MeasurableSpace X`, `IsSFiniteKernel κ`, ...) and the recursively built objects (measurable equivalences, objects of {name SFinKer}`SFinKer`) are memoized in a cache which is reset at the beginning of each transformation. The cache lives in *Eq-Lift*:
 
 {docstring TransformCache}
 
@@ -43,13 +53,11 @@ The instances (`MeasurableSpace X`, `IsSFiniteKernel κ`, the category-theoretic
 
 {docstring synthInstanceCached}
 
-{docstring inferTypeCached}
-
 {docstring memoized}
 
 # Carriers
 
-A measurable space is represented during the transformations by its carrier type and universe level, from which the `MeasurableSpace` instance is obtained through the cache.
+A measurable space is represented during the lifting by its carrier type and universe level, from which the `MeasurableSpace` instance is obtained through the cache.
 
 {docstring Carrier}
 
@@ -61,20 +69,16 @@ A measurable space is represented during the transformations by its carrier type
 
 {docstring constructMeasurableEquiv}
 
-The translation to {name SFinKer}`SFinKer` needs more data about each carrier `X`: the object of {name SFinKer}`SFinKer` it is translated to (`SFinKer.of X`, or a tensor product of such objects when `X` is a product, so that the monoidal tactics see the tensor structure) and the measurable equivalence between the carrier of this object and `X`, which is the argument `ex` of {name ProbabilityTheory.Kernel.toHom}`toHom` and of the translation lemmas. These are computed once per carrier by {name computeSFinkerOf}`computeSFinkerOf` and {name idME}`idME`, and gathered in a {name HomCarrier}`HomCarrier`.
+After the lifting, all the carriers live in the same universe, in which the translation takes place.
 
-{docstring HomCarrier}
+{docstring kernelLevel}
 
-{docstring HomCarrier.mk'}
+The translation to {name SFinKer}`SFinKer` needs more data about each carrier `X`: the object of {name SFinKer}`SFinKer` it is translated to (`SFinKer.of X`, or a tensor product of such objects when `X` is a product, so that the monoidal tactics see the tensor structure) and the measurable equivalence between the carrier of this object and `X`, which is the argument `ex` of {name ProbabilityTheory.Kernel.toHom}`toHom` and of the translation lemmas. They are computed once per carrier by {name homCarrier}`homCarrier`.
 
-{docstring HomCarrier.sfinite}
+{docstring homCarrier}
 
-{docstring computeSFinkerOf}
+{docstring liftCarrier}
 
-{docstring idME}
+In the other direction, the carrier of an object is computed by {name typeOfObj}`typeOfObj`, and its data by {name homCarrier}`homCarrier` again.
 
-Finally, every morphism built during the translation (`≫`, `⊗ₘ`, whiskers, `𝟙`, `ε`, `Δ`, braiding) takes as implicit arguments the category-theoretic instances of {name SFinKer}`SFinKer` (`Category`, `MonoidalCategory`, ...). Since the constructors are explicit, these instances have to be provided, and they are synthesized once per universe level and gathered in a {name SFinKerInsts}`SFinKerInsts`, which also provides the constructors of the morphisms.
-
-{docstring SFinKerInsts}
-
-{docstring sfinkerInsts}
+{docstring objCarrier}

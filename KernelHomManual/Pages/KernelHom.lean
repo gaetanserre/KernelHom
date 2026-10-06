@@ -30,8 +30,8 @@ The tactic can be described in 4 steps:
 
 1. Then, the equality is lifted to a common universe level with the machinery of {name EqLift}`lift_eq`, together with a proof of equivalence. When the tactic is applied at several locations, all the equalities are lifted to the same universe level, so that the translated equalities live in the same category and can be used to rewrite each other.
 
-1. Next, it recursively traverses the lifted equality and creates a new expression where each kernel is replaced by its translation in the {name SFinKer}`SFinKer` category. The kernel operations are translated to the corresponding categorical operations (composition, tensor product, whiskers, identity, unitors, associators, braiding, copy and discard), and the other kernels `κ` to `κ.toHom`. Each translated subexpression comes with a proof that it is the translation of the original one, built by congruence from the translation lemmas. This is done using the {name transformKernelToHom}`transformKernelToHom` function.
+1. Next, it recursively traverses the lifted equality and creates a new expression where each kernel is replaced by its translation in the {name SFinKer}`SFinKer` category. The kernel operations are translated to the corresponding categorical operations (composition, tensor product, whiskers, identity, unitors, associators, braiding, copy and discard), and the other kernels `κ` to `κ.toHom`. Each translated subexpression comes with a proof that it is the translation of the original one, obtained from the proofs of its subterms by a congruence lemma such as {name ProbabilityTheory.Kernel.comp_toHom_of_eq}`comp_toHom_of_eq`. This is done using the {name kernelToHom}`kernelToHom` function.
 
-  {docstring transformKernelToHom}
+  {docstring kernelToHom}
 
-1. Finally, the proofs of the two sides give, with {name ProbabilityTheory.Kernel.toHom_congr}`toHom_congr`, a proof that the lifted equality is equivalent to the categorical one, which replaces the goal or the hypothesis.
+1. Finally, the proofs of the two sides give, with {name ProbabilityTheory.Kernel.toHom_congr_of_eq}`toHom_congr_of_eq`, a proof that the lifted equality is equivalent to the categorical one, which replaces the goal or the hypothesis.
