@@ -52,7 +52,7 @@ def kernelReassocHandler (h_eq : Expr) : MetaM (Expr × Array LMVarId) := do
             let (hom_proof_reassoc, _) ← reassocExprHom hom_proof
             let (eq_unfolded, _) ← unfoldKernelOp eq_type
             let maxLvl ← computeMaxLevel <| u :: (← collectEqUniverses eq_unfolded)
-            let (ξ_lift, _) ← liftKernel ξ maxLvl
+            let (ξ_lift, _) ← liftKernelExpr maxLvl ξ
             let (ξ_hom, _) ← transformKernelToHom ξ_lift
             let reassoc_body ← mkAppM' hom_proof_reassoc #[ξ_hom]
             let (_, kernel_reassoc_proof) ← KernelEquality <| ← inferType reassoc_body

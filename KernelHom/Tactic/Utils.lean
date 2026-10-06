@@ -8,26 +8,25 @@ module
 public import EqLift.Tactic.Kernel.Utils
 public import KernelHom.ForMathlib.Kernel
 public import KernelHom.Kernel.Hom
+public meta import Qq
 
 /-!
 # Kernel transformation utilities
 
-Explicit constructors for the objects and morphisms of `SFinKer` used by the `kernel_hom` and
-`hom_kernel` tactics. The applications are built directly (`mkAppN` with explicit universe levels
-and cached instances) instead of going through `mkAppM`.
+Utilities for the `kernel_hom` and `hom_kernel` tactics, built with `Qq`.
 
 ## Main declarations
 
 * `unfoldKernelOp`, `foldKernelOp`: unfold and fold back `Kernel.prod` and `Kernel.compProd`.
-* `SFinKerInsts`: the category-theoretic instances of `SFinKer.{u}`.
-* `computeSFinkerOf`, `idME`: the object of `SFinKer` associated with a measurable space, and the
-  identity measurable equivalence, recursively on products (memoized).
-* `mkCatComp`, `mkTensorHom`, ...: explicit constructors of morphisms.
+* `homCarrier`: the object of `SFinKer` associated with a measurable space.
+* `homCarrierOfEquiv`: the same, for the lifted source of a measurable equivalence `X ≃ᵐ X₀`.
+* `typeOfObj`: the carrier of an object of `SFinKer`.
+* `objLevel`: the universe level of an object of `SFinKer`.
 -/
 
 public meta section
 
-open Lean Meta ProbabilityTheory CategoryTheory
+open Lean Meta Qq ProbabilityTheory CategoryTheory MonoidalCategory
 
 /-- Unfold kernel operations in an expression. Returns the unfolded expression `e'` together with a
 proof of `e = e'`. `Kernel.prod` is delta-expanded, while `Kernel.compProd`, being an
@@ -76,173 +75,56 @@ def foldKernelOp (e : Expr) : MetaM (Expr × Expr) := do
     (``Kernel.parallelComp_comp_copy, false)]
   return (e, ← mkEqTrans p₁ p₂)
 
-/-- The `IsSFiniteKernel` instance of a kernel (cached). -/
-def sfiniteInst (X Y : Carrier) (κ : Expr) : MetaM Expr := do
-  synthInstanceCached <| mkAppN (mkConst ``IsSFiniteKernel [X.lvl, Y.lvl])
-    #[X.type, Y.type, ← X.inst, ← Y.inst, κ]
+/-- The object `SX` of `SFinKer.{u}` associated with a measurable space `X : Type u`, together with
+the `MeasurableSpace` instance of `X` and the measurable equivalence `SX ≃ᵐ X`. Products are
+decomposed into tensor products and `PUnit` into the monoidal unit, so that the monoidal tactics see
+the tensor structure (memoized). -/
+partial def homCarrier (u : Level) (X : Expr) : MetaM
+    ((X : Q(Type u)) × (_ : Q(MeasurableSpace $X)) × (SX : Q(SFinKer.{u})) × Q($SX ≃ᵐ $X)) := do
+  have X : Q(Type u) := X
+  let res ← memoized `homCarrier X do
+    match_expr X with
+    | Prod A B =>
+      let ⟨A, mA, SA, eA⟩ ← homCarrier u A
+      let ⟨B, mB, SB, eB⟩ ← homCarrier u B
+      return #[q(@Prod.instMeasurableSpace $A $B $mA $mB), q($SA ⊗ $SB),
+        q(MeasurableEquiv.prodCongr $eA $eB)]
+    | PUnit => return #[(q(PUnit.instMeasurableSpace) : Q(MeasurableSpace PUnit.{u + 1})),
+        q(𝟙_ SFinKer.{u}), q(MeasurableEquiv.punit.{u, u})]
+    | _ =>
+      let mX ← synthInstanceQCached q(MeasurableSpace $X)
+      return #[mX, q(SFinKer.of $X), q(MeasurableEquiv.refl $X)]
+  return ⟨X, res[0]!, res[1]!, res[2]!⟩
 
-/-- The category-theoretic instances of `SFinKer.{u}`. -/
-structure SFinKerInsts where
-  /-- The universe level. -/
-  u : Level
-  /-- `SFinKer.{u}`. -/
-  C : Expr
-  /-- `Category SFinKer`. -/
-  cat : Expr
-  /-- `CategoryStruct SFinKer`. -/
-  catStruct : Expr
-  /-- `MonoidalCategory SFinKer`. -/
-  monoidal : Expr
-  /-- `MonoidalCategoryStruct SFinKer`. -/
-  monStruct : Expr
+/-- For a measurable equivalence `e₀ : X ≃ᵐ X₀` from a lifted measurable space `X : Type u` to the
+original space `X₀ : Type v` (an equivalence of `Kernel.lift`, or a component of one): the data of
+`homCarrier` for `X`, then `X₀` with its universe level and its `MeasurableSpace` instance, and
+`e₀`. -/
+def homCarrierOfEquiv (u : Level) (e₀ : Expr) :
+    MetaM ((X : Q(Type u)) × (_ : Q(MeasurableSpace $X)) × (SX : Q(SFinKer.{u})) ×
+      (_ : Q($SX ≃ᵐ $X)) × (v : Level) × (X₀ : Q(Type v)) × (_ : Q(MeasurableSpace $X₀)) ×
+      Q($X ≃ᵐ $X₀)) := do
+  let_expr MeasurableEquiv X X₀ _ mX₀ := ← inferType e₀
+    | throwError "Expected a measurable equivalence, got: {e₀}."
+  let ⟨X, mX, SX, ex⟩ ← homCarrier u X
+  return ⟨X, mX, SX, ex, ← getDecLevel X₀, X₀, mX₀, e₀⟩
 
-/-- The category-theoretic instances of `SFinKer.{u}` (cached). -/
-def sfinkerInsts (u : Level) : MetaM SFinKerInsts := do
-  let C := mkConst ``SFinKer [u]
-  let lvls := [u, u.succ]
-  let cat ← synthInstanceCached (mkApp (mkConst ``Category lvls) C)
-  return {
-    u, C, cat
-    catStruct := ← synthInstanceCached (mkApp (mkConst ``CategoryStruct lvls) C)
-    monoidal := ← synthInstanceCached (mkApp2 (mkConst ``MonoidalCategory lvls) C cat)
-    monStruct := ← synthInstanceCached (mkApp2 (mkConst ``MonoidalCategoryStruct lvls) C cat) }
+/-- The carrier of an object of `SFinKer.{u}` built from `SFinKer.of`, `⊗` and `𝟙_`, decomposed
+into products and `PUnit` as in `homCarrier`. -/
+partial def typeOfObj (u : Level) (SX : Expr) : MetaM Q(Type u) := do
+  match_expr SX with
+  | SFinKer.of X _ => return X
+  | MonoidalCategoryStruct.tensorObj _ _ _ SA SB =>
+    let A ← typeOfObj u SA
+    let B ← typeOfObj u SB
+    return q($A × $B)
+  | MonoidalCategoryStruct.tensorUnit _ _ _ => return q(PUnit.{u + 1})
+  | _ => throwError "Expected an object built from `SFinKer.of`, `⊗` and `𝟙_`, got: {SX}."
 
-namespace SFinKerInsts
-
-/-- `SFinKer.of X`. -/
-def of (X : Carrier) : MetaM Expr := do
-  return mkApp2 (mkConst ``SFinKer.of [X.lvl]) X.type (← X.inst)
-
-/-- `A ⊗ B`. -/
-def tensorObj (I : SFinKerInsts) (A B : Expr) : Expr :=
-  mkAppN (mkConst ``MonoidalCategoryStruct.tensorObj [I.u, I.u.succ])
-    #[I.C, I.cat, I.monStruct, A, B]
-
-/-- `𝟙_ SFinKer`. -/
-def tensorUnit (I : SFinKerInsts) : Expr :=
-  mkAppN (mkConst ``MonoidalCategoryStruct.tensorUnit [I.u, I.u.succ]) #[I.C, I.cat, I.monStruct]
-
-/-- `f ≫ g` with `f : X ⟶ Y` and `g : Y ⟶ Z`. -/
-def comp (I : SFinKerInsts) (X Y Z f g : Expr) : Expr :=
-  mkAppN (mkConst ``CategoryStruct.comp [I.u, I.u.succ]) #[I.C, I.catStruct, X, Y, Z, f, g]
-
-/-- `𝟙 X`. -/
-def id (I : SFinKerInsts) (X : Expr) : Expr :=
-  mkAppN (mkConst ``CategoryStruct.id [I.u, I.u.succ]) #[I.C, I.catStruct, X]
-
-/-- `f ⊗ₘ g` with `f : X₁ ⟶ Y₁` and `g : X₂ ⟶ Y₂`. -/
-def tensorHom (I : SFinKerInsts) (X₁ Y₁ X₂ Y₂ f g : Expr) : Expr :=
-  mkAppN (mkConst ``MonoidalCategoryStruct.tensorHom [I.u, I.u.succ])
-    #[I.C, I.cat, I.monStruct, X₁, Y₁, X₂, Y₂, f, g]
-
-/-- `X ◁ f` with `f : Y₁ ⟶ Y₂`. -/
-def whiskerLeft (I : SFinKerInsts) (X Y₁ Y₂ f : Expr) : Expr :=
-  mkAppN (mkConst ``MonoidalCategoryStruct.whiskerLeft [I.u, I.u.succ])
-    #[I.C, I.cat, I.monStruct, X, Y₁, Y₂, f]
-
-/-- `f ▷ Y` with `f : X₁ ⟶ X₂`. -/
-def whiskerRight (I : SFinKerInsts) (X₁ X₂ f Y : Expr) : Expr :=
-  mkAppN (mkConst ``MonoidalCategoryStruct.whiskerRight [I.u, I.u.succ])
-    #[I.C, I.cat, I.monStruct, X₁, X₂, f, Y]
-
-/-- The `ComonObj X` instance (cached). -/
-def comonInst (I : SFinKerInsts) (X : Expr) : MetaM Expr :=
-  synthInstanceCached (mkAppN (mkConst ``ComonObj [I.u, I.u.succ]) #[I.C, I.cat, I.monoidal, X])
-
-/-- `ε[X]`. -/
-def counit (I : SFinKerInsts) (X : Expr) : MetaM Expr := do
-  return mkAppN (mkConst ``ComonObj.counit [I.u, I.u.succ])
-    #[I.C, I.cat, I.monoidal, X, ← I.comonInst X]
-
-/-- `Δ[X]`. -/
-def comul (I : SFinKerInsts) (X : Expr) : MetaM Expr := do
-  return mkAppN (mkConst ``ComonObj.comul [I.u, I.u.succ])
-    #[I.C, I.cat, I.monoidal, X, ← I.comonInst X]
-
-/-- `(β_ X Y).hom`. -/
-def braidingHom (I : SFinKerInsts) (X Y : Expr) : MetaM Expr := do
-  let braided ← synthInstanceCached
-    (mkAppN (mkConst ``BraidedCategory [I.u, I.u.succ]) #[I.C, I.cat, I.monoidal])
-  let iso := mkAppN (mkConst ``BraidedCategory.braiding [I.u, I.u.succ])
-    #[I.C, I.cat, I.monoidal, braided, X, Y]
-  return mkAppN (mkConst ``Iso.hom [I.u, I.u.succ])
-    #[I.C, I.cat, I.tensorObj X Y, I.tensorObj Y X, iso]
-
-end SFinKerInsts
-
-/-- Compute the `SFinKer` object corresponding to a measurable space `X : Type xLvl`, decomposing
-products into tensor products and `PUnit` into the monoidal unit (memoized). -/
-partial def computeSFinkerOf (X : Expr) (xLvl : Level) : MetaM Expr := do
-  let res ← memoized `computeSFinkerOf X do
-    match X.getAppFn with
-    | Expr.const ``PUnit _ | Expr.const ``Unit _ => return #[(← sfinkerInsts xLvl).tensorUnit]
-    | Expr.const ``Prod [xLvl, yLvl] =>
-      let args := X.getAppArgs
-      let I ← sfinkerInsts xLvl
-      return #[I.tensorObj (← computeSFinkerOf args[0]! xLvl) (← computeSFinkerOf args[1]! yLvl)]
-    | _ => return #[← SFinKerInsts.of ⟨X, xLvl⟩]
-  return res[0]!
-
-/-- The measurable equivalence `X ≃ᵐ X`, built recursively on products so that it matches the
-decomposition of `computeSFinkerOf` (memoized). -/
-partial def idME (X : Expr) (xLvl : Level) : MetaM Expr := do
-  let res ← memoized `idME X do
-    match X.getAppFn with
-    | Expr.const ``Prod [xLvl, yLvl] =>
-      let args := X.getAppArgs
-      let X₁ := args[0]!
-      let X₂ := args[1]!
-      return #[mkAppN (mkConst ``MeasurableEquiv.prodCongr [xLvl, xLvl, yLvl, yLvl])
-        #[X₁, X₁, X₂, X₂, ← Carrier.inst ⟨X₁, xLvl⟩, ← Carrier.inst ⟨X₁, xLvl⟩,
-          ← Carrier.inst ⟨X₂, yLvl⟩, ← Carrier.inst ⟨X₂, yLvl⟩,
-          ← idME X₁ xLvl, ← idME X₂ yLvl]]
-    | Expr.const ``PUnit [l] | Expr.const ``Unit [l] =>
-      let l ← match l with
-        | Level.succ l => pure l
-        | _ => throwError "Expected a successor level for PUnit/Unit, got: {l}."
-      return #[mkConst ``MeasurableEquiv.punit [l, l]]
-    | _ => return #[mkApp2 (mkConst ``MeasurableEquiv.refl [xLvl]) X (← Carrier.inst ⟨X, xLvl⟩)]
-  return res[0]!
-
-/-- A carrier `X` together with its `MeasurableSpace` instance, its object `obj` in `SFinKer` and
-the measurable equivalence `equiv : obj ≃ᵐ X`. -/
-structure HomCarrier extends Carrier where
-  /-- The `MeasurableSpace` instance. -/
-  inst : Expr
-  /-- The object of `SFinKer`. -/
-  obj : Expr
-  /-- The measurable equivalence `obj ≃ᵐ X`. -/
-  equiv : Expr
-
-/-- Build the `HomCarrier` of a carrier. -/
-def HomCarrier.mk' (X : Carrier) : MetaM HomCarrier := do
-  let inst ← X.inst
-  let obj ← computeSFinkerOf X.type X.lvl
-  let equiv ← idME X.type X.lvl
-  return { X with inst, obj, equiv }
-
-instance : Coe HomCarrier Carrier := ⟨HomCarrier.toCarrier⟩
-
-/-- The `IsSFiniteKernel` instance of `κ : Kernel X Y` (cached). -/
-def HomCarrier.sfinite (X Y : HomCarrier) (κ : Expr) : MetaM Expr :=
-  sfiniteInst X Y κ
-
-/-- The carriers and their `MeasurableSpace` instances: `X Y ... [mX] [mY] ...`. -/
-def typeInstArgs (cs : Array HomCarrier) : Array Expr :=
-  cs.map (·.type) ++ cs.map (·.inst)
-
-/-- The objects of `SFinKer` and the measurable equivalences: `SX SY ... ex ey ...`. -/
-def objEquivArgs (cs : Array HomCarrier) : Array Expr :=
-  cs.map (·.obj) ++ cs.map (·.equiv)
-
-/-- The arguments shared by the translation lemmas for carriers `X Y ...`:
-`X Y ... [mX] [mY] ... SX SY ... ex ey ...`. -/
-def homLemmaArgs (cs : Array HomCarrier) : Array Expr :=
-  typeInstArgs cs ++ objEquivArgs cs
-
-/-- `κ.toHom (ex := ex) (ey := ey) : SX ⟶ SY`. -/
-def mkHom (X Y : HomCarrier) (κ : Expr) : MetaM Expr := do
-  return mkAppN (mkConst ``Kernel.toHom [X.lvl, Y.lvl, X.lvl])
-    (homLemmaArgs #[X, Y] ++ #[κ, ← X.sfinite Y κ])
+/-- The universe level `u` of an object of `SFinKer.{u}`. -/
+def objLevel (SX : Expr) : MetaM Level := do
+  match (← inferType SX).getAppFn with
+    | .const ``SFinKer [u] => return u
+    | _ => throwError "Expected an object of SFinKer, got: {SX}."
 
 end

@@ -7,7 +7,6 @@ Authors: Gaëtan Serré
 import VersoManual
 import KernelHomManual.Papers
 import KernelHomManual.Pages.Examples
-import KernelHomManual.Pages.Basu
 import KernelHomManual.Pages.Universe
 import KernelHomManual.Pages.KernelHom
 import KernelHomManual.Pages.HomKernel
@@ -37,7 +36,7 @@ shortTitle := "Kernel Categorical Reasoning"
 *Kernel-Hom* is a Lean 4 library that provides tactics to simplify kernel equalities by leveraging categorical reasoning. It automatically translates s-finite kernel equalities into equalities in a monoidal category, where tactics like {name Monoidal.monoidal}`monoidal` or {name Coherence.coherence}`coherence` can be applied, and then translates the result back to a kernel equality if needed. The translation from kernels to categorical expressions gives access to the tools of category theory for kernels, which has three main benefits:
 - *Proving API lemmas easily.* Equalities of kernels built from compositions, parallel compositions, products, copies, discards and swaps are proved by a single call to {name kernelDisch}`kernel_disch`, without any knowledge of the lemmas about kernels (see the {ref "examples"}[examples]).
 - *Visualizing kernels.* The {name kernelDiagram}`kernel_diagram` command and the string diagram widget draw complex kernel expressions as string diagrams, which makes their structure easier to understand.
-- *Reasoning by calculation.* A proof can be written as a `calc` whose lines are the mathematically meaningful rewrites, while the structural steps between them are proved automatically by the categorical tactics. Each step can moreover be visualized. In Mathlib, proofs by calculation whose steps are equalities of kernels are rare, and in calculations on measures built from kernels, each structural step is a chain of rewritings with lemmas about kernels and measures (see the {ref "calculational-proofs"}[calculational proof of Basu's theorem]).
+- *Reasoning by calculation.* A proof can be written as a `calc` whose lines are the mathematically meaningful rewrites, while the structural steps between them are proved automatically by the categorical tactics. Each step can moreover be visualized. In Mathlib, proofs by calculation whose steps are equalities of kernels are rare, and in calculations on measures built from kernels, each structural step is a chain of rewritings with lemmas about kernels and measures.
 
 ![](static/diagram.svg)
 
@@ -80,8 +79,6 @@ The translation builds its terms and proofs directly rather than through `mkAppM
 This library is under active development and is under the [Apache 2.0 license](https://www.apache.org/licenses/LICENSE-2.0). Contributions and feedback are welcome!
 
 {include 0 KernelHomManual.Pages.Examples}
-
-{include 0 KernelHomManual.Pages.Basu}
 
 {include 0 KernelHomManual.Pages.Universe}
 
