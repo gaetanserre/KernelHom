@@ -19,7 +19,7 @@ rev = "main"
 [[require]]
 name = "eqlift"
 git = "https://github.com/gaetanserre/EqLift"
-rev = "main"
+rev = "itp2027"
 
 [[require]]
 name = "mathlib"
