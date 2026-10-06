@@ -18,9 +18,8 @@ Utilities for the `kernel_hom` and `hom_kernel` tactics, built with `Qq`.
 ## Main declarations
 
 * `unfoldKernelOp`, `foldKernelOp`: unfold and fold back `Kernel.prod` and `Kernel.compProd`.
-* `kernelLevel`: the universe level of a lifted kernel.
 * `homCarrier`: the object of `SFinKer` associated with a measurable space.
-* `liftCarrier`: the same, for the lifted source of a measurable equivalence `X ≃ᵐ X₀`.
+* `homCarrierOfEquiv`: the same, for the lifted source of a measurable equivalence `X ≃ᵐ X₀`.
 * `typeOfObj`: the carrier of an object of `SFinKer`.
 * `objLevel`: the universe level of an object of `SFinKer`.
 -/
@@ -76,25 +75,6 @@ def foldKernelOp (e : Expr) : MetaM (Expr × Expr) := do
     (``Kernel.parallelComp_comp_copy, false)]
   return (e, ← mkEqTrans p₁ p₂)
 
-/-- `synthInstanceQ` with the memoization of `synthInstanceCached`. -/
-def synthInstanceQCached {u : Level} (α : Q(Sort u)) : MetaM Q($α) :=
-  synthInstanceCached α
-
-/-- Simplify the maxima `max l l` of a level, which appear in the universe levels of the products
-of types living in the same universe `Type l`. -/
-def dedupMaxLevel : Level → Level
-  | .max a b =>
-    let a := dedupMaxLevel a
-    let b := dedupMaxLevel b
-    if a == b then a else mkLevelMax a b
-  | l => l
-
-/-- The universe level `u` of the carriers of a lifted kernel `κ : Kernel X Y`: all the carriers of
-a lifted equality live in `Type u`, and the translation takes place in `SFinKer.{u}`. -/
-def kernelLevel (κ : Expr) : MetaM Level := do
-  let (_, _, xLvl, _) ← getTypesFromKernel κ
-  return dedupMaxLevel xLvl
-
 /-- The object `SX` of `SFinKer.{u}` associated with a measurable space `X : Type u`, together with
 the `MeasurableSpace` instance of `X` and the measurable equivalence `SX ≃ᵐ X`. Products are
 decomposed into tensor products and `PUnit` into the monoidal unit, so that the monoidal tactics see
@@ -120,7 +100,7 @@ partial def homCarrier (u : Level) (X : Expr) : MetaM
 original space `X₀ : Type v` (an equivalence of `Kernel.lift`, or a component of one): the data of
 `homCarrier` for `X`, then `X₀` with its universe level and its `MeasurableSpace` instance, and
 `e₀`. -/
-def liftCarrier (u : Level) (e₀ : Expr) :
+def homCarrierOfEquiv (u : Level) (e₀ : Expr) :
     MetaM ((X : Q(Type u)) × (_ : Q(MeasurableSpace $X)) × (SX : Q(SFinKer.{u})) ×
       (_ : Q($SX ≃ᵐ $X)) × (v : Level) × (X₀ : Q(Type v)) × (_ : Q(MeasurableSpace $X₀)) ×
       Q($X ≃ᵐ $X₀)) := do

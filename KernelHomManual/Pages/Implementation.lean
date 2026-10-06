@@ -23,7 +23,7 @@ htmlSplit := .never
 tag := "implementation"
 %%%
 
-The translation performed by {name kernelHom}`kernel_hom` traverses the kernel expression twice (once to lift it to a common universe level, once to translate it into {name SFinKer}`SFinKer`) and builds, at each node, an instance of a translation lemma such as {name ProbabilityTheory.Kernel.comp_toHom_of_eq}`comp_toHom_of_eq` or {name ProbabilityTheory.Kernel.comp_lift}`comp_lift`. Three design choices keep this cheap and safe.
+The translation performed by {name kernelHom}`kernel_hom` traverses the kernel expression twice (once to lift it to a common universe level, once to translate it into {name SFinKer}`SFinKer`) and builds, at each node, an instance of a translation lemma such as {name ProbabilityTheory.Kernel.comp_toHom_of_eq}`comp_toHom_of_eq` or {name ProbabilityTheory.Kernel.comp_lift_of_eq}`comp_lift_of_eq`. Three design choices keep this cheap and safe.
 
 # Proofs by congruence lemmas
 
@@ -31,7 +31,7 @@ The proof of equivalence between the original equality and the translated one is
 
 {docstring ProbabilityTheory.Kernel.comp_toHom_of_eq}
 
-The same lemmas serve both directions: {name kernelToHom}`kernelToHom` and {name homToKernel}`homToKernel` both return a proof of `f = κ.toHom`, where `f` is the morphism and `κ` the kernel. The equality of propositions is then obtained from {name ProbabilityTheory.Kernel.toHom_congr_of_eq}`toHom_congr_of_eq` (or {name ProbabilityTheory.Kernel.lift_congr}`lift_congr` for the lifting).
+The same lemmas serve both directions: {name kernelToHom}`kernelToHom` and {name homToKernel}`homToKernel` both return a proof of `f = κ.toHom`, where `f` is the morphism and `κ` the kernel. The equality of propositions is then obtained from {name ProbabilityTheory.Kernel.toHom_congr_of_eq}`toHom_congr_of_eq` (or {name ProbabilityTheory.Kernel.lift_congr_of_eq}`lift_congr_of_eq` for the lifting, which follows the same structure in *Eq-Lift*).
 
 {docstring ProbabilityTheory.Kernel.toHom_congr_of_eq}
 
@@ -57,17 +57,11 @@ The instances (`MeasurableSpace X`, `IsSFiniteKernel κ`, ...) and the recursive
 
 # Carriers
 
-A measurable space is represented during the lifting by its carrier type and universe level, from which the `MeasurableSpace` instance is obtained through the cache.
+During the lifting, each measurable space comes with its lift to the common universe level and the measurable equivalence between them, computed once per carrier by {name liftCarrier}`liftCarrier`, and recovered from the lifted space by {name unliftCarrier}`unliftCarrier`. Both live in *Eq-Lift*:
 
-{docstring Carrier}
+{docstring liftCarrier}
 
-{docstring Carrier.inst}
-
-{docstring Carrier.lift}
-
-{docstring getCarriersFromKernel}
-
-{docstring constructMeasurableEquiv}
+{docstring unliftCarrier}
 
 After the lifting, all the carriers live in the same universe, in which the translation takes place.
 
@@ -77,7 +71,7 @@ The translation to {name SFinKer}`SFinKer` needs more data about each carrier `X
 
 {docstring homCarrier}
 
-{docstring liftCarrier}
+{docstring homCarrierOfEquiv}
 
 In the other direction, the carrier of an object is computed by {name typeOfObj}`typeOfObj`, and its data by {name homCarrier}`homCarrier` again.
 

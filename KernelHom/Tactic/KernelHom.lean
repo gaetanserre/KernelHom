@@ -69,7 +69,7 @@ measurable equivalence of the lifting of its target. -/
 def unitorToHom (u : Level) (X₀ e₀ : Expr) (left : Bool) : MetaM (Expr × Expr) := do
   let .const _ [l₁, l₂] := X₀.getAppFn | throwError "Expected a product, got: {X₀}."
   let w := if left then l₁ else l₂
-  let ⟨_, _, SX, ex, v, _, _, ex₀⟩ ← liftCarrier u e₀
+  let ⟨_, _, SX, ex, v, _, _, ex₀⟩ ← homCarrierOfEquiv u e₀
   if left then return (q((λ_ $SX).hom), q(Kernel.leftUnitor_hom.{u, u, v, w} $SX $ex $ex₀))
   else return (q((ρ_ $SX).hom), q(Kernel.rightUnitor_hom.{u, u, v, w} $SX $ex $ex₀))
 
@@ -79,9 +79,9 @@ of its target (of its source for the inverse). -/
 def associatorToHom (u : Level) (e₀ : Expr) (inv : Bool) : MetaM (Expr × Expr) := do
   let some (ea₀, eb₀, ec₀) := prodCongr₃? e₀
     | throwError "Expected a product of three measurable equivalences, got: {e₀}."
-  let ⟨_, _, SA, ea, _, _, _, ea₀⟩ ← liftCarrier u ea₀
-  let ⟨_, _, SB, eb, _, _, _, eb₀⟩ ← liftCarrier u eb₀
-  let ⟨_, _, SC, ec, _, _, _, ec₀⟩ ← liftCarrier u ec₀
+  let ⟨_, _, SA, ea, _, _, _, ea₀⟩ ← homCarrierOfEquiv u ea₀
+  let ⟨_, _, SB, eb, _, _, _, eb₀⟩ ← homCarrierOfEquiv u eb₀
+  let ⟨_, _, SC, ec, _, _, _, ec₀⟩ ← homCarrierOfEquiv u ec₀
   if inv then
     return (q((α_ $SA $SB $SC).inv),
       q(Kernel.associator_inv $SA $SB $SC $ea $eb $ec $ea₀ $eb₀ $ec₀))

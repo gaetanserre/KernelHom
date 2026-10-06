@@ -41,13 +41,11 @@ def objCarrier (u : Level) (SX : Expr) : MetaM
   return ⟨SX, X, mX, ex⟩
 
 /-- The measurable equivalence `X ≃ᵐ X₀` from a lifted measurable space `X : Type u` to the original
-space `X₀` (see `getOriginalType` and `constructMeasurableEquiv`). -/
+space `X₀` (see `unliftCarrier`). -/
 def originalEquiv (u : Level) (X : Q(Type u)) {mX : Q(MeasurableSpace $X)} :
     MetaM ((v : Level) × (X₀ : Q(Type v)) × (_ : Q(MeasurableSpace $X₀)) × Q($X ≃ᵐ $X₀)) := do
-  let (X₀, v) ← getOriginalType X
-  let (e₀, _) ← constructMeasurableEquiv X₀ v u
-  have X₀ : Q(Type v) := X₀
-  return ⟨v, X₀, ← synthInstanceQCached q(MeasurableSpace $X₀), e₀⟩
+  let ⟨_, _, v, X₀, mX₀, e₀⟩ ← unliftCarrier u X
+  return ⟨v, X₀, mX₀, (e₀ : Expr)⟩
 
 /-- Given a proof of `f = κ.toHom`, return `κ` with the proof. -/
 def withKernelOfProof (pf : Expr) : MetaM (Expr × Expr) := do
