@@ -1018,59 +1018,6 @@ default ToC width these are the old 1400px and 1500px viewport breakpoints):
   opacity: 0.5;
 }
 </style><style>
-:root {
-  --vscode-editor-foreground: var(--verso-text-color, #111);
-  --vscode-editor-background: #fff;
-  --vscode-editorHoverWidget-background: #fff;
-  --vscode-editorHoverWidget-foreground: var(--verso-text-color, #111);
-  --vscode-editorHoverWidget-border: #98B2C0;
-}
-
-.verso-string-diagram {
-  margin: 1rem 0;
-  color: var(--verso-text-color, #111);
-}
-
-.verso-string-diagram-root {
-  overflow-x: auto;
-}
-
-.verso-string-diagram .sd-loading {
-  color: var(--verso-fg-secondary, #666);
-  font-style: italic;
-}
-
-.verso-string-diagram .sd-inline-code {
-  font-family: var(--verso-font-mono, monospace);
-  font-size: 0.85rem;
-  line-height: 1.3;
-  white-space: pre-wrap;
-  color: var(--verso-code-color, #111);
-  background: transparent;
-}
-
-.verso-string-diagram .relative { position: relative; }
-.verso-string-diagram .absolute { position: absolute; }
-.verso-string-diagram .dib { display: inline-block; }
-.verso-string-diagram .flex { display: flex; gap: 1rem; flex-wrap: nowrap; align-items:flex-start; }
-.verso-string-diagram .w-50 { flex: 1 1 0; min-width: 0; }
-
-@media (max-width: 900px) {
-  .verso-string-diagram .flex { flex-wrap: wrap; }
-  .verso-string-diagram .w-50 { flex-basis: 24rem; }
-}
-.verso-string-diagram .top-0 { top: 0; }
-.verso-string-diagram .right-0 { right: 0; }
-.verso-string-diagram .pv1 { padding-top: 0.25rem; padding-bottom: 0.25rem; }
-.verso-string-diagram .ph2 { padding-left: 0.5rem; padding-right: 0.5rem; }
-.verso-string-diagram .mv2 { margin-top: 0.5rem; margin-bottom: 0.5rem; }
-.verso-string-diagram .pointer { cursor: pointer; }
-.verso-string-diagram .link { text-decoration: none; }
-.verso-string-diagram .dim { opacity: 0.85; }
-.verso-string-diagram .dim:hover { opacity: 1; }
-.verso-string-diagram .o-30 { opacity: 0.3; }
-.verso-string-diagram .red { color: #b00020; }
-</style><style>
 
 .hl.lean {
   white-space: pre;
@@ -1358,11 +1305,11 @@ severity accent to distinguish them.
 }
 
 .warning .verso-message, .warning .verso-message .token, .warning .verso-message label {
-  color: var(--verso-message-warning-color, black);
+  color: var(--verso-message-warning-color, currentcolor);
 }
 
 .warning .verso-message .case-label:has(input[type="checkbox"])::before {
-  background-color: var(--verso-message-warning-color, black) !important;
+  background-color: var(--verso-message-warning-color, currentcolor) !important;
 }
 
 
@@ -1386,11 +1333,11 @@ severity accent to distinguish them.
 }
 
 .information .verso-message, .information .verso-message .token, .information .verso-message label {
-  color: var(--verso-message-info-color, black);
+  color: var(--verso-message-info-color, currentcolor);
 }
 
 .information .verso-message .case-label:has(input[type="checkbox"])::before {
-  background-color: var(--verso-message-info-color, black) !important;
+  background-color: var(--verso-message-info-color, currentcolor) !important;
 }
 
 .hl.lean div.docstring {
@@ -1815,6 +1762,59 @@ and its border extension paints the outline triangle with the box's border color
   white-space: pre-wrap;
 }
 
+</style><style>
+:root {
+  --vscode-editor-foreground: var(--verso-text-color, #111);
+  --vscode-editor-background: #fff;
+  --vscode-editorHoverWidget-background: #fff;
+  --vscode-editorHoverWidget-foreground: var(--verso-text-color, #111);
+  --vscode-editorHoverWidget-border: #98B2C0;
+}
+
+.verso-string-diagram {
+  margin: 1rem 0;
+  color: var(--verso-text-color, #111);
+}
+
+.verso-string-diagram-root {
+  overflow-x: auto;
+}
+
+.verso-string-diagram .sd-loading {
+  color: var(--verso-fg-secondary, #666);
+  font-style: italic;
+}
+
+.verso-string-diagram .sd-inline-code {
+  font-family: var(--verso-font-mono, monospace);
+  font-size: 0.85rem;
+  line-height: 1.3;
+  white-space: pre-wrap;
+  color: var(--verso-code-color, #111);
+  background: transparent;
+}
+
+.verso-string-diagram .relative { position: relative; }
+.verso-string-diagram .absolute { position: absolute; }
+.verso-string-diagram .dib { display: inline-block; }
+.verso-string-diagram .flex { display: flex; gap: 1rem; flex-wrap: nowrap; align-items:flex-start; }
+.verso-string-diagram .w-50 { flex: 1 1 0; min-width: 0; }
+
+@media (max-width: 900px) {
+  .verso-string-diagram .flex { flex-wrap: wrap; }
+  .verso-string-diagram .w-50 { flex-basis: 24rem; }
+}
+.verso-string-diagram .top-0 { top: 0; }
+.verso-string-diagram .right-0 { right: 0; }
+.verso-string-diagram .pv1 { padding-top: 0.25rem; padding-bottom: 0.25rem; }
+.verso-string-diagram .ph2 { padding-left: 0.5rem; padding-right: 0.5rem; }
+.verso-string-diagram .mv2 { margin-top: 0.5rem; margin-bottom: 0.5rem; }
+.verso-string-diagram .pointer { cursor: pointer; }
+.verso-string-diagram .link { text-decoration: none; }
+.verso-string-diagram .dim { opacity: 0.85; }
+.verso-string-diagram .dim:hover { opacity: 1; }
+.verso-string-diagram .o-30 { opacity: 0.3; }
+.verso-string-diagram .red { color: #b00020; }
 </style><script>
       
 window.onload = async () => {
@@ -2175,7 +2175,7 @@ window.onload = async () => {
             <div class="split-toc book">
               <div class="title">
                 <label for="--verso-manual-toc-----bookRoot" class="toggle-split-toc"><input type="checkbox" class="toggle-split-toc" id="--verso-manual-toc-----bookRoot" checked="checked"></label><span class="">Table of Contents</span></div>
-              <table><tr class="numbered"><td class="num">1.</td><td><a href="Usage-and-examples/#examples">Usage and examples</a></td></tr><tr class="numbered"><td class="num">2.</td><td><a href="Calculational-proofs/#calculational-proofs">Calculational proofs</a></td></tr><tr class="numbered"><td class="num">3.</td><td><a href="Universe-handling/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Universe-handling">Universe handling</a></td></tr><tr class="numbered"><td class="num">4.</td><td><a href="kernel_hom-tactic/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--kernel_hom-tactic">kernel_hom tactic</a></td></tr><tr class="numbered"><td class="num">5.</td><td><a href="hom_kernel-tactic/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--hom_kernel-tactic">hom_kernel tactic</a></td></tr><tr class="numbered"><td class="num">6.</td><td><a href="Categorical-tactics-for-kernels/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Categorical-tactics-for-kernels">Categorical tactics for kernels</a></td></tr><tr class="numbered"><td class="num">7.</td><td><a href="Kernel-reassociation/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Kernel-reassociation">Kernel reassociation</a></td></tr><tr class="numbered"><td class="num">8.</td><td><a href="Kernelized-monoidal-composition/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Kernelized-monoidal-composition">Monoidal composition</a></td></tr><tr class="numbered"><td class="num">9.</td><td><a href="Implementation-of-the-translation/#implementation">Implementation of the translation</a></td></tr></table></div>
+              <table><tr class="numbered"><td class="num">1.</td><td><a href="Usage-and-examples/#examples">Usage and examples</a></td></tr><tr class="numbered"><td class="num">2.</td><td><a href="Universe-handling/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Universe-handling">Universe handling</a></td></tr><tr class="numbered"><td class="num">3.</td><td><a href="kernel_hom-tactic/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--kernel_hom-tactic">kernel_hom tactic</a></td></tr><tr class="numbered"><td class="num">4.</td><td><a href="hom_kernel-tactic/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--hom_kernel-tactic">hom_kernel tactic</a></td></tr><tr class="numbered"><td class="num">5.</td><td><a href="Categorical-tactics-for-kernels/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Categorical-tactics-for-kernels">Categorical tactics for kernels</a></td></tr><tr class="numbered"><td class="num">6.</td><td><a href="Kernel-reassociation/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Kernel-reassociation">Kernel reassociation</a></td></tr><tr class="numbered"><td class="num">7.</td><td><a href="Kernelized-monoidal-composition/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Kernelized-monoidal-composition">Monoidal composition</a></td></tr><tr class="numbered"><td class="num">8.</td><td><a href="Implementation-of-the-translation/#implementation">Implementation of the translation</a></td></tr></table></div>
             </div>
           </div>
         <div class="last">
@@ -2213,7 +2213,7 @@ window.onload = async () => {
                   </li>
                 <li>
                   <p>
-                    <strong>Reasoning by calculation.</strong> A proof can be written as a <code>calc</code> whose lines are the mathematically meaningful rewrites, while the structural steps between them are proved automatically by the categorical tactics. Each step can moreover be visualized. In Mathlib, proofs by calculation whose steps are equalities of kernels are rare, and in calculations on measures built from kernels, each structural step is a chain of rewritings with lemmas about kernels and measures (see the <a href="Calculational-proofs/#calculational-proofs">calculational proof of Basu's theorem</a>).</p>
+                    <strong>Reasoning by calculation.</strong> A proof can be written as a <code>calc</code> whose lines are the mathematically meaningful rewrites, while the structural steps between them are proved automatically by the categorical tactics. Each step can moreover be visualized. In Mathlib, proofs by calculation whose steps are equalities of kernels are rare, and in calculations on measures built from kernels, each structural step is a chain of rewritings with lemmas about kernels and measures.</p>
                   </li>
                 </ul>
               <p>
@@ -2244,7 +2244,7 @@ window.onload = async () => {
               <p>
                 <strong>Universe handling</strong></p>
               <p>
-                A key aspect of the library is automatic universe management: expressions are lifted to a common universe level during translation, ensuring categorical expressions are well-typed. This allows users to work with kernels of varying universe levels without needing to manually manage universe annotations. When several hypotheses and the goal are translated together (<code>kernel_hom at h ⊢</code>), they are all lifted to the same universe level, so that the translated equalities can be used to rewrite each other. This part is handled by the <code class="hl lean inline" data-lean-context="examples"><a href="Universe-handling/#EqLift" title="Documentation for EqLift"><span class="const token" data-binding="const-EqLift" data-verso-hover="12">lift_eq</span></a></code> tactic, which can also be used independently (see <a href="https://github.com/gaetanserre/EqLift">the GitHub repository</a>).</p>
+                A key aspect of the library is automatic universe management: expressions are lifted to a common universe level during translation, ensuring categorical expressions are well-typed. This allows users to work with kernels of varying universe levels without needing to manually manage universe annotations. When several hypotheses and the goal are translated together (<code>kernel_hom at h ⊢</code>), they are all lifted to the same universe level, so that the translated equalities can be used to rewrite each other. This part is handled by the <code class="hl lean inline" data-lean-context="examples"><a href="Universe-handling/#EqLift" title="Documentation for EqLift"><span class="const token" data-binding="const-EqLift" data-verso-hover="12">lift_eq</span></a></code> tactic, which can also be used independently (see <a href="https://github.com/gaetanserre/EqLift">EqLift</a>).</p>
               <p>
                 <strong>Kernel diagrams</strong></p>
               <p>
@@ -2273,21 +2273,19 @@ window.onload = async () => {
                 <li>
                   <a href="Usage-and-examples/#examples"><span class="number">1.</span> Usage and examples</a></li>
                 <li>
-                  <a href="Calculational-proofs/#calculational-proofs"><span class="number">2.</span> Calculational proofs</a></li>
+                  <a href="Universe-handling/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Universe-handling"><span class="number">2.</span> Universe handling</a></li>
                 <li>
-                  <a href="Universe-handling/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Universe-handling"><span class="number">3.</span> Universe handling</a></li>
+                  <a href="kernel_hom-tactic/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--kernel_hom-tactic"><span class="number">3.</span> kernel_hom tactic</a></li>
                 <li>
-                  <a href="kernel_hom-tactic/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--kernel_hom-tactic"><span class="number">4.</span> kernel_hom tactic</a></li>
+                  <a href="hom_kernel-tactic/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--hom_kernel-tactic"><span class="number">4.</span> hom_kernel tactic</a></li>
                 <li>
-                  <a href="hom_kernel-tactic/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--hom_kernel-tactic"><span class="number">5.</span> hom_kernel tactic</a></li>
+                  <a href="Categorical-tactics-for-kernels/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Categorical-tactics-for-kernels"><span class="number">5.</span> Categorical tactics for kernels</a></li>
                 <li>
-                  <a href="Categorical-tactics-for-kernels/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Categorical-tactics-for-kernels"><span class="number">6.</span> Categorical tactics for kernels</a></li>
+                  <a href="Kernel-reassociation/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Kernel-reassociation"><span class="number">6.</span> Kernel reassociation</a></li>
                 <li>
-                  <a href="Kernel-reassociation/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Kernel-reassociation"><span class="number">7.</span> Kernel reassociation</a></li>
+                  <a href="Kernelized-monoidal-composition/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Kernelized-monoidal-composition"><span class="number">7.</span> Kernelized monoidal composition</a></li>
                 <li>
-                  <a href="Kernelized-monoidal-composition/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Kernelized-monoidal-composition"><span class="number">8.</span> Kernelized monoidal composition</a></li>
-                <li>
-                  <a href="Implementation-of-the-translation/#implementation"><span class="number">9.</span> Implementation of the translation</a></li>
+                  <a href="Implementation-of-the-translation/#implementation"><span class="number">8.</span> Implementation of the translation</a></li>
                 </ol>
               </section>
             </section>

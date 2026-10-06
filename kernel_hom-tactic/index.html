@@ -1018,59 +1018,6 @@ default ToC width these are the old 1400px and 1500px viewport breakpoints):
   opacity: 0.5;
 }
 </style><style>
-:root {
-  --vscode-editor-foreground: var(--verso-text-color, #111);
-  --vscode-editor-background: #fff;
-  --vscode-editorHoverWidget-background: #fff;
-  --vscode-editorHoverWidget-foreground: var(--verso-text-color, #111);
-  --vscode-editorHoverWidget-border: #98B2C0;
-}
-
-.verso-string-diagram {
-  margin: 1rem 0;
-  color: var(--verso-text-color, #111);
-}
-
-.verso-string-diagram-root {
-  overflow-x: auto;
-}
-
-.verso-string-diagram .sd-loading {
-  color: var(--verso-fg-secondary, #666);
-  font-style: italic;
-}
-
-.verso-string-diagram .sd-inline-code {
-  font-family: var(--verso-font-mono, monospace);
-  font-size: 0.85rem;
-  line-height: 1.3;
-  white-space: pre-wrap;
-  color: var(--verso-code-color, #111);
-  background: transparent;
-}
-
-.verso-string-diagram .relative { position: relative; }
-.verso-string-diagram .absolute { position: absolute; }
-.verso-string-diagram .dib { display: inline-block; }
-.verso-string-diagram .flex { display: flex; gap: 1rem; flex-wrap: nowrap; align-items:flex-start; }
-.verso-string-diagram .w-50 { flex: 1 1 0; min-width: 0; }
-
-@media (max-width: 900px) {
-  .verso-string-diagram .flex { flex-wrap: wrap; }
-  .verso-string-diagram .w-50 { flex-basis: 24rem; }
-}
-.verso-string-diagram .top-0 { top: 0; }
-.verso-string-diagram .right-0 { right: 0; }
-.verso-string-diagram .pv1 { padding-top: 0.25rem; padding-bottom: 0.25rem; }
-.verso-string-diagram .ph2 { padding-left: 0.5rem; padding-right: 0.5rem; }
-.verso-string-diagram .mv2 { margin-top: 0.5rem; margin-bottom: 0.5rem; }
-.verso-string-diagram .pointer { cursor: pointer; }
-.verso-string-diagram .link { text-decoration: none; }
-.verso-string-diagram .dim { opacity: 0.85; }
-.verso-string-diagram .dim:hover { opacity: 1; }
-.verso-string-diagram .o-30 { opacity: 0.3; }
-.verso-string-diagram .red { color: #b00020; }
-</style><style>
 
 .hl.lean {
   white-space: pre;
@@ -1358,11 +1305,11 @@ severity accent to distinguish them.
 }
 
 .warning .verso-message, .warning .verso-message .token, .warning .verso-message label {
-  color: var(--verso-message-warning-color, black);
+  color: var(--verso-message-warning-color, currentcolor);
 }
 
 .warning .verso-message .case-label:has(input[type="checkbox"])::before {
-  background-color: var(--verso-message-warning-color, black) !important;
+  background-color: var(--verso-message-warning-color, currentcolor) !important;
 }
 
 
@@ -1386,11 +1333,11 @@ severity accent to distinguish them.
 }
 
 .information .verso-message, .information .verso-message .token, .information .verso-message label {
-  color: var(--verso-message-info-color, black);
+  color: var(--verso-message-info-color, currentcolor);
 }
 
 .information .verso-message .case-label:has(input[type="checkbox"])::before {
-  background-color: var(--verso-message-info-color, black) !important;
+  background-color: var(--verso-message-info-color, currentcolor) !important;
 }
 
 .hl.lean div.docstring {
@@ -1815,6 +1762,59 @@ and its border extension paints the outline triangle with the box's border color
   white-space: pre-wrap;
 }
 
+</style><style>
+:root {
+  --vscode-editor-foreground: var(--verso-text-color, #111);
+  --vscode-editor-background: #fff;
+  --vscode-editorHoverWidget-background: #fff;
+  --vscode-editorHoverWidget-foreground: var(--verso-text-color, #111);
+  --vscode-editorHoverWidget-border: #98B2C0;
+}
+
+.verso-string-diagram {
+  margin: 1rem 0;
+  color: var(--verso-text-color, #111);
+}
+
+.verso-string-diagram-root {
+  overflow-x: auto;
+}
+
+.verso-string-diagram .sd-loading {
+  color: var(--verso-fg-secondary, #666);
+  font-style: italic;
+}
+
+.verso-string-diagram .sd-inline-code {
+  font-family: var(--verso-font-mono, monospace);
+  font-size: 0.85rem;
+  line-height: 1.3;
+  white-space: pre-wrap;
+  color: var(--verso-code-color, #111);
+  background: transparent;
+}
+
+.verso-string-diagram .relative { position: relative; }
+.verso-string-diagram .absolute { position: absolute; }
+.verso-string-diagram .dib { display: inline-block; }
+.verso-string-diagram .flex { display: flex; gap: 1rem; flex-wrap: nowrap; align-items:flex-start; }
+.verso-string-diagram .w-50 { flex: 1 1 0; min-width: 0; }
+
+@media (max-width: 900px) {
+  .verso-string-diagram .flex { flex-wrap: wrap; }
+  .verso-string-diagram .w-50 { flex-basis: 24rem; }
+}
+.verso-string-diagram .top-0 { top: 0; }
+.verso-string-diagram .right-0 { right: 0; }
+.verso-string-diagram .pv1 { padding-top: 0.25rem; padding-bottom: 0.25rem; }
+.verso-string-diagram .ph2 { padding-left: 0.5rem; padding-right: 0.5rem; }
+.verso-string-diagram .mv2 { margin-top: 0.5rem; margin-bottom: 0.5rem; }
+.verso-string-diagram .pointer { cursor: pointer; }
+.verso-string-diagram .link { text-decoration: none; }
+.verso-string-diagram .dim { opacity: 0.85; }
+.verso-string-diagram .dim:hover { opacity: 1; }
+.verso-string-diagram .o-30 { opacity: 0.3; }
+.verso-string-diagram .red { color: #b00020; }
 </style><script>
       
 window.onload = async () => {
@@ -2175,15 +2175,15 @@ window.onload = async () => {
             <div class="split-toc book">
               <div class="title">
                 <label for="--verso-manual-toc-----bookRoot" class="toggle-split-toc"><input type="checkbox" class="toggle-split-toc" id="--verso-manual-toc-----bookRoot" checked="checked"></label><span class="">Table of Contents</span></div>
-              <table><tr class="numbered"><td class="num">1.</td><td><a href="Usage-and-examples/#examples">Usage and examples</a></td></tr><tr class="numbered"><td class="num">2.</td><td><a href="Calculational-proofs/#calculational-proofs">Calculational proofs</a></td></tr><tr class="numbered"><td class="num">3.</td><td><a href="Universe-handling/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Universe-handling">Universe handling</a></td></tr><tr class="current numbered"><td class="num">4.</td><td><a href="kernel_hom-tactic/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--kernel_hom-tactic">kernel_hom tactic</a></td></tr><tr class="numbered"><td class="num">5.</td><td><a href="hom_kernel-tactic/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--hom_kernel-tactic">hom_kernel tactic</a></td></tr><tr class="numbered"><td class="num">6.</td><td><a href="Categorical-tactics-for-kernels/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Categorical-tactics-for-kernels">Categorical tactics for kernels</a></td></tr><tr class="numbered"><td class="num">7.</td><td><a href="Kernel-reassociation/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Kernel-reassociation">Kernel reassociation</a></td></tr><tr class="numbered"><td class="num">8.</td><td><a href="Kernelized-monoidal-composition/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Kernelized-monoidal-composition">Monoidal composition</a></td></tr><tr class="numbered"><td class="num">9.</td><td><a href="Implementation-of-the-translation/#implementation">Implementation of the translation</a></td></tr></table></div>
+              <table><tr class="numbered"><td class="num">1.</td><td><a href="Usage-and-examples/#examples">Usage and examples</a></td></tr><tr class="numbered"><td class="num">2.</td><td><a href="Universe-handling/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Universe-handling">Universe handling</a></td></tr><tr class="current numbered"><td class="num">3.</td><td><a href="kernel_hom-tactic/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--kernel_hom-tactic">kernel_hom tactic</a></td></tr><tr class="numbered"><td class="num">4.</td><td><a href="hom_kernel-tactic/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--hom_kernel-tactic">hom_kernel tactic</a></td></tr><tr class="numbered"><td class="num">5.</td><td><a href="Categorical-tactics-for-kernels/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Categorical-tactics-for-kernels">Categorical tactics for kernels</a></td></tr><tr class="numbered"><td class="num">6.</td><td><a href="Kernel-reassociation/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Kernel-reassociation">Kernel reassociation</a></td></tr><tr class="numbered"><td class="num">7.</td><td><a href="Kernelized-monoidal-composition/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Kernelized-monoidal-composition">Monoidal composition</a></td></tr><tr class="numbered"><td class="num">8.</td><td><a href="Implementation-of-the-translation/#implementation">Implementation of the translation</a></td></tr></table></div>
             <div class="split-toc">
               <div class="title">
-                <label for="--verso-manual-toc-Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--kernel_hom-tactic" class="toggle-split-toc"><input type="checkbox" class="toggle-split-toc" id="--verso-manual-toc-Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--kernel_hom-tactic" checked="checked"></label><span class="number">4.</span> <span class="current"><a href="kernel_hom-tactic/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--kernel_hom-tactic">kernel_hom tactic</a></span></div>
+                <label for="--verso-manual-toc-Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--kernel_hom-tactic" class="toggle-split-toc"><input type="checkbox" class="toggle-split-toc" id="--verso-manual-toc-Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--kernel_hom-tactic" checked="checked"></label><span class="number">3.</span> <span class="current"><a href="kernel_hom-tactic/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--kernel_hom-tactic">kernel_hom tactic</a></span></div>
               <ol>
                 <li>
                   <a href="kernel_hom-tactic/#kernelHom"><code>kernelHom</code></a></li>
                 <li>
-                  <a href="kernel_hom-tactic/#transformKernelToHom"><code>transformKernelToHom</code></a></li>
+                  <a href="kernel_hom-tactic/#kernelToHom"><code>kernelToHom</code></a></li>
                 </ol>
               </div>
             </div>
@@ -2200,39 +2200,39 @@ window.onload = async () => {
       <div class="toc-resize-handle"></div>
       <main><div class="content-wrapper">
           <nav class="prev-next-buttons">
-            <a class="local-button active" href="Universe-handling/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Universe-handling" rel="prev" title="3. Universe handling"><span class="arrow">←</span><span class="where">3. Universe handling</span></a><a class="local-button active" href="hom_kernel-tactic/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--hom_kernel-tactic" rel="next" title="5. hom_kernel tactic"><span class="where">5. hom_kernel tactic</span><span class="arrow">→</span></a></nav>
+            <a class="local-button active" href="Universe-handling/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Universe-handling" rel="prev" title="2. Universe handling"><span class="arrow">←</span><span class="where">2. Universe handling</span></a><a class="local-button active" href="hom_kernel-tactic/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--hom_kernel-tactic" rel="next" title="4. hom_kernel tactic"><span class="where">4. hom_kernel tactic</span><span class="arrow">→</span></a></nav>
           <section>
             <h1>
-              4. kernel_hom tactic<span class="permalink-widget inline"><a href="find/?domain=Verso.Genre.Manual.section&amp;name=Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--kernel_hom-tactic" title="Permalink">🔗</a></span></h1>
+              3. kernel_hom tactic<span class="permalink-widget inline"><a href="find/?domain=Verso.Genre.Manual.section&amp;name=Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--kernel_hom-tactic" title="Permalink">🔗</a></span></h1>
             <p>
-              The <code class="hl lean inline" data-lean-context="examples"><a href="kernel_hom-tactic/#kernelHom" title="Documentation for kernelHom"><span class="const token" data-binding="const-kernelHom" data-verso-hover="4">kernel_hom</span></a></code> tactic transforms a s-finite kernel equality into an equality in the <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-SFinKer" data-verso-hover="10">SFinKer</span></code> category, where any categorical reasoning can be applied to simplify it. For example, given kernels <code>κ : Kernel X Y</code>, <code>η : Kernel Y Z</code> and <code>ξ : Kernel X Z</code>, the following kernel equality: <code>η ∘ₖ κ = ξ</code> is transformed to <code>κ.toHom ≫ η.toHom = ξ.toHom</code> in the <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-SFinKer" data-verso-hover="10">SFinKer</span></code> category, where <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-ProbabilityTheory.Kernel.toHom" data-verso-hover="153">toHom</span></code> is the translation of kernels to morphisms in <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-SFinKer" data-verso-hover="10">SFinKer</span></code>.</p>
+              The <code class="hl lean inline" data-lean-context="examples"><a href="kernel_hom-tactic/#kernelHom" title="Documentation for kernelHom"><span class="const token" data-binding="const-kernelHom" data-verso-hover="4">kernel_hom</span></a></code> tactic transforms a s-finite kernel equality into an equality in the <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-SFinKer" data-verso-hover="10">SFinKer</span></code> category, where any categorical reasoning can be applied to simplify it. For example, given kernels <code>κ : Kernel X Y</code>, <code>η : Kernel Y Z</code> and <code>ξ : Kernel X Z</code>, the following kernel equality: <code>η ∘ₖ κ = ξ</code> is transformed to <code>κ.toHom ≫ η.toHom = ξ.toHom</code> in the <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-SFinKer" data-verso-hover="10">SFinKer</span></code> category, where <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-ProbabilityTheory.Kernel.toHom" data-verso-hover="117">toHom</span></code> is the translation of kernels to morphisms in <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-SFinKer" data-verso-hover="10">SFinKer</span></code>.</p>
             <div class="namedocs" id="kernelHom">
-              <span class="permalink-widget block"><a href="find/?domain=Verso.Genre.Manual.doc&amp;name=kernelHom" title="Permalink">🔗</a></span><span class="label">def</span><pre class="signature hl lean block"><div class="wide-only"><a href="kernel_hom-tactic/#kernelHom" title="Documentation for kernelHom"><span class="const token" data-binding="const-kernelHom" data-verso-hover="4">kernelHom</span></a><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-Lean.ParserDescr" data-verso-hover="149">Lean.ParserDescr</span></div><div class="narrow-only"><a href="kernel_hom-tactic/#kernelHom" title="Documentation for kernelHom"><span class="const token" data-binding="const-kernelHom" data-verso-hover="4">kernelHom</span></a><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-Lean.ParserDescr" data-verso-hover="149">Lean.ParserDescr</span></div></pre><div class="text">
+              <span class="permalink-widget block"><a href="find/?domain=Verso.Genre.Manual.doc&amp;name=kernelHom" title="Permalink">🔗</a></span><span class="label">def</span><pre class="signature hl lean block"><div class="wide-only"><a href="kernel_hom-tactic/#kernelHom" title="Documentation for kernelHom"><span class="const token" data-binding="const-kernelHom" data-verso-hover="4">kernelHom</span></a><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-Lean.ParserDescr" data-verso-hover="113">Lean.ParserDescr</span></div><div class="narrow-only"><a href="kernel_hom-tactic/#kernelHom" title="Documentation for kernelHom"><span class="const token" data-binding="const-kernelHom" data-verso-hover="4">kernelHom</span></a><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-Lean.ParserDescr" data-verso-hover="113">Lean.ParserDescr</span></div></pre><div class="text">
                 <p>
-                  The <code class="hl lean inline" data-lean-context="docstring-examples"><span class="keyword token" data-binding="kw-occ-kernelHom-0" data-verso-hover="154">kernel_hom</span></code> tactic transforms a kernel equality to an equivalent equality in
+                  The <code class="hl lean inline" data-lean-context="docstring-examples"><span class="keyword token" data-binding="kw-occ-kernelHom-0" data-verso-hover="118">kernel_hom</span></code> tactic transforms a kernel equality to an equivalent equality in
 the category of measurable spaces and s-finite kernels.</p>
                 <p>
                   The tactic supports location specifiers like <code class="hl lean inline" data-lean-context="docstring-examples"><span class="keyword token" data-binding="" data-verso-hover="49">rw</span></code> or <code class="hl lean inline" data-lean-context="docstring-examples"><span class="keyword token" data-binding="kw-occ-Lean.Parser.Tactic.simp-0" data-verso-hover="79">simp</span></code>:</p>
                 <ul>
                   <li>
                     <p>
-                      <code class="hl lean inline" data-lean-context="docstring-examples"><span class="keyword token" data-binding="kw-occ-kernelHom-0" data-verso-hover="154">kernel_hom</span></code> — applies to the goal</p>
+                      <code class="hl lean inline" data-lean-context="docstring-examples"><span class="keyword token" data-binding="kw-occ-kernelHom-0" data-verso-hover="118">kernel_hom</span></code> — applies to the goal</p>
                     </li>
                   <li>
                     <p>
-                      <code class="hl lean inline" data-lean-context="docstring-examples"><span class="keyword token" data-binding="kw-occ-kernelHom-0" data-verso-hover="154">kernel_hom</span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Tactic.location-11" data-verso-hover="151">at</span><span class="inter-text"> </span><span class="unknown token" data-binding="">h</span></code> — applies to hypothesis <code class="hl lean inline" data-lean-context="docstring-examples"><span class="unknown token" data-binding="">h</span></code></p>
+                      <code class="hl lean inline" data-lean-context="docstring-examples"><span class="keyword token" data-binding="kw-occ-kernelHom-0" data-verso-hover="118">kernel_hom</span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Tactic.location-11" data-verso-hover="115">at</span><span class="inter-text"> </span><span class="unknown token" data-binding="">h</span></code> — applies to hypothesis <code class="hl lean inline" data-lean-context="docstring-examples"><span class="unknown token" data-binding="">h</span></code></p>
                     </li>
                   <li>
                     <p>
-                      <code class="hl lean inline" data-lean-context="docstring-examples"><span class="keyword token" data-binding="kw-occ-kernelHom-0" data-verso-hover="154">kernel_hom</span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Tactic.location-11" data-verso-hover="151">at</span><span class="inter-text"> </span><span class="unknown token" data-binding="">h₁</span><span class="inter-text"> </span><span class="unknown token" data-binding="">h₂</span></code> — applies to multiple hypotheses</p>
+                      <code class="hl lean inline" data-lean-context="docstring-examples"><span class="keyword token" data-binding="kw-occ-kernelHom-0" data-verso-hover="118">kernel_hom</span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Tactic.location-11" data-verso-hover="115">at</span><span class="inter-text"> </span><span class="unknown token" data-binding="">h₁</span><span class="inter-text"> </span><span class="unknown token" data-binding="">h₂</span></code> — applies to multiple hypotheses</p>
                     </li>
                   <li>
                     <p>
-                      <code class="hl lean inline" data-lean-context="docstring-examples"><span class="keyword token" data-binding="kw-occ-kernelHom-0" data-verso-hover="154">kernel_hom</span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Tactic.location-11" data-verso-hover="151">at</span><span class="inter-text"> </span><span class="unknown token" data-binding="">h</span><span class="inter-text"> </span><span class="built-in delim token" data-binding="kw-occ-token.«⊢»-16">⊢</span></code> — applies to hypothesis <code class="hl lean inline" data-lean-context="docstring-examples"><span class="unknown token" data-binding="">h</span></code> and the goal</p>
+                      <code class="hl lean inline" data-lean-context="docstring-examples"><span class="keyword token" data-binding="kw-occ-kernelHom-0" data-verso-hover="118">kernel_hom</span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Tactic.location-11" data-verso-hover="115">at</span><span class="inter-text"> </span><span class="unknown token" data-binding="">h</span><span class="inter-text"> </span><span class="built-in delim token" data-binding="kw-occ-token.«⊢»-16">⊢</span></code> — applies to hypothesis <code class="hl lean inline" data-lean-context="docstring-examples"><span class="unknown token" data-binding="">h</span></code> and the goal</p>
                     </li>
                   <li>
                     <p>
-                      <code class="hl lean inline" data-lean-context="docstring-examples"><span class="keyword token" data-binding="kw-occ-kernelHom-0" data-verso-hover="154">kernel_hom</span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Tactic.location-11" data-verso-hover="151">at</span><span class="inter-text"> </span><span class="punctuation operator token" data-binding="kw-occ-Lean.Parser.Tactic.locationWildcard-14">*</span></code> — applies to all hypotheses and the goal</p>
+                      <code class="hl lean inline" data-lean-context="docstring-examples"><span class="keyword token" data-binding="kw-occ-kernelHom-0" data-verso-hover="118">kernel_hom</span><span class="inter-text"> </span><span class="keyword token" data-binding="kw-occ-Lean.Parser.Tactic.location-11" data-verso-hover="115">at</span><span class="inter-text"> </span><span class="punctuation operator token" data-binding="kw-occ-Lean.Parser.Tactic.locationWildcard-14">*</span></code> — applies to all hypotheses and the goal</p>
                     </li>
                   </ul>
                 <p>
@@ -2253,7 +2253,7 @@ equalities live in the same category and can be used to rewrite each other.</p>
             <ol start="1">
               <li>
                 <p>
-                  First, the derived operations <code>κ ×ₖ η</code> and <code>κ ⊗ₖ η</code> are unfolded into compositions, parallel compositions and copies (<code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-unfoldKernelOp" data-verso-hover="155">unfoldKernelOp</span></code>).</p>
+                  First, the derived operations <code>κ ×ₖ η</code> and <code>κ ⊗ₖ η</code> are unfolded into compositions, parallel compositions and copies (<code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-unfoldKernelOp" data-verso-hover="119">unfoldKernelOp</span></code>).</p>
                 </li>
               <li>
                 <p>
@@ -2261,27 +2261,29 @@ equalities live in the same category and can be used to rewrite each other.</p>
                 </li>
               <li>
                 <p>
-                  Next, it recursively traverses the lifted equality and creates a new expression where each kernel is replaced by its translation in the <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-SFinKer" data-verso-hover="10">SFinKer</span></code> category. The kernel operations are translated to the corresponding categorical operations (composition, tensor product, whiskers, identity, unitors, associators, braiding, copy and discard), and the other kernels <code>κ</code> to <code>κ.toHom</code>. Each translated subexpression comes with a proof that it is the translation of the original one, built by congruence from the translation lemmas. This is done using the <code class="hl lean inline" data-lean-context="examples"><a href="kernel_hom-tactic/#transformKernelToHom" title="Documentation for transformKernelToHom"><span class="const token" data-binding="const-transformKernelToHom" data-verso-hover="156">transformKernelToHom</span></a></code> function.</p>
-                <div class="namedocs" id="transformKernelToHom">
-                  <span class="permalink-widget block"><a href="find/?domain=Verso.Genre.Manual.doc&amp;name=transformKernelToHom" title="Permalink">🔗</a></span><span class="label">opaque</span><pre class="signature hl lean block"><div class="wide-only"><a href="kernel_hom-tactic/#transformKernelToHom" title="Documentation for transformKernelToHom"><span class="const token" data-binding="const-transformKernelToHom" data-verso-hover="156">transformKernelToHom</span></a><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="var token" data-binding="var-_uniq.142" data-verso-hover="157">e</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-Lean.Expr" data-verso-hover="144">Lean.Expr</span><span class="unknown token" data-binding="">)</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text">
-  </span><span class="const token" data-binding="const-Lean.Meta.MetaM" data-verso-hover="145">Lean.MetaM</span><span class="inter-text"> </span><span class="const token" data-binding="const-Prod" data-verso-hover="158">(</span><span class="const token" data-binding="const-Lean.Expr" data-verso-hover="144">Lean.Expr</span><span class="inter-text"> </span><span class="const token" data-binding="const-Prod" data-verso-hover="158">×</span><span class="inter-text"> </span><span class="const token" data-binding="const-Lean.Expr" data-verso-hover="144">Lean.Expr</span><span class="const token" data-binding="const-Prod" data-verso-hover="158">)</span></div><div class="narrow-only"><a href="kernel_hom-tactic/#transformKernelToHom" title="Documentation for transformKernelToHom"><span class="const token" data-binding="const-transformKernelToHom" data-verso-hover="156">transformKernelToHom</span></a><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="var token" data-binding="var-_uniq.142" data-verso-hover="157">e</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-Lean.Expr" data-verso-hover="144">Lean.Expr</span><span class="unknown token" data-binding="">)</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text">
-  </span><span class="const token" data-binding="const-Lean.Meta.MetaM" data-verso-hover="145">Lean.MetaM</span><span class="inter-text"> </span><span class="const token" data-binding="const-Prod" data-verso-hover="158">(</span><span class="const token" data-binding="const-Lean.Expr" data-verso-hover="144">Lean.Expr</span><span class="inter-text"> </span><span class="const token" data-binding="const-Prod" data-verso-hover="158">×</span><span class="inter-text"> </span><span class="const token" data-binding="const-Lean.Expr" data-verso-hover="144">Lean.Expr</span><span class="const token" data-binding="const-Prod" data-verso-hover="158">)</span></div></pre><div class="text">
+                  Next, it recursively traverses the lifted equality and creates a new expression where each kernel is replaced by its translation in the <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-SFinKer" data-verso-hover="10">SFinKer</span></code> category. The kernel operations are translated to the corresponding categorical operations (composition, tensor product, whiskers, identity, unitors, associators, braiding, copy and discard), and the other kernels <code>κ</code> to <code>κ.toHom</code>. Each translated subexpression comes with a proof that it is the translation of the original one, obtained from the proofs of its subterms by a congruence lemma such as <code class="hl lean inline" data-lean-context="examples"><a href="Implementation-of-the-translation/#ProbabilityTheory___Kernel___comp_toHom_of_eq" title="Documentation for ProbabilityTheory.Kernel.comp_toHom_of_eq"><span class="const token" data-binding="const-ProbabilityTheory.Kernel.comp_toHom_of_eq" data-verso-hover="120">comp_toHom_of_eq</span></a></code>. This is done using the <code class="hl lean inline" data-lean-context="examples"><a href="kernel_hom-tactic/#kernelToHom" title="Documentation for kernelToHom"><span class="const token" data-binding="const-kernelToHom" data-verso-hover="121">kernelToHom</span></a></code> function.</p>
+                <div class="namedocs" id="kernelToHom">
+                  <span class="permalink-widget block"><a href="find/?domain=Verso.Genre.Manual.doc&amp;name=kernelToHom" title="Permalink">🔗</a></span><span class="label">opaque</span><pre class="signature hl lean block"><div class="wide-only"><a href="kernel_hom-tactic/#kernelToHom" title="Documentation for kernelToHom"><span class="const token" data-binding="const-kernelToHom" data-verso-hover="121">kernelToHom</span></a><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="var token" data-binding="var-_uniq.248" data-verso-hover="122">u</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-Lean.Level" data-verso-hover="111">Lean.Level</span><span class="unknown token" data-binding="">)</span><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="var token" data-binding="var-_uniq.249" data-verso-hover="123">e</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-Lean.Expr" data-verso-hover="108">Lean.Expr</span><span class="unknown token" data-binding="">)</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text">
+  </span><span class="const token" data-binding="const-Lean.Meta.MetaM" data-verso-hover="109">Lean.MetaM</span><span class="inter-text"> </span><span class="const token" data-binding="const-Prod" data-verso-hover="124">(</span><span class="const token" data-binding="const-Lean.Expr" data-verso-hover="108">Lean.Expr</span><span class="inter-text"> </span><span class="const token" data-binding="const-Prod" data-verso-hover="124">×</span><span class="inter-text"> </span><span class="const token" data-binding="const-Lean.Expr" data-verso-hover="108">Lean.Expr</span><span class="const token" data-binding="const-Prod" data-verso-hover="124">)</span></div><div class="narrow-only"><a href="kernel_hom-tactic/#kernelToHom" title="Documentation for kernelToHom"><span class="const token" data-binding="const-kernelToHom" data-verso-hover="121">kernelToHom</span></a><span class="inter-text"> </span><span class="unknown token" data-binding="">(</span><span class="var token" data-binding="var-_uniq.248" data-verso-hover="122">u</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-Lean.Level" data-verso-hover="111">Lean.Level</span><span class="unknown token" data-binding="">)</span><span class="inter-text">
+  </span><span class="unknown token" data-binding="">(</span><span class="var token" data-binding="var-_uniq.249" data-verso-hover="123">e</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text"> </span><span class="const token" data-binding="const-Lean.Expr" data-verso-hover="108">Lean.Expr</span><span class="unknown token" data-binding="">)</span><span class="inter-text"> </span><span class="unknown token" data-binding="">:</span><span class="inter-text">
+  </span><span class="const token" data-binding="const-Lean.Meta.MetaM" data-verso-hover="109">Lean.MetaM</span><span class="inter-text"> </span><span class="const token" data-binding="const-Prod" data-verso-hover="124">(</span><span class="const token" data-binding="const-Lean.Expr" data-verso-hover="108">Lean.Expr</span><span class="inter-text"> </span><span class="const token" data-binding="const-Prod" data-verso-hover="124">×</span><span class="inter-text"> </span><span class="const token" data-binding="const-Lean.Expr" data-verso-hover="108">Lean.Expr</span><span class="const token" data-binding="const-Prod" data-verso-hover="124">)</span></div></pre><div class="text">
                     <p>
-                      Recursive transformation from kernel expressions to morphism expressions in the <code class="hl lean inline" data-lean-context="docstring-examples"><span class="const token" data-binding="const-SFinKer" data-verso-hover="10">SFinKer</span></code>
-category. Returns the morphism expression <code class="hl lean inline" data-lean-context="docstring-examples"><span class="var token" data-binding="var-_uniq.105" data-verso-hover="159">e'</span></code> together with a proof of <code class="hl lean inline" data-lean-context="docstring-examples"><span class="var token" data-binding="var-_uniq.105" data-verso-hover="160">e'</span><span class="inter-text"> </span><span class="punctuation operator token" data-binding="kw-occ-«term_=_»-0">=</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.79" data-verso-hover="157">e</span><span class="built-in delim token" data-binding="">.</span><span class="unknown token" data-binding="">toHom</span></code>, built by
-congruence from the translation lemmas (<code class="hl lean inline" data-lean-context="docstring-examples"><span class="unknown token" data-binding="">comp_toHom</span></code>, <code class="hl lean inline" data-lean-context="docstring-examples"><span class="unknown token" data-binding="">parallelComp_toHom</span></code>, ...).</p>
+                      Recursive translation of a lifted kernel <code class="hl lean inline" data-lean-context="docstring-examples"><span class="var token" data-binding="var-_uniq.157" data-verso-hover="123">e</span></code> into a morphism <code class="hl lean inline" data-lean-context="docstring-examples"><span class="var token" data-binding="var-_uniq.195" data-verso-hover="125">e'</span></code> of <code class="hl lean inline" data-lean-context="docstring-examples"><span class="const token" data-binding="const-SFinKer" data-verso-hover="10">SFinKer</span><span class="unknown token" data-binding="">.{</span><span class="unknown token" data-binding="">u</span><span class="punctuation bracket token" data-binding="kw-occ-Lean.Parser.Term.explicitUniv-0">}</span></code>. Returns <code class="hl lean inline" data-lean-context="docstring-examples"><span class="var token" data-binding="var-_uniq.195" data-verso-hover="125">e'</span></code>
+together with a proof of <code class="hl lean inline" data-lean-context="docstring-examples"><span class="var token" data-binding="var-_uniq.195" data-verso-hover="126">e'</span><span class="inter-text"> </span><span class="punctuation operator token" data-binding="kw-occ-«term_=_»-0">=</span><span class="inter-text"> </span><span class="var token" data-binding="var-_uniq.157" data-verso-hover="123">e</span><span class="built-in delim token" data-binding="">.</span><span class="unknown token" data-binding="">toHom</span></code>, where the carriers of the source and of the target of <code class="hl lean inline" data-lean-context="docstring-examples"><span class="var token" data-binding="var-_uniq.157" data-verso-hover="123">e</span></code>
+are given by <code class="hl lean inline" data-lean-context="docstring-examples"><a href="Implementation-of-the-translation/#homCarrier" title="Documentation for homCarrier"><span class="const token" data-binding="const-homCarrier" data-verso-hover="127">homCarrier</span></a></code>. Each step is a single application of a translation lemma, given the
+translations of the subterms (<code class="hl lean inline" data-lean-context="docstring-examples"><span class="unknown token" data-binding="">Kernel.comp_toHom_of_eq</span></code>, <code class="hl lean inline" data-lean-context="docstring-examples"><span class="unknown token" data-binding="">Kernel.parallelComp_toHom_of_eq</span></code>, ...).</p>
                     </div>
                   </div>
                 </li>
               <li>
                 <p>
-                  Finally, the proofs of the two sides give, with <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-ProbabilityTheory.Kernel.toHom_congr" data-verso-hover="161">toHom_congr</span></code>, a proof that the lifted equality is equivalent to the categorical one, which replaces the goal or the hypothesis.
+                  Finally, the proofs of the two sides give, with <code class="hl lean inline" data-lean-context="examples"><a href="Implementation-of-the-translation/#ProbabilityTheory___Kernel___toHom_congr_of_eq" title="Documentation for ProbabilityTheory.Kernel.toHom_congr_of_eq"><span class="const token" data-binding="const-ProbabilityTheory.Kernel.toHom_congr_of_eq" data-verso-hover="128">toHom_congr_of_eq</span></a></code>, a proof that the lifted equality is equivalent to the categorical one, which replaces the goal or the hypothesis.
 </p>
                 </li>
               </ol>
             </section>
           <nav class="prev-next-buttons">
-            <a class="local-button active" href="Universe-handling/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Universe-handling" rel="prev" title="3. Universe handling"><span class="arrow">←</span><span class="where">3. Universe handling</span></a><a class="local-button active" href="hom_kernel-tactic/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--hom_kernel-tactic" rel="next" title="5. hom_kernel tactic"><span class="where">5. hom_kernel tactic</span><span class="arrow">→</span></a></nav>
+            <a class="local-button active" href="Universe-handling/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Universe-handling" rel="prev" title="2. Universe handling"><span class="arrow">←</span><span class="where">2. Universe handling</span></a><a class="local-button active" href="hom_kernel-tactic/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--hom_kernel-tactic" rel="next" title="4. hom_kernel tactic"><span class="where">4. hom_kernel tactic</span><span class="arrow">→</span></a></nav>
           </div>
         </main></div>
     </body>

@@ -7,7 +7,7 @@
      "data":
      {"title": "Implementation of the translation",
       "shortTitle": null,
-      "sectionNum": "9.",
+      "sectionNum": "8.",
       "searchPriority": 50,
       "context":
       [{"title": "Kernel-Hom: Tactics for Kernel Categorical Reasoning",
@@ -15,7 +15,7 @@
         "number": null},
        {"title": "Implementation of the translation",
         "shortTitle": null,
-        "number": "9"}]},
+        "number": "8"}]},
      "address": "/Implementation-of-the-translation/"}],
    "examples":
    [{"id": "examples",
@@ -30,32 +30,19 @@
         "number": null},
        {"title": "Usage and examples", "shortTitle": null, "number": "1"}]},
      "address": "/Usage-and-examples/"}],
-   "calculational-proofs":
-   [{"id": "calculational-proofs",
-     "data":
-     {"title": "Calculational proofs",
-      "shortTitle": null,
-      "sectionNum": "2.",
-      "searchPriority": 50,
-      "context":
-      [{"title": "Kernel-Hom: Tactics for Kernel Categorical Reasoning",
-        "shortTitle": "Kernel Categorical Reasoning",
-        "number": null},
-       {"title": "Calculational proofs", "shortTitle": null, "number": "2"}]},
-     "address": "/Calculational-proofs/"}],
    "Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--kernel_hom-tactic":
    [{"id":
      "Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--kernel_hom-tactic",
      "data":
      {"title": "kernel_hom tactic",
       "shortTitle": null,
-      "sectionNum": "4.",
+      "sectionNum": "3.",
       "searchPriority": 50,
       "context":
       [{"title": "Kernel-Hom: Tactics for Kernel Categorical Reasoning",
         "shortTitle": "Kernel Categorical Reasoning",
         "number": null},
-       {"title": "kernel_hom tactic", "shortTitle": null, "number": "4"}]},
+       {"title": "kernel_hom tactic", "shortTitle": null, "number": "3"}]},
      "address": "/kernel_hom-tactic/"}],
    "Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--hom_kernel-tactic":
    [{"id":
@@ -63,13 +50,13 @@
      "data":
      {"title": "hom_kernel tactic",
       "shortTitle": null,
-      "sectionNum": "5.",
+      "sectionNum": "4.",
       "searchPriority": 50,
       "context":
       [{"title": "Kernel-Hom: Tactics for Kernel Categorical Reasoning",
         "shortTitle": "Kernel Categorical Reasoning",
         "number": null},
-       {"title": "hom_kernel tactic", "shortTitle": null, "number": "5"}]},
+       {"title": "hom_kernel tactic", "shortTitle": null, "number": "4"}]},
      "address": "/hom_kernel-tactic/"}],
    "Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Usage-and-examples--Usage":
    [{"id":
@@ -107,13 +94,13 @@
      "data":
      {"title": "Universe handling",
       "shortTitle": null,
-      "sectionNum": "3.",
+      "sectionNum": "2.",
       "searchPriority": 50,
       "context":
       [{"title": "Kernel-Hom: Tactics for Kernel Categorical Reasoning",
         "shortTitle": "Kernel Categorical Reasoning",
         "number": null},
-       {"title": "Universe handling", "shortTitle": null, "number": "3"}]},
+       {"title": "Universe handling", "shortTitle": null, "number": "2"}]},
      "address": "/Universe-handling/"}],
    "Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Kernelized-monoidal-composition--Monoidal-Composition-of-Kernels":
    [{"id":
@@ -121,7 +108,7 @@
      "data":
      {"title": "Monoidal Composition of Kernels",
       "shortTitle": null,
-      "sectionNum": "8.2.",
+      "sectionNum": "7.2.",
       "searchPriority": 50,
       "context":
       [{"title": "Kernel-Hom: Tactics for Kernel Categorical Reasoning",
@@ -129,7 +116,7 @@
         "number": null},
        {"title": "Kernelized monoidal composition",
         "shortTitle": "Monoidal composition",
-        "number": "8"},
+        "number": "7"},
        {"title": "Monoidal Composition of Kernels",
         "shortTitle": null,
         "number": "2"}]},
@@ -140,7 +127,7 @@
      "data":
      {"title": "Measurable Coherence",
       "shortTitle": null,
-      "sectionNum": "8.1.",
+      "sectionNum": "7.1.",
       "searchPriority": 50,
       "context":
       [{"title": "Kernel-Hom: Tactics for Kernel Categorical Reasoning",
@@ -148,7 +135,7 @@
         "number": null},
        {"title": "Kernelized monoidal composition",
         "shortTitle": "Monoidal composition",
-        "number": "8"},
+        "number": "7"},
        {"title": "Measurable Coherence", "shortTitle": null, "number": "1"}]},
      "address": "/Kernelized-monoidal-composition/"}],
    "Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Kernelized-monoidal-composition":
@@ -157,7 +144,7 @@
      "data":
      {"title": "Kernelized monoidal composition",
       "shortTitle": "Monoidal composition",
-      "sectionNum": "8.",
+      "sectionNum": "7.",
       "searchPriority": 50,
       "context":
       [{"title": "Kernel-Hom: Tactics for Kernel Categorical Reasoning",
@@ -165,7 +152,7 @@
         "number": null},
        {"title": "Kernelized monoidal composition",
         "shortTitle": "Monoidal composition",
-        "number": "8"}]},
+        "number": "7"}]},
      "address": "/Kernelized-monoidal-composition/"}],
    "Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Kernel-reassociation--The--kernel_reassoc_of___--elaborator":
    [{"id":
@@ -173,13 +160,13 @@
      "data":
      {"title": "The  kernel_reassoc_of%  elaborator",
       "shortTitle": null,
-      "sectionNum": "7.2.",
+      "sectionNum": "6.2.",
       "searchPriority": 50,
       "context":
       [{"title": "Kernel-Hom: Tactics for Kernel Categorical Reasoning",
         "shortTitle": "Kernel Categorical Reasoning",
         "number": null},
-       {"title": "Kernel reassociation", "shortTitle": null, "number": "7"},
+       {"title": "Kernel reassociation", "shortTitle": null, "number": "6"},
        {"title": "The  kernel_reassoc_of%  elaborator",
         "shortTitle": null,
         "number": "2"}]},
@@ -190,13 +177,13 @@
      "data":
      {"title": "The  @[kernel_reassoc]  attribute",
       "shortTitle": null,
-      "sectionNum": "7.1.",
+      "sectionNum": "6.1.",
       "searchPriority": 50,
       "context":
       [{"title": "Kernel-Hom: Tactics for Kernel Categorical Reasoning",
         "shortTitle": "Kernel Categorical Reasoning",
         "number": null},
-       {"title": "Kernel reassociation", "shortTitle": null, "number": "7"},
+       {"title": "Kernel reassociation", "shortTitle": null, "number": "6"},
        {"title": "The  @[kernel_reassoc]  attribute",
         "shortTitle": null,
         "number": "1"}]},
@@ -207,21 +194,21 @@
      "data":
      {"title": "Kernel reassociation",
       "shortTitle": null,
-      "sectionNum": "7.",
+      "sectionNum": "6.",
       "searchPriority": 50,
       "context":
       [{"title": "Kernel-Hom: Tactics for Kernel Categorical Reasoning",
         "shortTitle": "Kernel Categorical Reasoning",
         "number": null},
-       {"title": "Kernel reassociation", "shortTitle": null, "number": "7"}]},
+       {"title": "Kernel reassociation", "shortTitle": null, "number": "6"}]},
      "address": "/Kernel-reassociation/"}],
-   "Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Implementation-of-the-translation--Proofs-by-congruence":
+   "Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Implementation-of-the-translation--Terms-built-with-Qq":
    [{"id":
-     "Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Implementation-of-the-translation--Proofs-by-congruence",
+     "Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Implementation-of-the-translation--Terms-built-with-Qq",
      "data":
-     {"title": "Proofs by congruence",
+     {"title": "Terms built with Qq",
       "shortTitle": null,
-      "sectionNum": "9.1.",
+      "sectionNum": "8.2.",
       "searchPriority": 50,
       "context":
       [{"title": "Kernel-Hom: Tactics for Kernel Categorical Reasoning",
@@ -229,16 +216,16 @@
         "number": null},
        {"title": "Implementation of the translation",
         "shortTitle": null,
-        "number": "9"},
-       {"title": "Proofs by congruence", "shortTitle": null, "number": "1"}]},
+        "number": "8"},
+       {"title": "Terms built with Qq", "shortTitle": null, "number": "2"}]},
      "address": "/Implementation-of-the-translation/"}],
-   "Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Implementation-of-the-translation--Explicit-constructors-and-memoization":
+   "Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Implementation-of-the-translation--Proofs-by-congruence-lemmas":
    [{"id":
-     "Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Implementation-of-the-translation--Explicit-constructors-and-memoization",
+     "Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Implementation-of-the-translation--Proofs-by-congruence-lemmas",
      "data":
-     {"title": "Explicit constructors and memoization",
+     {"title": "Proofs by congruence lemmas",
       "shortTitle": null,
-      "sectionNum": "9.2.",
+      "sectionNum": "8.1.",
       "searchPriority": 50,
       "context":
       [{"title": "Kernel-Hom: Tactics for Kernel Categorical Reasoning",
@@ -246,10 +233,27 @@
         "number": null},
        {"title": "Implementation of the translation",
         "shortTitle": null,
-        "number": "9"},
-       {"title": "Explicit constructors and memoization",
+        "number": "8"},
+       {"title": "Proofs by congruence lemmas",
         "shortTitle": null,
-        "number": "2"}]},
+        "number": "1"}]},
+     "address": "/Implementation-of-the-translation/"}],
+   "Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Implementation-of-the-translation--Memoization":
+   [{"id":
+     "Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Implementation-of-the-translation--Memoization",
+     "data":
+     {"title": "Memoization",
+      "shortTitle": null,
+      "sectionNum": "8.3.",
+      "searchPriority": 50,
+      "context":
+      [{"title": "Kernel-Hom: Tactics for Kernel Categorical Reasoning",
+        "shortTitle": "Kernel Categorical Reasoning",
+        "number": null},
+       {"title": "Implementation of the translation",
+        "shortTitle": null,
+        "number": "8"},
+       {"title": "Memoization", "shortTitle": null, "number": "3"}]},
      "address": "/Implementation-of-the-translation/"}],
    "Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Implementation-of-the-translation--Carriers":
    [{"id":
@@ -257,7 +261,7 @@
      "data":
      {"title": "Carriers",
       "shortTitle": null,
-      "sectionNum": "9.3.",
+      "sectionNum": "8.4.",
       "searchPriority": 50,
       "context":
       [{"title": "Kernel-Hom: Tactics for Kernel Categorical Reasoning",
@@ -265,8 +269,8 @@
         "number": null},
        {"title": "Implementation of the translation",
         "shortTitle": null,
-        "number": "9"},
-       {"title": "Carriers", "shortTitle": null, "number": "3"}]},
+        "number": "8"},
+       {"title": "Carriers", "shortTitle": null, "number": "4"}]},
      "address": "/Implementation-of-the-translation/"}],
    "Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Categorical-tactics-for-kernels":
    [{"id":
@@ -274,7 +278,7 @@
      "data":
      {"title": "Categorical tactics for kernels",
       "shortTitle": null,
-      "sectionNum": "6.",
+      "sectionNum": "5.",
       "searchPriority": 50,
       "context":
       [{"title": "Kernel-Hom: Tactics for Kernel Categorical Reasoning",
@@ -282,76 +286,8 @@
         "number": null},
        {"title": "Categorical tactics for kernels",
         "shortTitle": null,
-        "number": "6"}]},
+        "number": "5"}]},
      "address": "/Categorical-tactics-for-kernels/"}],
-   "Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Calculational-proofs--String-diagrams-of-the-calculation--Second-calculation":
-   [{"id":
-     "Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Calculational-proofs--String-diagrams-of-the-calculation--Second-calculation",
-     "data":
-     {"title": "Second calculation",
-      "shortTitle": null,
-      "sectionNum": "2.2.2.",
-      "searchPriority": 50,
-      "context":
-      [{"title": "Kernel-Hom: Tactics for Kernel Categorical Reasoning",
-        "shortTitle": "Kernel Categorical Reasoning",
-        "number": null},
-       {"title": "Calculational proofs", "shortTitle": null, "number": "2"},
-       {"title": "String diagrams of the calculation",
-        "shortTitle": null,
-        "number": "2"},
-       {"title": "Second calculation", "shortTitle": null, "number": "2"}]},
-     "address": "/Calculational-proofs/"}],
-   "Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Calculational-proofs--String-diagrams-of-the-calculation--First-calculation":
-   [{"id":
-     "Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Calculational-proofs--String-diagrams-of-the-calculation--First-calculation",
-     "data":
-     {"title": "First calculation",
-      "shortTitle": null,
-      "sectionNum": "2.2.1.",
-      "searchPriority": 50,
-      "context":
-      [{"title": "Kernel-Hom: Tactics for Kernel Categorical Reasoning",
-        "shortTitle": "Kernel Categorical Reasoning",
-        "number": null},
-       {"title": "Calculational proofs", "shortTitle": null, "number": "2"},
-       {"title": "String diagrams of the calculation",
-        "shortTitle": null,
-        "number": "2"},
-       {"title": "First calculation", "shortTitle": null, "number": "1"}]},
-     "address": "/Calculational-proofs/"}],
-   "Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Calculational-proofs--String-diagrams-of-the-calculation":
-   [{"id":
-     "Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Calculational-proofs--String-diagrams-of-the-calculation",
-     "data":
-     {"title": "String diagrams of the calculation",
-      "shortTitle": null,
-      "sectionNum": "2.2.",
-      "searchPriority": 50,
-      "context":
-      [{"title": "Kernel-Hom: Tactics for Kernel Categorical Reasoning",
-        "shortTitle": "Kernel Categorical Reasoning",
-        "number": null},
-       {"title": "Calculational proofs", "shortTitle": null, "number": "2"},
-       {"title": "String diagrams of the calculation",
-        "shortTitle": null,
-        "number": "2"}]},
-     "address": "/Calculational-proofs/"}],
-   "Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Calculational-proofs--Basu___s-theorem":
-   [{"id":
-     "Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Calculational-proofs--Basu___s-theorem",
-     "data":
-     {"title": "Basu's theorem",
-      "shortTitle": null,
-      "sectionNum": "2.1.",
-      "searchPriority": 50,
-      "context":
-      [{"title": "Kernel-Hom: Tactics for Kernel Categorical Reasoning",
-        "shortTitle": "Kernel Categorical Reasoning",
-        "number": null},
-       {"title": "Calculational proofs", "shortTitle": null, "number": "2"},
-       {"title": "Basu's theorem", "shortTitle": null, "number": "1"}]},
-     "address": "/Calculational-proofs/"}],
    "Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning":
    [{"id": "Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning",
      "data":
@@ -427,67 +363,7 @@
        ["Kernel-Hom: Tactics for Kernel Categorical Reasoning",
         "Usage and examples",
         "Examples"]}},
-     "address": "/Usage-and-examples/"}],
-   "ProbabilityTheory.Kernel.basu_aux":
-   [{"id": "ProbabilityTheory___Kernel___basu_aux",
-     "data":
-     {"/Calculational-proofs/#ProbabilityTheory___Kernel___basu_aux":
-      {"display": "basu_aux",
-       "context":
-       ["Kernel-Hom: Tactics for Kernel Categorical Reasoning",
-        "Calculational proofs",
-        "Basu's theorem"]}},
-     "address": "/Calculational-proofs/"}],
-   "ProbabilityTheory.Kernel.basu":
-   [{"id": "ProbabilityTheory___Kernel___basu",
-     "data":
-     {"/Calculational-proofs/#ProbabilityTheory___Kernel___basu":
-      {"display": "basu",
-       "context":
-       ["Kernel-Hom: Tactics for Kernel Categorical Reasoning",
-        "Calculational proofs",
-        "Basu's theorem"]}},
-     "address": "/Calculational-proofs/"}],
-   "ProbabilityTheory.Kernel.IsSufficient":
-   [{"id": "ProbabilityTheory___Kernel___IsSufficient",
-     "data":
-     {"/Calculational-proofs/#ProbabilityTheory___Kernel___IsSufficient":
-      {"display": "IsSufficient",
-       "context":
-       ["Kernel-Hom: Tactics for Kernel Categorical Reasoning",
-        "Calculational proofs",
-        "Basu's theorem"]}},
-     "address": "/Calculational-proofs/"}],
-   "ProbabilityTheory.Kernel.IsComplete":
-   [{"id": "ProbabilityTheory___Kernel___IsComplete",
-     "data":
-     {"/Calculational-proofs/#ProbabilityTheory___Kernel___IsComplete":
-      {"display": "IsComplete",
-       "context":
-       ["Kernel-Hom: Tactics for Kernel Categorical Reasoning",
-        "Calculational proofs",
-        "Basu's theorem"]}},
-     "address": "/Calculational-proofs/"}],
-   "ProbabilityTheory.Kernel.IsAncillary":
-   [{"id": "ProbabilityTheory___Kernel___IsAncillary",
-     "data":
-     {"/Calculational-proofs/#ProbabilityTheory___Kernel___IsAncillary":
-      {"display": "IsAncillary",
-       "context":
-       ["Kernel-Hom: Tactics for Kernel Categorical Reasoning",
-        "Calculational proofs",
-        "Basu's theorem"]}},
-     "address": "/Calculational-proofs/"}],
-   "ProbabilityTheory.Kernel.AEEq":
-   [{"id": "ProbabilityTheory___Kernel___AEEq",
-     "data":
-     {"/Calculational-proofs/#ProbabilityTheory___Kernel___AEEq":
-      {"display": "AEEq",
-       "context":
-       ["Kernel-Hom: Tactics for Kernel Categorical Reasoning",
-        "Calculational proofs",
-        "Basu's theorem"]}},
-     "address": "/Calculational-proofs/"}]}},
+     "address": "/Usage-and-examples/"}]}},
  "Verso.Genre.Manual.doc.tech":
  {"title": "Terminology",
   "description": "Definitions of technical terms",
@@ -510,34 +386,36 @@
  {"title": "Lean constant reference",
   "description": "Documentation for Lean constants",
   "contents":
-  {"transformKernelToHom":
-   [{"id": "transformKernelToHom",
-     "data": null,
-     "address": "/kernel_hom-tactic/"}],
-   "transformHomToKernel":
-   [{"id": "transformHomToKernel",
-     "data": null,
-     "address": "/hom_kernel-tactic/"}],
-   "synthInstanceCached":
-   [{"id": "synthInstanceCached",
+  {"unliftCarrier":
+   [{"id": "unliftCarrier",
      "data": null,
      "address": "/Implementation-of-the-translation/"}],
-   "sfinkerInsts":
-   [{"id": "sfinkerInsts",
+   "synthInstanceCached":
+   [{"id": "synthInstanceCached",
      "data": null,
      "address": "/Implementation-of-the-translation/"}],
    "resetTransformCache":
    [{"id": "resetTransformCache",
      "data": null,
      "address": "/Implementation-of-the-translation/"}],
-   "mkHomCongrProof":
-   [{"id": "mkHomCongrProof",
+   "objCarrier":
+   [{"id": "objCarrier",
      "data": null,
      "address": "/Implementation-of-the-translation/"}],
    "memoized":
    [{"id": "memoized",
      "data": null,
      "address": "/Implementation-of-the-translation/"}],
+   "liftCarrier":
+   [{"id": "liftCarrier",
+     "data": null,
+     "address": "/Implementation-of-the-translation/"}],
+   "kernelToHomQ":
+   [{"id": "kernelToHomQ",
+     "data": null,
+     "address": "/Implementation-of-the-translation/"}],
+   "kernelToHom":
+   [{"id": "kernelToHom", "data": null, "address": "/kernel_hom-tactic/"}],
    "kernelReassocHandler":
    [{"id": "kernelReassocHandler",
      "data": null,
@@ -546,6 +424,10 @@
    [{"id": "kernelMonoidal",
      "data": null,
      "address": "/Categorical-tactics-for-kernels/"}],
+   "kernelLevel":
+   [{"id": "kernelLevel",
+     "data": null,
+     "address": "/Implementation-of-the-translation/"}],
    "kernelHom":
    [{"id": "kernelHom", "data": null, "address": "/kernel_hom-tactic/"}],
    "kernelDisch":
@@ -556,30 +438,20 @@
    [{"id": "kernelCoherence",
      "data": null,
      "address": "/Categorical-tactics-for-kernels/"}],
-   "inferTypeCached":
-   [{"id": "inferTypeCached",
-     "data": null,
-     "address": "/Implementation-of-the-translation/"}],
-   "idME":
-   [{"id": "idME",
-     "data": null,
-     "address": "/Implementation-of-the-translation/"}],
+   "homToKernel":
+   [{"id": "homToKernel", "data": null, "address": "/hom_kernel-tactic/"}],
    "homKernel":
    [{"id": "homKernel", "data": null, "address": "/hom_kernel-tactic/"}],
-   "getCarriersFromKernel":
-   [{"id": "getCarriersFromKernel",
+   "homCarrierOfEquiv":
+   [{"id": "homCarrierOfEquiv",
+     "data": null,
+     "address": "/Implementation-of-the-translation/"}],
+   "homCarrier":
+   [{"id": "homCarrier",
      "data": null,
      "address": "/Implementation-of-the-translation/"}],
    "foldKernelOp":
    [{"id": "foldKernelOp", "data": null, "address": "/hom_kernel-tactic/"}],
-   "constructMeasurableEquiv":
-   [{"id": "constructMeasurableEquiv",
-     "data": null,
-     "address": "/Implementation-of-the-translation/"}],
-   "computeSFinkerOf":
-   [{"id": "computeSFinkerOf",
-     "data": null,
-     "address": "/Implementation-of-the-translation/"}],
    "collectExprUniverses":
    [{"id": "collectExprUniverses",
      "data": null,
@@ -588,14 +460,6 @@
    [{"id": "aesopKernel",
      "data": null,
      "address": "/Categorical-tactics-for-kernels/"}],
-   "[anonymous]":
-   [{"id": "HomCarrier___mk",
-     "data": null,
-     "address": "/Implementation-of-the-translation/"}],
-   "TransformCache.types":
-   [{"id": "TransformCache___mk",
-     "data": null,
-     "address": "/Implementation-of-the-translation/"}],
    "TransformCache.mk":
    [{"id": "TransformCache___mk",
      "data": null,
@@ -612,36 +476,12 @@
    [{"id": "TransformCache___mk",
      "data": null,
      "address": "/Implementation-of-the-translation/"}],
-   "SFinKerInsts.u":
-   [{"id": "SFinKerInsts___mk",
+   "ProbabilityTheory.Kernel.toHom_congr_of_eq":
+   [{"id": "ProbabilityTheory___Kernel___toHom_congr_of_eq",
      "data": null,
      "address": "/Implementation-of-the-translation/"}],
-   "SFinKerInsts.monoidal":
-   [{"id": "SFinKerInsts___mk",
-     "data": null,
-     "address": "/Implementation-of-the-translation/"}],
-   "SFinKerInsts.monStruct":
-   [{"id": "SFinKerInsts___mk",
-     "data": null,
-     "address": "/Implementation-of-the-translation/"}],
-   "SFinKerInsts.mk":
-   [{"id": "SFinKerInsts___mk",
-     "data": null,
-     "address": "/Implementation-of-the-translation/"}],
-   "SFinKerInsts.catStruct":
-   [{"id": "SFinKerInsts___mk",
-     "data": null,
-     "address": "/Implementation-of-the-translation/"}],
-   "SFinKerInsts.cat":
-   [{"id": "SFinKerInsts___mk",
-     "data": null,
-     "address": "/Implementation-of-the-translation/"}],
-   "SFinKerInsts.C":
-   [{"id": "SFinKerInsts___mk",
-     "data": null,
-     "address": "/Implementation-of-the-translation/"}],
-   "SFinKerInsts":
-   [{"id": "SFinKerInsts___mk",
+   "ProbabilityTheory.Kernel.comp_toHom_of_eq":
+   [{"id": "ProbabilityTheory___Kernel___comp_toHom_of_eq",
      "data": null,
      "address": "/Implementation-of-the-translation/"}],
    "MeasurableCoherence.monoidalCoherence":
@@ -660,54 +500,7 @@
    [{"id": "MeasurableCoherence___mk",
      "data": null,
      "address": "/Kernelized-monoidal-composition/"}],
-   "HomCarrier.toCarrier":
-   [{"id": "HomCarrier___mk",
-     "data": null,
-     "address": "/Implementation-of-the-translation/"}],
-   "HomCarrier.sfinite":
-   [{"id": "HomCarrier___sfinite",
-     "data": null,
-     "address": "/Implementation-of-the-translation/"}],
-   "HomCarrier.mk'":
-   [{"id": "HomCarrier___mk___",
-     "data": null,
-     "address": "/Implementation-of-the-translation/"}],
-   "HomCarrier.mk":
-   [{"id": "HomCarrier___mk",
-     "data": null,
-     "address": "/Implementation-of-the-translation/"}],
-   "HomCarrier.inst":
-   [{"id": "HomCarrier___mk",
-     "data": null,
-     "address": "/Implementation-of-the-translation/"}],
-   "HomCarrier":
-   [{"id": "HomCarrier___mk",
-     "data": null,
-     "address": "/Implementation-of-the-translation/"}],
    "EqUnlift":
    [{"id": "EqUnlift", "data": null, "address": "/Universe-handling/"}],
-   "EqLift": [{"id": "EqLift", "data": null, "address": "/Universe-handling/"}],
-   "Carrier.type":
-   [{"id": "Carrier___mk",
-     "data": null,
-     "address": "/Implementation-of-the-translation/"}],
-   "Carrier.mk":
-   [{"id": "Carrier___mk",
-     "data": null,
-     "address": "/Implementation-of-the-translation/"}],
-   "Carrier.lvl":
-   [{"id": "Carrier___mk",
-     "data": null,
-     "address": "/Implementation-of-the-translation/"}],
-   "Carrier.lift":
-   [{"id": "Carrier___lift",
-     "data": null,
-     "address": "/Implementation-of-the-translation/"}],
-   "Carrier.inst":
-   [{"id": "Carrier___inst",
-     "data": null,
-     "address": "/Implementation-of-the-translation/"}],
-   "Carrier":
-   [{"id": "Carrier___mk",
-     "data": null,
-     "address": "/Implementation-of-the-translation/"}]}}}
+   "EqLift":
+   [{"id": "EqLift", "data": null, "address": "/Universe-handling/"}]}}}
