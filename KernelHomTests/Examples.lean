@@ -27,7 +27,7 @@ exchange law (`parallelComp_comm₀`) and the coassociativity of copy (`prodAsso
 `Kernel.map` is not translated, so `map_prod_swap₀`, `prodAssoc_prod₀`, `prodAssoc_symm_prod₀` and
 `prodComm_prod₀` are first rewritten with `swap_comp_eq_map` or `deterministic_comp_eq_map`. As in
 Mathlib, `parallelComp_comm₀` holds for any kernels, and the case of a non s-finite kernel is closed
-by `simp`. See `KernelHomTests/Scope.lean` for the complete list of the candidate lemmas.
+by `simp`. See `KernelHomTests/Paper/Scope.lean` for the complete list of the candidate lemmas.
 -/
 
 @[expose] public section

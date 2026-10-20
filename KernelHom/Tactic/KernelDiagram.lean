@@ -118,13 +118,13 @@ def KernelM? (e : Expr) : MetaM (Option Html) := do
         trace[string_diagram] "Penrose substance: \n{(← get).sub}"
         match ← DiagramBuilderM.buildDiagram StringDiagram.dsl StringDiagram.sty with
         | some html => return html
-        | none => return <span>No non-structural morphisms found.</span>
+        | none => return jsx%{<span>No non-structural morphisms found.</span>}
   catch _ => return none
 
 open scoped Jsx in
 /-- Help function for displaying two string diagrams in an equality. -/
 def mkEqHtml (lhs rhs : Html) : Html :=
-  <div className="flex">
+  jsx%{<div className="flex">
     <div className="w-50">
       <details «open»={true}>
         <summary className="mv2 pointer">Kernel diagram for LHS</summary> {lhs}
@@ -135,7 +135,7 @@ def mkEqHtml (lhs rhs : Html) : Html :=
         <summary className="mv2 pointer">Kernel diagram for RHS</summary> {rhs}
       </details>
     </div>
-  </div>
+  </div>}
 
 /-- Given an equality between kernels, return a string diagram of the LHS and RHS.
 Otherwise `none`. -/
@@ -169,7 +169,7 @@ def rpc (props : PanelWidgetProps) : RequestM (RequestTask Html) :=
           let type ← g.mvarId.getType
           kernelEqM? type)
     match html with
-    | none => return <span>No Kernel Diagram.</span>
+    | none => return jsx%{<span>No Kernel Diagram.</span>}
     | some inner => return inner
 
 end KernelDiagram

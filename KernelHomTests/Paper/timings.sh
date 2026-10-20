@@ -1,7 +1,7 @@
 #!/bin/bash
 # Elaboration times of the declarations of the test files, as reported in the paper
 # (Section 7). Run from the root of the repository, after `lake build KernelHomTests`:
-#   KernelHomTests/timings.sh [number of runs, default 5]
+#   KernelHomTests/Paper/timings.sh [number of runs, default 5]
 # Each file is elaborated sequentially (`Elab.async=false`) with `trace.profiler`, its imports being
 # already built; the time of a declaration is the time of its whole command (statement and proof).
 # The docstrings are removed from a temporary copy of each file, so that the profiler prints the
@@ -10,7 +10,7 @@
 set -e
 RUNS=${1:-5}
 TMP=$(mktemp -d)
-for f in Examples Basu; do
+for f in Examples; do
   perl -0pe 's{/--.*?-/\n}{}gs' "KernelHomTests/$f.lean" > "$TMP/$f.lean"
   for i in $(seq 1 "$RUNS"); do
     lake env lean -Dtrace.profiler=true -Dtrace.profiler.threshold=1 -DElab.async=false \
@@ -21,7 +21,7 @@ done
 python3 - "$TMP" "$RUNS" <<'EOF'
 import collections, re, statistics, sys
 tmp, runs = sys.argv[1], int(sys.argv[2])
-for f in ["Examples", "Basu"]:
+for f in ["Examples"]:
     times = collections.defaultdict(list)
     order = []
     for line in open(f"{tmp}/{f}.txt"):

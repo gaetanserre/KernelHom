@@ -3,7 +3,6 @@ Copyright (c) 2026 Gaëtan Serré. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gaëtan Serré
 -/
-import KernelHomTests.Basu
 import KernelHomTests.Examples
 
 /-!
@@ -85,7 +84,7 @@ open MeasureTheory ProbabilityTheory CategoryTheory MonoidalCategory
 
 namespace ProbabilityTheory.Kernel
 
-/-! ### The lemmas of `KernelHomTests/Examples.lean` and `basu` do not depend on Mathlib's proofs
+/-! ### The lemmas of `KernelHomTests/Examples.lean` do not depend on Mathlib's proofs
 
 Positive controls first: the traversal sees the proofs of Mathlib, of Kernel-Hom and of the test
 files. -/
@@ -94,7 +93,6 @@ files. -/
 #assert_depends_on swap_prod₀ toHom_congr
 #assert_depends_on swap_prod₀ braiding_hom
 #assert_depends_on prodComm_prod₀ swap_comp_eq_map
-#assert_depends_on basu basu_aux
 
 
 #assert_not_depends_on map_prod_swap₀ map_prod_swap
@@ -104,8 +102,6 @@ files. -/
 #assert_not_depends_on prodComm_prod₀ prodComm_prod
 #assert_not_depends_on parallelComp_comp_prod₀ parallelComp_comp_prod
 #assert_not_depends_on parallelComp_comm₀ parallelComp_comm
-#assert_not_depends_on basu swap_prod
-#assert_not_depends_on basu parallelComp_comp_prod
 
 /-! ### They only use the standard axioms -/
 
@@ -150,12 +146,6 @@ info: 'ProbabilityTheory.Kernel.parallelComp_comm₀' depends on axioms: [propex
 -/
 #guard_msgs in
 #print axioms parallelComp_comm₀
-
-/--
-info: 'ProbabilityTheory.Kernel.basu' depends on axioms: [propext, Classical.choice, Quot.sound]
--/
-#guard_msgs in
-#print axioms basu
 
 /-! ### Lemmas used by the construction: proved by the tactics, but not independently -/
 
