@@ -62,7 +62,7 @@ def isPUnit (X : Expr) : Bool := X.isAppOf ``PUnit || X.isConstOf ``Unit
 unitor `Kernel.id.map Prod.fst : Kernel (X × PUnit) X` if `left` is false), as in
 `Kernel.leftUnitor_hom` and `Kernel.rightUnitor_hom`. -/
 def isUnitor (κ : Expr) (left : Bool) : Bool :=
-  match_expr κ.consumeMData with
+  match_expr κ with
   | Kernel.map P _ _ _ _ _ id f =>
     let_expr Prod A B := P | false
     id.isAppOf ``Kernel.id && f.isAppOf (if left then ``Prod.snd else ``Prod.fst) &&
@@ -73,7 +73,7 @@ def isUnitor (κ : Expr) (left : Bool) : Bool :=
 `Kernel.deterministic prodAssoc.symm` if `inv`), as in `Kernel.associator_hom` and
 `Kernel.associator_inv`. -/
 def isAssociator (κ : Expr) (inv : Bool) : Bool :=
-  match_expr κ.consumeMData with
+  match_expr κ with
   | Kernel.deterministic _ _ _ _ f _ =>
     let_expr DFunLike.coe _ _ _ _ e := f | false
     if inv then

@@ -62,6 +62,7 @@ partial def kernelToMeasure (e : Expr) : MetaM (Expr × Expr) := do
 /-- Transform an equality of kernels from `Unit` into an equivalent equality of measures, along
 with a proof of equivalence. -/
 def MeasureEquality (eq : Expr) : MetaM (Expr × Expr) := do
+  let eq ← whnfR (← instantiateMVars eq)
   let some (_, lhs, rhs) := eq.eq? | throwError "Expected an equality, got: {eq}."
   let (μ, pμ) ← kernelToMeasure lhs
   let (ν, pν) ← kernelToMeasure rhs

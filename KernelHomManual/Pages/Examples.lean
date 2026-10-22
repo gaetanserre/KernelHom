@@ -6,6 +6,7 @@ Authors: Gaëtan Serré
 
 import KernelHomTests.KernelHom.Examples
 import MeasureKernel
+import KernelHomManual.Papers
 import KernelHomManual.Tools.VersoKernelDiagram
 import KernelHomManual.Tools.LeanDecl
 import VersoManual
@@ -74,9 +75,9 @@ The library also provides the {name kernelDiagram}`kernel_diagram` command, whic
 swap_prod₀
 ```
 
-# Examples
+# API lemmas
 
-*Kernel-Hom* makes it easy to prove "API" lemmas about the usual operations on kernels. The following lemmas of Mathlib are equalities of kernels built only from composition, parallel composition, product, identity, copy and swap. In Mathlib, their proofs either manipulate integrals or rely on other lemmas about kernels. With *Kernel-Hom*, they are proved from the structure of {name SFinKer}`SFinKer`, without any knowledge of the lemmas about kernels. They are collected in the file `KernelHomTests/KernelHom/Examples.lean`, where their names are suffixed by `₀`. The tactics are also useful in longer proofs, written by calculation.
+*Kernel-Hom* makes it easy to prove "API" lemmas about the usual operations on kernels. The following lemmas of Mathlib are equalities of kernels built only from composition, parallel composition, product, identity, copy and swap. In Mathlib, their proofs either manipulate integrals or rely on other lemmas about kernels. With *Kernel-Hom*, they are proved from the structure of {name SFinKer}`SFinKer`, without any knowledge of the lemmas about kernels. They are collected in the file `KernelHomTests/KernelHom/Examples.lean`, where their names are suffixed by `₀`. The tactics are also useful in longer proofs, written by calculation (see the {ref "calculational-proofs"}[calculational proofs]).
 
 The other lemmas of Mathlib built from these operations, such as {name ProbabilityTheory.Kernel.comp_assoc}`comp_assoc`, {name ProbabilityTheory.Kernel.swap_parallelComp}`swap_parallelComp` or {name ProbabilityTheory.Kernel.parallelComp_comp_parallelComp}`parallelComp_comp_parallelComp`, are used, directly or not, to prove the axioms of {name SFinKer}`SFinKer`. The tactics also prove them, but these proofs could not replace the ones of Mathlib, so they are not listed here.
 
