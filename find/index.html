@@ -1,14 +1,9 @@
-<!DOCTYPE html><html>
-  <head>
-    <script>
-      (function(){
+<!DOCTYPE html><html><head><script>(function(){
   const {protocol:proto, host:hostName, pathname:path, search:srch, hash:hsh} = window.location;
   if (!(path.endsWith("/") || path.endsWith(".html"))) {
     window.location.replace(`${proto}//${hostName}${path}/${srch}${hsh}`);
   }
-})()</script>
-    <script>
-      // Enable TypeScript checking.
+})()</script><script>// Enable TypeScript checking.
 // @ts-check
 
 // Applies a saved table-of-contents width before the first paint.
@@ -32,31 +27,7 @@
         // Leave the default width in place when local storage is unavailable.
     }
 })();
-</script>
-    <base href="./../"><meta charset="utf-8">
-    <meta name="viewport" content="height=device-height, width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
-    <title>Cross-Reference Redirection</title><link rel="stylesheet" href="book.css">
-    <link rel="stylesheet" href="verso-vars.css">
-    <script src="https://cdn.jsdelivr.net/npm/marked@11.1.1/marked.min.js" integrity="sha384-zbcZAIxlvJtNE3Dp5nxLXdXtXyxwOdnILY1TDPVmKFhl4r4nSUG1r8bcFXGVa4Te" crossorigin="anonymous"></script>
-    <script defer="defer" src="-verso-search/elasticlunr.min.js"></script>
-    <script defer="defer" src="-verso-search/fuzzysort.min.js"></script>
-    <script defer="defer" src="-verso-search/searchIndex.js"></script>
-    <script defer="defer" src="-verso-search/search-config.js"></script>
-    <script type="module" src="-verso-search/search-init.js"></script>
-    <link rel="stylesheet" href="-verso-search/search-box.css">
-    <link rel="stylesheet" href="-verso-search/search-page.css">
-    <link rel="stylesheet" href="-verso-search/search-highlight.css">
-    <link rel="stylesheet" href="-verso-search/domain-display.css">
-    <script src="-verso-search/search-highlight.js" defer="defer"></script>
-    <script src="toc-resize.js" defer="defer"></script>
-    <script src="-verso-data/katex/katex.js"></script>
-    <script src="-verso-data/katex/math.js"></script>
-    <script src="-verso-data/popper.min.js"></script>
-    <script src="-verso-data/string-diagram/string-diagram-loader.js" defer="defer"></script>
-    <script src="-verso-data/tippy-bundle.umd.min.js"></script>
-    <link rel="stylesheet" href="-verso-data/tippy-border.css">
-    <link rel="stylesheet" href="-verso-data/katex/katex.css">
-    <style>
+</script><base href="./../"/><meta charset="utf-8"/><meta name="viewport" content="height=device-height, width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1"/><title>Cross-Reference Redirection</title><link rel="stylesheet" href="book.css"/><link rel="stylesheet" href="verso-vars.css"/><script src="https://cdn.jsdelivr.net/npm/marked@11.1.1/marked.min.js" integrity="sha384-zbcZAIxlvJtNE3Dp5nxLXdXtXyxwOdnILY1TDPVmKFhl4r4nSUG1r8bcFXGVa4Te" crossorigin="anonymous"></script><script defer="defer" src="-verso-search/elasticlunr.min.js"></script><script defer="defer" src="-verso-search/fuzzysort.min.js"></script><script defer="defer" src="-verso-search/searchIndex.js"></script><script defer="defer" src="-verso-search/search-config.js"></script><script type="module" src="-verso-search/search-init.js"></script><link rel="stylesheet" href="-verso-search/search-box.css"/><link rel="stylesheet" href="-verso-search/search-page.css"/><link rel="stylesheet" href="-verso-search/search-highlight.css"/><link rel="stylesheet" href="-verso-search/domain-display.css"/><script src="-verso-search/search-highlight.js" defer="defer"></script><script src="toc-resize.js" defer="defer"></script><script src="-verso-data/katex/katex.js"></script><script src="-verso-data/katex/math.js"></script><script src="-verso-data/popper.min.js"></script><script src="-verso-data/string-diagram/string-diagram-loader.js" defer="defer"></script><script src="-verso-data/tippy-bundle.umd.min.js"></script><link rel="stylesheet" href="-verso-data/tippy-border.css"/><link rel="stylesheet" href="-verso-data/katex/katex.css"/><style>
 .marginalia-note {
   box-sizing: border-box;
   padding: 0.5rem;
@@ -1815,7 +1786,6 @@ and its border extension paints the outline triangle with the box's border color
 .verso-string-diagram .o-30 { opacity: 0.3; }
 .verso-string-diagram .red { color: #b00020; }
 </style><script>
-      
 window.onload = async () => {
 
     // Don't show hovers inside of closed tactic states
@@ -2112,9 +2082,7 @@ window.onload = async () => {
       });
   });
 }
-</script>
-    <script>
-      window.xref = {"Verso.Genre.Manual.section":
+</script><script>window.xref = {"Verso.Genre.Manual.section":
  {"title": "Sections or chapters of the manual",
   "description": null,
   "contents":
@@ -2123,7 +2091,7 @@ window.onload = async () => {
      "data":
      {"title": "Implementation of the translation",
       "shortTitle": null,
-      "sectionNum": "8.",
+      "sectionNum": "9.",
       "searchPriority": 50,
       "context":
       [{"title": "Kernel-Hom: Tactics for Kernel Categorical Reasoning",
@@ -2131,7 +2099,7 @@ window.onload = async () => {
         "number": null},
        {"title": "Implementation of the translation",
         "shortTitle": null,
-        "number": "8"}]},
+        "number": "9"}]},
      "address": "/Implementation-of-the-translation/"}],
    "examples":
    [{"id": "examples",
@@ -2146,25 +2114,40 @@ window.onload = async () => {
         "number": null},
        {"title": "Usage and examples", "shortTitle": null, "number": "1"}]},
      "address": "/Usage-and-examples/"}],
-   "Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--kernel_hom-tactic":
-   [{"id":
-     "Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--kernel_hom-tactic",
+   "data-augmentation":
+   [{"id": "data-augmentation",
      "data":
-     {"title": "kernel_hom tactic",
+     {"title": "Reversibility of data augmentation",
       "shortTitle": null,
-      "sectionNum": "3.",
+      "sectionNum": "2.1.",
       "searchPriority": 50,
       "context":
       [{"title": "Kernel-Hom: Tactics for Kernel Categorical Reasoning",
         "shortTitle": "Kernel Categorical Reasoning",
         "number": null},
-       {"title": "kernel_hom tactic", "shortTitle": null, "number": "3"}]},
-     "address": "/kernel_hom-tactic/"}],
-   "Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--hom_kernel-tactic":
-   [{"id":
-     "Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--hom_kernel-tactic",
+       {"title": "Calculational proofs", "shortTitle": null, "number": "2"},
+       {"title": "Reversibility of data augmentation",
+        "shortTitle": null,
+        "number": "1"}]},
+     "address": "/Calculational-proofs/"}],
+   "calculational-proofs":
+   [{"id": "calculational-proofs",
      "data":
-     {"title": "hom_kernel tactic",
+     {"title": "Calculational proofs",
+      "shortTitle": null,
+      "sectionNum": "2.",
+      "searchPriority": 50,
+      "context":
+      [{"title": "Kernel-Hom: Tactics for Kernel Categorical Reasoning",
+        "shortTitle": "Kernel Categorical Reasoning",
+        "number": null},
+       {"title": "Calculational proofs", "shortTitle": null, "number": "2"}]},
+     "address": "/Calculational-proofs/"}],
+   "Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--kernel_hom-tactic":
+   [{"id":
+     "Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--kernel_hom-tactic",
+     "data":
+     {"title": "kernel_hom tactic",
       "shortTitle": null,
       "sectionNum": "4.",
       "searchPriority": 50,
@@ -2172,7 +2155,21 @@ window.onload = async () => {
       [{"title": "Kernel-Hom: Tactics for Kernel Categorical Reasoning",
         "shortTitle": "Kernel Categorical Reasoning",
         "number": null},
-       {"title": "hom_kernel tactic", "shortTitle": null, "number": "4"}]},
+       {"title": "kernel_hom tactic", "shortTitle": null, "number": "4"}]},
+     "address": "/kernel_hom-tactic/"}],
+   "Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--hom_kernel-tactic":
+   [{"id":
+     "Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--hom_kernel-tactic",
+     "data":
+     {"title": "hom_kernel tactic",
+      "shortTitle": null,
+      "sectionNum": "5.",
+      "searchPriority": 50,
+      "context":
+      [{"title": "Kernel-Hom: Tactics for Kernel Categorical Reasoning",
+        "shortTitle": "Kernel Categorical Reasoning",
+        "number": null},
+       {"title": "hom_kernel tactic", "shortTitle": null, "number": "5"}]},
      "address": "/hom_kernel-tactic/"}],
    "Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Usage-and-examples--Usage":
    [{"id":
@@ -2189,11 +2186,11 @@ window.onload = async () => {
        {"title": "Usage and examples", "shortTitle": null, "number": "1"},
        {"title": "Usage", "shortTitle": null, "number": "1"}]},
      "address": "/Usage-and-examples/"}],
-   "Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Usage-and-examples--Examples":
+   "Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Usage-and-examples--API-lemmas":
    [{"id":
-     "Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Usage-and-examples--Examples",
+     "Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Usage-and-examples--API-lemmas",
      "data":
-     {"title": "Examples",
+     {"title": "API lemmas",
       "shortTitle": null,
       "sectionNum": "1.2.",
       "searchPriority": 50,
@@ -2202,7 +2199,7 @@ window.onload = async () => {
         "shortTitle": "Kernel Categorical Reasoning",
         "number": null},
        {"title": "Usage and examples", "shortTitle": null, "number": "1"},
-       {"title": "Examples", "shortTitle": null, "number": "2"}]},
+       {"title": "API lemmas", "shortTitle": null, "number": "2"}]},
      "address": "/Usage-and-examples/"}],
    "Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Universe-handling":
    [{"id":
@@ -2210,13 +2207,13 @@ window.onload = async () => {
      "data":
      {"title": "Universe handling",
       "shortTitle": null,
-      "sectionNum": "2.",
+      "sectionNum": "3.",
       "searchPriority": 50,
       "context":
       [{"title": "Kernel-Hom: Tactics for Kernel Categorical Reasoning",
         "shortTitle": "Kernel Categorical Reasoning",
         "number": null},
-       {"title": "Universe handling", "shortTitle": null, "number": "2"}]},
+       {"title": "Universe handling", "shortTitle": null, "number": "3"}]},
      "address": "/Universe-handling/"}],
    "Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Kernelized-monoidal-composition--Monoidal-Composition-of-Kernels":
    [{"id":
@@ -2224,7 +2221,7 @@ window.onload = async () => {
      "data":
      {"title": "Monoidal Composition of Kernels",
       "shortTitle": null,
-      "sectionNum": "7.2.",
+      "sectionNum": "8.2.",
       "searchPriority": 50,
       "context":
       [{"title": "Kernel-Hom: Tactics for Kernel Categorical Reasoning",
@@ -2232,7 +2229,7 @@ window.onload = async () => {
         "number": null},
        {"title": "Kernelized monoidal composition",
         "shortTitle": "Monoidal composition",
-        "number": "7"},
+        "number": "8"},
        {"title": "Monoidal Composition of Kernels",
         "shortTitle": null,
         "number": "2"}]},
@@ -2243,7 +2240,7 @@ window.onload = async () => {
      "data":
      {"title": "Measurable Coherence",
       "shortTitle": null,
-      "sectionNum": "7.1.",
+      "sectionNum": "8.1.",
       "searchPriority": 50,
       "context":
       [{"title": "Kernel-Hom: Tactics for Kernel Categorical Reasoning",
@@ -2251,7 +2248,7 @@ window.onload = async () => {
         "number": null},
        {"title": "Kernelized monoidal composition",
         "shortTitle": "Monoidal composition",
-        "number": "7"},
+        "number": "8"},
        {"title": "Measurable Coherence", "shortTitle": null, "number": "1"}]},
      "address": "/Kernelized-monoidal-composition/"}],
    "Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Kernelized-monoidal-composition":
@@ -2260,7 +2257,7 @@ window.onload = async () => {
      "data":
      {"title": "Kernelized monoidal composition",
       "shortTitle": "Monoidal composition",
-      "sectionNum": "7.",
+      "sectionNum": "8.",
       "searchPriority": 50,
       "context":
       [{"title": "Kernel-Hom: Tactics for Kernel Categorical Reasoning",
@@ -2268,7 +2265,7 @@ window.onload = async () => {
         "number": null},
        {"title": "Kernelized monoidal composition",
         "shortTitle": "Monoidal composition",
-        "number": "7"}]},
+        "number": "8"}]},
      "address": "/Kernelized-monoidal-composition/"}],
    "Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Kernel-reassociation--The--kernel_reassoc_of___--elaborator":
    [{"id":
@@ -2276,13 +2273,13 @@ window.onload = async () => {
      "data":
      {"title": "The  kernel_reassoc_of%  elaborator",
       "shortTitle": null,
-      "sectionNum": "6.2.",
+      "sectionNum": "7.2.",
       "searchPriority": 50,
       "context":
       [{"title": "Kernel-Hom: Tactics for Kernel Categorical Reasoning",
         "shortTitle": "Kernel Categorical Reasoning",
         "number": null},
-       {"title": "Kernel reassociation", "shortTitle": null, "number": "6"},
+       {"title": "Kernel reassociation", "shortTitle": null, "number": "7"},
        {"title": "The  kernel_reassoc_of%  elaborator",
         "shortTitle": null,
         "number": "2"}]},
@@ -2293,13 +2290,13 @@ window.onload = async () => {
      "data":
      {"title": "The  @[kernel_reassoc]  attribute",
       "shortTitle": null,
-      "sectionNum": "6.1.",
+      "sectionNum": "7.1.",
       "searchPriority": 50,
       "context":
       [{"title": "Kernel-Hom: Tactics for Kernel Categorical Reasoning",
         "shortTitle": "Kernel Categorical Reasoning",
         "number": null},
-       {"title": "Kernel reassociation", "shortTitle": null, "number": "6"},
+       {"title": "Kernel reassociation", "shortTitle": null, "number": "7"},
        {"title": "The  @[kernel_reassoc]  attribute",
         "shortTitle": null,
         "number": "1"}]},
@@ -2310,13 +2307,13 @@ window.onload = async () => {
      "data":
      {"title": "Kernel reassociation",
       "shortTitle": null,
-      "sectionNum": "6.",
+      "sectionNum": "7.",
       "searchPriority": 50,
       "context":
       [{"title": "Kernel-Hom: Tactics for Kernel Categorical Reasoning",
         "shortTitle": "Kernel Categorical Reasoning",
         "number": null},
-       {"title": "Kernel reassociation", "shortTitle": null, "number": "6"}]},
+       {"title": "Kernel reassociation", "shortTitle": null, "number": "7"}]},
      "address": "/Kernel-reassociation/"}],
    "Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Implementation-of-the-translation--Terms-built-with-Qq":
    [{"id":
@@ -2324,7 +2321,7 @@ window.onload = async () => {
      "data":
      {"title": "Terms built with Qq",
       "shortTitle": null,
-      "sectionNum": "8.2.",
+      "sectionNum": "9.2.",
       "searchPriority": 50,
       "context":
       [{"title": "Kernel-Hom: Tactics for Kernel Categorical Reasoning",
@@ -2332,7 +2329,7 @@ window.onload = async () => {
         "number": null},
        {"title": "Implementation of the translation",
         "shortTitle": null,
-        "number": "8"},
+        "number": "9"},
        {"title": "Terms built with Qq", "shortTitle": null, "number": "2"}]},
      "address": "/Implementation-of-the-translation/"}],
    "Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Implementation-of-the-translation--Proofs-by-congruence-lemmas":
@@ -2341,7 +2338,7 @@ window.onload = async () => {
      "data":
      {"title": "Proofs by congruence lemmas",
       "shortTitle": null,
-      "sectionNum": "8.1.",
+      "sectionNum": "9.1.",
       "searchPriority": 50,
       "context":
       [{"title": "Kernel-Hom: Tactics for Kernel Categorical Reasoning",
@@ -2349,7 +2346,7 @@ window.onload = async () => {
         "number": null},
        {"title": "Implementation of the translation",
         "shortTitle": null,
-        "number": "8"},
+        "number": "9"},
        {"title": "Proofs by congruence lemmas",
         "shortTitle": null,
         "number": "1"}]},
@@ -2360,7 +2357,7 @@ window.onload = async () => {
      "data":
      {"title": "Memoization",
       "shortTitle": null,
-      "sectionNum": "8.3.",
+      "sectionNum": "9.3.",
       "searchPriority": 50,
       "context":
       [{"title": "Kernel-Hom: Tactics for Kernel Categorical Reasoning",
@@ -2368,7 +2365,7 @@ window.onload = async () => {
         "number": null},
        {"title": "Implementation of the translation",
         "shortTitle": null,
-        "number": "8"},
+        "number": "9"},
        {"title": "Memoization", "shortTitle": null, "number": "3"}]},
      "address": "/Implementation-of-the-translation/"}],
    "Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Implementation-of-the-translation--Carriers":
@@ -2377,7 +2374,7 @@ window.onload = async () => {
      "data":
      {"title": "Carriers",
       "shortTitle": null,
-      "sectionNum": "8.4.",
+      "sectionNum": "9.4.",
       "searchPriority": 50,
       "context":
       [{"title": "Kernel-Hom: Tactics for Kernel Categorical Reasoning",
@@ -2385,7 +2382,7 @@ window.onload = async () => {
         "number": null},
        {"title": "Implementation of the translation",
         "shortTitle": null,
-        "number": "8"},
+        "number": "9"},
        {"title": "Carriers", "shortTitle": null, "number": "4"}]},
      "address": "/Implementation-of-the-translation/"}],
    "Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Categorical-tactics-for-kernels":
@@ -2394,7 +2391,7 @@ window.onload = async () => {
      "data":
      {"title": "Categorical tactics for kernels",
       "shortTitle": null,
-      "sectionNum": "5.",
+      "sectionNum": "6.",
       "searchPriority": 50,
       "context":
       [{"title": "Kernel-Hom: Tactics for Kernel Categorical Reasoning",
@@ -2402,7 +2399,7 @@ window.onload = async () => {
         "number": null},
        {"title": "Categorical tactics for kernels",
         "shortTitle": null,
-        "number": "5"}]},
+        "number": "6"}]},
      "address": "/Categorical-tactics-for-kernels/"}],
    "Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning":
    [{"id": "Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning",
@@ -2438,7 +2435,7 @@ window.onload = async () => {
        "context":
        ["Kernel-Hom: Tactics for Kernel Categorical Reasoning",
         "Usage and examples",
-        "Examples"]}},
+        "API lemmas"]}},
      "address": "/Usage-and-examples/"}],
    "ProbabilityTheory.Kernel.prodAssoc_prod₀":
    [{"id": "ProbabilityTheory___Kernel___prodAssoc_prod___",
@@ -2448,7 +2445,7 @@ window.onload = async () => {
        "context":
        ["Kernel-Hom: Tactics for Kernel Categorical Reasoning",
         "Usage and examples",
-        "Examples"]}},
+        "API lemmas"]}},
      "address": "/Usage-and-examples/"}],
    "ProbabilityTheory.Kernel.parallelComp_comp_prod₀":
    [{"id": "ProbabilityTheory___Kernel___parallelComp_comp_prod___",
@@ -2458,7 +2455,7 @@ window.onload = async () => {
        "context":
        ["Kernel-Hom: Tactics for Kernel Categorical Reasoning",
         "Usage and examples",
-        "Examples"]}},
+        "API lemmas"]}},
      "address": "/Usage-and-examples/"}],
    "ProbabilityTheory.Kernel.parallelComp_comm₀":
    [{"id": "ProbabilityTheory___Kernel___parallelComp_comm___",
@@ -2468,7 +2465,7 @@ window.onload = async () => {
        "context":
        ["Kernel-Hom: Tactics for Kernel Categorical Reasoning",
         "Usage and examples",
-        "Examples"]}},
+        "API lemmas"]}},
      "address": "/Usage-and-examples/"}],
    "ProbabilityTheory.Kernel.map_prod_swap₀":
    [{"id": "ProbabilityTheory___Kernel___map_prod_swap___",
@@ -2478,8 +2475,29 @@ window.onload = async () => {
        "context":
        ["Kernel-Hom: Tactics for Kernel Categorical Reasoning",
         "Usage and examples",
-        "Examples"]}},
-     "address": "/Usage-and-examples/"}]}},
+        "API lemmas"]}},
+     "address": "/Usage-and-examples/"}],
+   "ProbabilityTheory.Kernel.DataAugmentation.isReversible_of_map_swap":
+   [{"id":
+     "ProbabilityTheory___Kernel___DataAugmentation___isReversible_of_map_swap",
+     "data":
+     {"/Calculational-proofs/#ProbabilityTheory___Kernel___DataAugmentation___isReversible_of_map_swap":
+      {"display": "isReversible_of_map_swap",
+       "context":
+       ["Kernel-Hom: Tactics for Kernel Categorical Reasoning",
+        "Calculational proofs",
+        "Reversibility of data augmentation"]}},
+     "address": "/Calculational-proofs/"}],
+   "ProbabilityTheory.Kernel.DataAugmentation.isReversible_comp":
+   [{"id": "ProbabilityTheory___Kernel___DataAugmentation___isReversible_comp",
+     "data":
+     {"/Calculational-proofs/#ProbabilityTheory___Kernel___DataAugmentation___isReversible_comp":
+      {"display": "isReversible_comp",
+       "context":
+       ["Kernel-Hom: Tactics for Kernel Categorical Reasoning",
+        "Calculational proofs",
+        "Reversibility of data augmentation"]}},
+     "address": "/Calculational-proofs/"}]}},
  "Verso.Genre.Manual.doc.tech":
  {"title": "Terminology",
   "description": "Definitions of technical terms",
@@ -2514,10 +2532,6 @@ window.onload = async () => {
    [{"id": "resetTransformCache",
      "data": null,
      "address": "/Implementation-of-the-translation/"}],
-   "objCarrier":
-   [{"id": "objCarrier",
-     "data": null,
-     "address": "/Implementation-of-the-translation/"}],
    "memoized":
    [{"id": "memoized",
      "data": null,
@@ -2526,12 +2540,6 @@ window.onload = async () => {
    [{"id": "liftCarrier",
      "data": null,
      "address": "/Implementation-of-the-translation/"}],
-   "kernelToHomQ":
-   [{"id": "kernelToHomQ",
-     "data": null,
-     "address": "/Implementation-of-the-translation/"}],
-   "kernelToHom":
-   [{"id": "kernelToHom", "data": null, "address": "/kernel_hom-tactic/"}],
    "kernelReassocHandler":
    [{"id": "kernelReassocHandler",
      "data": null,
@@ -2544,8 +2552,6 @@ window.onload = async () => {
    [{"id": "kernelLevel",
      "data": null,
      "address": "/Implementation-of-the-translation/"}],
-   "kernelHom":
-   [{"id": "kernelHom", "data": null, "address": "/kernel_hom-tactic/"}],
    "kernelDisch":
    [{"id": "kernelDisch",
      "data": null,
@@ -2554,10 +2560,6 @@ window.onload = async () => {
    [{"id": "kernelCoherence",
      "data": null,
      "address": "/Categorical-tactics-for-kernels/"}],
-   "homToKernel":
-   [{"id": "homToKernel", "data": null, "address": "/hom_kernel-tactic/"}],
-   "homKernel":
-   [{"id": "homKernel", "data": null, "address": "/hom_kernel-tactic/"}],
    "homCarrierOfEquiv":
    [{"id": "homCarrierOfEquiv",
      "data": null,
@@ -2616,6 +2618,30 @@ window.onload = async () => {
    [{"id": "MeasurableCoherence___mk",
      "data": null,
      "address": "/Kernelized-monoidal-composition/"}],
+   "KernelHom.kernelToHomQ":
+   [{"id": "KernelHom___kernelToHomQ",
+     "data": null,
+     "address": "/Implementation-of-the-translation/"}],
+   "KernelHom.kernelToHom":
+   [{"id": "KernelHom___kernelToHom",
+     "data": null,
+     "address": "/kernel_hom-tactic/"}],
+   "KernelHom.kernelHom":
+   [{"id": "KernelHom___kernelHom",
+     "data": null,
+     "address": "/kernel_hom-tactic/"}],
+   "HomKernel.objCarrier":
+   [{"id": "HomKernel___objCarrier",
+     "data": null,
+     "address": "/Implementation-of-the-translation/"}],
+   "HomKernel.homToKernel":
+   [{"id": "HomKernel___homToKernel",
+     "data": null,
+     "address": "/hom_kernel-tactic/"}],
+   "HomKernel.homKernel":
+   [{"id": "HomKernel___homKernel",
+     "data": null,
+     "address": "/hom_kernel-tactic/"}],
    "EqUnlift":
    [{"id": "EqUnlift", "data": null, "address": "/Universe-handling/"}],
    "EqLift":
@@ -2816,9 +2842,7 @@ if (paramName) {
         }
     });
 }
-</script>
-    <script>
-      
+</script><script>
 (() => {
   const setupHover = () => {
     document.querySelectorAll(".marginalia-reference").forEach(reference => {
@@ -2855,56 +2879,4 @@ if (paramName) {
     }
   });
 })();
-</script>
-    <link rel="icon" type="image/x-icon" href="static/favicon.svg">
-    <link rel="stylesheet" href="static/style.css">
-    <script src="static/scripts.js"></script>
-    </head>
-  <body>
-    <header>
-      <div class="header-logo-wrapper"></div>
-      <div class="header-title-wrapper">
-        <a href="" class="header-title"><h1>
-            Cross-Reference Redirection</h1>
-          </a></div>
-      </header>
-    <label for="toggle-toc" id="toggle-toc-click"><span class="line line1"></span><span class="line line2"></span><span class="line line3"></span></label><div class="with-toc">
-      <div class="toc-backdrop" onclick="document.getElementById('toggle-toc-click')?.click()"></div>
-      <nav id="toc">
-        <input type="checkbox" id="toggle-toc"><div class="first">
-          <a href="" class="toc-title"><h1>
-              Cross-Reference Redirection</h1>
-            </a><div class="split-tocs">
-            <div class="split-toc book">
-              <div class="title">
-                <label for="--verso-manual-toc-----bookRoot" class="toggle-split-toc"><input type="checkbox" class="toggle-split-toc" id="--verso-manual-toc-----bookRoot" checked="checked"></label><span class="">Table of Contents</span></div>
-              <table><tr class="numbered"><td class="num">1.</td><td><a href="Usage-and-examples/#examples">Usage and examples</a></td></tr><tr class="numbered"><td class="num">2.</td><td><a href="Universe-handling/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Universe-handling">Universe handling</a></td></tr><tr class="numbered"><td class="num">3.</td><td><a href="kernel_hom-tactic/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--kernel_hom-tactic">kernel_hom tactic</a></td></tr><tr class="numbered"><td class="num">4.</td><td><a href="hom_kernel-tactic/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--hom_kernel-tactic">hom_kernel tactic</a></td></tr><tr class="numbered"><td class="num">5.</td><td><a href="Categorical-tactics-for-kernels/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Categorical-tactics-for-kernels">Categorical tactics for kernels</a></td></tr><tr class="numbered"><td class="num">6.</td><td><a href="Kernel-reassociation/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Kernel-reassociation">Kernel reassociation</a></td></tr><tr class="numbered"><td class="num">7.</td><td><a href="Kernelized-monoidal-composition/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Kernelized-monoidal-composition">Monoidal composition</a></td></tr><tr class="numbered"><td class="num">8.</td><td><a href="Implementation-of-the-translation/#implementation">Implementation of the translation</a></td></tr></table></div>
-            </div>
-          </div>
-        <div class="last">
-          <ul id="meta-links">
-            <li>
-              <a href="https://github.com/gaetanserre/KernelHom">Source Code</a></li>
-            <li>
-              <a href="https://github.com/gaetanserre/KernelHom/issues">Report Issues</a></li>
-            </ul>
-          </div>
-        </nav>
-      <div class="toc-resize-handle"></div>
-      <main><div class="content-wrapper">
-          <nav class="prev-next-buttons">
-            <div></div>
-            <div></div>
-            </nav>
-          <section>
-            <h1 id="title"></h1>
-            <div id="message"></div>
-            </section>
-          <nav class="prev-next-buttons">
-            <div></div>
-            <div></div>
-            </nav>
-          </div>
-        </main></div>
-    </body>
-  </html>
+</script><link rel="icon" type="image/x-icon" href="static/favicon.svg"/><link rel="stylesheet" href="static/style.css"/><script src="static/scripts.js"></script></head><body><header><div class="header-logo-wrapper"></div><div class="header-title-wrapper"><a href class="header-title"><h1>Cross-Reference Redirection</h1></a></div></header><label for="toggle-toc" id="toggle-toc-click"><span class="line line1"></span><span class="line line2"></span><span class="line line3"></span></label><div class="with-toc"><div class="toc-backdrop" onclick="document.getElementById('toggle-toc-click')?.click()"></div><nav id="toc"><input type="checkbox" id="toggle-toc"/><div class="first"><a href class="toc-title"><h1>Cross-Reference Redirection</h1></a><div class="split-tocs"><div class="split-toc book"><div class="title"><label for="--verso-manual-toc-----bookRoot" class="toggle-split-toc"><input type="checkbox" class="toggle-split-toc" id="--verso-manual-toc-----bookRoot" checked="checked"/></label><span class>Table of Contents</span></div><table><tr class="numbered"><td class="num">1.</td><td><a href="Usage-and-examples/#examples">Usage and examples</a></td></tr><tr class="numbered"><td class="num">2.</td><td><a href="Calculational-proofs/#calculational-proofs">Calculational proofs</a></td></tr><tr class="numbered"><td class="num">3.</td><td><a href="Universe-handling/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Universe-handling">Universe handling</a></td></tr><tr class="numbered"><td class="num">4.</td><td><a href="kernel_hom-tactic/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--kernel_hom-tactic">kernel_hom tactic</a></td></tr><tr class="numbered"><td class="num">5.</td><td><a href="hom_kernel-tactic/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--hom_kernel-tactic">hom_kernel tactic</a></td></tr><tr class="numbered"><td class="num">6.</td><td><a href="Categorical-tactics-for-kernels/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Categorical-tactics-for-kernels">Categorical tactics for kernels</a></td></tr><tr class="numbered"><td class="num">7.</td><td><a href="Kernel-reassociation/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Kernel-reassociation">Kernel reassociation</a></td></tr><tr class="numbered"><td class="num">8.</td><td><a href="Kernelized-monoidal-composition/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Kernelized-monoidal-composition">Monoidal composition</a></td></tr><tr class="numbered"><td class="num">9.</td><td><a href="Implementation-of-the-translation/#implementation">Implementation of the translation</a></td></tr></table></div></div></div><div class="last"><ul id="meta-links"><li><a href="https://github.com/gaetanserre/KernelHom">Source Code</a></li><li><a href="https://github.com/gaetanserre/KernelHom/issues">Report Issues</a></li></ul></div></nav><div class="toc-resize-handle"></div><main><div class="content-wrapper"><nav class="prev-next-buttons"><div></div><div></div></nav><section><h1 id="title"></h1><div id="message"></div></section><nav class="prev-next-buttons"><div></div><div></div></nav></div></main></div></body></html>

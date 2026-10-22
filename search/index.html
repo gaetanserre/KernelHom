@@ -1,14 +1,9 @@
-<!DOCTYPE html><html>
-  <head>
-    <script>
-      (function(){
+<!DOCTYPE html><html><head><script>(function(){
   const {protocol:proto, host:hostName, pathname:path, search:srch, hash:hsh} = window.location;
   if (!(path.endsWith("/") || path.endsWith(".html"))) {
     window.location.replace(`${proto}//${hostName}${path}/${srch}${hsh}`);
   }
-})()</script>
-    <script>
-      // Enable TypeScript checking.
+})()</script><script>// Enable TypeScript checking.
 // @ts-check
 
 // Applies a saved table-of-contents width before the first paint.
@@ -32,31 +27,7 @@
         // Leave the default width in place when local storage is unavailable.
     }
 })();
-</script>
-    <base href="./../"><meta charset="utf-8">
-    <meta name="viewport" content="height=device-height, width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
-    <title>Search</title><link rel="stylesheet" href="book.css">
-    <link rel="stylesheet" href="verso-vars.css">
-    <script src="https://cdn.jsdelivr.net/npm/marked@11.1.1/marked.min.js" integrity="sha384-zbcZAIxlvJtNE3Dp5nxLXdXtXyxwOdnILY1TDPVmKFhl4r4nSUG1r8bcFXGVa4Te" crossorigin="anonymous"></script>
-    <script defer="defer" src="-verso-search/elasticlunr.min.js"></script>
-    <script defer="defer" src="-verso-search/fuzzysort.min.js"></script>
-    <script defer="defer" src="-verso-search/searchIndex.js"></script>
-    <script defer="defer" src="-verso-search/search-config.js"></script>
-    <script type="module" src="-verso-search/search-init.js"></script>
-    <link rel="stylesheet" href="-verso-search/search-box.css">
-    <link rel="stylesheet" href="-verso-search/search-page.css">
-    <link rel="stylesheet" href="-verso-search/search-highlight.css">
-    <link rel="stylesheet" href="-verso-search/domain-display.css">
-    <script src="-verso-search/search-highlight.js" defer="defer"></script>
-    <script src="toc-resize.js" defer="defer"></script>
-    <script src="-verso-data/katex/katex.js"></script>
-    <script src="-verso-data/katex/math.js"></script>
-    <script src="-verso-data/popper.min.js"></script>
-    <script src="-verso-data/string-diagram/string-diagram-loader.js" defer="defer"></script>
-    <script src="-verso-data/tippy-bundle.umd.min.js"></script>
-    <link rel="stylesheet" href="-verso-data/tippy-border.css">
-    <link rel="stylesheet" href="-verso-data/katex/katex.css">
-    <style>
+</script><base href="./../"/><meta charset="utf-8"/><meta name="viewport" content="height=device-height, width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1"/><title>Search</title><link rel="stylesheet" href="book.css"/><link rel="stylesheet" href="verso-vars.css"/><script src="https://cdn.jsdelivr.net/npm/marked@11.1.1/marked.min.js" integrity="sha384-zbcZAIxlvJtNE3Dp5nxLXdXtXyxwOdnILY1TDPVmKFhl4r4nSUG1r8bcFXGVa4Te" crossorigin="anonymous"></script><script defer="defer" src="-verso-search/elasticlunr.min.js"></script><script defer="defer" src="-verso-search/fuzzysort.min.js"></script><script defer="defer" src="-verso-search/searchIndex.js"></script><script defer="defer" src="-verso-search/search-config.js"></script><script type="module" src="-verso-search/search-init.js"></script><link rel="stylesheet" href="-verso-search/search-box.css"/><link rel="stylesheet" href="-verso-search/search-page.css"/><link rel="stylesheet" href="-verso-search/search-highlight.css"/><link rel="stylesheet" href="-verso-search/domain-display.css"/><script src="-verso-search/search-highlight.js" defer="defer"></script><script src="toc-resize.js" defer="defer"></script><script src="-verso-data/katex/katex.js"></script><script src="-verso-data/katex/math.js"></script><script src="-verso-data/popper.min.js"></script><script src="-verso-data/string-diagram/string-diagram-loader.js" defer="defer"></script><script src="-verso-data/tippy-bundle.umd.min.js"></script><link rel="stylesheet" href="-verso-data/tippy-border.css"/><link rel="stylesheet" href="-verso-data/katex/katex.css"/><style>
 .marginalia-note {
   box-sizing: border-box;
   padding: 0.5rem;
@@ -1815,7 +1786,6 @@ and its border extension paints the outline triangle with the box's border color
 .verso-string-diagram .o-30 { opacity: 0.3; }
 .verso-string-diagram .red { color: #b00020; }
 </style><script>
-      
 window.onload = async () => {
 
     // Don't show hovers inside of closed tactic states
@@ -2112,9 +2082,7 @@ window.onload = async () => {
       });
   });
 }
-</script>
-    <script>
-      
+</script><script>
 (() => {
   const setupHover = () => {
     document.querySelectorAll(".marginalia-reference").forEach(reference => {
@@ -2151,62 +2119,4 @@ window.onload = async () => {
     }
   });
 })();
-</script>
-    <link rel="icon" type="image/x-icon" href="static/favicon.svg">
-    <link rel="stylesheet" href="static/style.css">
-    <script src="static/scripts.js"></script>
-    <link rel="preload" href="xref.json" as="fetch">
-    </head>
-  <body>
-    <header>
-      <div class="header-logo-wrapper"></div>
-      <div class="header-title-wrapper">
-        <a href="" class="header-title"><h1>
-            Kernel Categorical Reasoning</h1>
-          </a></div>
-      </header>
-    <label for="toggle-toc" id="toggle-toc-click"><span class="line line1"></span><span class="line line2"></span><span class="line line3"></span></label><div class="with-toc">
-      <div class="toc-backdrop" onclick="document.getElementById('toggle-toc-click')?.click()"></div>
-      <nav id="toc">
-        <input type="checkbox" id="toggle-toc"><div class="first">
-          <a href="" class="toc-title"><h1>
-              Kernel Categorical Reasoning</h1>
-            </a><div class="split-tocs">
-            <div class="split-toc book">
-              <div class="title">
-                <label for="--verso-manual-toc-----bookRoot" class="toggle-split-toc"><input type="checkbox" class="toggle-split-toc" id="--verso-manual-toc-----bookRoot" checked="checked"></label><span class="">Table of Contents</span></div>
-              <table><tr class="numbered"><td class="num">1.</td><td><a href="Usage-and-examples/#examples">Usage and examples</a></td></tr><tr class="numbered"><td class="num">2.</td><td><a href="Universe-handling/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Universe-handling">Universe handling</a></td></tr><tr class="numbered"><td class="num">3.</td><td><a href="kernel_hom-tactic/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--kernel_hom-tactic">kernel_hom tactic</a></td></tr><tr class="numbered"><td class="num">4.</td><td><a href="hom_kernel-tactic/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--hom_kernel-tactic">hom_kernel tactic</a></td></tr><tr class="numbered"><td class="num">5.</td><td><a href="Categorical-tactics-for-kernels/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Categorical-tactics-for-kernels">Categorical tactics for kernels</a></td></tr><tr class="numbered"><td class="num">6.</td><td><a href="Kernel-reassociation/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Kernel-reassociation">Kernel reassociation</a></td></tr><tr class="numbered"><td class="num">7.</td><td><a href="Kernelized-monoidal-composition/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Kernelized-monoidal-composition">Monoidal composition</a></td></tr><tr class="numbered"><td class="num">8.</td><td><a href="Implementation-of-the-translation/#implementation">Implementation of the translation</a></td></tr></table></div>
-            </div>
-          </div>
-        <div class="last">
-          <ul id="meta-links">
-            <li>
-              <a href="https://github.com/gaetanserre/KernelHom">Source Code</a></li>
-            <li>
-              <a href="https://github.com/gaetanserre/KernelHom/issues">Report Issues</a></li>
-            </ul>
-          </div>
-        </nav>
-      <div class="toc-resize-handle"></div>
-      <main><div class="content-wrapper">
-          <nav class="prev-next-buttons">
-            <div></div>
-            <div></div>
-            </nav>
-          <section class="search-page">
-            <h1>
-              Search</h1>
-            <div data-search-host="" class="search-page-host"></div>
-            <noscript><p>
-                This search feature requires JavaScript.</p>
-              </noscript><div id="search-page-results"></div>
-            <script type="module" src="-verso-search/search-page.js"></script>
-            </section>
-          <nav class="prev-next-buttons">
-            <div></div>
-            <div></div>
-            </nav>
-          </div>
-        </main></div>
-    </body>
-  </html>
+</script><link rel="icon" type="image/x-icon" href="static/favicon.svg"/><link rel="stylesheet" href="static/style.css"/><script src="static/scripts.js"></script><link rel="preload" href="xref.json" as="fetch"/></head><body><header><div class="header-logo-wrapper"></div><div class="header-title-wrapper"><a href class="header-title"><h1>Kernel Categorical Reasoning</h1></a></div></header><label for="toggle-toc" id="toggle-toc-click"><span class="line line1"></span><span class="line line2"></span><span class="line line3"></span></label><div class="with-toc"><div class="toc-backdrop" onclick="document.getElementById('toggle-toc-click')?.click()"></div><nav id="toc"><input type="checkbox" id="toggle-toc"/><div class="first"><a href class="toc-title"><h1>Kernel Categorical Reasoning</h1></a><div class="split-tocs"><div class="split-toc book"><div class="title"><label for="--verso-manual-toc-----bookRoot" class="toggle-split-toc"><input type="checkbox" class="toggle-split-toc" id="--verso-manual-toc-----bookRoot" checked="checked"/></label><span class>Table of Contents</span></div><table><tr class="numbered"><td class="num">1.</td><td><a href="Usage-and-examples/#examples">Usage and examples</a></td></tr><tr class="numbered"><td class="num">2.</td><td><a href="Calculational-proofs/#calculational-proofs">Calculational proofs</a></td></tr><tr class="numbered"><td class="num">3.</td><td><a href="Universe-handling/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Universe-handling">Universe handling</a></td></tr><tr class="numbered"><td class="num">4.</td><td><a href="kernel_hom-tactic/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--kernel_hom-tactic">kernel_hom tactic</a></td></tr><tr class="numbered"><td class="num">5.</td><td><a href="hom_kernel-tactic/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--hom_kernel-tactic">hom_kernel tactic</a></td></tr><tr class="numbered"><td class="num">6.</td><td><a href="Categorical-tactics-for-kernels/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Categorical-tactics-for-kernels">Categorical tactics for kernels</a></td></tr><tr class="numbered"><td class="num">7.</td><td><a href="Kernel-reassociation/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Kernel-reassociation">Kernel reassociation</a></td></tr><tr class="numbered"><td class="num">8.</td><td><a href="Kernelized-monoidal-composition/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Kernelized-monoidal-composition">Monoidal composition</a></td></tr><tr class="numbered"><td class="num">9.</td><td><a href="Implementation-of-the-translation/#implementation">Implementation of the translation</a></td></tr></table></div></div></div><div class="last"><ul id="meta-links"><li><a href="https://github.com/gaetanserre/KernelHom">Source Code</a></li><li><a href="https://github.com/gaetanserre/KernelHom/issues">Report Issues</a></li></ul></div></nav><div class="toc-resize-handle"></div><main><div class="content-wrapper"><nav class="prev-next-buttons"><div></div><div></div></nav><section class="search-page"><h1>Search</h1><div data-search-host class="search-page-host"></div><noscript><p>This search feature requires JavaScript.</p></noscript><div id="search-page-results"></div><script type="module" src="-verso-search/search-page.js"></script></section><nav class="prev-next-buttons"><div></div><div></div></nav></div></main></div></body></html>

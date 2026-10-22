@@ -1,15 +1,10 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <script>
-      (function(){
+<html><head><script>(function(){
   const {protocol:proto, host:hostName, pathname:path, search:srch, hash:hsh} = window.location;
   if (!(path.endsWith("/") || path.endsWith(".html"))) {
     window.location.replace(`${proto}//${hostName}${path}/${srch}${hsh}`);
   }
-})()</script>
-    <script>
-      // Enable TypeScript checking.
+})()</script><script>// Enable TypeScript checking.
 // @ts-check
 
 // Applies a saved table-of-contents width before the first paint.
@@ -33,31 +28,7 @@
         // Leave the default width in place when local storage is unavailable.
     }
 })();
-</script>
-    <base href="./"><meta charset="utf-8">
-    <meta name="viewport" content="height=device-height, width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
-    <title>Kernel-Hom: Tactics for Kernel Categorical Reasoning</title><link rel="stylesheet" href="book.css">
-    <link rel="stylesheet" href="verso-vars.css">
-    <script src="https://cdn.jsdelivr.net/npm/marked@11.1.1/marked.min.js" integrity="sha384-zbcZAIxlvJtNE3Dp5nxLXdXtXyxwOdnILY1TDPVmKFhl4r4nSUG1r8bcFXGVa4Te" crossorigin="anonymous"></script>
-    <script defer="defer" src="-verso-search/elasticlunr.min.js"></script>
-    <script defer="defer" src="-verso-search/fuzzysort.min.js"></script>
-    <script defer="defer" src="-verso-search/searchIndex.js"></script>
-    <script defer="defer" src="-verso-search/search-config.js"></script>
-    <script type="module" src="-verso-search/search-init.js"></script>
-    <link rel="stylesheet" href="-verso-search/search-box.css">
-    <link rel="stylesheet" href="-verso-search/search-page.css">
-    <link rel="stylesheet" href="-verso-search/search-highlight.css">
-    <link rel="stylesheet" href="-verso-search/domain-display.css">
-    <script src="-verso-search/search-highlight.js" defer="defer"></script>
-    <script src="toc-resize.js" defer="defer"></script>
-    <script src="-verso-data/katex/katex.js"></script>
-    <script src="-verso-data/katex/math.js"></script>
-    <script src="-verso-data/popper.min.js"></script>
-    <script src="-verso-data/string-diagram/string-diagram-loader.js" defer="defer"></script>
-    <script src="-verso-data/tippy-bundle.umd.min.js"></script>
-    <link rel="stylesheet" href="-verso-data/tippy-border.css">
-    <link rel="stylesheet" href="-verso-data/katex/katex.css">
-    <style>
+</script><base href="./"/><meta charset="utf-8"/><meta name="viewport" content="height=device-height, width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1"/><title>Kernel-Hom: Tactics for Kernel Categorical Reasoning</title><link rel="stylesheet" href="book.css"/><link rel="stylesheet" href="verso-vars.css"/><script src="https://cdn.jsdelivr.net/npm/marked@11.1.1/marked.min.js" integrity="sha384-zbcZAIxlvJtNE3Dp5nxLXdXtXyxwOdnILY1TDPVmKFhl4r4nSUG1r8bcFXGVa4Te" crossorigin="anonymous"></script><script defer="defer" src="-verso-search/elasticlunr.min.js"></script><script defer="defer" src="-verso-search/fuzzysort.min.js"></script><script defer="defer" src="-verso-search/searchIndex.js"></script><script defer="defer" src="-verso-search/search-config.js"></script><script type="module" src="-verso-search/search-init.js"></script><link rel="stylesheet" href="-verso-search/search-box.css"/><link rel="stylesheet" href="-verso-search/search-page.css"/><link rel="stylesheet" href="-verso-search/search-highlight.css"/><link rel="stylesheet" href="-verso-search/domain-display.css"/><script src="-verso-search/search-highlight.js" defer="defer"></script><script src="toc-resize.js" defer="defer"></script><script src="-verso-data/katex/katex.js"></script><script src="-verso-data/katex/math.js"></script><script src="-verso-data/popper.min.js"></script><script src="-verso-data/string-diagram/string-diagram-loader.js" defer="defer"></script><script src="-verso-data/tippy-bundle.umd.min.js"></script><link rel="stylesheet" href="-verso-data/tippy-border.css"/><link rel="stylesheet" href="-verso-data/katex/katex.css"/><style>
 .marginalia-note {
   box-sizing: border-box;
   padding: 0.5rem;
@@ -1816,7 +1787,6 @@ and its border extension paints the outline triangle with the box's border color
 .verso-string-diagram .o-30 { opacity: 0.3; }
 .verso-string-diagram .red { color: #b00020; }
 </style><script>
-      
 window.onload = async () => {
 
     // Don't show hovers inside of closed tactic states
@@ -2113,9 +2083,7 @@ window.onload = async () => {
       });
   });
 }
-</script>
-    <script>
-      
+</script><script>
 (() => {
   const setupHover = () => {
     document.querySelectorAll(".marginalia-reference").forEach(reference => {
@@ -2152,148 +2120,5 @@ window.onload = async () => {
     }
   });
 })();
-</script>
-    <link rel="icon" type="image/x-icon" href="static/favicon.svg">
-    <link rel="stylesheet" href="static/style.css">
-    <script src="static/scripts.js"></script>
-    </head>
-  <body>
-    <header>
-      <div class="header-logo-wrapper"></div>
-      <div class="header-title-wrapper">
-        <a href="" class="header-title"><h1>
-            Kernel Categorical Reasoning</h1>
-          </a></div>
-      </header>
-    <label for="toggle-toc" id="toggle-toc-click"><span class="line line1"></span><span class="line line2"></span><span class="line line3"></span></label><div class="with-toc">
-      <div class="toc-backdrop" onclick="document.getElementById('toggle-toc-click')?.click()"></div>
-      <nav id="toc">
-        <input type="checkbox" id="toggle-toc"><div class="first">
-          <a href="" class="toc-title"><h1>
-              Kernel Categorical Reasoning</h1>
-            </a><div class="split-tocs">
-            <div class="split-toc book">
-              <div class="title">
-                <label for="--verso-manual-toc-----bookRoot" class="toggle-split-toc"><input type="checkbox" class="toggle-split-toc" id="--verso-manual-toc-----bookRoot" checked="checked"></label><span class="">Table of Contents</span></div>
-              <table><tr class="numbered"><td class="num">1.</td><td><a href="Usage-and-examples/#examples">Usage and examples</a></td></tr><tr class="numbered"><td class="num">2.</td><td><a href="Universe-handling/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Universe-handling">Universe handling</a></td></tr><tr class="numbered"><td class="num">3.</td><td><a href="kernel_hom-tactic/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--kernel_hom-tactic">kernel_hom tactic</a></td></tr><tr class="numbered"><td class="num">4.</td><td><a href="hom_kernel-tactic/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--hom_kernel-tactic">hom_kernel tactic</a></td></tr><tr class="numbered"><td class="num">5.</td><td><a href="Categorical-tactics-for-kernels/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Categorical-tactics-for-kernels">Categorical tactics for kernels</a></td></tr><tr class="numbered"><td class="num">6.</td><td><a href="Kernel-reassociation/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Kernel-reassociation">Kernel reassociation</a></td></tr><tr class="numbered"><td class="num">7.</td><td><a href="Kernelized-monoidal-composition/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Kernelized-monoidal-composition">Monoidal composition</a></td></tr><tr class="numbered"><td class="num">8.</td><td><a href="Implementation-of-the-translation/#implementation">Implementation of the translation</a></td></tr></table></div>
-            </div>
-          </div>
-        <div class="last">
-          <ul id="meta-links">
-            <li>
-              <a href="https://github.com/gaetanserre/KernelHom">Source Code</a></li>
-            <li>
-              <a href="https://github.com/gaetanserre/KernelHom/issues">Report Issues</a></li>
-            </ul>
-          </div>
-        </nav>
-      <div class="toc-resize-handle"></div>
-      <main><div class="content-wrapper">
-          <nav class="prev-next-buttons">
-            <div></div>
-            <a class="local-button active" href="Usage-and-examples/#examples" rel="next" title="1. Usage and examples"><span class="where">1. Usage and examples</span><span class="arrow">→</span></a></nav>
-          <section>
-            <div class="titlepage">
-              <h1>
-                 Kernel-Hom: Tactics for Kernel Categorical Reasoning<span class="permalink-widget inline"><a href="find/?domain=Verso.Genre.Manual.section&amp;name=Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning" title="Permalink">🔗</a></span></h1>
-              <div class="authors">
-                <span class="author">Gaëtan Serré</span></div>
-              <p>
-                <strong>Overview</strong></p>
-              <p>
-                <strong>Kernel-Hom</strong> is a Lean 4 library that provides tactics to simplify kernel equalities by leveraging categorical reasoning. It automatically translates s-finite kernel equalities into equalities in a monoidal category, where tactics like <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Mathlib.Tactic.Monoidal.monoidal" data-verso-hover="0">monoidal</span></code> or <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Mathlib.Tactic.Coherence.coherence" data-verso-hover="1">coherence</span></code> can be applied, and then translates the result back to a kernel equality if needed. The translation from kernels to categorical expressions gives access to the tools of category theory for kernels, which has three main benefits:</p>
-              <ul>
-                <li>
-                  <p>
-                    <strong>Proving API lemmas easily.</strong> Equalities of kernels built from compositions, parallel compositions, products, copies, discards and swaps are proved by a single call to <code class="hl lean inline" data-lean-context="examples"><a href="Categorical-tactics-for-kernels/#kernelDisch" title="Documentation for kernelDisch"><span class="const token" data-binding="const-kernelDisch" data-verso-hover="2">kernel_disch</span></a></code>, without any knowledge of the lemmas about kernels (see the <a href="Usage-and-examples/#examples">examples</a>).</p>
-                  </li>
-                <li>
-                  <p>
-                    <strong>Visualizing kernels.</strong> The <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-kernelDiagram" data-verso-hover="3">kernel_diagram</span></code> command and the string diagram widget draw complex kernel expressions as string diagrams, which makes their structure easier to understand.</p>
-                  </li>
-                <li>
-                  <p>
-                    <strong>Reasoning by calculation.</strong> A proof can be written as a <code>calc</code> whose lines are the mathematically meaningful rewrites, while the structural steps between them are proved automatically by the categorical tactics. Each step can moreover be visualized. In Mathlib, proofs by calculation whose steps are equalities of kernels are rare, and in calculations on measures built from kernels, each structural step is a chain of rewritings with lemmas about kernels and measures.</p>
-                  </li>
-                </ul>
-              <p>
-                <img src="static/diagram.svg" alt=""></p>
-              <p>
-                <strong>Documentation</strong></p>
-              <p>
-                The complete documentation for the library is available in the <a href="docs/">API reference</a>.</p>
-              <p>
-                <strong>Core of the project</strong></p>
-              <p>
-                The library introduces two main tactics:</p>
-              <ul>
-                <li>
-                  <p>
-                    <code class="hl lean inline" data-lean-context="examples"><a href="kernel_hom-tactic/#kernelHom" title="Documentation for kernelHom"><span class="const token" data-binding="const-kernelHom" data-verso-hover="4">kernel_hom</span></a></code> : transforms a kernel equality into an equality in the monoidal category.</p>
-                  </li>
-                <li>
-                  <p>
-                    <code class="hl lean inline" data-lean-context="examples"><a href="hom_kernel-tactic/#homKernel" title="Documentation for homKernel"><span class="const token" data-binding="const-homKernel" data-verso-hover="5">hom_kernel</span></a></code> : performs the inverse transformation, bringing the categorical equality back to a kernel equality.</p>
-                  </li>
-                </ul>
-              <p>
-                These tactics allow users to transform complex kernel equalities into categorical equalities, where powerful categorical tactics can be applied to simplify or prove them. To this end, the library provides built-in helpers like <code class="hl lean inline" data-lean-context="examples"><a href="Categorical-tactics-for-kernels/#kernelDisch" title="Documentation for kernelDisch"><span class="const token" data-binding="const-kernelDisch" data-verso-hover="2">kernel_disch</span></a></code>, <code class="hl lean inline" data-lean-context="examples"><a href="Categorical-tactics-for-kernels/#kernelMonoidal" title="Documentation for kernelMonoidal"><span class="const token" data-binding="const-kernelMonoidal" data-verso-hover="6">kernel_monoidal</span></a></code>, <code class="hl lean inline" data-lean-context="examples"><a href="Categorical-tactics-for-kernels/#kernelCoherence" title="Documentation for kernelCoherence"><span class="const token" data-binding="const-kernelCoherence" data-verso-hover="7">kernel_coherence</span></a></code> and <code class="hl lean inline" data-lean-context="examples"><a href="Categorical-tactics-for-kernels/#aesopKernel" title="Documentation for aesopKernel"><span class="const token" data-binding="const-aesopKernel" data-verso-hover="8">aesop_kernel</span></a></code> to apply categorical tactics directly to kernels without needing to manually invoke the translation tactics. <code class="hl lean inline" data-lean-context="examples"><a href="Categorical-tactics-for-kernels/#kernelDisch" title="Documentation for kernelDisch"><span class="const token" data-binding="const-kernelDisch" data-verso-hover="2">kernel_disch</span></a></code> is the tactic to use by default, as it tries both <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-CategoryTheory.categoryTheoryDischarger" data-verso-hover="9">cat_disch</span></code> and <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Mathlib.Tactic.Monoidal.monoidal" data-verso-hover="0">monoidal</span></code>.</p>
-              <p>
-                The library rests on <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-SFinKer" data-verso-hover="10">SFinKer</span></code>, the category of measurable spaces with s-finite kernels as morphisms, equipped with monoidal and symmetric structures. This category is also used to define <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Stoch" data-verso-hover="11">Stoch</span></code>, the category of measurable spaces with Markov kernels as morphisms, which is a wide subcategory of <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-SFinKer" data-verso-hover="10">SFinKer</span></code> (see  (Fritz, 2020)<span class="marginalia-reference"><span class="marginalia-marker marginalia-marker-desktop" aria-details="--citation-Tobias-Fritz-2020-0"><span class="marginalia-accessible-label">Marginal note</span></span><button class="marginalia-marker marginalia-marker-mobile" type="button" aria-details="--citation-Tobias-Fritz-2020-0" popovertarget="--citation-Tobias-Fritz-2020-0"><span class="marginalia-accessible-label">Show marginal note</span></button></span><span class="marginalia-note" id="--citation-Tobias-Fritz-2020-0" role="note" popover="auto"><span class="citation">Tobias Fritz, 2020. “A synthetic approach to Markov kernels, conditional independence and theorems
-  on sufficient statistics”. In <em>Advances in Mathematics.</em></span></span>). Both categories have been merged into Mathlib (PR <a href="https://github.com/leanprover-community/mathlib4/pull/36779">#36779</a>).</p>
-              <p>
-                <strong>Universe handling</strong></p>
-              <p>
-                A key aspect of the library is automatic universe management: expressions are lifted to a common universe level during translation, ensuring categorical expressions are well-typed. This allows users to work with kernels of varying universe levels without needing to manually manage universe annotations. When several hypotheses and the goal are translated together (<code>kernel_hom at h ⊢</code>), they are all lifted to the same universe level, so that the translated equalities can be used to rewrite each other. This part is handled by the <code class="hl lean inline" data-lean-context="examples"><a href="Universe-handling/#EqLift" title="Documentation for EqLift"><span class="const token" data-binding="const-EqLift" data-verso-hover="12">lift_eq</span></a></code> tactic, which can also be used independently (see <a href="https://github.com/gaetanserre/EqLift">EqLift</a>).</p>
-              <p>
-                <strong>Kernel diagrams</strong></p>
-              <p>
-                The library provides the <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-kernelDiagram" data-verso-hover="3">kernel_diagram</span></code> command, which generates string diagrams for kernel expressions. This is an adaptation of the <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Mathlib.Tactic.Widget.stringDiagram" data-verso-hover="13">string_diagram</span></code> command, where s-finite kernels are represented as morphisms using <code class="hl lean inline" data-lean-context="examples"><a href="kernel_hom-tactic/#kernelHom" title="Documentation for kernelHom"><span class="const token" data-binding="const-kernelHom" data-verso-hover="4">kernel_hom</span></a></code>. This provides a visual representation of kernel compositions and transformations, aiding intuition and understanding. The visualization of such diagrams in this documentation is made possible by the Verso code block expander made by <a href="https://github.com/yuma-mizuno/coherence-tactics/blob/master/CoherenceTactics/VersoStringDiagram.lean">@Yuma Mizuno</a>.</p>
-              <p>
-                <strong>Kernel reassociation</strong></p>
-              <p>
-                The library also provides the <code>@[kernel_reassoc]</code> attribute, which is a variant of <code>@[reassoc]</code> that, given a lemma named <code>F</code> of shape <code>∀ .., f = g</code>, where <code>f g : Kernel X Y</code> are s-finite kernels, will create a new lemma named <code>F_assoc</code> of shape <code>∀ .. {Z : Type u} [MeasurableSpace Z] (ξ : Kernel Y Z) [IsSFiniteKernel ξ], ξ ∘ₖ f = ξ ∘ₖ g</code>. It first transforms the kernel equality into a categorical equality in <code>SFinKer</code>, then applies the <code>@[reassoc]</code> pipeline to generate the reassociated equality, and finally transforms the result back into a kernel equality. It comes with the term elaborator <code>kernel_reassoc_of%</code>, the variant of <code>reassoc_of%</code>, which applies the same construction to any proof of an equality of s-finite kernels, such as a local hypothesis.</p>
-              <p>
-                <strong>Kernelized monoidal composition</strong></p>
-              <p>
-                An additional consequence of the translation to <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-SFinKer" data-verso-hover="10">SFinKer</span></code> is that one can adapt the categorical monoidal composition “<code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-CategoryTheory.monoidalComp" data-verso-hover="14">⊗≫</span></code>” to kernels, resulting in a kernelized monoidal composition “<code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-ProbabilityTheory.Kernel.monoComp" data-verso-hover="15">⊗≫ₖ</span></code>”. This composition automatically handles measurable equivalences, allowing for seamless composition of kernels while maintaining s-finiteness.</p>
-              <p>
-                <strong>Implementation</strong></p>
-              <p>
-                The translation builds its terms and proofs directly rather than through <code>mkAppM</code> and rewriting: the equivalence between the original and the translated equalities is proved by congruence from the translation lemmas, and the instances, inferred types and recursively built objects (measurable equivalences, objects of <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-SFinKer" data-verso-hover="10">SFinKer</span></code>) are memoized in a cache that is reset at each call. See the <a href="Implementation-of-the-translation/#implementation">Implementation of the translation</a> page for the underlying structures.</p>
-              <p>
-                <strong>About</strong></p>
-              <p>
-                This library is under active development and is under the <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache 2.0 license</a>. Contributions and feedback are welcome!</p>
-              </div>
-            <section>
-              <h2>
-                Contents</h2>
-              <ol class="section-toc">
-                <li>
-                  <a href="Usage-and-examples/#examples"><span class="number">1.</span> Usage and examples</a></li>
-                <li>
-                  <a href="Universe-handling/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Universe-handling"><span class="number">2.</span> Universe handling</a></li>
-                <li>
-                  <a href="kernel_hom-tactic/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--kernel_hom-tactic"><span class="number">3.</span> kernel_hom tactic</a></li>
-                <li>
-                  <a href="hom_kernel-tactic/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--hom_kernel-tactic"><span class="number">4.</span> hom_kernel tactic</a></li>
-                <li>
-                  <a href="Categorical-tactics-for-kernels/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Categorical-tactics-for-kernels"><span class="number">5.</span> Categorical tactics for kernels</a></li>
-                <li>
-                  <a href="Kernel-reassociation/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Kernel-reassociation"><span class="number">6.</span> Kernel reassociation</a></li>
-                <li>
-                  <a href="Kernelized-monoidal-composition/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Kernelized-monoidal-composition"><span class="number">7.</span> Kernelized monoidal composition</a></li>
-                <li>
-                  <a href="Implementation-of-the-translation/#implementation"><span class="number">8.</span> Implementation of the translation</a></li>
-                </ol>
-              </section>
-            </section>
-          <nav class="prev-next-buttons">
-            <div></div>
-            <a class="local-button active" href="Usage-and-examples/#examples" rel="next" title="1. Usage and examples"><span class="where">1. Usage and examples</span><span class="arrow">→</span></a></nav>
-          </div>
-        </main></div>
-    </body>
-  </html>
-
+</script><link rel="icon" type="image/x-icon" href="static/favicon.svg"/><link rel="stylesheet" href="static/style.css"/><script src="static/scripts.js"></script></head><body><header><div class="header-logo-wrapper"></div><div class="header-title-wrapper"><a href class="header-title"><h1>Kernel Categorical Reasoning</h1></a></div></header><label for="toggle-toc" id="toggle-toc-click"><span class="line line1"></span><span class="line line2"></span><span class="line line3"></span></label><div class="with-toc"><div class="toc-backdrop" onclick="document.getElementById('toggle-toc-click')?.click()"></div><nav id="toc"><input type="checkbox" id="toggle-toc"/><div class="first"><a href class="toc-title"><h1>Kernel Categorical Reasoning</h1></a><div class="split-tocs"><div class="split-toc book"><div class="title"><label for="--verso-manual-toc-----bookRoot" class="toggle-split-toc"><input type="checkbox" class="toggle-split-toc" id="--verso-manual-toc-----bookRoot" checked="checked"/></label><span class>Table of Contents</span></div><table><tr class="numbered"><td class="num">1.</td><td><a href="Usage-and-examples/#examples">Usage and examples</a></td></tr><tr class="numbered"><td class="num">2.</td><td><a href="Calculational-proofs/#calculational-proofs">Calculational proofs</a></td></tr><tr class="numbered"><td class="num">3.</td><td><a href="Universe-handling/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Universe-handling">Universe handling</a></td></tr><tr class="numbered"><td class="num">4.</td><td><a href="kernel_hom-tactic/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--kernel_hom-tactic">kernel_hom tactic</a></td></tr><tr class="numbered"><td class="num">5.</td><td><a href="hom_kernel-tactic/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--hom_kernel-tactic">hom_kernel tactic</a></td></tr><tr class="numbered"><td class="num">6.</td><td><a href="Categorical-tactics-for-kernels/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Categorical-tactics-for-kernels">Categorical tactics for kernels</a></td></tr><tr class="numbered"><td class="num">7.</td><td><a href="Kernel-reassociation/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Kernel-reassociation">Kernel reassociation</a></td></tr><tr class="numbered"><td class="num">8.</td><td><a href="Kernelized-monoidal-composition/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Kernelized-monoidal-composition">Monoidal composition</a></td></tr><tr class="numbered"><td class="num">9.</td><td><a href="Implementation-of-the-translation/#implementation">Implementation of the translation</a></td></tr></table></div></div></div><div class="last"><ul id="meta-links"><li><a href="https://github.com/gaetanserre/KernelHom">Source Code</a></li><li><a href="https://github.com/gaetanserre/KernelHom/issues">Report Issues</a></li></ul></div></nav><div class="toc-resize-handle"></div><main><div class="content-wrapper"><nav class="prev-next-buttons"><div></div><a class="local-button active" href="Usage-and-examples/#examples" rel="next" title="1. Usage and examples"><span class="where">1. Usage and examples</span><span class="arrow">→</span></a></nav><section><div class="titlepage"><h1 id="Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning"> Kernel-Hom: Tactics for Kernel Categorical Reasoning<span class="permalink-widget inline"><a href="find/?domain=Verso.Genre.Manual.section&amp;name=Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning" title="Permalink">🔗</a></span></h1><div class="authors"><span class="author">Gaëtan Serré</span></div><p><strong>Overview</strong></p><p><strong>Kernel-Hom</strong> is a Lean 4 library that provides tactics to simplify kernel equalities by leveraging categorical reasoning. It automatically translates s-finite kernel equalities into equalities in a monoidal category, where tactics like <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Mathlib.Tactic.Monoidal.monoidal" data-verso-hover="0">monoidal</span></code> or <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Mathlib.Tactic.Coherence.coherence" data-verso-hover="1">coherence</span></code> can be applied, and then translates the result back to a kernel equality if needed. The translation from kernels to categorical expressions gives access to the tools of category theory for kernels, which has three main benefits:</p><ul><li><p><strong>Proving API lemmas easily.</strong> Equalities of kernels built from compositions, parallel compositions, products, copies, discards and swaps are proved by a single call to <code class="hl lean inline" data-lean-context="examples"><a href="Categorical-tactics-for-kernels/#kernelDisch" title="Documentation for kernelDisch"><span class="const token" data-binding="const-kernelDisch" data-verso-hover="2">kernel_disch</span></a></code>, without any knowledge of the lemmas about kernels (see the <a href="Usage-and-examples/#examples">examples</a>).</p></li><li><p><strong>Visualizing kernels.</strong> The <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-kernelDiagram" data-verso-hover="3">kernel_diagram</span></code> command and the string diagram widget draw complex kernel expressions as string diagrams, which makes their structure easier to understand.</p></li><li><p><strong>Reasoning by calculation.</strong> A proof can be written as a <code>calc</code> whose lines are the mathematically meaningful rewrites, while the structural steps between them are proved automatically by the categorical tactics. Each step can moreover be visualized. In Mathlib, proofs by calculation whose steps are equalities of kernels are rare, and in calculations on measures built from kernels, each structural step is a chain of rewritings with lemmas about kernels and measures (see the <a href="Calculational-proofs/#calculational-proofs">calculational proofs</a>).</p></li></ul><p><img src="static/diagram.svg" alt/></p><p><strong>Documentation</strong></p><p>The complete documentation for the library is available in the <a href="docs/">API reference</a>.</p><p><strong>Core of the project</strong></p><p>The library introduces two main tactics:</p><ul><li><p><code class="hl lean inline" data-lean-context="examples"><a href="kernel_hom-tactic/#KernelHom___kernelHom" title="Documentation for KernelHom.kernelHom"><span class="const token" data-binding="const-KernelHom.kernelHom" data-verso-hover="4">kernel_hom</span></a></code> : transforms a kernel equality into an equality in the monoidal category.</p></li><li><p><code class="hl lean inline" data-lean-context="examples"><a href="hom_kernel-tactic/#HomKernel___homKernel" title="Documentation for HomKernel.homKernel"><span class="const token" data-binding="const-HomKernel.homKernel" data-verso-hover="5">hom_kernel</span></a></code> : performs the inverse transformation, bringing the categorical equality back to a kernel equality.</p></li></ul><p>These tactics allow users to transform complex kernel equalities into categorical equalities, where powerful categorical tactics can be applied to simplify or prove them. To this end, the library provides built-in helpers like <code class="hl lean inline" data-lean-context="examples"><a href="Categorical-tactics-for-kernels/#kernelDisch" title="Documentation for kernelDisch"><span class="const token" data-binding="const-kernelDisch" data-verso-hover="2">kernel_disch</span></a></code>, <code class="hl lean inline" data-lean-context="examples"><a href="Categorical-tactics-for-kernels/#kernelMonoidal" title="Documentation for kernelMonoidal"><span class="const token" data-binding="const-kernelMonoidal" data-verso-hover="6">kernel_monoidal</span></a></code>, <code class="hl lean inline" data-lean-context="examples"><a href="Categorical-tactics-for-kernels/#kernelCoherence" title="Documentation for kernelCoherence"><span class="const token" data-binding="const-kernelCoherence" data-verso-hover="7">kernel_coherence</span></a></code> and <code class="hl lean inline" data-lean-context="examples"><a href="Categorical-tactics-for-kernels/#aesopKernel" title="Documentation for aesopKernel"><span class="const token" data-binding="const-aesopKernel" data-verso-hover="8">aesop_kernel</span></a></code> to apply categorical tactics directly to kernels without needing to manually invoke the translation tactics. <code class="hl lean inline" data-lean-context="examples"><a href="Categorical-tactics-for-kernels/#kernelDisch" title="Documentation for kernelDisch"><span class="const token" data-binding="const-kernelDisch" data-verso-hover="2">kernel_disch</span></a></code> is the tactic to use by default, as it tries both <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-CategoryTheory.categoryTheoryDischarger" data-verso-hover="9">cat_disch</span></code> and <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Mathlib.Tactic.Monoidal.monoidal" data-verso-hover="0">monoidal</span></code>, after a few targeted simplifications.</p><p>The library rests on <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-SFinKer" data-verso-hover="10">SFinKer</span></code>, the category of measurable spaces with s-finite kernels as morphisms, equipped with monoidal and symmetric structures. This category is also used to define <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Stoch" data-verso-hover="11">Stoch</span></code>, the category of measurable spaces with Markov kernels as morphisms, which is a wide subcategory of <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-SFinKer" data-verso-hover="10">SFinKer</span></code> (see  (Fritz, 2020)<span class="marginalia-reference"><span class="marginalia-marker marginalia-marker-desktop" aria-details="--citation-Tobias-Fritz-2020-0"><span class="marginalia-accessible-label">Marginal note</span></span><button class="marginalia-marker marginalia-marker-mobile" type="button" aria-details="--citation-Tobias-Fritz-2020-0" popovertarget="--citation-Tobias-Fritz-2020-0"><span class="marginalia-accessible-label">Show marginal note</span></button></span><span class="marginalia-note" id="--citation-Tobias-Fritz-2020-0" role="note" popover="auto"><span class="citation">Tobias Fritz, 2020. “A synthetic approach to Markov kernels, conditional independence and theorems
+on sufficient statistics”. In <em>Advances in Mathematics.</em></span></span>). Both categories have been merged into Mathlib (PR <a href="https://github.com/leanprover-community/mathlib4/pull/36779">#36779</a>).</p><p><strong>Universe handling</strong></p><p>A key aspect of the library is automatic universe management: expressions are lifted to a common universe level during translation, ensuring categorical expressions are well-typed. This allows users to work with kernels of varying universe levels without needing to manually manage universe annotations. When several hypotheses and the goal are translated together (<code>kernel_hom at h ⊢</code>), they are all lifted to the same universe level, so that the translated equalities can be used to rewrite each other. This part is handled by the <code class="hl lean inline" data-lean-context="examples"><a href="Universe-handling/#EqLift" title="Documentation for EqLift"><span class="const token" data-binding="const-EqLift" data-verso-hover="12">lift_eq</span></a></code> tactic, which can also be used independently (see <a href="https://github.com/gaetanserre/EqLift">EqLift</a>).</p><p><strong>Kernel diagrams</strong></p><p>The library provides the <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-kernelDiagram" data-verso-hover="3">kernel_diagram</span></code> command, which generates string diagrams for kernel expressions. This is an adaptation of the <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-Mathlib.Tactic.Widget.stringDiagram" data-verso-hover="13">string_diagram</span></code> command, where s-finite kernels are represented as morphisms using <code class="hl lean inline" data-lean-context="examples"><a href="kernel_hom-tactic/#KernelHom___kernelHom" title="Documentation for KernelHom.kernelHom"><span class="const token" data-binding="const-KernelHom.kernelHom" data-verso-hover="4">kernel_hom</span></a></code>. This provides a visual representation of kernel compositions and transformations, aiding intuition and understanding. The visualization of such diagrams in this documentation is made possible by the Verso code block expander made by <a href="https://github.com/yuma-mizuno/coherence-tactics/blob/master/CoherenceTactics/VersoStringDiagram.lean">@Yuma Mizuno</a>.</p><p><strong>Kernel reassociation</strong></p><p>The library also provides the <code>@[kernel_reassoc]</code> attribute, which is a variant of <code>@[reassoc]</code> that, given a lemma named <code>F</code> of shape <code>∀ .., f = g</code>, where <code>f g : Kernel X Y</code> are s-finite kernels, will create a new lemma named <code>F_assoc</code> of shape <code>∀ .. {Z : Type u} [MeasurableSpace Z] (ξ : Kernel Y Z) [IsSFiniteKernel ξ], ξ ∘ₖ f = ξ ∘ₖ g</code>. It first transforms the kernel equality into a categorical equality in <code>SFinKer</code>, then applies the <code>@[reassoc]</code> pipeline to generate the reassociated equality, and finally transforms the result back into a kernel equality. It comes with the term elaborator <code>kernel_reassoc_of%</code>, the variant of <code>reassoc_of%</code>, which applies the same construction to any proof of an equality of s-finite kernels, such as a local hypothesis.</p><p><strong>Kernelized monoidal composition</strong></p><p>An additional consequence of the translation to <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-SFinKer" data-verso-hover="10">SFinKer</span></code> is that one can adapt the categorical monoidal composition “<code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-CategoryTheory.monoidalComp" data-verso-hover="14">⊗≫</span></code>” to kernels, resulting in a kernelized monoidal composition “<code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-ProbabilityTheory.Kernel.monoComp" data-verso-hover="15">⊗≫ₖ</span></code>”. This composition automatically handles measurable equivalences, allowing for seamless composition of kernels while maintaining s-finiteness.</p><p><strong>Measures as kernels</strong></p><p>The library <code>MeasureKernel</code> provides the <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-MeasureKernel.measureKernel" data-verso-hover="16">measure_kernel</span></code> tactic, which transforms an equality of measures into an equality of kernels from <code>Unit</code>, by sending a measure <code>μ</code> to <code>Kernel.const Unit μ</code>. The operations <code>κ ∘ₘ μ</code>, <code>μ ⊗ₘ κ</code> and <code>μ.prod ν</code> are translated into compositions and products of kernels, so that the tactics of <strong>Kernel-Hom</strong> apply to equalities of measures. For instance, <code>Kernel.swap X Y ∘ₘ μ.prod ν = ν.prod μ</code> is proved by <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-MeasureKernel.measureKernel" data-verso-hover="16">measure_kernel</span></code> followed by <code class="hl lean inline" data-lean-context="examples"><a href="Categorical-tactics-for-kernels/#kernelDisch" title="Documentation for kernelDisch"><span class="const token" data-binding="const-kernelDisch" data-verso-hover="2">kernel_disch</span></a></code>. The <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-MeasureKernel.kernelMeasure" data-verso-hover="17">kernel_measure</span></code> tactic performs the inverse transformation.</p><p><strong>Implementation</strong></p><p>The translation builds its terms and proofs directly rather than through <code>mkAppM</code> and rewriting: the equivalence between the original and the translated equalities is proved by congruence from the translation lemmas, and the instances, inferred types and recursively built objects (measurable equivalences, objects of <code class="hl lean inline" data-lean-context="examples"><span class="const token" data-binding="const-SFinKer" data-verso-hover="10">SFinKer</span></code>) are memoized in a cache that is reset at each call. See the <a href="Implementation-of-the-translation/#implementation">Implementation of the translation</a> page for the underlying structures.</p><p><strong>About</strong></p><p>This library is under active development and is under the <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache 2.0 license</a>. Contributions and feedback are welcome!</p></div><section><h2>Contents</h2><ol class="section-toc"><li><a href="Usage-and-examples/#examples"><span class="number">1.</span> Usage and examples</a></li><li><a href="Calculational-proofs/#calculational-proofs"><span class="number">2.</span> Calculational proofs</a></li><li><a href="Universe-handling/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Universe-handling"><span class="number">3.</span> Universe handling</a></li><li><a href="kernel_hom-tactic/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--kernel_hom-tactic"><span class="number">4.</span> kernel_hom tactic</a></li><li><a href="hom_kernel-tactic/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--hom_kernel-tactic"><span class="number">5.</span> hom_kernel tactic</a></li><li><a href="Categorical-tactics-for-kernels/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Categorical-tactics-for-kernels"><span class="number">6.</span> Categorical tactics for kernels</a></li><li><a href="Kernel-reassociation/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Kernel-reassociation"><span class="number">7.</span> Kernel reassociation</a></li><li><a href="Kernelized-monoidal-composition/#Kernel-Hom___-Tactics-for-Kernel-Categorical-Reasoning--Kernelized-monoidal-composition"><span class="number">8.</span> Kernelized monoidal composition</a></li><li><a href="Implementation-of-the-translation/#implementation"><span class="number">9.</span> Implementation of the translation</a></li></ol></section></section><nav class="prev-next-buttons"><div></div><a class="local-button active" href="Usage-and-examples/#examples" rel="next" title="1. Usage and examples"><span class="where">1. Usage and examples</span><span class="arrow">→</span></a></nav></div></main></div></body></html>
