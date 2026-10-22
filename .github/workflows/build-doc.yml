@@ -52,10 +52,6 @@ jobs:
           lint: true
           mk_all-check: false
       
-      - name: Lint project
-        run: |
-          lake lint
-      
       - name: Build Verso Documentation
         run: |
           ./build_manual.sh
