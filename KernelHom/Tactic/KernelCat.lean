@@ -17,8 +17,8 @@ categorical tactic to solve the resulting goal.
 
 ## Main declarations
 
-* `kernel_disch`: `kernel_hom` followed by `cat_disch` or `monoidal`, possibly after normalizing the
-  tensor products of morphisms. It is the tactic to use by default.
+* `kernel_disch`: `kernel_hom` followed by `monoidal` or `cat_disch`, after normalizing the tensor
+  products of morphisms. It is the tactic to use by default.
 * `kernel_monoidal`: `kernel_hom` followed by `monoidal`.
 * `kernel_coherence`: `kernel_hom` followed by `coherence`.
 * `aesop_kernel`: `kernel_hom` followed by `aesop` with the `CategoryTheory` rule set, skipping the
@@ -49,16 +49,26 @@ elab_rules : tactic
     evalTactic (← `(tactic| kernel_hom))
     evalTactic (← `(tactic| coherence))
 
+/-- The `aesop_kernel` tactic applies the `kernel_hom` transformation to the goal and then
+invokes `aesop` with the `CategoryTheory` rule set, using the same configuration as `aesop_cat`. -/
+syntax (name := aesopKernel) "aesop_kernel" : tactic
+
+elab_rules : tactic
+  | `(tactic| aesop_kernel) => do
+    evalTactic (← `(tactic| kernel_hom))
+    evalTactic (← `(tactic| aesop
+      (config := { introsTransparency? := some .default, terminal := true })
+      (rule_sets := [$(Lean.mkIdent `CategoryTheory):ident])))
+
+
 /-- The `kernel_disch` tactic applies the `kernel_hom` transformation to the goal and then
 tries to solve the resulting goal with:
-1. `cat_disch`;
-2. `monoidal`;
-3. `cat_disch`, after merging the whiskers and the compositions of tensor products into single
+1. `monoidal`, after `simp` together with the splitting of the tensor products of compositions and
+  the coassociativity of the comultiplication;
+2. `cat_disch`, after merging the whiskers and the compositions of tensor products into single
   tensor products, together with the counit and comultiplication laws of the comonoid structure
   and of the deterministic and Markov kernels. This handles the exchange law and the laws hidden in
-  tensor products;
-4. `monoidal`, after splitting the tensor products of compositions and applying the
-  coassociativity of the comultiplication.
+  tensor products.
 
 As it tries both `cat_disch` and `monoidal`, it is the tactic to use by default. -/
 syntax (name := kernelDisch) "kernel_disch" : tactic
@@ -67,8 +77,13 @@ elab_rules : tactic
   | `(tactic| kernel_disch) => do
     evalTactic (← `(tactic| kernel_hom))
     evalTactic (← `(tactic| first
-      | cat_disch
-      | (monoidal; done)
+      /- Split the tensor products of compositions into whiskers, the form in which `comul_assoc`
+         is stated, so that `monoidal` is left with the associators only. `simp` also removes the
+         braidings, which `monoidal` does not handle. -/
+      | (((try simp [← MonoidalCategory.whiskerRight_comp_tensorHom,
+          ← MonoidalCategory.whiskerLeft_comp_tensorHom,
+          ComonObj.comul_assoc, ComonObj.comul_assoc_assoc])
+        <;> monoidal); done)
       /- Merge the whiskers and the compositions of tensor products into single tensor products,
          which makes the exchange law syntactic and exposes the comonoid laws hidden inside them. -/
       | ((try simp only [← MonoidalCategory.tensorHom_id, ← MonoidalCategory.id_tensorHom,
@@ -83,21 +98,4 @@ elab_rules : tactic
           ComonObj.comul_tensorHom_counit_comp, ComonObj.comul_tensorHom_counit_comp_assoc,
           ComonObj.comul_counit_comp_tensorHom, ComonObj.comul_counit_comp_tensorHom_assoc])
         <;> cat_disch)
-      /- Split the tensor products of compositions into whiskers, the form in which `comul_assoc`
-         is stated, so that `monoidal` is left with the associators only. -/
-      | (((try simp only [← MonoidalCategory.whiskerRight_comp_tensorHom,
-          ← MonoidalCategory.whiskerLeft_comp_tensorHom, Category.assoc,
-          ComonObj.comul_assoc, ComonObj.comul_assoc_assoc])
-        <;> monoidal); done)
       ))
-
-/-- The `aesop_kernel` tactic applies the `kernel_hom` transformation to the goal and then
-invokes `aesop` with the `CategoryTheory` rule set, using the same configuration as `aesop_cat`. -/
-syntax (name := aesopKernel) "aesop_kernel" : tactic
-
-elab_rules : tactic
-  | `(tactic| aesop_kernel) => do
-    evalTactic (← `(tactic| kernel_hom))
-    evalTactic (← `(tactic| aesop
-      (config := { introsTransparency? := some .default, terminal := true })
-      (rule_sets := [$(Lean.mkIdent `CategoryTheory):ident])))

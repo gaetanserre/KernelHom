@@ -14,7 +14,7 @@ For more information, see [the project homepage](https://gaetanserre.fr/KernelHo
 
 The translation of kernels into morphisms of a monoidal category gives access to the tools of category theory for kernels:
 
-- **Proving API lemmas easily.** Equalities of kernels built from compositions, parallel compositions, products, copies, discards and swaps are proved by a single call to `kernel_disch`, the tactic to use by default since it tries both `cat_disch` and `monoidal`, without any knowledge of the lemmas about kernels (see [`KernelHomTests/Examples.lean`](KernelHomTests/Examples.lean)).
+- **Proving API lemmas easily.** Equalities of kernels built from compositions, parallel compositions, products, copies, discards and swaps are proved by a single call to `kernel_disch`, the tactic to use by default since it tries both `cat_disch` and `monoidal`, after a few targeted simplifications, without any knowledge of the lemmas about kernels (see [`KernelHomTests/KernelHom/Examples.lean`](KernelHomTests/KernelHom/Examples.lean)).
 - **Visualizing kernels.** The `#kernel_diagram` command and the string diagram widget draw complex kernel expressions as string diagrams, which makes their structure easier to understand.
 - **Reasoning by calculation.** A proof can be written as a `calc` whose lines are the mathematically meaningful rewrites, while the structural steps between them are proved automatically by the categorical tactics. Each step can moreover be visualized. In Mathlib, proofs by calculation whose steps are equalities of kernels are rare, and in calculations on measures built from kernels, each structural step is a chain of rewritings with lemmas about kernels and measures.
 
@@ -61,6 +61,17 @@ It first transforms the kernel equality into a categorical equality in `SFinKer`
 ### Kernelized monoidal composition
 
 An additional consequence of the translation to `SFinKer` is that one can adapt the categorical monoidal composition `⊗≫` to kernels, resulting in a kernelized monoidal composition `⊗≫ₖ`. This composition automatically handles measurable equivalences, allowing for seamless composition of kernels while maintaining s-finiteness.
+
+### Measures as kernels
+
+The library `MeasureKernel` (`import MeasureKernel`) provides the `measure_kernel` tactic, which transforms an equality of measures into an equality of kernels from `Unit`, by sending a measure `μ` to `Kernel.const Unit μ`. The operations `κ ∘ₘ μ`, `μ ⊗ₘ κ` and `μ.prod ν` are translated into compositions and products of kernels, so that the tactics of Kernel-Hom apply to equalities of measures. The `kernel_measure` tactic performs the inverse transformation.
+
+```lean4
+example (μ : Measure X) [SFinite μ] (ν : Measure Y) [SFinite ν] :
+    Kernel.swap X Y ∘ₘ μ.prod ν = ν.prod μ := by
+  measure_kernel
+  kernel_disch
+```
 
 ## Implementation
 

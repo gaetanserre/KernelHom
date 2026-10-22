@@ -17,11 +17,6 @@ open ProbabilityTheory Kernel KernelHom
 
 open scoped CategoryTheory.ComonObj
 
-set_option linter.style.setOption false
-set_option linter.hashCommand false
-set_option linter.style.longLine false
-set_option pp.rawOnError true
-set_option verso.code.warnLineLength 100
 set_option verso.exampleProject "."
 
 #doc (Manual) "Kernel reassociation" =>
@@ -62,9 +57,9 @@ variable {W: Type*} [MeasurableSpace W] (ξ : Kernel (Z × Z') W) [IsSFiniteKern
 parallelComp_comp_prod₀_assoc κ η κ' η' ξ : ξ ∘ₖ (η ∥ₖ η') ∘ₖ (κ ×ₖ κ') = ξ ∘ₖ (η ∘ₖ κ ×ₖ (η' ∘ₖ κ'))
 ```
 
-The products are written with `×ₖ` in `F_assoc`, as in `F`, so that `F_assoc` rewrites the goals stated with them. The translation unfolds the products `×ₖ` and composition-products `⊗ₖ`, and the reassociation splits their unfoldings, but the translation back folds them, as described in the page on {name homKernel}`hom_kernel`.
+The products are written with `×ₖ` in `F_assoc`, as in `F`, so that `F_assoc` rewrites the goals stated with them. The translation unfolds the products `×ₖ` and composition-products `⊗ₖ`, and the reassociation splits their unfoldings, but the translation back folds them, as described in the page on {name HomKernel.homKernel}`hom_kernel`.
 
-The attribute works by transport. The kernel equality is translated into an equality of morphisms of {name SFinKer}`SFinKer`, as in {name kernelHom}`kernel_hom`. The `@[reassoc]` pipeline of Mathlib is applied to this equality, and the result is translated back into kernels, as in {name homKernel}`hom_kernel`. The only subtlety concerns universes. The translation lifts all the carriers of `F` to a common level `w`, so the lemma produced by `@[reassoc]` quantifies over the objects `Z` of `SFinKer.{w}` only. Translated back, it would not apply to a kernel `ξ` whose codomain lives in an arbitrary universe. The equality is therefore lifted to `max u w`, where `u` is a fresh level for `Z`, and `u` becomes a new universe parameter of `F_assoc`.
+The attribute works by transport. The kernel equality is translated into an equality of morphisms of {name SFinKer}`SFinKer`, as in {name kernelHom}`kernel_hom`. The `@[reassoc]` pipeline of Mathlib is applied to this equality, and the result is translated back into kernels, as in {name HomKernel.homKernel}`hom_kernel`. The only subtlety concerns universes. The translation lifts all the carriers of `F` to a common level `w`, so the lemma produced by `@[reassoc]` quantifies over the objects `Z` of `SFinKer.{w}` only. Translated back, it would not apply to a kernel `ξ` whose codomain lives in an arbitrary universe. The equality is therefore lifted to `max u w`, where `u` is a fresh level for `Z`, and `u` becomes a new universe parameter of `F_assoc`.
 
 {docstring kernelReassocHandler}
 

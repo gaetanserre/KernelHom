@@ -42,7 +42,3 @@ jobs:
           build: true
           lint: true
           mk_all-check: false
-      
-      - name: Lint project
-        run: |
-          lake exe runLinter KernelHom

@@ -1,7 +1,7 @@
 #!/bin/bash
 # Elaboration times of the declarations of the test files, as reported in the paper
-# (Section 7). Run from the root of the repository, after `lake build KernelHomTests`:
-#   KernelHomTests/Paper/timings.sh [number of runs, default 5]
+# (Section 7). Run from the root of the repository, after `lake test`:
+#   KernelHomTests/KernelHom/Paper/timings.sh [number of runs, default 5]
 # Each file is elaborated sequentially (`Elab.async=false`) with `trace.profiler`, its imports being
 # already built; the time of a declaration is the time of its whole command (statement and proof).
 # The docstrings are removed from a temporary copy of each file, so that the profiler prints the
@@ -11,7 +11,7 @@ set -e
 RUNS=${1:-5}
 TMP=$(mktemp -d)
 for f in Examples; do
-  perl -0pe 's{/--.*?-/\n}{}gs' "KernelHomTests/$f.lean" > "$TMP/$f.lean"
+  perl -0pe 's{/--.*?-/\n}{}gs' "KernelHomTests/KernelHom/$f.lean" > "$TMP/$f.lean"
   for i in $(seq 1 "$RUNS"); do
     lake env lean -Dtrace.profiler=true -Dtrace.profiler.threshold=1 -DElab.async=false \
       "$TMP/$f.lean" 2>/dev/null \
@@ -31,7 +31,7 @@ for f in ["Examples"]:
             if m.group(3) not in times:
                 order.append(m.group(3))
             times[m.group(3)].append(float(m.group(1)))
-    print(f"== KernelHomTests/{f}.lean ({runs} runs)")
+    print(f"== KernelHomTests/KernelHom/{f}.lean ({runs} runs)")
     for name in order:
         v = times[name]
         print(f"{name:32.32s} median {1000 * statistics.median(v):6.0f} ms"

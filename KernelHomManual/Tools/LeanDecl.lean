@@ -8,8 +8,8 @@ open SubVerso.Module
 
 namespace VersoTools
 
-private def parseDeclNames (code : StrLit) : Array Name :=
-  code.getString.splitOn "\n"
+private def parseDeclNames (code : VersoCodeBlock) : Array Name :=
+  code.getVersoCodeBlock.splitOn "\n"
     |> List.toArray
     |> .map (fun s => String.trimAscii s |>.copy)
     |> .filter (not ∘ String.isEmpty)

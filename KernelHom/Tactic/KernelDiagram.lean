@@ -50,10 +50,10 @@ def Node.toPenroseVar_kernel (n : Node) : MetaM PenroseVar := do
     try
       match n.e.getAppFn with
       | Expr.const ``SFinKer.of _ => do
-        let res ← getTypeFromSFinKer n.e
+        let res ← HomKernel.getTypeFromSFinKer n.e
         pure res
       | _ => do
-        let (expr, _) ← transformHomToKernel n.e
+        let (expr, _) ← HomKernel.transformHomToKernel n.e
         pure expr
     catch _ =>
       pure n.e
@@ -95,7 +95,7 @@ open scoped Jsx in
 def KernelM? (e : Expr) : MetaM (Option Html) := do
   let e ← instantiateMVars e
   try
-    let (e, _) ← transformKernelToHom e
+    let (e, _) ← KernelHom.transformKernelToHom e
     let k ← StringDiagram.mkKind e
     let x : Option (List (List StringDiagram.Node) × List (List StringDiagram.Strand))
     ← (match k with
@@ -126,12 +126,12 @@ open scoped Jsx in
 def mkEqHtml (lhs rhs : Html) : Html :=
   jsx%{<div className="flex">
     <div className="w-50">
-      <details «open»={true}>
+      <details open={true}>
         <summary className="mv2 pointer">Kernel diagram for LHS</summary> {lhs}
       </details>
     </div>
     <div className="w-50">
-      <details «open»={true}>
+      <details open={true}>
         <summary className="mv2 pointer">Kernel diagram for RHS</summary> {rhs}
       </details>
     </div>

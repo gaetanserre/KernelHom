@@ -3,7 +3,7 @@ Copyright (c) 2026 Gaëtan Serré. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gaëtan Serré
 -/
-import KernelHomTests.Examples
+import KernelHomTests.KernelHom.Examples
 
 /-!
 # Scope of the tactics on the structural lemmas of Mathlib
@@ -18,8 +18,8 @@ rewriting lemma `swap_comp_eq_map` (`swap β γ ∘ₖ κ = κ.map Prod.swap`, u
 lemmas in the vocabulary of the tactics) are excluded. There are 26 of them.
 
 * 7 are not used by the construction of `SFinKer`, Eq-Lift or Kernel-Hom, and are proved in
-  `KernelHomTests/Examples.lean`, without depending on the lemma they re-prove (checked below by
-  `#assert_not_depends_on`) and with the standard axioms only (`#print axioms`).
+  `KernelHomTests/KernelHom/Examples.lean`, without depending on the lemma they re-prove (checked
+  below by `#assert_not_depends_on`) and with the standard axioms only (`#print axioms`).
 * 13 are used by the construction of `SFinKer`, Eq-Lift or Kernel-Hom (checked below by
   `#assert_used_by_machinery`). The tactics prove them, but the proofs depend on the lemma itself.
 * 6 are not proved by the tactics (`fail_if_success` below): the marginals `fst` and `snd`, and
@@ -84,7 +84,7 @@ open MeasureTheory ProbabilityTheory CategoryTheory MonoidalCategory
 
 namespace ProbabilityTheory.Kernel
 
-/-! ### The lemmas of `KernelHomTests/Examples.lean` do not depend on Mathlib's proofs
+/-! ### The lemmas of `KernelHomTests/KernelHom/Examples.lean` do not depend on Mathlib's proofs
 
 Positive controls first: the traversal sees the proofs of Mathlib, of Kernel-Hom and of the test
 files. -/

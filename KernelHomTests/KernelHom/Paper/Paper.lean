@@ -11,8 +11,8 @@ public import KernelHom
 # The listings of the paper
 
 This file checks the listings of the paper *Categorical reasoning for probability kernels in
-Mathlib* that are not already in `KernelHomTests/Examples.lean`, and the goals displayed in the
-paper, with `#guard_msgs`. It also tests, with `fail_if_success`, the
+Mathlib* that are not already in `KernelHomTests/KernelHom/Examples.lean`, and the goals displayed
+in the paper, with `#guard_msgs`. It also tests, with `fail_if_success`, the
 limitations described in the paper. The declarations are in the namespace `Paper`, so that they do
 not clash with those of the other test files.
 
@@ -42,7 +42,8 @@ not clash with those of the other test files.
 * `#kernel_diagram`: in Kernel-Hom, `KernelHom/Tactic/KernelDiagram.lean`.
 * `@[kernel_reassoc]` and `kernel_reassoc_of%`: in Kernel-Hom, `KernelHom/Tactic/Reassoc.lean`.
 * The examples of Section 5 and the limitations of Section 7: this file.
-* Table 2 (scope): `KernelHomTests/Examples.lean` and `KernelHomTests/Paper/Scope.lean`.
+* Table 2 (scope): `KernelHomTests/KernelHom/Examples.lean` and
+  `KernelHomTests/KernelHom/Paper/Scope.lean`.
 -/
 
 @[expose] public section

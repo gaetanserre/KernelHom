@@ -24,7 +24,7 @@ open Lean Meta Elab Tactic ProbabilityTheory Mathlib.Tactic Reassoc
 /-- Same as `HomEquality`, but allows specifying a universe level that will be taken into account
 when computing the maximum universe level. -/
 def HomEqualityToLvl (eq : Expr) (Lvl : Level) : MetaM (Expr × Expr) :=
-  HomEqualityWith (liftEqualityWithLevel Lvl) eq
+  KernelHom.HomEqualityWith (liftEqualityWithLevel Lvl) eq
 
 /-- Core handler for `@[kernel_reassoc]`.
 
@@ -53,9 +53,9 @@ def kernelReassocHandler (h_eq : Expr) : MetaM (Expr × Array LMVarId) := do
             let (eq_unfolded, _) ← unfoldKernelOp eq_type
             let maxLvl ← computeMaxLevel <| u :: (← collectEqUniverses eq_unfolded)
             let (ξ_lift, _) ← liftKernelExpr maxLvl ξ
-            let (ξ_hom, _) ← transformKernelToHom ξ_lift
+            let (ξ_hom, _) ← KernelHom.transformKernelToHom ξ_lift
             let reassoc_body ← mkAppM' hom_proof_reassoc #[ξ_hom]
-            let (_, kernel_reassoc_proof) ← KernelEquality <| ← inferType reassoc_body
+            let (_, kernel_reassoc_proof) ← HomKernel.KernelEquality <| ← inferType reassoc_body
             let kernel_reassoc_proof ← mkAppM ``Eq.mp #[kernel_reassoc_proof, reassoc_body]
             mkLambdaFVars #[Z, _inst, ξ, _inst_1] kernel_reassoc_proof
   return (proof, #[u.mvarId!])

@@ -54,7 +54,7 @@ jobs:
       
       - name: Lint project
         run: |
-          lake exe runLinter KernelHom
+          lake lint
       
       - name: Build Verso Documentation
         run: |
