@@ -13,3 +13,10 @@ def fritz2020 : InProceedings where
   authors := #[inlines!"Tobias Fritz"]
   year := 2020
   booktitle := inlines!"Advances in Mathematics"
+
+def douc2018 : InProceedings where
+  title := inlines!"Markov Chains"
+  authors := #[inlines!"Randal Douc", inlines!"Eric Moulines", inlines!"Pierre Priouret",
+    inlines!"Philippe Soulier"]
+  year := 2018
+  booktitle := inlines!"Springer Series in Operations Research and Financial Engineering"

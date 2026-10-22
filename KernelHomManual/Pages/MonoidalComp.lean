@@ -9,12 +9,6 @@ import VersoManual
 
 open Verso.Genre Manual Verso.Genre.Manual.InlineLean Verso.Code.External MeasurableCoherence
 
-set_option linter.style.setOption false
-set_option linter.hashCommand false
-set_option linter.style.longLine false
-set_option pp.rawOnError true
-set_option verso.code.warnLineLength 100
-
 #doc (Manual) "Kernelized monoidal composition" =>
 %%%
 htmlSplit := .never

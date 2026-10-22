@@ -17,6 +17,29 @@ public meta import Qq
 This file implements the `kernel_hom` tactic, which transforms equalities of
 kernels into equivalent equalities in the monoidal category.
 
+The equality is first lifted to a common universe level with `lift_eq`. The translation then sends
+a kernel `κ` to its morphism `κ.toHom`, and the operations on kernels to operations on morphisms:
+
+| Kernel                                | Morphism            | Lemma                             |
+|---------------------------------------|---------------------|-----------------------------------|
+| `η ∘ₖ κ`                              | `f ≫ g`             | `Kernel.comp_toHom_of_eq`         |
+| `κ ∥ₖ η`                              | `f ⊗ₘ g`            | `Kernel.parallelComp_toHom_of_eq` |
+| `Kernel.id ∥ₖ κ`                      | `SZ ◁ f`            | `Kernel.whiskerLeft_of_eq`        |
+| `κ ∥ₖ Kernel.id`                      | `f ▷ SZ`            | `Kernel.whiskerRight_of_eq`       |
+| `Kernel.id`                           | `𝟙 SX`              | `Kernel.id_toHom`                 |
+| `Kernel.discard X`                    | `ε[SX]`             | `Kernel.counit`                   |
+| `Kernel.copy X`                       | `Δ[SX]`             | `Kernel.comul`                    |
+| `Kernel.swap X Y`                     | `(β_ SX SY).hom`    | `Kernel.braiding_hom`             |
+| `Kernel.id.map Prod.snd`              | `(λ_ SX).hom`       | `Kernel.leftUnitor_hom`           |
+| `Kernel.id.map Prod.fst`              | `(ρ_ SX).hom`       | `Kernel.rightUnitor_hom`          |
+| `Kernel.deterministic prodAssoc`      | `(α_ SX SY SZ).hom` | `Kernel.associator_hom`           |
+| `Kernel.deterministic prodAssoc.symm` | `(α_ SX SY SZ).inv` | `Kernel.associator_inv`           |
+| any other `κ`                         | `κ.toHom`           | reflexivity                       |
+
+where `f` and `g` are the translations of `κ` and `η`, and `SX`, `SY` and `SZ` are the objects of
+the carriers `X`, `Y` and `Z` (`homCarrier`). The products `κ ×ₖ η` and `κ ⊗ₖ η` are unfolded first
+(`unfoldKernelOp`).
+
 ## Main declarations
 
 * `kernelToHom`: recursive translation from kernel expressions to categorical morphism expressions.
@@ -30,6 +53,8 @@ public meta section
 open Lean Elab Tactic Meta Qq CategoryTheory Parser.Tactic ProbabilityTheory MonoidalCategory
 open scoped ComonObj
 
+namespace KernelHom
+
 /-- Whether `X` is `PUnit` or `Unit`. -/
 def isPUnit (X : Expr) : Bool := X.isAppOf ``PUnit || X.isConstOf ``Unit
 
@@ -37,7 +62,7 @@ def isPUnit (X : Expr) : Bool := X.isAppOf ``PUnit || X.isConstOf ``Unit
 unitor `Kernel.id.map Prod.fst : Kernel (X × PUnit) X` if `left` is false), as in
 `Kernel.leftUnitor_hom` and `Kernel.rightUnitor_hom`. -/
 def isUnitor (κ : Expr) (left : Bool) : Bool :=
-  match_expr κ.consumeMData with
+  match_expr κ with
   | Kernel.map P _ _ _ _ _ id f =>
     let_expr Prod A B := P | false
     id.isAppOf ``Kernel.id && f.isAppOf (if left then ``Prod.snd else ``Prod.fst) &&
@@ -48,7 +73,7 @@ def isUnitor (κ : Expr) (left : Bool) : Bool :=
 `Kernel.deterministic prodAssoc.symm` if `inv`), as in `Kernel.associator_hom` and
 `Kernel.associator_inv`. -/
 def isAssociator (κ : Expr) (inv : Bool) : Bool :=
-  match_expr κ.consumeMData with
+  match_expr κ with
   | Kernel.deterministic _ _ _ _ f _ =>
     let_expr DFunLike.coe _ _ _ _ e := f | false
     if inv then
@@ -207,3 +232,5 @@ syntax (name := kernelHom) "kernel_hom" (ppSpace location)? : tactic
 elab_rules : tactic
   | `(tactic| kernel_hom $[$loc]?) =>
     liftEqualityAt (expandOptLocation <| mkOptionalNode loc) HomEqualityWith
+
+end KernelHom

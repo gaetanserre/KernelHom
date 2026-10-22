@@ -1,7 +1,7 @@
 name = "KernelHom"
 version = "0.1.0"
 keywords = ["math"]
-defaultTargets = ["KernelHom"]
+defaultTargets = ["KernelHom", "MeasureKernel"]
 testDriver = "KernelHomTests"
 lintDriver = "batteries/runLinter"
 
@@ -19,7 +19,7 @@ rev = "main"
 [[require]]
 name = "eqlift"
 git = "https://github.com/gaetanserre/EqLift"
-rev = "main"
+rev = "paper"
 
 [[require]]
 name = "mathlib"
@@ -29,12 +29,25 @@ scope = "leanprover-community"
 name = "KernelHom"
 
 [[lean_lib]]
+name = "MeasureKernel"
+
+[[lean_lib]]
 name = "KernelHomTests"
-globs = ["KernelHomTests.+"]
+globs = ["KernelHomTests.*"]
 
 [[lean_lib]]
 name = "KernelHomManual"
 globs = ["KernelHomManual.+"]
+
+# Options common to the files of the manual, whose `#doc` blocks are prose and not Mathlib code.
+[lean_lib.leanOptions]
+pp.rawOnError = true
+weak.verso.code.warnLineLength = 100
+weak.linter.style.header = false
+weak.linter.style.setOption = false
+weak.linter.style.longLine = false
+weak.linter.style.emptyLine = false
+weak.linter.hashCommand = false
 
 [[lean_exe]]
 name = "manual"

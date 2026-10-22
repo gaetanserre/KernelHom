@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gaëtan Serré
 -/
 
-import KernelHomTests.Examples
+import KernelHomTests.KernelHom.Examples
+import MeasureKernel
+import KernelHomManual.Papers
 import KernelHomManual.Tools.VersoKernelDiagram
 import KernelHomManual.Tools.LeanDecl
 import VersoManual
@@ -15,13 +17,8 @@ open ProbabilityTheory Kernel KernelHom
 
 open scoped CategoryTheory.ComonObj
 
-set_option linter.style.setOption false
-set_option linter.hashCommand false
-set_option linter.style.longLine false
-set_option pp.rawOnError true
-set_option verso.code.warnLineLength 100
 set_option verso.exampleProject "."
-set_option verso.exampleModule "KernelHomTests.Examples"
+set_option verso.exampleModule "KernelHomTests.KernelHom.Examples"
 
 #doc (Manual) "Usage and examples" =>
 %%%
@@ -54,9 +51,9 @@ import KernelHom
 The library provides several tactics for working with s-finite kernels equalities. The main tactics are:
 - {name kernelHom}`kernel_hom`: Transforms a s-finite kernel equality into an equality in the {name SFinKer}`SFinKer` monoidal category.
 
-- {name homKernel}`hom_kernel`: The inverse of {name kernelHom}`kernel_hom`, transforms an equality in {name SFinKer}`SFinKer` back into a kernel equality.
+- {name HomKernel.homKernel}`hom_kernel`: The inverse of {name kernelHom}`kernel_hom`, transforms an equality in {name SFinKer}`SFinKer` back into a kernel equality.
 
-- {name kernelDisch}`kernel_disch`: The tactic to use by default. Applies the {name CategoryTheory.categoryTheoryDischarger}`cat_disch` and {name Monoidal.monoidal}`monoidal` tactics to a s-finite kernel equality, possibly after normalizing the tensor products of morphisms, so that it also handles the exchange law and the comonoid laws of copy and discard.
+- {name kernelDisch}`kernel_disch`: The tactic to use by default. Applies the {name Monoidal.monoidal}`monoidal` and {name CategoryTheory.categoryTheoryDischarger}`cat_disch` tactics to a s-finite kernel equality, after normalizing the tensor products of morphisms, so that it also handles the exchange law, the coassociativity of copy and the comonoid laws of copy and discard.
 
 - {name kernelMonoidal}`kernel_monoidal`: Applies the {name Monoidal.monoidal}`monoidal` tactic to a s-finite kernel equality.
 
@@ -64,7 +61,7 @@ The library provides several tactics for working with s-finite kernels equalitie
 
 - {name aesopKernel}`aesop_kernel`: Applies `aesop` with the `CategoryTheory` rule set to a s-finite kernel equality, without the `rfl_cat` attempt of {name CategoryTheory.categoryTheoryDischarger}`cat_disch`.
 
-Basically, whenever you have a equality of s-finite kernels that you want to simplify, you can apply {name kernelHom}`kernel_hom` to transform it into a categorical equality, try applying categorical tactics, simps, or manually manipulate it, and then apply {name homKernel}`hom_kernel` to get back to a kernel equality if needed. The built-in helpers {name kernelDisch}`kernel_disch`, {name kernelMonoidal}`kernel_monoidal`, {name kernelCoherence}`kernel_coherence` and {name aesopKernel}`aesop_kernel` directly apply categorical tactics to kernels without needing to manually invoke the translation tactic.
+Basically, whenever you have a equality of s-finite kernels that you want to simplify, you can apply {name kernelHom}`kernel_hom` to transform it into a categorical equality, try applying categorical tactics, simps, or manually manipulate it, and then apply {name HomKernel.homKernel}`hom_kernel` to get back to a kernel equality if needed. The built-in helpers {name kernelDisch}`kernel_disch`, {name kernelMonoidal}`kernel_monoidal`, {name kernelCoherence}`kernel_coherence` and {name aesopKernel}`aesop_kernel` directly apply categorical tactics to kernels without needing to manually invoke the translation tactic.
 
 *Kernel diagrams*
 
@@ -78,9 +75,9 @@ The library also provides the {name kernelDiagram}`kernel_diagram` command, whic
 swap_prod₀
 ```
 
-# Examples
+# API lemmas
 
-*Kernel-Hom* makes it easy to prove "API" lemmas about the usual operations on kernels. The following lemmas of Mathlib are equalities of kernels built only from composition, parallel composition, product, identity, copy and swap. In Mathlib, their proofs either manipulate integrals or rely on other lemmas about kernels. With *Kernel-Hom*, they are proved from the structure of {name SFinKer}`SFinKer`, without any knowledge of the lemmas about kernels. They are collected in the file `KernelHomTests/Examples.lean`, where their names are suffixed by `₀`. The tactics are also useful in longer proofs, written by calculation.
+*Kernel-Hom* makes it easy to prove "API" lemmas about the usual operations on kernels. The following lemmas of Mathlib are equalities of kernels built only from composition, parallel composition, product, identity, copy and swap. In Mathlib, their proofs either manipulate integrals or rely on other lemmas about kernels. With *Kernel-Hom*, they are proved from the structure of {name SFinKer}`SFinKer`, without any knowledge of the lemmas about kernels. They are collected in the file `KernelHomTests/KernelHom/Examples.lean`, where their names are suffixed by `₀`. The tactics are also useful in longer proofs, written by calculation (see the {ref "calculational-proofs"}[calculational proofs]).
 
 The other lemmas of Mathlib built from these operations, such as {name ProbabilityTheory.Kernel.comp_assoc}`comp_assoc`, {name ProbabilityTheory.Kernel.swap_parallelComp}`swap_parallelComp` or {name ProbabilityTheory.Kernel.parallelComp_comp_parallelComp}`parallelComp_comp_parallelComp`, are used, directly or not, to prove the axioms of {name SFinKer}`SFinKer`. The tactics also prove them, but these proofs could not replace the ones of Mathlib, so they are not listed here.
 
@@ -125,4 +122,17 @@ The diagram below is drawn for s-finite kernels.
 fun {X Y Z T : Type} [MeasurableSpace X] [MeasurableSpace Y] [MeasurableSpace Z] [MeasurableSpace T]
     (κ : Kernel X Y) (η : Kernel Z T) [IsSFiniteKernel κ] [IsSFiniteKernel η] ↦
   parallelComp_comm₀ (κ := κ) (η := η)
+```
+
+*Measures*
+
+The {name MeasureKernel.measureKernel}`measure_kernel` tactic transforms an equality of measures into an equality of kernels from `Unit`, to which the tactics above apply. For instance, the product of measures commutes up to the swap:
+
+```lean
+open MeasureTheory in
+example {X Y : Type*} [MeasurableSpace X] [MeasurableSpace Y]
+    (μ : Measure X) [SFinite μ] (ν : Measure Y) [SFinite ν] :
+    Kernel.swap X Y ∘ₘ μ.prod ν = ν.prod μ := by
+  measure_kernel
+  kernel_disch
 ```

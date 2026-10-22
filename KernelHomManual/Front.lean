@@ -7,6 +7,7 @@ Authors: Gaëtan Serré
 import VersoManual
 import KernelHomManual.Papers
 import KernelHomManual.Pages.Examples
+import KernelHomManual.Pages.Calculational
 import KernelHomManual.Pages.Universe
 import KernelHomManual.Pages.KernelHom
 import KernelHomManual.Pages.HomKernel
@@ -16,14 +17,10 @@ import KernelHomManual.Pages.MonoidalComp
 import KernelHomManual.Pages.Implementation
 import KernelHom.Tactic.KernelDiagram
 import EqLift.Tactic.Lift
-import Mathlib.Probability.Kernel.Category.Stoch
+import KernelHomManual.Tools.MathlibImports
+import MeasureKernel
 
 open Verso.Genre Manual Verso.Genre.Manual.InlineLean Mathlib.Tactic
-
-set_option linter.style.setOption false
-set_option linter.hashCommand false
-set_option linter.style.longLine false
-set_option pp.rawOnError true
 
 #doc (Manual) "Kernel-Hom: Tactics for Kernel Categorical Reasoning" =>
 %%%
@@ -36,7 +33,7 @@ shortTitle := "Kernel Categorical Reasoning"
 *Kernel-Hom* is a Lean 4 library that provides tactics to simplify kernel equalities by leveraging categorical reasoning. It automatically translates s-finite kernel equalities into equalities in a monoidal category, where tactics like {name Monoidal.monoidal}`monoidal` or {name Coherence.coherence}`coherence` can be applied, and then translates the result back to a kernel equality if needed. The translation from kernels to categorical expressions gives access to the tools of category theory for kernels, which has three main benefits:
 - *Proving API lemmas easily.* Equalities of kernels built from compositions, parallel compositions, products, copies, discards and swaps are proved by a single call to {name kernelDisch}`kernel_disch`, without any knowledge of the lemmas about kernels (see the {ref "examples"}[examples]).
 - *Visualizing kernels.* The {name kernelDiagram}`kernel_diagram` command and the string diagram widget draw complex kernel expressions as string diagrams, which makes their structure easier to understand.
-- *Reasoning by calculation.* A proof can be written as a `calc` whose lines are the mathematically meaningful rewrites, while the structural steps between them are proved automatically by the categorical tactics. Each step can moreover be visualized. In Mathlib, proofs by calculation whose steps are equalities of kernels are rare, and in calculations on measures built from kernels, each structural step is a chain of rewritings with lemmas about kernels and measures.
+- *Reasoning by calculation.* A proof can be written as a `calc` whose lines are the mathematically meaningful rewrites, while the structural steps between them are proved automatically by the categorical tactics. Each step can moreover be visualized. In Mathlib, proofs by calculation whose steps are equalities of kernels are rare, and in calculations on measures built from kernels, each structural step is a chain of rewritings with lemmas about kernels and measures (see the {ref "calculational-proofs"}[calculational proofs]).
 
 ![](static/diagram.svg)
 
@@ -47,10 +44,10 @@ The complete documentation for the library is available in the [API reference](d
 *Core of the project*
 
 The library introduces two main tactics:
-- {name kernelHom}`kernel_hom` : transforms a kernel equality into an equality in the monoidal category.
-- {name homKernel}`hom_kernel` : performs the inverse transformation, bringing the categorical equality back to a kernel equality.
+- {name KernelHom.kernelHom}`kernel_hom` : transforms a kernel equality into an equality in the monoidal category.
+- {name HomKernel.homKernel}`hom_kernel` : performs the inverse transformation, bringing the categorical equality back to a kernel equality.
 
-These tactics allow users to transform complex kernel equalities into categorical equalities, where powerful categorical tactics can be applied to simplify or prove them. To this end, the library provides built-in helpers like {name kernelDisch}`kernel_disch`, {name kernelMonoidal}`kernel_monoidal`, {name kernelCoherence}`kernel_coherence` and {name aesopKernel}`aesop_kernel` to apply categorical tactics directly to kernels without needing to manually invoke the translation tactics. {name kernelDisch}`kernel_disch` is the tactic to use by default, as it tries both {name CategoryTheory.categoryTheoryDischarger}`cat_disch` and {name Monoidal.monoidal}`monoidal`.
+These tactics allow users to transform complex kernel equalities into categorical equalities, where powerful categorical tactics can be applied to simplify or prove them. To this end, the library provides built-in helpers like {name kernelDisch}`kernel_disch`, {name kernelMonoidal}`kernel_monoidal`, {name kernelCoherence}`kernel_coherence` and {name aesopKernel}`aesop_kernel` to apply categorical tactics directly to kernels without needing to manually invoke the translation tactics. {name kernelDisch}`kernel_disch` is the tactic to use by default, as it tries both {name CategoryTheory.categoryTheoryDischarger}`cat_disch` and {name Monoidal.monoidal}`monoidal`, after a few targeted simplifications.
 
 The library rests on {name SFinKer}`SFinKer`, the category of measurable spaces with s-finite kernels as morphisms, equipped with monoidal and symmetric structures. This category is also used to define {name Stoch}`Stoch`, the category of measurable spaces with Markov kernels as morphisms, which is a wide subcategory of {name SFinKer}`SFinKer` (see {citep fritz2020}[]). Both categories have been merged into Mathlib (PR [#36779](https://github.com/leanprover-community/mathlib4/pull/36779)).
 
@@ -60,7 +57,7 @@ A key aspect of the library is automatic universe management: expressions are li
 
 *Kernel diagrams*
 
-The library provides the {name kernelDiagram}`kernel_diagram` command, which generates string diagrams for kernel expressions. This is an adaptation of the {name Widget.stringDiagram}`string_diagram` command, where s-finite kernels are represented as morphisms using {name kernelHom}`kernel_hom`. This provides a visual representation of kernel compositions and transformations, aiding intuition and understanding. The visualization of such diagrams in this documentation is made possible by the Verso code block expander made by [@Yuma Mizuno](https://github.com/yuma-mizuno/coherence-tactics/blob/master/CoherenceTactics/VersoStringDiagram.lean).
+The library provides the {name kernelDiagram}`kernel_diagram` command, which generates string diagrams for kernel expressions. This is an adaptation of the {name Widget.stringDiagram}`string_diagram` command, where s-finite kernels are represented as morphisms using {name KernelHom.kernelHom}`kernel_hom`. This provides a visual representation of kernel compositions and transformations, aiding intuition and understanding. The visualization of such diagrams in this documentation is made possible by the Verso code block expander made by [@Yuma Mizuno](https://github.com/yuma-mizuno/coherence-tactics/blob/master/CoherenceTactics/VersoStringDiagram.lean).
 
 *Kernel reassociation*
 
@@ -69,6 +66,10 @@ The library also provides the `@[kernel_reassoc]` attribute, which is a variant 
 *Kernelized monoidal composition*
 
 An additional consequence of the translation to {name SFinKer}`SFinKer` is that one can adapt the categorical monoidal composition “{name CategoryTheory.monoidalComp}`⊗≫`” to kernels, resulting in a kernelized monoidal composition “{name ProbabilityTheory.Kernel.monoComp}`⊗≫ₖ`”. This composition automatically handles measurable equivalences, allowing for seamless composition of kernels while maintaining s-finiteness.
+
+*Measures as kernels*
+
+The library `MeasureKernel` provides the {name MeasureKernel.measureKernel}`measure_kernel` tactic, which transforms an equality of measures into an equality of kernels from `Unit`, by sending a measure `μ` to `Kernel.const Unit μ`. The operations `κ ∘ₘ μ`, `μ ⊗ₘ κ` and `μ.prod ν` are translated into compositions and products of kernels, so that the tactics of *Kernel-Hom* apply to equalities of measures. For instance, `Kernel.swap X Y ∘ₘ μ.prod ν = ν.prod μ` is proved by {name MeasureKernel.measureKernel}`measure_kernel` followed by {name kernelDisch}`kernel_disch`. The {name MeasureKernel.kernelMeasure}`kernel_measure` tactic performs the inverse transformation.
 
 *Implementation*
 
@@ -79,6 +80,8 @@ The translation builds its terms and proofs directly rather than through `mkAppM
 This library is under active development and is under the [Apache 2.0 license](https://www.apache.org/licenses/LICENSE-2.0). Contributions and feedback are welcome!
 
 {include 0 KernelHomManual.Pages.Examples}
+
+{include 0 KernelHomManual.Pages.Calculational}
 
 {include 0 KernelHomManual.Pages.Universe}
 

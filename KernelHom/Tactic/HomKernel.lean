@@ -29,6 +29,8 @@ public meta section
 open Lean Elab Tactic Meta Qq CategoryTheory Parser.Tactic ProbabilityTheory MonoidalCategory
 open scoped ComonObj
 
+namespace HomKernel
+
 /-- The carrier of an object of `SFinKer` (see `typeOfObj`). -/
 def getTypeFromSFinKer (SX : Expr) : MetaM Expr := do
   typeOfObj (← objLevel SX) SX
@@ -188,3 +190,5 @@ syntax (name := homKernel) "hom_kernel" (ppSpace location)? : tactic
 elab_rules : tactic
   | `(tactic| hom_kernel $[$loc]?) =>
     expandOptLocation (Lean.mkOptionalNode loc) |> applyLocTactic <| KernelEquality
+
+end HomKernel

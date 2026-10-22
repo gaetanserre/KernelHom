@@ -143,16 +143,16 @@ block_extension Block.stringDiagramWidget (payload : StringDiagramPayload) where
             interactiveCodeHash := 0
           }
       let htmlJson := Json.compress payload.html
-      pure {{
+      pure html%{
         <div class="verso-string-diagram">
           <div class="verso-string-diagram-root"
-               "data-html"={{htmlJson}}
-               "data-diagram-hash"={{toString payload.diagramHash}}
-               "data-interactive-code-hash"={{toString payload.interactiveCodeHash}}>
-            <div class="sd-loading">"Loading string diagram..."</div>
+               data-html={htmlJson}
+               data-diagram-hash={toString payload.diagramHash}
+               data-interactive-code-hash={toString payload.interactiveCodeHash}>
+            <div class="sd-loading">{"Loading string diagram..."}</div>
           </div>
         </div>
-      }}
+      }
   toTeX :=
     open Verso.Output.TeX in
     some <| fun _ _ _ _ _ => pure .empty
@@ -166,8 +166,8 @@ private def diagramHash : Nat :=
 private def interactiveCodeHash : Nat :=
   (hash ProofWidgets.InteractiveCode.javascript).toNat
 
-private def parseTermSyntax (str : StrLit) : DocElabM (TSyntax `term) := do
-  let input := str.getString
+private def parseTermSyntax (str : VersoCodeBlock) : DocElabM (TSyntax `term) := do
+  let input := str.getVersoCodeBlock
   match Parser.runParserCategory (← getEnv) `term input (← getFileName) with
   | .ok stx => pure ⟨stx⟩
   | .error err => throwErrorAt str err
