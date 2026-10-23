@@ -13,16 +13,14 @@ public import Mathlib.Probability.Kernel.Invariance
 /-!
 # Reversibility of data augmentation
 
-This file formalizes Lemma 2.3.5 of *Markov Chains*, R. Douc et al., Springer, 2018.
-
- [R. Douc, E. Moulines, P. Priouret and P. Soulier, *Markov
-Chains*, Springer, 2018]. A data augmentation algorithm writes a probability measure `π` on `X` as
-the marginal of `π ⊗ R` on `X × Y`, where `R : Kernel X Y`. The disintegration of `π ⊗ R` along
-`Y` gives a kernel `S : Kernel Y X` and a probability measure `π̃` on `Y` such that
-`π(dx) R(x, dy) = S(y, dx) π̃(dy)` (equation (2.3.11) of the book). In Mathlib, `S` is the
-posterior `R†π` and `π̃` is `R ∘ₘ π`. The algorithm draws `y` from `R(x)`, then `x` from `S(y)`,
-so that the sequence of the `x` is a Markov chain with kernel `RS`, written `S ∘ₖ R` in Mathlib.
-The lemma states that `π` is reversible with respect to this kernel.
+This file formalizes Lemma 2.3.5 of *Markov Chains*, R. Douc et al., Springer, 2018. A data
+augmentation algorithm writes a probability measure `π` on `X` as the marginal of `π ⊗ R` on `X ×
+Y`, where `R : Kernel X Y`. The disintegration of `π ⊗ R` along `Y` gives a kernel `S : Kernel Y X`
+and a probability measure `π̃` on `Y` such that `π(dx) R(x, dy) = S(y, dx) π̃(dy)` (equation (2.3.
+11) of the book). In Mathlib, `S` is the posterior `R†π` and `π̃` is `R ∘ₘ π`. The algorithm draws
+`y` from `R(x)`, then `x` from `S(y)`, so that the sequence of the `x` is a Markov chain with
+kernel `RS`, written `S ∘ₖ R` in Mathlib. The lemma states that `π` is reversible with respect to
+this kernel.
 
 The proof of the book computes `(π ⊗ RS)(A × B) = ∫ S(y, A) S(y, B) π̃(dy)`, which is symmetric in
 `A` and `B`. The proof below follows the same steps on the measures. By Definition 1.5.1 of the book

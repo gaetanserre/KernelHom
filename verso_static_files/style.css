@@ -128,22 +128,17 @@ code.block {
 }
 
 ol.section-toc {
-  list-style-position: outside !important;
-  /* ensure markers are outside */
-  list-style-type: decimal !important;
+  /* Verso already prints the section numbers */
+  list-style-type: none !important;
   padding-left: 0em;
   margin-left: 0em;
   /* adjust as needed for desired indentation */
   padding-inline-start: 1.5em !important;
-  /* add padding for marker */
 }
 
 ol.section-toc li {
-  display: list-item !important;
-  /* critical: restores marker behavior */
   font-weight: normal;
   text-indent: 0em;
-  /* negative indent equal to padding */
 }
 
 p a:visited,
