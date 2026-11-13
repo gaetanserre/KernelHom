@@ -10,8 +10,8 @@ public import KernelHom
 /-!
 # Examples
 
-This file contains the examples of the paper *Categorical reasoning for probability kernels in
-Mathlib* and of the manual.
+This file contains the examples of the paper *Categorical reasoning for transition kernels in
+Lean* and of the manual.
 
 * Lemmas of Mathlib about kernels, proved with the tactics. Each of them has the name of its
   Mathlib counterpart, suffixed by `₀`.
