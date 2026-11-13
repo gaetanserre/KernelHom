@@ -8,6 +8,7 @@ module
 public import Mathlib.Probability.Kernel.Composition.CompProd
 public import Mathlib.Probability.Kernel.Composition.ParallelComp
 public import Mathlib.Probability.Kernel.Composition.Prod
+import all Mathlib.Probability.Kernel.Composition.CompProd
 
 /-!
 # Kernel utilities
@@ -19,6 +20,7 @@ This file provides helper lemmas for working with kernels.
 * `comap_parallelComp_comap`: the comap of a parallel composition is the parallel composition of
   the comaps.
 * `map_parallelComp_map`: the map of a parallel composition is the parallel composition of the maps.
+* `compProd_def`: the definition of the composition-product `⊗ₖ`.
 * `comp_parallelComp_comp_copy_eq_comp_prod`, `comp_compProd_def_eq_comp_compProd`: fold a product
   `×ₖ` and a composition-product `⊗ₖ` preceded by a kernel `ξ`, in the left-associated form of
   the compositions.
@@ -66,6 +68,13 @@ lemma comp_parallelComp_comp_copy_eq_comp_prod {δ : Type*} [MeasurableSpace δ]
     (ξ : Kernel (β × γ) δ) (κ : Kernel α β) (η : Kernel α γ) :
     ξ ∘ₖ (κ ∥ₖ η) ∘ₖ copy α = ξ ∘ₖ (κ ×ₖ η) := by
   rw [comp_assoc, parallelComp_comp_copy]
+
+/-- The definition of the composition-product `⊗ₖ`, which Mathlib does not expose. -/
+lemma compProd_def (κ : Kernel α β) (η : Kernel (α × β) γ) :
+    κ ⊗ₖ η = swap γ β ∘ₖ (η ∥ₖ Kernel.id)
+      ∘ₖ deterministic MeasurableEquiv.prodAssoc.symm (MeasurableEquiv.measurable _)
+      ∘ₖ (Kernel.id ∥ₖ copy β) ∘ₖ (Kernel.id ∥ₖ κ) ∘ₖ copy α := by
+  rw [compProd]
 
 /-- Fold a composition-product `⊗ₖ` preceded by a kernel `ξ`. -/
 lemma comp_compProd_def_eq_comp_compProd {δ : Type*} [MeasurableSpace δ]

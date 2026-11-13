@@ -133,7 +133,7 @@ example (p : Kernel X Y) (s : Kernel Y Z) (ψ : Kernel Unit W) [IsMarkovKernel p
     ψ ∘ₖ Kernel.discard X = (ψ ∘ₖ Kernel.discard Z) ∘ₖ (s ∘ₖ p) := by
   kernel_disch
 
-/-! Tests for `Kernel.compProd`, which is an `irreducible_def` and is unfolded by rewriting. -/
+/-! Tests for `Kernel.compProd`, which is unfolded by rewriting with `Kernel.compProd_def`. -/
 
 example (κ : Kernel X Y) (η : Kernel (X × Y) Z) [IsSFiniteKernel κ] [IsSFiniteKernel η] :
     κ ⊗ₖ η = Kernel.swap Z Y ∘ₖ (η ∥ₖ Kernel.id)

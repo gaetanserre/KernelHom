@@ -83,7 +83,7 @@ The other lemmas of Mathlib built from these operations, such as {name Probabili
 
 As {name ProbabilityTheory.Kernel.map}`Kernel.map` is not translated, {name ProbabilityTheory.Kernel.map_prod_swap}`map_prod_swap` and {name ProbabilityTheory.Kernel.prodAssoc_prod}`prodAssoc_prod` are first rewritten with {name ProbabilityTheory.Kernel.swap_comp_eq_map}`swap_comp_eq_map` and {name ProbabilityTheory.Kernel.deterministic_comp_eq_map}`deterministic_comp_eq_map`. The tactics only apply to s-finite kernels: as in Mathlib, the case of a non s-finite kernel in {name ProbabilityTheory.Kernel.parallelComp_comm}`parallelComp_comm` is closed by `simp`.
 
-All of them are proved by a single call to {name kernelDisch}`kernel_disch` or {name kernelMonoidal}`kernel_monoidal`. In particular, {name kernelDisch}`kernel_disch` handles the exchange law {name CategoryTheory.MonoidalCategory.whisker_exchange}`whisker_exchange` in {name ProbabilityTheory.Kernel.parallelComp_comm}`parallelComp_comm`, and the coassociativity of copy {name CategoryTheory.ComonObj.comul_assoc}`comul_assoc` in {name ProbabilityTheory.Kernel.prodAssoc_prod}`prodAssoc_prod`, which the tactics of Mathlib do not apply on their own.
+All of them are proved by a single call to {name kernelDisch}`kernel_disch`. In particular, {name kernelDisch}`kernel_disch` handles the exchange law {name CategoryTheory.MonoidalCategory.whisker_exchange}`whisker_exchange` in {name ProbabilityTheory.Kernel.parallelComp_comm}`parallelComp_comm`, and the coassociativity of copy {name CategoryTheory.ComonObj.comul_assoc}`comul_assoc` in {name ProbabilityTheory.Kernel.prodAssoc_prod}`prodAssoc_prod`, which the tactics of Mathlib do not apply on their own.
 
 *`Mathlib.Probability.Kernel.Composition.Prod`*
 

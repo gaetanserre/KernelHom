@@ -29,8 +29,8 @@ public meta section
 open Lean Meta Qq ProbabilityTheory CategoryTheory MonoidalCategory
 
 /-- Unfold kernel operations in an expression. Returns the unfolded expression `e'` together with a
-proof of `e = e'`. `Kernel.prod` is delta-expanded, while `Kernel.compProd`, being an
-`irreducible_def`, is rewritten using `Kernel.compProd_def`. -/
+proof of `e = e'`. `Kernel.prod` is delta-expanded, while `Kernel.compProd`, whose
+definition is not exposed by Mathlib, is rewritten using `Kernel.compProd_def`. -/
 def unfoldKernelOp (e : Expr) : MetaM (Expr × Expr) := do
   let e ← zetaReduce (← instantiateMVars e)
   let e ← transform e (post := fun e => do
