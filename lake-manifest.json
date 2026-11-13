@@ -15,7 +15,7 @@
    "type": "git",
    "subDir": null,
    "scope": "",
-   "rev": "0bf19958fb0ea18ad2b7e56a194da98190eca8b3",
+   "rev": "ef527f06f1b7e7c7b9fa653703533deb8aa6b9b9",
    "name": "eqlift",
    "manifestFile": "lake-manifest.json",
    "inputRev": "paper",
