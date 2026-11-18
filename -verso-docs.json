@@ -19,7 +19,7 @@
  "9":
  "<code>CategoryTheory.categoryTheoryDischarger : Lean.Elab.Tactic.TacticM Unit</code><span class=\"sep\"></span><code class=\"docstring\">A tactic for discharging easy category theory goals, widely used as an autoparameter.\nCurrently this defaults to the `aesop_cat` wrapper around `aesop`, but by setting\nthe option `mathlib.tactic.category.grind` to `true`, it will use the `grind` tactic instead.</code>",
  "89":
- "<code>MeasureTheory.Measure.prod.{u_4, u_5} {α : Type u_4} {β : Type u_5} [MeasurableSpace α] [MeasurableSpace β]\n  (μ : Measure α) (ν : Measure β) : Measure (α × β)</code><span class=\"sep\"></span><code class=\"docstring\">The binary product of measures `μ.prod ν`. It is defined for arbitrary measures, but we\nbasically prove all properties under the assumption that `ν` is s-finite. To make sure\nthat the measure is always reasonable, we use the junk value `0` when `ν` is not s-finite.</code>",
+ "<code>MeasureTheory.Measure.prod.{u_1, u_2} {α : Type u_1} {β : Type u_2} [MeasurableSpace α] [MeasurableSpace β]\n  (μ : Measure α) (ν : Measure β) : Measure (α × β)</code><span class=\"sep\"></span><code class=\"docstring\">The binary product of measures `μ.prod ν`. It is defined for arbitrary measures, but we\nbasically prove all properties under the assumption that `ν` is s-finite. To make sure\nthat the measure is always reasonable, we use the junk value `0` when `ν` is not s-finite.</code>",
  "88": "<code>Measure Y</code>",
  "87":
  "<code>MeasureTheory.SFinite.{u_1} {α : Type u_1} {m0 : MeasurableSpace α} (μ : Measure α) : Prop</code><span class=\"sep\"></span><code class=\"docstring\">A measure is called s-finite if it is a countable sum of finite measures.</code>",
@@ -27,7 +27,7 @@
  "<code>MeasureTheory.Measure.{u_5} (α : Type u_5) [MeasurableSpace α] : Type u_5</code><span class=\"sep\"></span><code class=\"docstring\">A measure is defined to be an outer measure that is countably additive on\nmeasurable sets, with the additional assumption that the outer measure is the canonical\nextension of the restricted measure.\n\nThe measure of a set `s`, denoted `μ s`, is an extended nonnegative real. The real-valued version\nis written `μ.real s`.</code>",
  "85": "<code>Measure X</code>",
  "84":
- "<code class=\"docstring\">The syntax `variable (X Y ... Z : Type*)` creates a new distinct implicit universe variable\n`&gt; 0` for each variable in the sequence.</code>",
+ "<code class=\"docstring\">The syntax `variable (X Y ... Z : Type*)` creates a new distinct implicit universe variable\n`&gt; 0` for each variable in the sequence. </code>",
  "83":
  "<code class=\"docstring\">Makes names from other namespaces visible without writing the namespace prefix.\n\nNames that are made available with `open` are visible within the current `section` or `namespace`\nblock. This makes referring to (type) definitions and theorems easier, but note that it can also\nmake [scoped instances], notations, and attributes from a different namespace available.\n\nThe `open` command can be used in a few different ways:\n\n* `open Some.Namespace.Path1 Some.Namespace.Path2` makes all non-protected names in\n  `Some.Namespace.Path1` and `Some.Namespace.Path2` available without the prefix, so that\n  `Some.Namespace.Path1.x` and `Some.Namespace.Path2.y` can be referred to by writing only `x` and\n  `y`.\n\n* `open Some.Namespace.Path hiding def1 def2` opens all non-protected names in `Some.Namespace.Path`\n  except `def1` and `def2`.\n\n* `open Some.Namespace.Path (def1 def2)` only makes `Some.Namespace.Path.def1` and\n  `Some.Namespace.Path.def2` available without the full prefix, so `Some.Namespace.Path.def3` would\n  be unaffected.\n\n  This works even if `def1` and `def2` are `protected`.\n\n* `open Some.Namespace.Path renaming def1 → def1', def2 → def2'` same as `open Some.Namespace.Path\n  (def1 def2)` but `def1`/`def2`'s names are changed to `def1'`/`def2'`.\n\n  This works even if `def1` and `def2` are `protected`.\n\n* `open scoped Some.Namespace.Path1 Some.Namespace.Path2` **only** opens [scoped instances],\n  notations, and attributes from `Namespace1` and `Namespace2`; it does **not** make any other name\n  available.\n\n* `open &lt;any of the open shapes above&gt; in` makes the names `open`-ed visible only in the next\n  command or expression.\n\n[scoped instance]: https://lean-lang.org/theorem_proving_in_lean4/type_classes.html#scoped-instances\n(Scoped instances in Theorem Proving in Lean)\n\n\n## Examples\n\n```lean\n/-- SKI combinators https://en.wikipedia.org/wiki/SKI_combinator_calculus -/\nnamespace Combinator.Calculus\n  def I (a : α) : α := a\n  def K (a : α) : β → α := fun _ =&gt; a\n  def S (x : α → β → γ) (y : α → β) (z : α) : γ := x z (y z)\nend Combinator.Calculus\n\nsection\n  -- open everything under `Combinator.Calculus`, *i.e.* `I`, `K` and `S`,\n  -- until the section ends\n  open Combinator.Calculus\n\n  theorem SKx_eq_K : S K x = I := rfl\nend\n\n-- open everything under `Combinator.Calculus` only for the next command (the next `theorem`, here)\nopen Combinator.Calculus in\ntheorem SKx_eq_K' : S K x = I := rfl\n\nsection\n  -- open only `S` and `K` under `Combinator.Calculus`\n  open Combinator.Calculus (S K)\n\n  theorem SKxy_eq_y : S K x y = y := rfl\n\n  -- `I` is not in scope, we have to use its full path\n  theorem SKxy_eq_Iy : S K x y = Combinator.Calculus.I y := rfl\nend\n\nsection\n  open Combinator.Calculus\n    renaming\n      I → identity,\n      K → konstant\n\n  #check identity\n  #check konstant\nend\n\nsection\n  open Combinator.Calculus\n    hiding S\n\n  #check I\n  #check K\nend\n\nsection\n  namespace Demo\n    inductive MyType\n    | val\n\n    namespace N1\n      scoped infix:68 \" ≋ \" =&gt; BEq.beq\n\n      scoped instance : BEq MyType where\n        beq _ _ := true\n\n      def Alias := MyType\n    end N1\n  end Demo\n\n  -- bring `≋` and the instance in scope, but not `Alias`\n  open scoped Demo.N1\n\n  #check Demo.MyType.val == Demo.MyType.val\n  #check Demo.MyType.val ≋ Demo.MyType.val\n  -- #check Alias -- unknown identifier 'Alias'\nend\n```</code>",
  "82": "<code>¬IsSFiniteKernel η</code>",
@@ -48,22 +48,22 @@
  "74":
  "<code>ProbabilityTheory.Kernel.parallelComp_comm₀.{u_1, u_2, u_3, u_4} {X : Type u_1} {Y : Type u_2} {Z : Type u_3}\n  {T : Type u_4} [MeasurableSpace X] [MeasurableSpace Y] [MeasurableSpace Z] [MeasurableSpace T] {κ : Kernel X Y}\n  {η : Kernel Z T} : Kernel.id ∥ₖ κ ∘ₖ (η ∥ₖ Kernel.id) = η ∥ₖ Kernel.id ∘ₖ (Kernel.id ∥ₖ κ)</code>",
  "73":
- "<code class=\"docstring\">The `kernel_monoidal` tactic applies the `kernel_hom` transformation to the goal and then\ninvokes the `monoidal` tactic to solve or simplify the resulting goal.</code>",
- "72":
- "<code>ProbabilityTheory.Kernel.parallelComp.{u_5, u_6, u_7, u_8} {α : Type u_5} {β : Type u_6} {γ : Type u_7} {δ : Type u_8}\n  {mα : MeasurableSpace α} {mβ : MeasurableSpace β} {mγ : MeasurableSpace γ} {mδ : MeasurableSpace δ} (κ : Kernel α β)\n  (η : Kernel γ δ) : Kernel (α × γ) (β × δ)</code><span class=\"sep\"></span><code class=\"docstring\">Parallel product of two kernels.</code>",
- "71": "<code>IsSFiniteKernel η'</code>",
- "70": "<code>IsSFiniteKernel κ'</code>",
+ "<code>ProbabilityTheory.Kernel.parallelComp.{u_1, u_2, u_3, u_4} {α : Type u_1} {β : Type u_2} {γ : Type u_3} {δ : Type u_4}\n  {mα : MeasurableSpace α} {mβ : MeasurableSpace β} {mγ : MeasurableSpace γ} {mδ : MeasurableSpace δ} (κ : Kernel α β)\n  (η : Kernel γ δ) : Kernel (α × γ) (β × δ)</code><span class=\"sep\"></span><code class=\"docstring\">Parallel product of two kernels.</code>",
+ "72": "<code>IsSFiniteKernel η'</code>",
+ "71": "<code>IsSFiniteKernel κ'</code>",
+ "70": "<code>MeasurableSpace Z'</code>",
  "7":
  "<code>kernelCoherence : Lean.ParserDescr</code><span class=\"sep\"></span><code class=\"docstring\">The `kernel_coherence` tactic applies the `kernel_hom` transformation to the goal and then\ninvokes the `coherence` tactic to solve the resulting goal.</code>",
- "69": "<code>MeasurableSpace Z'</code>",
- "68": "<code>MeasurableSpace Y'</code>",
- "67": "<code>Type u_6</code>",
- "66": "<code>Kernel Y' Z'</code>",
- "65": "<code>Type u_5</code>",
- "64": "<code>Kernel X Y'</code>",
- "63": "<code>Kernel Y Z</code>",
+ "69": "<code>MeasurableSpace Y'</code>",
+ "68": "<code>Type u_7</code>",
+ "67": "<code>Kernel Y' Z'</code>",
+ "66": "<code>Type u_6</code>",
+ "65": "<code>Kernel X Y'</code>",
+ "64": "<code>Kernel Y Z</code>",
+ "63":
+ "<code>ProbabilityTheory.Kernel.parallelComp_comp_prod₀.{u_1, u_2, u_3, u_6, u_7} {X : Type u_1} {Y : Type u_2} {Z : Type u_3}\n  {Y' : Type u_6} {Z' : Type u_7} [MeasurableSpace X] [MeasurableSpace Y] [MeasurableSpace Z] [MeasurableSpace Y']\n  [MeasurableSpace Z'] (κ : Kernel X Y) [IsSFiniteKernel κ] (η : Kernel Y Z) [IsSFiniteKernel η] (κ' : Kernel X Y')\n  [IsSFiniteKernel κ'] (η' : Kernel Y' Z') [IsSFiniteKernel η'] : η ∥ₖ η' ∘ₖ (κ ×ₖ κ') = η ∘ₖ κ ×ₖ (η' ∘ₖ κ')</code>",
  "62":
- "<code>ProbabilityTheory.Kernel.parallelComp_comp_prod₀.{u_1, u_2, u_3, u_5, u_6} {X : Type u_1} {Y : Type u_2} {Z : Type u_3}\n  {Y' : Type u_5} {Z' : Type u_6} [MeasurableSpace X] [MeasurableSpace Y] [MeasurableSpace Z] [MeasurableSpace Y']\n  [MeasurableSpace Z'] {κ : Kernel X Y} [IsSFiniteKernel κ] {η : Kernel Y Z} [IsSFiniteKernel η] {κ' : Kernel X Y'}\n  [IsSFiniteKernel κ'] {η' : Kernel Y' Z'} [IsSFiniteKernel η'] : η ∥ₖ η' ∘ₖ (κ ×ₖ κ') = η ∘ₖ κ ×ₖ (η' ∘ₖ κ')</code>",
+ "<code class=\"docstring\">Same as `@[reassoc]`, but for equalities of s-finite kernels.</code>",
  "61":
  "<code>ProbabilityTheory.Kernel.deterministic.{u_1, u_2} {α : Type u_1} {β : Type u_2} {mα : MeasurableSpace α}\n  {mβ : MeasurableSpace β} (f : α → β) (hf : Measurable f) : Kernel α β</code><span class=\"sep\"></span><code class=\"docstring\">Kernel which to `a` associates the dirac measure at `f a`. This is a Markov kernel.</code>",
  "60":
@@ -124,157 +124,158 @@
  "<code>kernelDiagram : Lean.ParserDescr</code><span class=\"sep\"></span><code class=\"docstring\">Display the kernel diagram for a given term.\n\nExample usage:\n```\n/- Kernel diagram for an equality theorem. -/\n#kernel_diagram ProbabilityTheory.Kernel.swap_prod\n```</code>",
  "29":
  "<code>CategoryTheory.MonoidalCategory.whisker_exchange.{v, u} {C : Type u} [CategoryTheory.Category.{v, u} C]\n  [CategoryTheory.MonoidalCategory C] {W X Y Z : C} (f : W ⟶ X) (g : Y ⟶ Z) :\n  CategoryTheory.CategoryStruct.comp (CategoryTheory.MonoidalCategoryStruct.whiskerLeft W g)\n      (CategoryTheory.MonoidalCategoryStruct.whiskerRight f Z) =\n    CategoryTheory.CategoryStruct.comp (CategoryTheory.MonoidalCategoryStruct.whiskerRight f Y)\n      (CategoryTheory.MonoidalCategoryStruct.whiskerLeft X g)</code>",
- "283": "<code>Type ?u.3</code>",
- "282":
+ "284": "<code>Type ?u.3</code>",
+ "283":
  "<code>typeOfObj (u : Lean.Level) (SX : Lean.Expr) : Lean.MetaM Q(Type u)</code><span class=\"sep\"></span><code class=\"docstring\">The carrier of an object of `SFinKer.{u}` built from `SFinKer.of`, `⊗` and `𝟙_`, decomposed\ninto products and `PUnit` as in `homCarrier`.</code>",
- "281": "<code class=\"docstring\">The universe parameter v</code>",
- "280": "<code>Type v</code>",
+ "282": "<code class=\"docstring\">The universe parameter v</code>",
+ "281": "<code>Type v</code>",
+ "280": "<code>Q(MeasurableSpace «$X₀»)</code>",
  "28":
  "<code>ProbabilityTheory.Kernel.parallelComp_comm.{u_1, u_2, u_3, u_4} {X : Type u_1} {Y : Type u_2} {Z : Type u_3}\n  {T : Type u_4} {mX : MeasurableSpace X} {mY : MeasurableSpace Y} {mZ : MeasurableSpace Z} {mT : MeasurableSpace T}\n  {κ : Kernel X Y} {η : Kernel Z T} : Kernel.id ∥ₖ κ ∘ₖ (η ∥ₖ Kernel.id) = η ∥ₖ Kernel.id ∘ₖ (Kernel.id ∥ₖ κ)</code>",
- "279": "<code>Q(MeasurableSpace «$X₀»)</code>",
- "278": "<code>Q(Type v)</code>",
- "277":
+ "279": "<code>Q(Type v)</code>",
+ "278":
  "<code>homCarrierOfEquiv (u : Lean.Level) (e₀ : Lean.Expr) :\n  Lean.MetaM\n    ((X : Q(Type u)) ×\n      (x : Q(MeasurableSpace «$X»)) ×\n        (SX : Q(SFinKer)) ×\n          (_ : Q(«$SX».carrier ≃ᵐ «$X»)) ×\n            (v : Lean.Level) × (X₀ : Q(Type v)) × (x_2 : Q(MeasurableSpace «$X₀»)) × Q(«$X» ≃ᵐ «$X₀»))</code><span class=\"sep\"></span><code class=\"docstring\">For a measurable equivalence `e₀ : X ≃ᵐ X₀` from a lifted measurable space `X : Type u` to the\noriginal space `X₀ : Type v` (an equivalence of `Kernel.lift`, or a component of one): the data of\n`homCarrier` for `X`, then `X₀` with its universe level and its `MeasurableSpace` instance, and\n`e₀`.</code>",
- "276": "<code class=\"docstring\">The universe parameter w</code>",
- "275":
+ "277": "<code class=\"docstring\">The universe parameter w</code>",
+ "276":
  "<code>kernelLevel (κ : Lean.Expr) : Lean.MetaM Lean.Level</code><span class=\"sep\"></span><code class=\"docstring\">The universe level `w` of the carriers of a lifted kernel `κ : Kernel X Y`: all the carriers of\na lifted equality live in `Type w`.</code>",
- "274": "<code>Type ?u.4</code>",
- "273":
+ "275": "<code>Type ?u.4</code>",
+ "274":
  "<code>getOriginalType (t : Lean.Expr) : Lean.MetaM (Lean.Expr × Lean.Level)</code><span class=\"sep\"></span><code class=\"docstring\">Get the original type from a lifted type. `PUnit` is unlifted to `Unit`.</code>",
- "272": "<code>Type x_1</code>",
- "271": "<code>Q(Type x_1)</code>",
- "270":
+ "273": "<code>Type x_1</code>",
+ "272": "<code>Q(Type x_1)</code>",
+ "271":
  "<code>PUnit.{u} : Sort u</code><span class=\"sep\"></span><code class=\"docstring\">The canonical universe-polymorphic type with just one element.\n\nIt should be used in contexts that require a type to be universe polymorphic, thus disallowing\n`Unit`.</code>",
+ "270": "<code>Type ?u.5</code>",
  "27":
  "<code>ProbabilityTheory.Kernel.deterministic_comp_eq_map.{u_1, u_2, u_4} {α : Type u_1} {β : Type u_2}\n  {mα : MeasurableSpace α} {mβ : MeasurableSpace β} {γ : Type u_4} {mγ : MeasurableSpace γ} {f : β → γ}\n  (hf : Measurable f) (κ : Kernel α β) : deterministic f hf ∘ₖ κ = κ.map f</code>",
- "269": "<code>Type ?u.5</code>",
- "268": "<code>Type w</code>",
- "267": "<code>Q(MeasurableSpace «$X'»)</code>",
- "266": "<code>Q(Type w)</code>",
- "265": "<code>Q(Type x)</code>",
- "264":
+ "269": "<code>Type w</code>",
+ "268": "<code>Q(MeasurableSpace «$X'»)</code>",
+ "267": "<code>Q(Type w)</code>",
+ "266": "<code>Q(Type x)</code>",
+ "265":
  "<code>unliftCarrier (w : Lean.Level) (X' : Lean.Expr) :\n  Lean.MetaM\n    ((X' : Q(Type w)) ×\n      (x : Q(MeasurableSpace «$X'»)) ×\n        (x_1 : Lean.Level) × (X : Q(Type x_1)) × (x_2 : Q(MeasurableSpace «$X»)) × Q(«$X'» ≃ᵐ «$X»))</code><span class=\"sep\"></span><code class=\"docstring\">A lifted measurable space `X' : Type w` with its original space `X` (see `getOriginalType`),\ntheir `MeasurableSpace` instances and the measurable equivalence `X' ≃ᵐ X` of `liftCarrier`.</code>",
- "263":
+ "264":
  "<code>liftCarrier (w : Lean.Level) (X : Lean.Expr) :\n  Lean.MetaM\n    ((x : Lean.Level) ×\n      (X : Q(Type x)) ×\n        (x_1 : Q(MeasurableSpace «$X»)) × (X' : Q(Type w)) × (x_2 : Q(MeasurableSpace «$X'»)) × Q(«$X'» ≃ᵐ «$X»))</code><span class=\"sep\"></span><code class=\"docstring\">The lift `X'` of a measurable space `X : Type x` to the universe `w`, together with the\n`MeasurableSpace` instances of `X` and `X'` and the measurable equivalence `X' ≃ᵐ X`. Products are\nlifted componentwise, `PUnit` to `PUnit` and the other types to `ULift`.</code>",
- "262": "<code>Lean.MetaM (Array Lean.Expr)</code>",
- "261": "<code>Lean.Name</code>",
- "260":
+ "263": "<code>Lean.MetaM (Array Lean.Expr)</code>",
+ "262": "<code>Lean.Name</code>",
+ "261":
  "<code>memoized (tag : Lean.Name) (key : Lean.Expr) (f : Lean.MetaM (Array Lean.Expr)) : Lean.MetaM (Array Lean.Expr)</code><span class=\"sep\"></span><code class=\"docstring\">Memoizes the computation `f`, keyed by `tag` and `key`.</code>",
+ "260":
+ "<code>synthInstanceCached (type : Lean.Expr) : Lean.MetaM Lean.Expr</code><span class=\"sep\"></span><code class=\"docstring\">`synthInstance` with memoization.</code>",
  "26":
  "<code>ProbabilityTheory.Kernel.swap_comp_eq_map.{u_1, u_2, u_4} {α : Type u_1} {β : Type u_2} {mα : MeasurableSpace α}\n  {mβ : MeasurableSpace β} {γ : Type u_4} {mγ : MeasurableSpace γ} {κ : Kernel α (β × γ)} :\n  swap β γ ∘ₖ κ = κ.map Prod.swap</code>",
  "259":
- "<code>synthInstanceCached (type : Lean.Expr) : Lean.MetaM Lean.Expr</code><span class=\"sep\"></span><code class=\"docstring\">`synthInstance` with memoization.</code>",
- "258":
  "<code>resetTransformCache : Lean.MetaM Unit</code><span class=\"sep\"></span><code class=\"docstring\">Empties the cache. To be called at the beginning of each transformation.</code>",
- "257":
+ "258":
  "<code>Lean.Name : Type</code><span class=\"sep\"></span><code class=\"docstring\">Hierarchical names consist of a sequence of components, each of\nwhich is either a string or numeric, that are written separated by dots (`.`).\n\nHierarchical names are used to name declarations and for creating\nunique identifiers for free variables and metavariables.\n\nYou can create hierarchical names using a backtick:\n```\n`Lean.Meta.whnf\n```\nIt is short for `.str (.str (.str .anonymous \"Lean\") \"Meta\") \"whnf\"`.\n\nYou can use double backticks to request Lean to statically check whether the name\ncorresponds to a Lean declaration in scope.\n```\n``Lean.Meta.whnf\n```\nIf the name is not in scope, Lean will report an error.\n\nThere are two ways to convert a `String` to a `Name`:\n\n 1. `Name.mkSimple` creates a name with a single string component.\n\n 2. `String.toName` first splits the string into its dot-separated\n    components, and then creates a hierarchical name.</code>",
- "256":
+ "257":
  "<code>Std.HashMap (Lean.Name × Lean.Expr) (Array Lean.Expr)</code><span class=\"sep\"></span><code class=\"docstring\">Memoized computations, keyed by a tag and an expression.</code>",
- "255":
+ "256":
  "<code>Std.HashMap.{u, v} (α : Type u) (β : Type v) [BEq α] [Hashable α] : Type (max u v)</code><span class=\"sep\"></span><code class=\"docstring\">Hash maps.\n\nThis is a simple separate-chaining hash table. The data of the hash map consists of a cached size\nand an array of buckets, where each bucket is a linked list of key-value pairs. The number of buckets\nis always a power of two. The hash map doubles its size upon inserting an element such that the\nnumber of elements is more than 75% of the number of buckets.\n\nThe hash table is backed by an `Array`. Users should make sure that the hash map is used linearly to\navoid expensive copies.\n\nThe hash map uses `==` (provided by the `BEq` typeclass) to compare keys and `hash` (provided by\nthe `Hashable` typeclass) to hash them. To ensure that the operations behave as expected, `==`\nshould be an equivalence relation and `a == b` should imply `hash a = hash b` (see also the\n`EquivBEq` and `LawfulHashable` typeclasses). Both of these conditions are automatic if the BEq\ninstance is lawful, i.e., if `a == b` implies `a = b`.\n\nThese hash maps contain a bundled well-formedness invariant, which means that they cannot\nbe used in nested inductive types. For these use cases, `Std.Data.HashMap.Raw` and\n`Std.Data.HashMap.Raw.WF` unbundle the invariant from the hash map. When in doubt, prefer\n`HashMap` over `HashMap.Raw`.\n\nDependent hash maps, in which keys may occur in their values' types, are available as\n`Std.Data.DHashMap`.</code>",
- "254":
+ "255":
  "<code>Std.HashMap Lean.Expr Lean.Expr</code><span class=\"sep\"></span><code class=\"docstring\">Synthesized instances, keyed by the class application.</code>",
- "253":
+ "254":
  "<code>TransformCache.mk (insts : Std.HashMap Lean.Expr Lean.Expr)\n  (memo : Std.HashMap (Lean.Name × Lean.Expr) (Array Lean.Expr)) : TransformCache</code>",
- "252":
+ "253":
  "<code>TransformCache : Type</code><span class=\"sep\"></span><code class=\"docstring\">The cache of the lifting/unlifting transformations.</code>",
- "251": "<code>sorry</code>",
- "250": "<code>«$SX» ⟶ «$SY»</code>",
+ "252": "<code>sorry</code>",
+ "251": "<code>«$SX» ⟶ «$SY»</code>",
+ "250": "<code>Q(«$SX» ⟶ «$SY»)</code>",
  "25":
  "<code>ProbabilityTheory.Kernel.prodAssoc_prod.{u_1, u_2, u_4, u_5} {α : Type u_1} {β : Type u_2} {mα : MeasurableSpace α}\n  {mβ : MeasurableSpace β} {γ : Type u_4} {δ : Type u_5} {mγ : MeasurableSpace γ} {mδ : MeasurableSpace δ}\n  (κ : Kernel α β) [IsSFiniteKernel κ] (η : Kernel α γ) [IsSFiniteKernel η] (ξ : Kernel α δ) [IsSFiniteKernel ξ] :\n  (κ ×ₖ ξ ×ₖ η).map ⇑MeasurableEquiv.prodAssoc = κ ×ₖ (ξ ×ₖ η)</code>",
- "249": "<code>Q(«$SX» ⟶ «$SY»)</code>",
- "248": "<code>ProbabilityTheory.Kernel «$X» «$Y»</code>",
- "247": "<code>Q(ProbabilityTheory.IsSFiniteKernel «$κ»)</code>",
- "246": "<code>Q(ProbabilityTheory.Kernel «$X» «$Y»)</code>",
- "245": "<code>Q(«$SY».carrier ≃ᵐ «$Y»)</code>",
- "244": "<code>Q(«$SX».carrier ≃ᵐ «$X»)</code>",
- "243": "<code>Q(SFinKer)</code>",
- "242": "<code>Q(MeasurableSpace «$Y»)</code>",
- "241": "<code>Q(MeasurableSpace «$X»)</code>",
- "240": "<code>Q(Type u)</code>",
+ "249": "<code>ProbabilityTheory.Kernel «$X» «$Y»</code>",
+ "248": "<code>Q(ProbabilityTheory.IsSFiniteKernel «$κ»)</code>",
+ "247": "<code>Q(ProbabilityTheory.Kernel «$X» «$Y»)</code>",
+ "246": "<code>Q(«$SY».carrier ≃ᵐ «$Y»)</code>",
+ "245": "<code>Q(«$SX».carrier ≃ᵐ «$X»)</code>",
+ "244": "<code>Q(SFinKer)</code>",
+ "243": "<code>Q(MeasurableSpace «$Y»)</code>",
+ "242": "<code>Q(MeasurableSpace «$X»)</code>",
+ "241": "<code>Q(Type u)</code>",
+ "240":
+ "<code>KernelHom.kernelToHomQ {u : Lean.Level} {X Y : Q(Type u)} {mX : Q(MeasurableSpace «$X»)} {mY : Q(MeasurableSpace «$Y»)}\n  {SX SY : Q(SFinKer)} (ex : Q(«$SX».carrier ≃ᵐ «$X»)) (ey : Q(«$SY».carrier ≃ᵐ «$Y»)) (κ : Lean.Expr) :\n  Lean.MetaM\n    ((κ : Q(ProbabilityTheory.Kernel «$X» «$Y»)) ×\n      (x : Q(ProbabilityTheory.IsSFiniteKernel «$κ»)) × (f : Q(«$SX» ⟶ «$SY»)) × Q(«$f» = «$κ».toHom))</code><span class=\"sep\"></span><code class=\"docstring\">Typed version of `kernelToHom`, for a kernel `κ : Kernel X Y` and the carriers `ex : SX ≃ᵐ X`\nand `ey : SY ≃ᵐ Y` of `X` and `Y` given by `homCarrier` (as in `kernelToHom`): returns `κ` with its\n`IsSFiniteKernel` instance, its translation `f : SX ⟶ SY` and the proof of `f = κ.toHom`.</code>",
  "24":
  "<code>ProbabilityTheory.Kernel.map_prod_swap.{u_1, u_2, u_4} {α : Type u_1} {β : Type u_2} {mα : MeasurableSpace α}\n  {mβ : MeasurableSpace β} {γ : Type u_4} {mγ : MeasurableSpace γ} (κ : Kernel α β) (η : Kernel α γ) [IsSFiniteKernel κ]\n  [IsSFiniteKernel η] : (κ ×ₖ η).map Prod.swap = η ×ₖ κ</code>",
  "239":
- "<code>KernelHom.kernelToHomQ {u : Lean.Level} {X Y : Q(Type u)} {mX : Q(MeasurableSpace «$X»)} {mY : Q(MeasurableSpace «$Y»)}\n  {SX SY : Q(SFinKer)} (ex : Q(«$SX».carrier ≃ᵐ «$X»)) (ey : Q(«$SY».carrier ≃ᵐ «$Y»)) (κ : Lean.Expr) :\n  Lean.MetaM\n    ((κ : Q(ProbabilityTheory.Kernel «$X» «$Y»)) ×\n      (x : Q(ProbabilityTheory.IsSFiniteKernel «$κ»)) × (f : Q(«$SX» ⟶ «$SY»)) × Q(«$f» = «$κ».toHom))</code><span class=\"sep\"></span><code class=\"docstring\">Typed version of `kernelToHom`, for a kernel `κ : Kernel X Y` and the carriers `ex : SX ≃ᵐ X`\nand `ey : SY ≃ᵐ Y` of `X` and `Y` given by `homCarrier` (as in `kernelToHom`): returns `κ` with its\n`IsSFiniteKernel` instance, its translation `f : SX ⟶ SY` and the proof of `f = κ.toHom`.</code>",
- "238":
  "<code>ProbabilityTheory.Kernel.lift_congr_of_eq.{x, y, w} {X : Type x} [MeasurableSpace X] {Y : Type y} [MeasurableSpace Y]\n  {X' : Type w} [MeasurableSpace X'] {Y' : Type w} [MeasurableSpace Y'] {ex : X' ≃ᵐ X} {ey : Y' ≃ᵐ Y}\n  {κ η : ProbabilityTheory.Kernel X Y} {κ' η' : ProbabilityTheory.Kernel X' Y'} (hκ : κ' = κ.lift) (hη : η' = η.lift) :\n  (κ = η) = (κ' = η')</code><span class=\"sep\"></span><code class=\"docstring\">The equivalence between an equality of kernels and the equality of their lifts `κ'` and `η'`,\ngiven by `lift_congr`.</code>",
- "237":
+ "238":
  "<code>ProbabilityTheory.Kernel.comp.{u_1, u_2, u_3} {α : Type u_1} {β : Type u_2} {γ : Type u_3} {mα : MeasurableSpace α}\n  {mβ : MeasurableSpace β} {mγ : MeasurableSpace γ} (η : ProbabilityTheory.Kernel β γ)\n  (κ : ProbabilityTheory.Kernel α β) : ProbabilityTheory.Kernel α γ</code><span class=\"sep\"></span><code class=\"docstring\">Composition of two kernels.</code>",
- "236":
+ "237":
  "<code>CategoryTheory.CategoryStruct.comp.{v, u} {obj : Type u} [self : CategoryTheory.CategoryStruct.{v, u} obj]\n  {X Y Z : obj} : (X ⟶ Y) → (Y ⟶ Z) → (X ⟶ Z)</code><span class=\"sep\"></span><code class=\"docstring\">Composition of morphisms in a category, written `f ≫ g`.</code>",
- "235": "<code>g = η.toHom</code>",
- "234": "<code>f = κ.toHom</code>",
- "233": "<code>SX ⟶ SY</code>",
- "232": "<code>SZ ⟶ SX</code>",
- "231":
+ "236": "<code>g = η.toHom</code>",
+ "235": "<code>f = κ.toHom</code>",
+ "234": "<code>SX ⟶ SY</code>",
+ "233": "<code>SZ ⟶ SX</code>",
+ "232":
  "<code>ProbabilityTheory.IsSFiniteKernel.{u_1, u_2} {α : Type u_1} {β : Type u_2} {mα : MeasurableSpace α}\n  {mβ : MeasurableSpace β} (κ : ProbabilityTheory.Kernel α β) : Prop</code><span class=\"sep\"></span><code class=\"docstring\">A kernel is s-finite if it can be written as the sum of countably many finite kernels.</code>",
- "230": "<code>ProbabilityTheory.Kernel Z X</code>",
+ "231": "<code>ProbabilityTheory.Kernel Z X</code>",
+ "230": "<code>ProbabilityTheory.Kernel X Y</code>",
  "23":
  "<code>ProbabilityTheory.Kernel.map.{u_1, u_2, u_4} {α : Type u_1} {β : Type u_2} {mα : MeasurableSpace α}\n  {mβ : MeasurableSpace β} {γ : Type u_4} [MeasurableSpace γ] (κ : Kernel α β) (f : β → γ) : Kernel α γ</code><span class=\"sep\"></span><code class=\"docstring\">The pushforward of a kernel along a function.\nIf the function is not measurable, we use zero instead. This choice of junk\nvalue ensures that typeclass inference can infer that the `map` of a kernel\nsatisfying `IsZeroOrMarkovKernel` again satisfies this property.</code>",
- "229": "<code>ProbabilityTheory.Kernel X Y</code>",
- "228": "<code>SZ.carrier ≃ᵐ Z</code>",
- "227":
+ "229": "<code>SZ.carrier ≃ᵐ Z</code>",
+ "228":
  "<code>ProbabilityTheory.Kernel.comp_lift_of_eq.{x, y, z, w} {X : Type x} [MeasurableSpace X] {Y : Type y} [MeasurableSpace Y]\n  {X' : Type w} [MeasurableSpace X'] {Y' : Type w} [MeasurableSpace Y'] {ex : X' ≃ᵐ X} {ey : Y' ≃ᵐ Y} {Z : Type z}\n  [MeasurableSpace Z] {Z' : Type w} [MeasurableSpace Z'] {ez : Z' ≃ᵐ Z} {η : ProbabilityTheory.Kernel X Y}\n  {κ : ProbabilityTheory.Kernel Z X} {η' : ProbabilityTheory.Kernel X' Y'} {κ' : ProbabilityTheory.Kernel Z' X'}\n  (hη : η' = η.lift) (hκ : κ' = κ.lift) : η'.comp κ' = (η.comp κ).lift</code><span class=\"sep\"></span><code class=\"docstring\">The lift `η' ∘ₖ κ'` of a composition `η ∘ₖ κ`, from the lifts `η'` of `η` and `κ'` of `κ` (see\n`comp_lift`).</code>",
- "226":
+ "227":
  "<code>ProbabilityTheory.Kernel.fromHom.{x, y, u} {X : Type x} {Y : Type y} [MeasurableSpace X] [MeasurableSpace Y]\n  {SX SY : SFinKer} {ex : SX.carrier ≃ᵐ X} {ey : SY.carrier ≃ᵐ Y} (κ : SX ⟶ SY) : ProbabilityTheory.Kernel X Y</code><span class=\"sep\"></span><code class=\"docstring\">Transform a morphism in `SFinKer` into a kernel.</code>",
- "225": "<code>SY.carrier ≃ᵐ Y</code>",
- "224":
+ "226": "<code>SY.carrier ≃ᵐ Y</code>",
+ "225":
  "<code>SFinKer.carrier.{u} (self : SFinKer) : Type u</code><span class=\"sep\"></span><code class=\"docstring\">The underlying measurable space.</code>",
- "223": "<code>SX.carrier ≃ᵐ X</code>",
- "222": "<code>SFinKer</code>",
- "221": "<code>MeasurableCoherence X Y</code>",
- "220":
+ "224": "<code>SX.carrier ≃ᵐ X</code>",
+ "223": "<code>SFinKer</code>",
+ "222": "<code>MeasurableCoherence X Y</code>",
+ "221":
  "<code>CategoryTheory.MonoidalCoherence.{v, u} {C : Type u} [CategoryTheory.Category.{v, u} C] (X Y : C) : Type v</code><span class=\"sep\"></span><code class=\"docstring\">A typeclass carrying a choice of monoidal structural isomorphism between two objects.\nUsed by the `⊗≫` monoidal composition operator, and the `coherence` tactic.</code>",
+ "220":
+ "<code>MeasurableEquiv.{u_6, u_7} (α : Type u_6) (β : Type u_7) [MeasurableSpace α] [MeasurableSpace β] : Type (max u_6 u_7)</code><span class=\"sep\"></span><code class=\"docstring\">Equivalences between measurable spaces. Main application is the simplification of measurability\nstatements along measurable equivalences.</code>",
  "22":
  "<code>ProbabilityTheory.Kernel.parallelComp_comp_parallelComp.{u_1, u_2, u_3, u_5, u_6, u_7} {X : Type u_1} {Y : Type u_2}\n  {Z : Type u_3} {mX : MeasurableSpace X} {mY : MeasurableSpace Y} {mZ : MeasurableSpace Z} {κ : Kernel X Y}\n  {X' : Type u_5} {Y' : Type u_6} {Z' : Type u_7} {mX' : MeasurableSpace X'} {mY' : MeasurableSpace Y'}\n  {mZ' : MeasurableSpace Z'} [IsSFiniteKernel κ] {η : Kernel Y Z} [IsSFiniteKernel η] {κ' : Kernel X' Y'}\n  [IsSFiniteKernel κ'] {η' : Kernel Y' Z'} [IsSFiniteKernel η'] : η ∥ₖ η' ∘ₖ (κ ∥ₖ κ') = η ∘ₖ κ ∥ₖ (η' ∘ₖ κ')</code>",
  "219":
- "<code>MeasurableEquiv.{u_6, u_7} (α : Type u_6) (β : Type u_7) [MeasurableSpace α] [MeasurableSpace β] : Type (max u_6 u_7)</code><span class=\"sep\"></span><code class=\"docstring\">Equivalences between measurable spaces. Main application is the simplification of measurability\nstatements along measurable equivalences.</code>",
- "218":
  "<code>X ≃ᵐ Y</code><span class=\"sep\"></span><code class=\"docstring\">A measurable equivalence between `X` and `Y`.</code>",
- "217":
+ "218":
  "<code>MeasurableCoherence.mk.{u_1, u_2} {X : Type u_1} {Y : Type u_2} [MeasurableSpace X] [MeasurableSpace Y]\n  (miso : X ≃ᵐ Y) : MeasurableCoherence X Y</code>",
- "216":
+ "217":
  "<code>MeasurableCoherence.monoidalCoherence.{u_1, u_2, u_3} {X : Type u_1} {Y : Type u_2} [MeasurableSpace X]\n  [MeasurableSpace Y] [mXY : MeasurableCoherence X Y] {SX SY : SFinKer} (ex : SX.carrier ≃ᵐ X) (ey : SY.carrier ≃ᵐ Y) :\n  CategoryTheory.MonoidalCoherence SX SY</code><span class=\"sep\"></span><code class=\"docstring\">`MeasurableCoherence` gives an instance of `MonoidalCoherence` in the `SFinKer` category.</code>",
- "215":
+ "216":
  "<code>MeasurableCoherence.{u_1, u_2} (X : Type u_1) (Y : Type u_2) [MeasurableSpace X] [MeasurableSpace Y] :\n  Type (max u_1 u_2)</code><span class=\"sep\"></span><code class=\"docstring\">A class witnessing the existence of a measurable equivalence between two measurable spaces.</code>",
- "214":
+ "215":
  "<code class=\"docstring\">Same as `reassoc_of%`, but for equalities of s-finite kernels.</code>",
- "213": "<code>IsSFiniteKernel ζ</code>",
- "212": "<code>IsSFiniteKernel ξ✝</code>",
- "211": "<code>MeasurableSpace W</code>",
- "210": "<code>IsSFiniteKernel η✝</code>",
+ "214": "<code>IsSFiniteKernel ζ</code>",
+ "213": "<code>IsSFiniteKernel ξ✝</code>",
+ "212": "<code>MeasurableSpace W</code>",
+ "211": "<code>IsSFiniteKernel η✝</code>",
+ "210": "<code>IsSFiniteKernel κ✝</code>",
  "21":
  "<code>ProbabilityTheory.Kernel.swap_parallelComp.{u_1, u_2, u_3, u_4} {X : Type u_1} {Y : Type u_2} {Z : Type u_3}\n  {T : Type u_4} {mX : MeasurableSpace X} {mY : MeasurableSpace Y} {mZ : MeasurableSpace Z} {mT : MeasurableSpace T}\n  {κ : Kernel X Y} {η : Kernel Z T} : swap Y T ∘ₖ (κ ∥ₖ η) = η ∥ₖ κ ∘ₖ swap X Z</code>",
- "209": "<code>IsSFiniteKernel κ✝</code>",
- "208": "<code>η ∘ₖ κ = ζ</code>",
- "207": "<code>Kernel Z W</code>",
- "206":
+ "209": "<code>η ∘ₖ κ = ζ</code>",
+ "208": "<code>Kernel Z W</code>",
+ "207":
  "<code>Lean.LMVarId : Type</code><span class=\"sep\"></span><code class=\"docstring\">Short for `LevelMVarId`</code>",
- "205":
+ "206":
  "<code>Array.{u} (α : Type u) : Type u</code><span class=\"sep\"></span><code class=\"docstring\">`Array α` is the type of [dynamic arrays](https://en.wikipedia.org/wiki/Dynamic_array) with elements\nfrom `α`. This type has special support in the runtime.\n\nArrays perform best when unshared. As long as there is never more than one reference to an array,\nall updates will be performed _destructively_. This results in performance comparable to mutable\narrays in imperative programming languages.\n\nAn array has a size and a capacity. The size is the number of elements present in the array, while\nthe capacity is the amount of memory currently allocated for elements. The size is accessible via\n`Array.size`, but the capacity is not observable from Lean code. `Array.emptyWithCapacity n` creates\nan array which is equal to `#[]`, but internally allocates an array of capacity `n`. When the size\nexceeds the capacity, allocation is required to grow the array.\n\nFrom the point of view of proofs, `Array α` is just a wrapper around `List α`.</code>",
- "204":
+ "205":
  "<code>kernelReassocHandler (h_eq : Lean.Expr) : Lean.MetaM (Lean.Expr × Array Lean.LMVarId)</code><span class=\"sep\"></span><code class=\"docstring\">Core handler for `@[kernel_reassoc]`.\n\nGiven an equality between s-finite kernels, this constructs the corresponding reassociated\nequality in `SFinKer` category, under the extra `Z` measurable space and instance binders needed to\nstate the result. The returned array contains the fresh level metavariables that still need to be\nadded to the declaration's universe levels.</code>",
- "203": "<code>Kernel (Z × Z') W</code>",
- "202":
+ "204": "<code>Kernel (Z × Z') W</code>",
+ "203":
  "<code>parallelComp_comp_prod₀_assoc.{u_1, u_2, u_3, u_4, u_5, u_6} {X : Type u_1} {Y : Type u_2} {Z : Type u_3}\n  {Y' : Type u_4} {Z' : Type u_5} [MeasurableSpace X] [MeasurableSpace Y] [MeasurableSpace Z] [MeasurableSpace Y']\n  [MeasurableSpace Z'] (κ : Kernel X Y) [IsSFiniteKernel κ] (η : Kernel Y Z) [IsSFiniteKernel η] (κ' : Kernel X Y')\n  [IsSFiniteKernel κ'] (η' : Kernel Y' Z') [IsSFiniteKernel η'] {Z✝ : Type u_6} [inst : MeasurableSpace Z✝]\n  (ξ : Kernel (Z × Z') Z✝) [inst_1 : IsSFiniteKernel ξ] : ξ ∘ₖ (η ∥ₖ η') ∘ₖ (κ ×ₖ κ') = ξ ∘ₖ (η ∘ₖ κ ×ₖ (η' ∘ₖ κ'))</code>",
+ "202": "<code>Type u_5</code>",
  "201":
  "<code>parallelComp_comp_prod₀.{u_1, u_2, u_3, u_4, u_5} {X : Type u_1} {Y : Type u_2} {Z : Type u_3} {Y' : Type u_4}\n  {Z' : Type u_5} [MeasurableSpace X] [MeasurableSpace Y] [MeasurableSpace Z] [MeasurableSpace Y'] [MeasurableSpace Z']\n  (κ : Kernel X Y) [IsSFiniteKernel κ] (η : Kernel Y Z) [IsSFiniteKernel η] (κ' : Kernel X Y') [IsSFiniteKernel κ']\n  (η' : Kernel Y' Z') [IsSFiniteKernel η'] : η ∥ₖ η' ∘ₖ (κ ×ₖ κ') = η ∘ₖ κ ×ₖ (η' ∘ₖ κ')</code>",
  "200":
- "<code class=\"docstring\">Same as `@[reassoc]`, but for equalities of s-finite kernels.</code>",
+ "<code class=\"docstring\">A thin wrapper for `aesop` which adds the `CategoryTheory` rule set and\nallows `aesop` to look through semireducible definitions when calling `intros`.\nThis tactic fails when it is unable to solve the goal, making it suitable for\nuse in auto-params.</code>",
  "20":
  "<code>ProbabilityTheory.Kernel.comp_assoc.{u_1, u_2, u_3, u_4} {α : Type u_1} {β : Type u_2} {γ : Type u_3}\n  {mα : MeasurableSpace α} {mβ : MeasurableSpace β} {mγ : MeasurableSpace γ} {δ : Type u_4} {mδ : MeasurableSpace δ}\n  (ξ : Kernel γ δ) (η : Kernel β γ) (κ : Kernel α β) : ξ ∘ₖ η ∘ₖ κ = ξ ∘ₖ (η ∘ₖ κ)</code><span class=\"sep\"></span><code class=\"docstring\">Composition of kernels is associative.</code>",
  "2":
  "<code>kernelDisch : Lean.ParserDescr</code><span class=\"sep\"></span><code class=\"docstring\">The `kernel_disch` tactic applies the `kernel_hom` transformation to the goal and then\ntries to solve the resulting goal with:\n1. `monoidal`, after `simp` together with the splitting of the tensor products of compositions and\n  the coassociativity of the comultiplication;\n2. `cat_disch`, after merging the whiskers and the compositions of tensor products into single\n  tensor products, together with the counit and comultiplication laws of the comonoid structure\n  and of the deterministic and Markov kernels. This handles the exchange law and the laws hidden in\n  tensor products.\n\nAs it tries both `cat_disch` and `monoidal`, it is the tactic to use by default.</code>",
  "199":
- "<code class=\"docstring\">A thin wrapper for `aesop` which adds the `CategoryTheory` rule set and\nallows `aesop` to look through semireducible definitions when calling `intros`.\nThis tactic fails when it is unable to solve the goal, making it suitable for\nuse in auto-params.</code>",
- "198":
  "<code class=\"docstring\">`aesop &lt;clause&gt;*` tries to solve the current goal by applying a set of rules\nregistered with the `@[aesop]` attribute. See [its\nREADME](https://github.com/JLimperg/aesop#readme) for a tutorial and a\nreference.\n\nThe variant `aesop?` prints the proof it found as a `Try this` suggestion.\n\nClauses can be used to customise the behaviour of an Aesop call. Available\nclauses are:\n\n- `(add &lt;phase&gt; &lt;priority&gt; &lt;builder&gt; &lt;rule&gt;)` adds a rule. `&lt;phase&gt;` is\n  `unsafe`, `safe` or `norm`. `&lt;priority&gt;` is a percentage for unsafe rules and\n  an integer for safe and norm rules. `&lt;rule&gt;` is the name of a declaration or\n  local hypothesis. `&lt;builder&gt;` is the rule builder used to turn `&lt;rule&gt;` into\n  an Aesop rule. Example: `(add unsafe 50% apply Or.inl)`.\n- `(erase &lt;rule&gt;)` disables a globally registered Aesop rule. Example: `(erase\n  Aesop.BuiltinRules.assumption)`.\n- `(rule_sets := [&lt;ruleset&gt;,*])` enables or disables named sets of rules for\n  this Aesop call. Example: `(rule_sets := [-builtin, MyRuleSet])`.\n- `(config { &lt;opt&gt; := &lt;value&gt; })` adjusts Aesop's search options. See\n  `Aesop.Options`.\n- `(simp_config { &lt;opt&gt; := &lt;value&gt; })` adjusts options for Aesop's built-in\n  `simp` rule. The given options are directly passed to `simp`. For example,\n  `(simp_config := { zeta := false })` makes Aesop use\n  `simp (config := { zeta := false })`.</code>",
- "197":
+ "198":
  "<code class=\"docstring\">The `aesop_kernel` tactic applies the `kernel_hom` transformation to the goal and then\ninvokes `aesop` with the `CategoryTheory` rule set, using the same configuration as `aesop_cat`.</code>",
- "196":
+ "197":
  "<code class=\"docstring\">Use the coherence theorem for monoidal categories to solve equations in a monoidal equation,\nwhere the two sides only differ by replacing strings of monoidal structural morphisms\n(that is, associators, unitors, and identities)\nwith different strings of structural morphisms with the same source and target.\n\nThat is, `coherence` can handle goals of the form\n`a ≫ f ≫ b ≫ g ≫ c = a' ≫ f ≫ b' ≫ g ≫ c'`\nwhere `a = a'`, `b = b'`, and `c = c'` can be proved using `pure_coherence`.\n\n(If you have very large equations on which `coherence` is unexpectedly failing,\nyou may need to increase the typeclass search depth,\nusing e.g. `set_option synthInstance.maxSize 500`.)</code>",
- "195":
+ "196":
  "<code class=\"docstring\">The `kernel_coherence` tactic applies the `kernel_hom` transformation to the goal and then\ninvokes the `coherence` tactic to solve the resulting goal.</code>",
+ "195":
+ "<code class=\"docstring\">The `kernel_monoidal` tactic applies the `kernel_hom` transformation to the goal and then\ninvokes the `monoidal` tactic to solve or simplify the resulting goal.</code>",
  "194":
  "<code class=\"docstring\">A tactic for discharging easy category theory goals, widely used as an autoparameter.\nCurrently this defaults to the `aesop_cat` wrapper around `aesop`, but by setting\nthe option `mathlib.tactic.category.grind` to `true`, it will use the `grind` tactic instead.</code>",
  "193":
@@ -312,7 +313,7 @@
  "177":
  "<code>ProbabilityTheory.Kernel.comp_toHom_of_eq.{x, y, z, u} {X : Type x} {Y : Type y} {Z : Type z} [MeasurableSpace X]\n  [MeasurableSpace Y] [MeasurableSpace Z] {SX SY SZ : SFinKer} {ex : SX.carrier ≃ᵐ X} {ey : SY.carrier ≃ᵐ Y}\n  {ez : SZ.carrier ≃ᵐ Z} {η : ProbabilityTheory.Kernel X Y} {κ : ProbabilityTheory.Kernel Z X}\n  [ProbabilityTheory.IsSFiniteKernel η] [ProbabilityTheory.IsSFiniteKernel κ] {f : SZ ⟶ SX} {g : SX ⟶ SY}\n  (hf : f = κ.toHom) (hg : g = η.toHom) : CategoryTheory.CategoryStruct.comp f g = (η.comp κ).toHom</code><span class=\"sep\"></span><code class=\"docstring\">The translation `f ≫ g` of a composition `η ∘ₖ κ`, from the translations `f` of `κ` and `g` of\n`η` (see `comp_toHom`).</code>",
  "176":
- "<code>unfoldKernelOp (e : Lean.Expr) : Lean.MetaM (Lean.Expr × Lean.Expr)</code><span class=\"sep\"></span><code class=\"docstring\">Unfold kernel operations in an expression. Returns the unfolded expression `e'` together with a\nproof of `e = e'`. `Kernel.prod` is delta-expanded, while `Kernel.compProd`, being an\n`irreducible_def`, is rewritten using `Kernel.compProd_def`.</code>",
+ "<code>unfoldKernelOp (e : Lean.Expr) : Lean.MetaM (Lean.Expr × Lean.Expr)</code><span class=\"sep\"></span><code class=\"docstring\">Unfold kernel operations in an expression. Returns the unfolded expression `e'` together with a\nproof of `e = e'`. `Kernel.prod` is delta-expanded, while `Kernel.compProd`, whose\ndefinition is not exposed by Mathlib, is rewritten using `Kernel.compProd_def`.</code>",
  "175":
  "<code class=\"docstring\">The `kernel_hom` tactic transforms a kernel equality to an equivalent equality in\nthe category of measurable spaces and s-finite kernels.\n\nThe tactic supports location specifiers like `rw` or `simp`:\n* `kernel_hom` — applies to the goal\n* `kernel_hom at h` — applies to hypothesis `h`\n* `kernel_hom at h₁ h₂` — applies to multiple hypotheses\n* `kernel_hom at h ⊢` — applies to hypothesis `h` and the goal\n* `kernel_hom at *` — applies to all hypotheses and the goal\n\nAll the equalities are lifted to a common universe level, so that the resulting categorical\nequalities live in the same category and can be used to rewrite each other.\n\nExample:\n```lean\nexample {W X Y Z : Type*} [MeasurableSpace X] [MeasurableSpace Y] [MeasurableSpace Z]\n    [MeasurableSpace W] (κ : Kernel X Y) (η : Kernel Y Z) (ξ : Kernel Z W)\n    [IsFiniteKernel ξ] [IsSFiniteKernel κ] [IsSFiniteKernel η] :\n    ξ ∘ₖ (η ∘ₖ κ) = ξ ∘ₖ η ∘ₖ κ := by\n  kernel_hom\n  exact Category.assoc _ _ _\n```</code>",
  "174":
@@ -430,7 +431,7 @@
  "<code>MeasureTheory.Measure.compProd_apply_prod.{u_1, u_2} {α : Type u_1} {β : Type u_2} {mα : MeasurableSpace α}\n  {mβ : MeasurableSpace β} {μ : Measure α} {κ : Kernel α β} [SFinite μ] [IsSFiniteKernel κ] {s : Set α} {t : Set β}\n  (hs : MeasurableSet s) (ht : MeasurableSet t) : (μ ⊗ₘ κ) (s ×ˢ t) = ∫⁻ (a : α) in s, (κ a) t ∂μ</code>",
  "113": "<code>X</code>",
  "112":
- "<code>MeasureTheory.lintegral.{u_4} {α : Type u_4} {m : MeasurableSpace α} (μ : Measure α) (f : α → ENNReal) : ENNReal</code><span class=\"sep\"></span><code class=\"docstring\">The **lower Lebesgue integral** of a function `f` with respect to a measure `μ`.</code>",
+ "<code>MeasureTheory.lintegral.{u_1} {α : Type u_1} {m : MeasurableSpace α} (μ : Measure α) (f : α → ENNReal) : ENNReal</code><span class=\"sep\"></span><code class=\"docstring\">The **lower Lebesgue integral** of a function `f` with respect to a measure `μ`.</code>",
  "111":
  "<code>MeasurableSet.{u_1} {α : Type u_1} [MeasurableSpace α] (s : Set α) : Prop</code><span class=\"sep\"></span><code class=\"docstring\">`MeasurableSet s` means that `s` is measurable (in the ambient measure space on `α`)</code>",
  "110":
@@ -448,7 +449,7 @@
  "103":
  "<code>ProbabilityTheory.Kernel.IsReversible.{u_1} {α : Type u_1} {mα : MeasurableSpace α} (κ : Kernel α α) (π : Measure α) :\n  Prop</code><span class=\"sep\"></span><code class=\"docstring\">Reversibility (detailed balance) of a Markov kernel `κ` w.r.t. a measure `π`:\nfor all measurable sets `A B`, the mass flowing from `A` to `B` equals that from `B` to `A`.</code>",
  "102":
- "<code>MeasureTheory.Measure.map.{u_4, u_5} {α : Type u_4} {β : Type u_5} [MeasurableSpace α] [MeasurableSpace β] (f : α → β)\n  (μ : Measure α) : Measure β</code><span class=\"sep\"></span><code class=\"docstring\">The pushforward of a measure. If `f` is not an almost everywhere measurable function,\nwe define it to be `0` if `μ = 0`, and to be an arbitrary Dirac mass otherwise. That way\nwe always have `map f 0 = 0`, and the push-forward of a probability measure is always a\nprobability measure.</code>",
+ "<code>MeasureTheory.Measure.map.{u_1, u_2} {α : Type u_1} {β : Type u_2} [MeasurableSpace α] [MeasurableSpace β] (f : α → β)\n  (μ : Measure α) : Measure β</code><span class=\"sep\"></span><code class=\"docstring\">The pushforward of a measure. If `f` is not an almost everywhere measurable function,\nwe define it to be `0` if `μ = 0`, and to be an arbitrary Dirac mass otherwise. That way\nwe always have `map f 0 = 0`, and the push-forward of a probability measure is always a\nprobability measure.</code>",
  "101": "<code>Measure.map Prod.swap (π ⊗ₘ κ) = π ⊗ₘ κ</code>",
  "100": "<code>Kernel X X</code>",
  "10":
