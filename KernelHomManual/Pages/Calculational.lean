@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gaëtan Serré
 -/
 
-import KernelHomTests.KernelHom.Paper.DataAugmentation
+import KernelHomTests.KernelHom.DataAugmentation
 import KernelHomManual.Papers
 import KernelHomManual.Tools.LeanDecl
 import VersoManual
@@ -14,7 +14,7 @@ open Verso.Genre Manual Verso.Genre.Manual.InlineLean Verso.Code.External Mathli
 open ProbabilityTheory Kernel KernelHom
 
 set_option verso.exampleProject "."
-set_option verso.exampleModule "KernelHomTests.KernelHom.Paper.DataAugmentation"
+set_option verso.exampleModule "KernelHomTests.KernelHom.DataAugmentation"
 
 #doc (Manual) "Calculational proofs" =>
 %%%
