@@ -41,6 +41,8 @@ open scoped KernelHom
 
 namespace ProbabilityTheory.Kernel.DataAugmentation
 
+show_panel_widgets [local KernelDiagram]
+
 variable {X Y : Type*} [MeasurableSpace X] [MeasurableSpace Y]
 
 /-- Definition 1.5.1 of Douc et al.: if the measure `π ⊗ κ` on `X × X` is symmetric, then `π` is
