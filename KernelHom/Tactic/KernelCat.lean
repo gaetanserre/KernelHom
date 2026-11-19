@@ -17,8 +17,8 @@ categorical tactic to solve the resulting goal.
 
 ## Main declarations
 
-* `kernel_disch`: `kernel_hom` followed by `monoidal` or `cat_disch`, after normalizing the tensor
-  products of morphisms. It is the tactic to use by default.
+* `kernel_disch`: `kernel_hom` followed by `monoidal` or the search of `aesop_kernel`, after
+  normalizing the tensor products of morphisms. It is the tactic to use by default.
 * `kernel_monoidal`: `kernel_hom` followed by `monoidal`.
 * `kernel_coherence`: `kernel_hom` followed by `coherence`.
 * `aesop_kernel`: `kernel_hom` followed by `aesop` with the `CategoryTheory` rule set, skipping the
@@ -30,6 +30,13 @@ public meta section
 open Lean Elab Tactic CategoryTheory
 open Lean Elab Tactic Meta CategoryTheory Parser.Tactic ProbabilityTheory MonoidalCategory
 
+/-- The search of `cat_disch`: `aesop` with the `CategoryTheory` rule set and the configuration of
+`aesop_cat`. Unlike `cat_disch`, it does not first try `rfl_cat`, which is slow to fail on the goals
+translated by `kernel_hom`. It is a function rather than a local macro, as the tactics below are
+expanded in the files that call them, where a local macro is not defined. -/
+private def aesopCatSearch : TacticM (TSyntax `tactic) :=
+  `(tactic| aesop (config := { introsTransparency? := some .default, terminal := true })
+    (rule_sets := [$(Lean.mkIdent `CategoryTheory):ident]))
 
 /-- The `kernel_monoidal` tactic applies the `kernel_hom` transformation to the goal and then
 invokes the `monoidal` tactic to solve or simplify the resulting goal. -/
@@ -56,25 +63,23 @@ syntax (name := aesopKernel) "aesop_kernel" : tactic
 elab_rules : tactic
   | `(tactic| aesop_kernel) => do
     evalTactic (← `(tactic| kernel_hom))
-    evalTactic (← `(tactic| aesop
-      (config := { introsTransparency? := some .default, terminal := true })
-      (rule_sets := [$(Lean.mkIdent `CategoryTheory):ident])))
-
+    evalTactic (← aesopCatSearch)
 
 /-- The `kernel_disch` tactic applies the `kernel_hom` transformation to the goal and then
 tries to solve the resulting goal with:
 1. `monoidal`, after `simp` together with the splitting of the tensor products of compositions and
   the coassociativity of the comultiplication;
-2. `cat_disch`, after merging the whiskers and the compositions of tensor products into single
-  tensor products, together with the counit and comultiplication laws of the comonoid structure
-  and of the deterministic and Markov kernels. This handles the exchange law and the laws hidden in
-  tensor products.
+2. the search of `cat_disch` without its `rfl_cat` attempt, as in `aesop_kernel`, after merging
+  the whiskers and the compositions of tensor products into single tensor products, together with
+  the counit and comultiplication laws of the comonoid structure and of the deterministic and
+  Markov kernels. This handles the exchange law and the laws hidden in tensor products.
 
-As it tries both `cat_disch` and `monoidal`, it is the tactic to use by default. -/
+As it tries both strategies, it is the tactic to use by default. -/
 syntax (name := kernelDisch) "kernel_disch" : tactic
 
 elab_rules : tactic
   | `(tactic| kernel_disch) => do
+    let search ← aesopCatSearch
     evalTactic (← `(tactic| kernel_hom))
     evalTactic (← `(tactic| first
       /- Split the tensor products of compositions into whiskers, the form in which `comul_assoc`
@@ -97,5 +102,5 @@ elab_rules : tactic
           ComonObj.counit_comul_hom, ComonObj.counit_comul_hom_assoc,
           ComonObj.comul_tensorHom_counit_comp, ComonObj.comul_tensorHom_counit_comp_assoc,
           ComonObj.comul_counit_comp_tensorHom, ComonObj.comul_counit_comp_tensorHom_assoc])
-        <;> cat_disch)
+        <;> $search)
       ))
